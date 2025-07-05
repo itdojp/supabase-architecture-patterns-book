@@ -1,10 +1,40 @@
 # Auto-generated navigation data
+introduction:
+  - title: "🏗️ Supabaseアーキテクチャパターン実践技術書 - 学習ガイド"
+    path: "/introduction/"
+
 chapters:
-  - title: "第1章: v3.0デザインシステムの基本概念"
+  - title: "Chapter 1: Supabaseアーキテクチャ理解 🏥"
     path: "/chapters/chapter01/"
-  - title: "第2章: 実装方法とカスタマイズ"
+  - title: "Chapter 2: 認証・認可設計 🔐"
     path: "/chapters/chapter02/"
+  - title: "Chapter 3: パターン1 - クライアントサイド実装 🏠"
+    path: "/chapters/chapter03/"
+  - title: "Chapter 4: パターン2 - Edge Functions活用 ⚡"
+    path: "/chapters/chapter04/"
+  - title: "Chapter 5: パターン3 - 独立APIサーバー 🏗️"
+    path: "/chapters/chapter05-1/"
+  - title: "Chapter 5-2: マルチテナンシーと複雑ビジネスロジック 🏢"
+    path: "/chapters/chapter05-2/"
+  - title: "Chapter 5-3: 拡張性設計とパフォーマンス最適化 📈"
+    path: "/chapters/chapter05-3/"
+  - title: "Chapter 6: パフォーマンス最適化（システムの高速化マスター） 🚀"
+    path: "/chapters/chapter06/"
+  - title: "Chapter 7: セキュリティ強化 🔐"
+    path: "/chapters/chapter07/"
+  - title: "Chapter 8: 運用監視と自動化 🏥"
+    path: "/chapters/chapter08/"
+  - title: "Chapter 9: アーキテクチャ選択演習 🏗️"
+    path: "/chapters/chapter09/"
+  - title: "Chapter 10: 統合実践プロジェクト 🏗️"
+    path: "/chapters/chapter10/"
 
 appendices:
   - title: "付録A: 設定リファレンス"
     path: "/appendices/appendix-a/"
+  - title: "付録: 実践的リファレンス集 📚"
+    path: "/appendices/appendix01/"
+
+afterword:
+  - title: "あとがき"
+    path: "/afterword/"
