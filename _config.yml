@@ -1,22 +1,23 @@
 # Jekyll設定
-title: {{BOOK_TITLE}}
-description: {{BOOK_DESCRIPTION}}
+title: "Supabaseアーキテクチャパターン実践技術書"
+description: "スケーラブルな3層構成の設計と実装 - 初心者から上級者まで段階的に学べる、Supabase完全マスターガイド"
 author: 
-  name: ITDO Inc. (株式会社アイティードゥ)
-  github: {{GITHUB_USERNAME}}
-  email: {{AUTHOR_EMAIL}}
-baseurl: "/{{PUBLIC_REPO_NAME}}"
-url: "https://{{GITHUB_USERNAME}}.github.io"
+  name: "株式会社アイティードゥ"
+  github: itdojp
+  email: knowledge@itdo.jp
+baseurl: "/supabase-architecture-patterns-book"
+url: "https://itdojp.github.io"
 
 # Repository settings for links
 repository:
-  github: {{GITHUB_USERNAME}}/{{PUBLIC_REPO_NAME}}  # GitHub repository path
-  zenn: books/{{PUBLIC_REPO_NAME}}                  # Zenn book path
+  github: itdojp/supabase-architecture-patterns-book  # GitHub repository path
+  zenn: books/supabase-architecture-patterns          # Zenn book path
 
 # テーマ
-remote_theme: pages-themes/minimal@v0.2.0
+theme: minima
 plugins:
-  - jekyll-remote-theme
+  - jekyll-feed
+  - jekyll-seo-tag
 
 # 言語設定
 lang: ja
@@ -36,3 +37,18 @@ exclude:
   - LICENSE
   - CONTRIBUTING.md
   - src/
+  - vendor/
+  - Gemfile
+  - Gemfile.lock
+
+# v3.0 Design System Configuration
+markdown: kramdown
+highlighter: rouge
+
+# Use custom book layout as default
+defaults:
+  - scope:
+      path: ""
+      type: "pages"
+    values:
+      layout: "book"
