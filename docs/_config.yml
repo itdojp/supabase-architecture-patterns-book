@@ -13,11 +13,8 @@ repository:
   github: itdojp/supabase-architecture-patterns-book  # GitHub repository path
   zenn: books/supabase-architecture-patterns          # Zenn book path
 
-# テーマ
-theme: minima
-plugins:
-  - jekyll-feed
-  - jekyll-seo-tag
+# plugins:
+#   - jekyll-feed
 
 # 言語設定
 lang: ja
