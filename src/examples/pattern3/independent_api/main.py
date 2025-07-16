@@ -18,6 +18,8 @@ from sqlalchemy import create_engine, Column, String, Boolean, DateTime, Text, F
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, Session, relationship
 from supabase import create_client, Client
+import secrets
+import string
 import jwt
 import asyncio
 from typing import Optional, List, Dict, Any
@@ -373,6 +375,12 @@ async def health_check():
 
 # === 認証・ユーザー管理 ===
 
+def generate_random_password(length: int = 16) -> str:
+    """セキュアなランダムパスワードを生成"""
+    alphabet = string.ascii_letters + string.digits + string.punctuation
+    password = ''.join(secrets.choice(alphabet) for _ in range(length))
+    return password
+
 @app.post("/api/v1/users", response_model=ApiResponse)
 async def create_user(
     user_data: UserCreate,
@@ -384,7 +392,7 @@ async def create_user(
         # Supabaseで認証ユーザーを作成
         auth_response = supabase.auth.admin.create_user({
             "email": user_data.email,
-            "password": "temporary_password",  # 実際にはランダム生成
+            "password": generate_random_password(),  # セキュアなランダムパスワード
             "email_confirm": True
         })
         

@@ -5,6 +5,7 @@ Supabase Architecture Patterns - Performance Monitoring
 
 import time
 import asyncio
+import os
 from functools import wraps
 from typing import Dict, Any, Optional, Callable
 from datetime import datetime, timedelta
@@ -130,9 +131,16 @@ class PerformanceMetrics:
             disk = psutil.disk_usage('/')
             SYSTEM_DISK_USAGE.set(disk.percent)
             
-            # データベース接続数（仮想値）
-            DB_CONNECTION_POOL.labels(type='active').set(10)
-            DB_CONNECTION_POOL.labels(type='idle').set(5)
+            # データベース接続数
+            # 実際の実装では、使用しているデータベースドライバーから接続プール情報を取得
+            # 例: psycopg2の場合
+            # active_connections = connection_pool.active_count()
+            # idle_connections = connection_pool.idle_count()
+            # ここではデモ用に環境変数またはデフォルト値を使用
+            active_connections = int(os.getenv('DB_ACTIVE_CONNECTIONS', '0'))
+            idle_connections = int(os.getenv('DB_IDLE_CONNECTIONS', '0'))
+            DB_CONNECTION_POOL.labels(type='active').set(active_connections)
+            DB_CONNECTION_POOL.labels(type='idle').set(idle_connections)
             
         except Exception as e:
             logger.error(f"Failed to update system metrics: {e}")
