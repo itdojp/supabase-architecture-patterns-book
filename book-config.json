@@ -1,100 +1,28 @@
 {
-  "book": {
-    "title": "Supabaseアーキテクチャパターン実践技術書",
-    "subtitle": "スケーラブルな3層構成の設計と実装",
-    "description": "初心者から上級者まで段階的に学べる、Supabase完全マスターガイド。病院・レストラン・建築などの身近な例を使って、Supabaseの3つのアーキテクチャパターンを分かりやすく解説し、実際に動作するコード例とともに実践的な学習を提供します。",
-    "author": {
-      "name": "株式会社アイティードゥ",
-      "email": "knowledge@itdo.jp",
-      "github": "itdojp",
-      "organization": "ITDO Inc.",
-      "website": "https://www.itdo.jp"
-    },
-    "license": "MIT License",
-    "version": "1.0版",
-    "language": "ja",
-    "repository": {
-      "github": "itdojp/supabase-architecture-patterns-book",
-      "zenn": "books/supabase-architecture-patterns"
-    }
+  "title": "Supabaseアーキテクチャパターン - 実践的な設計手法",
+  "description": "Supabaseアーキテクチャパターン - 実践的な設計手法",
+  "author": "ITDO Inc.（株式会社アイティードゥ）",
+  "version": "1.0.0",
+  "language": "ja",
+  "license": "MIT",
+  "repository": {
+    "url": "https://github.com/itdojp/supabase-architecture-patterns-book.git",
+    "branch": "main"
   },
-  "contentSections": [
-    {
-      "name": "introduction",
-      "directory": "introduction",
-      "enabled": true,
-      "order": 1,
-      "title": "はじめに"
-    },
-    {
-      "name": "chapters",
-      "directory": "chapters",
-      "enabled": true,
-      "order": 2,
-      "title": "本章",
-      "numbering": true
-    },
-    {
-      "name": "guides",
-      "directory": "guides",
-      "enabled": true,
-      "order": 3,
-      "title": "ガイド"
-    },
-    {
-      "name": "appendices",
-      "directory": "appendices",
-      "enabled": true,
-      "order": 4,
-      "title": "付録",
-      "numbering": false
-    },
-    {
-      "name": "afterword",
-      "directory": "afterword",
-      "enabled": true,
-      "order": 5,
-      "title": "あとがき"
-    }
-  ],
-  "excludePatterns": [
-    "draft.md",
-    "notes.md",
-    "solutions.md",
-    "instructor.md",
-    "private.md",
-    "confidential.md",
-    "secret.md",
-    "*.tmp",
-    "*.backup",
-    "*.bak",
-    ".private",
-    ".confidential",
-    "scripts/*.py",
-    "*_old_*",
-    "*_proofreading_report.md",
-    "quality_check_report.md",
-    ".DS_Store",
-    "Thumbs.db"
-  ],
-  "contentExcludePatterns": [
-    "<!-- TODO:",
-    "<!-- FIXME:",
-    "<!-- PRIVATE:",
-    "<!-- SECRET:",
-    "<!-- DRAFT:",
-    "<!-- CONFIDENTIAL:",
-    "<!-- INSTRUCTOR:",
-    "<!-- INTERNAL:",
-    "<!-- SENSITIVE:",
-    "<!-- PRIVATE START -->",
-    "<!-- 個人情報",
-    "<!-- 機密情報"
-  ],
+  "structure": {
+    "chapters": [
+      {
+        "id": "chapter01",
+        "title": "第1章：基礎概念",
+        "description": "基本的な概念と原理"
+      }
+    ]
+  },
   "build": {
     "outputDirectory": "docs",
-    "enableV3DesignSystem": true,
+    "framework": "book-formatter",
     "enableNavigation": true,
-    "enableSyntaxHighlighting": true
+    "enableSyntaxHighlighting": true,
+    "enableMobileOptimization": true
   }
 }

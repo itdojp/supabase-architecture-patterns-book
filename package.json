@@ -1,54 +1,46 @@
 {
-  "name": "book-publishing-template-improved",
-  "version": "2.0.0",
-  "description": "Improved Book Publishing Template with Easy Setup",
-  "author": "Book Publishing Template Contributors",
+  "name": "supabase-architecture-patterns-book",
+  "version": "1.0.0",
+  "description": "Supabaseアーキテクチャパターン - 実践的な設計手法",
+  "author": "ITDO Inc.（株式会社アイティードゥ）",
   "license": "MIT",
   "engines": {
     "node": ">=18.0.0"
   },
   "scripts": {
-    "setup": "node easy-setup.js",
-    "build": "node scripts/build-simple.js",
-    "build:safe": "node scripts/build-with-conflict-detection.js",
-    "build:full": "node scripts/build.js",
-    "preview": "npm run build && npx http-server public -p 8080 --silent",
-    "deploy": "bash scripts/deploy.sh",
-    "clean": "rm -rf public output temp",
-    "configure:workflows": "node scripts/configure-workflows.js",
-    "check-conflicts": "node scripts/jekyll-conflict-detector.js src --dry-run",
-    "fix-conflicts": "node scripts/jekyll-conflict-detector.js src --fix",
+    "start": "jekyll serve --livereload",
+    "build": "jekyll build",
+    "build:gh-pages": "bundle exec jekyll build",
+    "preview": "npm run build && npx http-server _site -p 8080 --silent",
+    "deploy": "gh-pages -d _site",
+    "clean": "rm -rf _site .jekyll-cache",
+    "test": "npm run lint && npm run check-links",
+    "lint": "markdownlint 'src/**/*.md' --ignore node_modules",
     "lint:light": "markdownlint 'src/**/*.md' --ignore node_modules",
-    "test:light": "npm run lint:light && npm run build",
-    "test:conflicts": "npm run check-conflicts",
-    "help": "echo 'Available commands:\n  npm run setup - Interactive setup\n  npm run build - Build the book\n  npm run build:safe - Build with conflict detection\n  npm run check-conflicts - Check Jekyll conflicts\n  npm run fix-conflicts - Auto-fix Jekyll conflicts\n  npm run preview - Local preview\n  npm run configure:workflows - Disable problematic workflows\n  npm run deploy - Deploy to GitHub Pages'"
+    "check-links": "markdown-link-check src/**/*.md",
+    "help": "echo 'Available commands:\n  npm start - Start development server\n  npm run build - Build the book\n  npm run preview - Local preview\n  npm run deploy - Deploy to GitHub Pages'"
   },
   "dependencies": {
-    "fs-extra": "^11.3.0",
-    "gray-matter": "^4.0.3"
+    "jekyll": "^4.0.0"
   },
   "devDependencies": {
-    "http-server": "^14.1.1",
-    "markdownlint-cli": "^0.33.0"
-  },
-  "optionalDependencies": {
-    "puppeteer": "^21.0.0",
-    "sharp": "^0.34.2"
+    "markdownlint-cli": "^0.37.0",
+    "markdown-link-check": "^3.11.2",
+    "gh-pages": "^6.0.0",
+    "http-server": "^14.1.1"
   },
   "keywords": [
     "book",
-    "publishing",
-    "markdown",
-    "github-pages",
-    "template",
-    "easy-setup"
+    "documentation",
+    "japanese",
+    "supabase","architecture","patterns"
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/itdojp/book-publishing-template2.git"
+    "url": "git+https://github.com/itdojp/supabase-architecture-patterns-book.git"
   },
   "bugs": {
-    "url": "https://github.com/itdojp/book-publishing-template2/issues"
+    "url": "https://github.com/itdojp/supabase-architecture-patterns-book/issues"
   },
-  "homepage": "https://github.com/itdojp/book-publishing-template2#readme"
+  "homepage": "https://github.com/itdojp/supabase-architecture-patterns-book#readme"
 }
