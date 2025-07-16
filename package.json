@@ -21,9 +21,7 @@
     "check-conflicts": "echo 'No Jekyll conflicts to check'",
     "help": "echo 'Available commands:\n  npm start - Start development server\n  npm run build - Build the book\n  npm run preview - Local preview\n  npm run deploy - Deploy to GitHub Pages'"
   },
-  "dependencies": {
-    "jekyll": "^4.0.0"
-  },
+  "dependencies": {},
   "devDependencies": {
     "markdownlint-cli": "^0.37.0",
     "markdown-link-check": "^3.11.2",
