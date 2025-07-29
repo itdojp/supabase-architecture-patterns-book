@@ -41,6 +41,15 @@ exclude:
 # v3.0 Design System Configuration
 markdown: kramdown
 highlighter: rouge
+permalink: pretty
+plugins:
+  - jekyll-relative-links
+  - jekyll-optional-front-matter
+
+# GitHub Pages compatibility
+relative_links:
+  enabled: true
+  collections: true
 
 # Use custom book layout as default
 defaults:

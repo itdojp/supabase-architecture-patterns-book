@@ -1,6 +1,7 @@
 ---
 layout: book
 title: "Supabaseアーキテクチャパターン実践技術書"
+permalink: /
 ---
 
 # Supabaseアーキテクチャパターン実践技術書
