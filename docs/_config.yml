@@ -43,13 +43,10 @@ markdown: kramdown
 highlighter: rouge
 permalink: pretty
 plugins:
-  - jekyll-relative-links
-  - jekyll-optional-front-matter
+  - jekyll-feed
+  - jekyll-sitemap
 
 # GitHub Pages compatibility
-relative_links:
-  enabled: true
-  collections: true
 
 # Use custom book layout as default
 defaults:
@@ -58,3 +55,8 @@ defaults:
       type: "pages"
     values:
       layout: "book"
+
+# Ensure Jekyll processes the site correctly
+safe: true
+source: .
+destination: ./_site
