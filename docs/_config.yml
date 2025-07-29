@@ -1,27 +1,25 @@
-# Jekyll設定
 title: "Supabaseアーキテクチャパターン実践技術書"
 description: "スケーラブルな3層構成の設計と実装 - 初心者から上級者まで段階的に学べる、Supabase完全マスターガイド"
-author: 
-  name: "株式会社アイティードゥ"
-  github: itdojp
-  email: knowledge@itdo.jp
+author: "ITDO Inc.（株式会社アイティードゥ）"
+version: "1.0.0"
+lang: "ja"
+
+# Jekyll設定
+markdown: kramdown
+highlighter: rouge
+
+# プラグイン
+plugins:
+  - jekyll-feed
+  - jekyll-sitemap
+  - jekyll-seo-tag
+
+# GitHub Pages設定
 baseurl: "/supabase-architecture-patterns-book"
 url: "https://itdojp.github.io"
 
-# Repository settings for links
-repository:
-  github: itdojp/supabase-architecture-patterns-book  # GitHub repository path
-  zenn: books/supabase-architecture-patterns          # Zenn book path
-
-# plugins:
-#   - jekyll-feed
-
-# 言語設定
-lang: ja
-
-# その他の設定
-show_downloads: false
-google_analytics:
+repository: 
+  github: "https://github.com/itdojp/supabase-architecture-patterns-book"
 
 # ビルド設定
 exclude:
