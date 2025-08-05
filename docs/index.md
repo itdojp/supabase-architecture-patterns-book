@@ -5,6 +5,7 @@ title: "Supabaseアーキテクチャパターン実践技術書"
 description: "スケーラブルな3層構成の設計と実装 - 初心者から上級者まで段階的に学べる、Supabase完全マスターガイド"
 author: "ITDO Inc.（株式会社アイティードゥ）"
 version: "1.0.0"
+permalink: /
 ---
 # Supabaseアーキテクチャパターン実践技術書
 
