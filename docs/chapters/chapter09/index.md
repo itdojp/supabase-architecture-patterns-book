@@ -1,8 +1,8 @@
 ---
 layout: book
-title: "Chapter 9: アーキテクチャ選択演習 🏗️"
+order: 13
+title: "第9章：アーキテクチャ選択演習"
 ---
-
 # Chapter 9: アーキテクチャ選択演習 🏗️
 
 ---

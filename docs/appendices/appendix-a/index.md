@@ -1,8 +1,8 @@
 ---
 layout: book
-title: "付録A: 設定リファレンス"
+order: 20
+title: "付録A: 追加リソース"
 ---
-
 # 付録A: 設定リファレンス
 
 Book Publishing Template v3.0の詳細な設定オプションと機能リファレンスです。

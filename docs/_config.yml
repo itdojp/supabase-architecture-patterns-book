@@ -1,52 +1,41 @@
+# Jekyll Configuration for Supabase Architecture Patterns Book
 title: "Supabaseアーキテクチャパターン実践技術書"
 description: "スケーラブルな3層構成の設計と実装 - 初心者から上級者まで段階的に学べる、Supabase完全マスターガイド"
-author: "ITDO Inc.（株式会社アイティードゥ）"
-version: "1.0.0"
+author: "株式会社アイティードゥ"
 lang: "ja"
+url: "https://itdojp.github.io"
+baseurl: "/supabase-architecture-patterns-book"
+repository: "https://github.com/itdojp/supabase-architecture-patterns-book"
 
-# Jekyll設定
+# Build settings
 markdown: kramdown
 highlighter: rouge
+theme: null
 
-# プラグイン
 plugins:
   - jekyll-feed
   - jekyll-sitemap
   - jekyll-seo-tag
 
-# GitHub Pages設定
-baseurl: "/supabase-architecture-patterns-book"
-url: "https://itdojp.github.io"
-
-repository: 
-  github: "https://github.com/itdojp/supabase-architecture-patterns-book"
-
-# ビルド設定
+# Exclude from processing
 exclude:
-  - README.md
-  - package.json
-  - package-lock.json
-  - node_modules/
-  - scripts/
-  - .gitignore
-  - LICENSE
-  - CONTRIBUTING.md
-  - src/
-  - vendor/
+  - .sass-cache/
+  - .jekyll-cache/
+  - gemfiles/
   - Gemfile
   - Gemfile.lock
+  - node_modules/
+  - vendor/bundle/
+  - vendor/cache/
+  - vendor/gems/
+  - vendor/ruby/
+  - README.md
+  - LICENSE
+  - package.json
+  - package-lock.json
+  - src/
 
-# v3.0 Design System Configuration
-markdown: kramdown
-highlighter: rouge
-permalink: pretty
-plugins:
-  - jekyll-feed
-  - jekyll-sitemap
-
-# GitHub Pages compatibility
-
-# Use custom book layout as default
+# Collections and defaults
 defaults:
   - scope:
       path: ""

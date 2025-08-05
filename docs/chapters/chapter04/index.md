@@ -1,8 +1,8 @@
 ---
 layout: book
-title: "Chapter 4: パターン2 - Edge Functions活用 ⚡"
+order: 6
+title: "第4章：パターン2 - Edge Functions活用"
 ---
-
 # Chapter 4: パターン2 - Edge Functions活用 ⚡
 
 ---

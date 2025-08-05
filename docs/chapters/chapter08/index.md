@@ -1,8 +1,8 @@
 ---
 layout: book
-title: "Chapter 8: 運用監視と自動化 🏥"
+order: 12
+title: "第8章：運用監視と自動化"
 ---
-
 # Chapter 8: 運用監視と自動化 🏥
 
 ```

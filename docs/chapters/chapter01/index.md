@@ -1,8 +1,8 @@
 ---
 layout: book
-title: "Chapter 1: Supabaseアーキテクチャ理解 🏥"
+order: 3
+title: "第1章：Supabaseアーキテクチャ理解"
 ---
-
 # Chapter 1: Supabaseアーキテクチャ理解 🏥
 
 ---
