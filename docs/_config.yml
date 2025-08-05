@@ -35,15 +35,12 @@ exclude:
   - package-lock.json
   - src/
 
+# Permalink configuration
+permalink: pretty
+
 # Collections and defaults
 defaults:
   - scope:
       path: ""
-      type: "pages"
     values:
       layout: "book"
-
-# Ensure Jekyll processes the site correctly
-safe: true
-source: .
-destination: ./_site
