@@ -42,3 +42,8 @@ defaults:
       type: "pages"
     values:
       layout: "book"
+
+# Ensure Jekyll processes the site correctly
+safe: true
+source: .
+destination: ./_site
