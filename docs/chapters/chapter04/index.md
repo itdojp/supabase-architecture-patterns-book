@@ -6,9 +6,9 @@ title: "第4章：パターン2 - Edge Functions活用"
 # Chapter 4: パターン2 - Edge Functions活用 ⚡
 
 ---
-**📚 目次に戻る**: [📖 学習ガイド](./textbook_index.md)  
-**⬅️ 前の章**: [Chapter 3: パターン1 - クライアントサイド実装](./chapter03.md)  
-**➡️ 次の章**: [Chapter 5: パターン3 - 独立API サーバー](./chapter05-1.md)  
+**📚 目次に戻る**: [📖 学習ガイド]({{ site.baseurl }}/introduction/index.html)  
+**⬅️ 前の章**: [Chapter 3: パターン1 - クライアントサイド実装]({{ site.baseurl }}/chapters/chapter03/index.html)  
+**➡️ 次の章**: [Chapter 5: パターン3 - 独立API サーバー]({{ site.baseurl }}/chapter05-1.md)  
 **🏗️ アーキテクチャ**: Edge Functions（サーバーレス関数）  
 **🎯 学習レベル**: 🌱 基礎 | 🚀 応用 | 💪 発展  
 **⏱️ 推定学習時間**: 4-6時間  
@@ -25,7 +25,7 @@ Chapter 3で学んだ**クライアントサイド実装**を振り返りまし�
 
 しかし、クライアントサイドでは**処理できない複雑な業務**があります。今度はサーバーサイドで処理する仕組みを学びます。
 
-> 💡 **Chapter 3の理解度確認**: クライアントサイド実装のメリット・制約を説明できますか？不安な場合は[Chapter 3](./chapter03.md)を復習してください。
+> 💡 **Chapter 3の理解度確認**: クライアントサイド実装のメリット・制約を説明できますか？不安な場合は[Chapter 3]({{ site.baseurl }}/chapters/chapter03/index.html)を復習してください。
 
 ## 🎯 この章で学ぶこと（初心者向け）
 
@@ -800,12 +800,12 @@ async function validateAddress(address: Address, type: string): Promise<void> {
 ```typescript
 // supabase/functions/process-order/index.ts
 import { serve } from 'https://deno.land/std@0.207.0/http/server.ts'
-import { corsHeaders } from '../_shared/cors.ts'
-import { authService } from '../_shared/auth.ts'
-import { initDatabase } from '../_shared/database.ts'
-import { validateOrderRequest } from '../_shared/validation.ts'
+import { corsHeaders } from './_shared/cors.ts'
+import { authService } from './_shared/auth.ts'
+import { initDatabase } from './_shared/database.ts'
+import { validateOrderRequest } from './_shared/validation.ts'
 import { OrderProcessor } from './handlers/order-processor.ts'
-import { ErrorHandler } from '../_shared/errors.ts'
+import { ErrorHandler } from './_shared/errors.ts'
 
 serve(async (req: Request) => {
   // CORS処理
@@ -847,11 +847,11 @@ serve(async (req: Request) => {
 
 ```typescript
 // supabase/functions/process-order/handlers/order-processor.ts
-import { DatabaseConnection } from '../../_shared/database.ts'
-import { Order, OrderRequest, OrderResponse, OrderStatus, OrderItem } from '../../_shared/models.ts'
-import { InventoryService } from '../services/inventory-service.ts'
-import { PaymentService } from '../services/payment-service.ts'
-import { NotificationService } from '../services/notification-service.ts'
+import { DatabaseConnection } from './_shared/database.ts'
+import { Order, OrderRequest, OrderResponse, OrderStatus, OrderItem } from './_shared/models.ts'
+import { InventoryService } from './services/inventory-service.ts'
+import { PaymentService } from './services/payment-service.ts'
+import { NotificationService } from './services/notification-service.ts'
 
 export class OrderProcessor {
   private inventoryService: InventoryService
@@ -1048,7 +1048,7 @@ export class OrderProcessor {
 
 ```typescript
 // supabase/functions/process-order/services/inventory-service.ts
-import { DatabaseConnection } from '../../_shared/database.ts'
+import { DatabaseConnection } from './_shared/database.ts'
 
 export interface InventoryReservation {
   reservation_id: string
@@ -1353,9 +1353,9 @@ export class PaymentService {
 // supabase/functions/webhook-stripe/index.ts
 import { serve } from 'https://deno.land/std@0.207.0/http/server.ts'
 import Stripe from 'https://esm.sh/stripe@14.5.0?target=deno'
-import { initDatabase } from '../_shared/database.ts'
-import { OrderStatus } from '../_shared/models.ts'
-import { NotificationService } from '../process-order/services/notification-service.ts'
+import { initDatabase } from './_shared/database.ts'
+import { OrderStatus } from './_shared/models.ts'
+import { NotificationService } from './process-order/services/notification-service.ts'
 
 const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY')!, {
   apiVersion: '2023-10-16'
@@ -2003,7 +2003,7 @@ supabase functions deploy process-order --debug
 // supabase/functions/process-order/index.ts
 // 1. import パスの明示化
 import { serve } from "https://deno.land/std@0.207.0/http/server.ts"
-import { corsHeaders } from "../_shared/cors.ts"
+import { corsHeaders } from "./_shared/cors.ts"
 
 // 2. TypeScript 設定確認
 // deno.json または import_map.json の設定
@@ -3171,8 +3171,8 @@ Chapter 5では、「**大病院の基幹システム**」を例に、エンタ�
 ---
 
 **📍 ナビゲーション**
-- **📚 目次**: [📖 学習ガイド](./textbook_index.md)
-- **⬅️ 前の章**: [Chapter 3: クライアントサイド実装](./chapter03.md)  
-- **➡️ 次の章**: [Chapter 5: 独立API サーバー](./chapter05-1.md)
-- **🏠 関連章**: [Chapter 1: Supabase基礎](./chapter01.md) | [Chapter 6: パフォーマンス](./chapter06.md)
-- **🔧 リソース**: [動作検証](./src/) | [トラブルシューティング](./troubleshooting_guide.md)
+- **📚 目次**: [📖 学習ガイド]({{ site.baseurl }}/introduction/index.html)
+- **⬅️ 前の章**: [Chapter 3: クライアントサイド実装]({{ site.baseurl }}/chapters/chapter03/index.html)  
+- **➡️ 次の章**: [Chapter 5: 独立API サーバー]({{ site.baseurl }}/chapter05-1.md)
+- **🏠 関連章**: [Chapter 1: Supabase基礎]({{ site.baseurl }}/chapters/chapter01/index.html) | [Chapter 6: パフォーマンス]({{ site.baseurl }}/chapters/chapter06/index.html)
+- **🔧 リソース**: [動作検証]({{ site.baseurl }}/src/) | [トラブルシューティング]({{ site.baseurl }}/troubleshooting_guide.md)
