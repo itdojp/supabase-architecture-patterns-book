@@ -1,8 +1,8 @@
 ---
 layout: book
-title: "Terminology Guide - 用語統一ガイド"
+order: 18
+title: "専門用語集"
 ---
-
 # Terminology Guide - 用語統一ガイド
 
 ## 📋 Purpose / 目的

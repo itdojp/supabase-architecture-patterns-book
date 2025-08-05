@@ -1,8 +1,8 @@
 ---
 layout: book
-title: "Chapter 2: 認証・認可設計 🔐"
+order: 4
+title: "第2章：認証・認可設計"
 ---
-
 # Chapter 2: 認証・認可設計 🔐
 
 ---
