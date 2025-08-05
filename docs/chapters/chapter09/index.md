@@ -6,9 +6,9 @@ title: "第9章：アーキテクチャ選択演習"
 # Chapter 9: アーキテクチャ選択演習 🏗️
 
 ---
-**📚 目次に戻る**: [📖 学習ガイド](./textbook_index.md)  
-**⬅️ 前の章**: [Chapter 8: 運用監視と自動化](./chapter08.md)  
-**➡️ 次の章**: [Chapter 10: トラブルシューティング](./chapter10.md)  
+**📚 目次に戻る**: [📖 学習ガイド]({{ site.baseurl }}/introduction/index.html)  
+**⬅️ 前の章**: [Chapter 8: 運用監視と自動化]({{ site.baseurl }}/chapters/chapter08/index.html)  
+**➡️ 次の章**: [Chapter 10: トラブルシューティング]({{ site.baseurl }}/chapters/chapter10/index.html)  
 **🎯 学習フェーズ**: Part IV - 実践・応用編（演習）  
 **🎯 学習レベル**: 🌱 基礎 | 🚀 応用 | 💪 発展  
 **⏱️ 推定学習時間**: 4-6時間  
@@ -2953,9 +2953,9 @@ Chapter 10では、「**緊急救命室の医師**」レベルの問題解決力
 ---
 
 **📍 ナビゲーション**
-- **📚 目次**: [📖 学習ガイド](./textbook_index.md)
-- **⬅️ 前の章**: [Chapter 8: 運用監視と自動化](./chapter08.md)  
-- **➡️ 最終章**: [Chapter 10: トラブルシューティング](./chapter10.md)
-- **🏠 関連章**: [Chapter 3-5: アーキテクチャパターン](./chapter03.md) | [選択ガイド](./pattern_selection_guide.md)
-- **🔧 リソース**: [アーキテクチャ決定ツール](./src/) | [移行チェックリスト](./operational_checklists.md)
+- **📚 目次**: [📖 学習ガイド]({{ site.baseurl }}/introduction/index.html)
+- **⬅️ 前の章**: [Chapter 8: 運用監視と自動化]({{ site.baseurl }}/chapters/chapter08/index.html)  
+- **➡️ 最終章**: [Chapter 10: トラブルシューティング]({{ site.baseurl }}/chapters/chapter10/index.html)
+- **🏠 関連章**: [Chapter 3-5: アーキテクチャパターン]({{ site.baseurl }}/chapters/chapter03/index.html) | [選択ガイド]({{ site.baseurl }}/pattern_selection_guide.md)
+- **🔧 リソース**: [アーキテクチャ決定ツール]({{ site.baseurl }}/src/) | [移行チェックリスト]({{ site.baseurl }}/operational_checklists.md)
 

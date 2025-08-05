@@ -6,9 +6,9 @@ title: "第3章：パターン1 - クライアントサイド実装"
 # Chapter 3: パターン1 - クライアントサイド実装 🏠
 
 ---
-**📚 目次に戻る**: [📖 学習ガイド](./textbook_index.md)  
-**⬅️ 前の章**: [Chapter 2: 認証システムの実装](./chapter02.md)  
-**➡️ 次の章**: [Chapter 4: Edge Functions活用](./chapter04.md)  
+**📚 目次に戻る**: [📖 学習ガイド]({{ site.baseurl }}/introduction/index.html)  
+**⬅️ 前の章**: [Chapter 2: 認証システムの実装]({{ site.baseurl }}/chapters/chapter02/index.html)  
+**➡️ 次の章**: [Chapter 4: Edge Functions活用]({{ site.baseurl }}/chapters/chapter04/index.html)  
 **🎯 学習レベル**: 🌱 基礎 ➜ 🚀 応用  
 **⏱️ 推定学習時間**: 6-10時間  
 **🏗️ アーキテクチャ**: 木造住宅工法（シンプル・高速・個人向け）
@@ -24,7 +24,7 @@ Chapter 2で学んだ**認証・認可の基本概念**を振り返りましょ�
 
 これらのセキュリティ基盤を使って、今度は**実際に動くアプリケーション**を作成します。
 
-> 💡 **Chapter 2の理解度確認**: 認証と認可の違い、RLSの役割を説明できますか？不安な場合は[Chapter 2](./chapter02.md)を復習してください。
+> 💡 **Chapter 2の理解度確認**: 認証と認可の違い、RLSの役割を説明できますか？不安な場合は[Chapter 2]({{ site.baseurl }}/chapters/chapter02/index.html)を復習してください。
 
 ## 🎯 この章で学ぶこと（初心者向け）
 
@@ -2178,14 +2178,14 @@ def main(page: ft.Page):
 
 ### 復習推奨ポイント
 理解が不十分な場合は以下を復習してください：
-- **認証実装**: [Chapter 2: 認証・認可設計](./chapter02.md)を確認
-- **RLS設計**: [セキュリティ強化](./chapter07.md)で詳細学習
-- **パフォーマンス**: [Chapter 6: パフォーマンス最適化](./chapter06.md)で深掘り
+- **認証実装**: [Chapter 2: 認証・認可設計]({{ site.baseurl }}/chapters/chapter02/index.html)を確認
+- **RLS設計**: [セキュリティ強化]({{ site.baseurl }}/chapters/chapter07/index.html)で詳細学習
+- **パフォーマンス**: [Chapter 6: パフォーマンス最適化]({{ site.baseurl }}/chapters/chapter06/index.html)で深掘り
 
 ### 関連リソース
 - [Flet公式ドキュメント](https://flet.dev/docs/)
 - [Supabase Python クライアント](https://supabase.com/docs/reference/python/introduction)
-- [環境構築ガイド](./environment_setup_guide.md)
+- [環境構築ガイド]({{ site.baseurl }}/environment_setup_guide.md)
 
 ---
 
@@ -2193,7 +2193,7 @@ def main(page: ft.Page):
 
 | 前の章 | 現在の章 | 次の章 |
 |---------|----------|--------|
-| [Chapter 2: 認証・認可設計](./chapter02.md) | **Chapter 3: クライアントサイド実装** | [Chapter 4: Edge Functions実装](./chapter04.md) |
+| [Chapter 2: 認証・認可設計]({{ site.baseurl }}/chapters/chapter02/index.html) | **Chapter 3: クライアントサイド実装** | [Chapter 4: Edge Functions実装]({{ site.baseurl }}/chapters/chapter04/index.html) |
 
 ### 学習パス確認
 
@@ -2207,9 +2207,9 @@ flowchart LR
 ```
 
 ### 関連章への参照
-- **前提となる章**: [Chapter 2](./chapter02.md) - 認証・認可基礎
-- **並行学習可能**: [Chapter 4](./chapter04.md) - Edge Functions
-- **後続の発展**: [Chapter 6](./chapter06.md) - パフォーマンス最適化
+- **前提となる章**: [Chapter 2]({{ site.baseurl }}/chapters/chapter02/index.html) - 認証・認可基礎
+- **並行学習可能**: [Chapter 4]({{ site.baseurl }}/chapters/chapter04/index.html) - Edge Functions
+- **後続の発展**: [Chapter 6]({{ site.baseurl }}/chapters/chapter06/index.html) - パフォーマンス最適化
 
 ## 📝 Chapter 3 学習まとめ
 
@@ -2324,14 +2324,14 @@ Chapter 4では、「病院薬剤管理システム」を例に、**プレハブ
 ---
 
 **📍 ナビゲーション**
-- **📚 目次**: [📖 学習ガイド](./textbook_index.md)
-- **⬅️ 前の章**: [Chapter 2: 認証システム](./chapter02.md)
-- **➡️ 次の章**: [Chapter 4: Edge Functions活用](./chapter04.md)
-- **🏠 同レベル**: [Chapter 5: API Server実装](./chapter05-1.md)
-- **🔧 実践**: [サンプルコード](./src/chapter03-task-manager/) | [動作検証](./src/verify_apps.py)
+- **📚 目次**: [📖 学習ガイド]({{ site.baseurl }}/introduction/index.html)
+- **⬅️ 前の章**: [Chapter 2: 認証システム]({{ site.baseurl }}/chapters/chapter02/index.html)
+- **➡️ 次の章**: [Chapter 4: Edge Functions活用]({{ site.baseurl }}/chapters/chapter04/index.html)
+- **🏠 同レベル**: [Chapter 5: API Server実装]({{ site.baseurl }}/chapter05-1.md)
+- **🔧 実践**: [サンプルコード]({{ site.baseurl }}/src/chapter03-task-manager/) | [動作検証]({{ site.baseurl }}/src/verify_apps.py)
 
 ### 📚 **関連リソース**
-- 🔧 [トラブルシューティング](./troubleshooting_guide.md)
-- 🎯 [パターン選択ガイド](./pattern_selection_guide.md)  
-- 📋 [運用チェックリスト](./operational_checklists.md)
-- 🔍 [コード検証ガイド](./code_verification.md)
+- 🔧 [トラブルシューティング]({{ site.baseurl }}/troubleshooting_guide.md)
+- 🎯 [パターン選択ガイド]({{ site.baseurl }}/pattern_selection_guide.md)  
+- 📋 [運用チェックリスト]({{ site.baseurl }}/operational_checklists.md)
+- 🔍 [コード検証ガイド]({{ site.baseurl }}/code_verification.md)

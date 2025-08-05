@@ -6,8 +6,8 @@ title: "付録B: 参考資料"
 # 付録: 実践的リファレンス集 📚
 
 ---
-**📚 目次に戻る**: [📖 学習ガイド](./textbook_index.md)  
-**🔗 関連章**: [全章](./textbook_index.md) で参照されるリファレンス資料集  
+**📚 目次に戻る**: [📖 学習ガイド]({{ site.baseurl }}/introduction/index.html)  
+**🔗 関連章**: [全章]({{ site.baseurl }}/introduction/index.html) で参照されるリファレンス資料集  
 **🎯 用途**: 開発中の即座な参照・トラブルシューティング・実装支援  
 **⏱️ 利用方法**: 必要時に該当セクションを参照  
 **📝 レベル**: 全レベル対応（基礎〜上級）
@@ -1519,7 +1519,7 @@ LIMIT 20;
 ---
 
 **📍 最終ナビゲーション**
-- **📚 目次**: [📖 学習ガイド](./textbook_index.md)
-- **🏠 全章**: [Chapter 1-10](./textbook_index.md) での実装時に参照
-- **🔧 関連リソース**: [動作検証](./src/) | [チェックリスト](./operational_checklists.md) | [トラブルシューティング](./troubleshooting_guide.md)
+- **📚 目次**: [📖 学習ガイド]({{ site.baseurl }}/introduction/index.html)
+- **🏠 全章**: [Chapter 1-10]({{ site.baseurl }}/introduction/index.html) での実装時に参照
+- **🔧 関連リソース**: [動作検証]({{ site.baseurl }}/src/) | [チェックリスト]({{ site.baseurl }}/operational_checklists.md) | [トラブルシューティング]({{ site.baseurl }}/troubleshooting_guide.md)
 - **🌐 コミュニティ**: [Supabase公式](https://supabase.com) | [GitHub](https://github.com/supabase/supabase)

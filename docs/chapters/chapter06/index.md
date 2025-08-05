@@ -6,9 +6,9 @@ title: "第6章：パフォーマンス最適化"
 # Chapter 6: パフォーマンス最適化（システムの高速化マスター） 🚀
 
 ---
-**📚 目次に戻る**: [📖 学習ガイド](./textbook_index.md)  
-**⬅️ 前の章**: [Chapter 5-3: 本番運用機能](./chapter05-3.md)  
-**➡️ 次の章**: [Chapter 7: セキュリティ強化](./chapter07.md)  
+**📚 目次に戻る**: [📖 学習ガイド]({{ site.baseurl }}/introduction/index.html)  
+**⬅️ 前の章**: [Chapter 5-3: 本番運用機能]({{ site.baseurl }}/chapter05-3.md)  
+**➡️ 次の章**: [Chapter 7: セキュリティ強化]({{ site.baseurl }}/chapters/chapter07/index.html)  
 **🎯 学習フェーズ**: Part III - 実装・運用編（パフォーマンス）  
 **🎯 学習レベル**: 🌱 基礎 | 🚀 応用 | 💪 発展  
 **⏱️ 推定学習時間**: 5-7時間  
@@ -3631,9 +3631,9 @@ Chapter 7では、「**銀行の金庫システム**」並みの堅牢なセキ�
 ---
 
 **📍 ナビゲーション**
-- **📚 目次**: [📖 学習ガイド](./textbook_index.md)
-- **⬅️ 前の章**: [Chapter 5-3: 本番運用機能](./chapter05-3.md)  
-- **➡️ 次の章**: [Chapter 7: セキュリティ強化](./chapter07.md)
-- **🏠 関連章**: [Chapter 5: 独立API サーバー](./chapter05-1.md) | [Chapter 8: 運用監視](./chapter08.md)
-- **🔧 リソース**: [動作検証](./src/) | [パフォーマンス・チェックリスト](./operational_checklists.md)
+- **📚 目次**: [📖 学習ガイド]({{ site.baseurl }}/introduction/index.html)
+- **⬅️ 前の章**: [Chapter 5-3: 本番運用機能]({{ site.baseurl }}/chapter05-3.md)  
+- **➡️ 次の章**: [Chapter 7: セキュリティ強化]({{ site.baseurl }}/chapters/chapter07/index.html)
+- **🏠 関連章**: [Chapter 5: 独立API サーバー]({{ site.baseurl }}/chapter05-1.md) | [Chapter 8: 運用監視]({{ site.baseurl }}/chapters/chapter08/index.html)
+- **🔧 リソース**: [動作検証]({{ site.baseurl }}/src/) | [パフォーマンス・チェックリスト]({{ site.baseurl }}/operational_checklists.md)
 
