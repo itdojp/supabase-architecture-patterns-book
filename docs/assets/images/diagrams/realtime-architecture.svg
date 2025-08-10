@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="900" height="700" viewBox="0 0 900 700" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .title { font-family: 'Noto Sans JP', sans-serif; font-size: 20px; font-weight: bold; fill: #2c3e50; }
+      .component-title { font-family: 'Noto Sans JP', sans-serif; font-size: 14px; font-weight: bold; fill: #fff; }
+      .feature-title { font-family: 'Noto Sans JP', sans-serif; font-size: 12px; font-weight: bold; fill: #2c3e50; }
+      .text-content { font-family: 'Noto Sans JP', sans-serif; font-size: 11px; fill: #2c3e50; }
+      .small-text { font-family: 'Noto Sans JP', sans-serif; font-size: 10px; fill: #7f8c8d; }
+      .code-text { font-family: 'Courier New', monospace; font-size: 10px; fill: #2c3e50; }
+      .client-box { fill: #3498db; stroke: #2980b9; stroke-width: 2; }
+      .server-box { fill: #e74c3c; stroke: #c0392b; stroke-width: 2; }
+      .channel-box { fill: #2ecc71; stroke: #27ae60; stroke-width: 2; }
+      .database-box { fill: #f39c12; stroke: #e67e22; stroke-width: 2; }
+      .presence-box { fill: #9b59b6; stroke: #8e44ad; stroke-width: 2; }
+      .broadcast-box { fill: #1abc9c; stroke: #16a085; stroke-width: 2; }
+      .component { fill: #fff; stroke: #95a5a6; stroke-width: 1; }
+      .websocket-line { stroke: #34495e; stroke-width: 2; stroke-dasharray: 5,3; fill: none; }
+      .data-flow { stroke: #3498db; stroke-width: 2; fill: none; marker-end: url(#arrowhead-blue); }
+      .event-flow { stroke: #e74c3c; stroke-width: 2; fill: none; marker-end: url(#arrowhead-red); }
+    </style>
+    <marker id="arrowhead-blue" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#3498db"/>
+    </marker>
+    <marker id="arrowhead-red" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#e74c3c"/>
+    </marker>
+  </defs>
+
+  <!-- Title -->
+  <text x="450" y="30" class="title" text-anchor="middle">Supabase Realtimeアーキテクチャ</text>
+
+  <!-- Client Applications -->
+  <g id="clients">
+    <text x="150" y="70" class="feature-title" text-anchor="middle">クライアント</text>
+    
+    <rect x="50" y="90" width="120" height="80" class="client-box" rx="10"/>
+    <text x="110" y="115" class="component-title" text-anchor="middle">Client A</text>
+    <rect x="65" y="125" width="90" height="30" class="component" rx="3"/>
+    <text x="110" y="145" class="small-text" text-anchor="middle">WebSocket</text>
+    
+    <rect x="50" y="190" width="120" height="80" class="client-box" rx="10"/>
+    <text x="110" y="215" class="component-title" text-anchor="middle">Client B</text>
+    <rect x="65" y="225" width="90" height="30" class="component" rx="3"/>
+    <text x="110" y="245" class="small-text" text-anchor="middle">WebSocket</text>
+    
+    <rect x="50" y="290" width="120" height="80" class="client-box" rx="10"/>
+    <text x="110" y="315" class="component-title" text-anchor="middle">Client C</text>
+    <rect x="65" y="325" width="90" height="30" class="component" rx="3"/>
+    <text x="110" y="345" class="small-text" text-anchor="middle">WebSocket</text>
+  </g>
+
+  <!-- Realtime Server -->
+  <g id="realtime-server">
+    <rect x="250" y="150" width="200" height="160" class="server-box" rx="10"/>
+    <text x="350" y="175" class="component-title" text-anchor="middle">Realtime Server</text>
+    <text x="350" y="195" class="component-title" text-anchor="middle">(Phoenix/Elixir)</text>
+    
+    <rect x="270" y="210" width="160" height="30" class="component" rx="3"/>
+    <text x="350" y="230" class="text-content" text-anchor="middle">Connection Manager</text>
+    
+    <rect x="270" y="250" width="75" height="30" class="component" rx="3"/>
+    <text x="307" y="270" class="small-text" text-anchor="middle">Auth</text>
+    
+    <rect x="355" y="250" width="75" height="30" class="component" rx="3"/>
+    <text x="392" y="270" class="small-text" text-anchor="middle">Router</text>
+  </g>
+
+  <!-- Channel Types -->
+  <g id="channels">
+    <text x="600" y="70" class="feature-title" text-anchor="middle">チャンネルタイプ</text>
+    
+    <!-- Broadcast Channel -->
+    <rect x="520" y="90" width="160" height="100" class="broadcast-box" rx="10"/>
+    <text x="600" y="115" class="component-title" text-anchor="middle">Broadcast</text>
+    <rect x="535" y="125" width="130" height="25" class="component" rx="3"/>
+    <text x="600" y="142" class="text-content" text-anchor="middle">任意メッセージ</text>
+    <rect x="535" y="155" width="130" height="25" class="component" rx="3"/>
+    <text x="600" y="172" class="text-content" text-anchor="middle">低レイテンシ</text>
+    
+    <!-- Presence Channel -->
+    <rect x="520" y="210" width="160" height="100" class="presence-box" rx="10"/>
+    <text x="600" y="235" class="component-title" text-anchor="middle">Presence</text>
+    <rect x="535" y="245" width="130" height="25" class="component" rx="3"/>
+    <text x="600" y="262" class="text-content" text-anchor="middle">オンライン状態</text>
+    <rect x="535" y="275" width="130" height="25" class="component" rx="3"/>
+    <text x="600" y="292" class="text-content" text-anchor="middle">ユーザー追跡</text>
+    
+    <!-- DB Changes Channel -->
+    <rect x="520" y="330" width="160" height="100" class="channel-box" rx="10"/>
+    <text x="600" y="355" class="component-title" text-anchor="middle">DB Changes</text>
+    <rect x="535" y="365" width="130" height="25" class="component" rx="3"/>
+    <text x="600" y="382" class="text-content" text-anchor="middle">INSERT/UPDATE</text>
+    <rect x="535" y="395" width="130" height="25" class="component" rx="3"/>
+    <text x="600" y="412" class="text-content" text-anchor="middle">DELETE</text>
+  </g>
+
+  <!-- PostgreSQL Database -->
+  <g id="database">
+    <rect x="720" y="200" width="140" height="140" class="database-box" rx="10"/>
+    <text x="790" y="225" class="component-title" text-anchor="middle">PostgreSQL</text>
+    
+    <rect x="735" y="240" width="110" height="30" class="component" rx="3"/>
+    <text x="790" y="260" class="text-content" text-anchor="middle">WAL</text>
+    
+    <rect x="735" y="280" width="110" height="30" class="component" rx="3"/>
+    <text x="790" y="300" class="text-content" text-anchor="middle">Replication</text>
+    
+    <text x="790" y="330" class="small-text" text-anchor="middle">Publication</text>
+  </g>
+
+  <!-- Connection lines -->
+  <path d="M 170 130 L 250 180" class="websocket-line"/>
+  <path d="M 170 230 L 250 230" class="websocket-line"/>
+  <path d="M 170 330 L 250 280" class="websocket-line"/>
+  
+  <path d="M 450 230 L 520 140" class="data-flow"/>
+  <path d="M 450 230 L 520 260" class="data-flow"/>
+  <path d="M 450 230 L 520 380" class="data-flow"/>
+  
+  <path d="M 680 380 L 720 270" class="event-flow"/>
+  <text x="700" y="325" class="small-text" transform="rotate(-45 700 325)">CDC</text>
+
+  <!-- Flow Description -->
+  <g id="flow-description">
+    <rect x="50" y="400" width="800" height="200" fill="#f8f9fa" stroke="#dee2e6" stroke-width="1" rx="5"/>
+    <text x="450" y="425" class="feature-title" text-anchor="middle">リアルタイム通信フロー</text>
+    
+    <!-- Subscribe Example -->
+    <rect x="70" y="440" width="360" height="140" fill="#e6f3ff" stroke="#3498db" stroke-width="1" rx="3"/>
+    <text x="250" y="460" class="text-content" text-anchor="middle" font-weight="bold">購読 (Subscribe)</text>
+    <text x="80" y="480" class="code-text">const channel = supabase.channel('room:123')</text>
+    <text x="80" y="500" class="code-text">channel</text>
+    <text x="80" y="515" class="code-text">  .on('broadcast', { event: 'message' },</text>
+    <text x="80" y="530" class="code-text">    payload => console.log(payload))</text>
+    <text x="80" y="545" class="code-text">  .on('presence', { event: 'sync' },</text>
+    <text x="80" y="560" class="code-text">    () => console.log(channel.presenceState()))</text>
+    <text x="80" y="575" class="code-text">  .subscribe()</text>
+    
+    <!-- Broadcast Example -->
+    <rect x="460" y="440" width="360" height="140" fill="#e6ffe6" stroke="#2ecc71" stroke-width="1" rx="3"/>
+    <text x="640" y="460" class="text-content" text-anchor="middle" font-weight="bold">送信 (Broadcast)</text>
+    <text x="470" y="480" class="code-text">// メッセージ送信</text>
+    <text x="470" y="500" class="code-text">channel.send({</text>
+    <text x="470" y="515" class="code-text">  type: 'broadcast',</text>
+    <text x="470" y="530" class="code-text">  event: 'message',</text>
+    <text x="470" y="545" class="code-text">  payload: { text: 'Hello!' }</text>
+    <text x="470" y="560" class="code-text">})</text>
+  </g>
+
+  <!-- Features -->
+  <g id="features">
+    <rect x="50" y="620" width="800" height="60" fill="#fff3cd" stroke="#ffc107" stroke-width="1" rx="5"/>
+    <text x="450" y="645" class="feature-title" text-anchor="middle">主要機能</text>
+    <text x="100" y="665" class="text-content">• WebSocket通信</text>
+    <text x="250" y="665" class="text-content">• 自動再接続</text>
+    <text x="380" y="665" class="text-content">• 認証統合</text>
+    <text x="500" y="665" class="text-content">• RLS連携</text>
+    <text x="620" y="665" class="text-content">• 水平スケール</text>
+    <text x="750" y="665" class="text-content">• 低レイテンシ</text>
+  </g>
+</svg>

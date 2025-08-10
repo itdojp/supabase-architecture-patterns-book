@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="900" height="700" viewBox="0 0 900 700" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .title { font-family: 'Noto Sans JP', sans-serif; font-size: 20px; font-weight: bold; fill: #2c3e50; }
+      .section-title { font-family: 'Noto Sans JP', sans-serif; font-size: 14px; font-weight: bold; fill: #2c3e50; }
+      .policy-title { font-family: 'Noto Sans JP', sans-serif; font-size: 12px; font-weight: bold; fill: #fff; }
+      .text-content { font-family: 'Noto Sans JP', sans-serif; font-size: 11px; fill: #2c3e50; }
+      .small-text { font-family: 'Noto Sans JP', sans-serif; font-size: 10px; fill: #7f8c8d; }
+      .code-text { font-family: 'Courier New', monospace; font-size: 9px; fill: #2c3e50; }
+      .user-box { fill: #3498db; stroke: #2980b9; stroke-width: 2; }
+      .rls-box { fill: #e74c3c; stroke: #c0392b; stroke-width: 2; }
+      .table-box { fill: #f39c12; stroke: #e67e22; stroke-width: 2; }
+      .policy-box { fill: #2ecc71; stroke: #27ae60; stroke-width: 2; }
+      .denied-box { fill: #95a5a6; stroke: #7f8c8d; stroke-width: 2; opacity: 0.5; }
+      .component { fill: #fff; stroke: #95a5a6; stroke-width: 1; }
+      .allow-arrow { stroke: #27ae60; stroke-width: 2; fill: none; marker-end: url(#arrowhead-green); }
+      .deny-arrow { stroke: #c0392b; stroke-width: 2; fill: none; marker-end: url(#arrowhead-red); stroke-dasharray: 5,3; }
+      .flow-arrow { stroke: #34495e; stroke-width: 2; fill: none; marker-end: url(#arrowhead); }
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#34495e"/>
+    </marker>
+    <marker id="arrowhead-green" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#27ae60"/>
+    </marker>
+    <marker id="arrowhead-red" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#c0392b"/>
+    </marker>
+  </defs>
+
+  <!-- Title -->
+  <text x="450" y="30" class="title" text-anchor="middle">Row Level Security (RLS) アーキテクチャ</text>
+
+  <!-- RLS Flow -->
+  <g id="rls-flow">
+    <text x="450" y="70" class="section-title" text-anchor="middle">RLSによるアクセス制御フロー</text>
+    
+    <!-- User Request -->
+    <rect x="50" y="90" width="140" height="100" class="user-box" rx="10"/>
+    <text x="120" y="115" class="policy-title" text-anchor="middle">ユーザー</text>
+    <rect x="65" y="125" width="110" height="25" class="component" rx="3"/>
+    <text x="120" y="142" class="text-content" text-anchor="middle">認証済み</text>
+    <rect x="65" y="155" width="110" height="25" class="component" rx="3"/>
+    <text x="120" y="172" class="text-content" text-anchor="middle">JWT Token</text>
+    
+    <!-- RLS Check -->
+    <rect x="250" y="90" width="200" height="100" class="rls-box" rx="10"/>
+    <text x="350" y="115" class="policy-title" text-anchor="middle">RLS エンジン</text>
+    <rect x="270" y="125" width="160" height="25" class="component" rx="3"/>
+    <text x="350" y="142" class="text-content" text-anchor="middle">ポリシーチェック</text>
+    <rect x="270" y="155" width="160" height="25" class="component" rx="3"/>
+    <text x="350" y="172" class="text-content" text-anchor="middle">権限評価</text>
+    
+    <!-- Database Table -->
+    <rect x="510" y="90" width="160" height="100" class="table-box" rx="10"/>
+    <text x="590" y="115" class="policy-title" text-anchor="middle">データベース</text>
+    <rect x="525" y="125" width="130" height="25" class="component" rx="3"/>
+    <text x="590" y="142" class="text-content" text-anchor="middle">テーブル</text>
+    <rect x="525" y="155" width="130" height="25" class="component" rx="3"/>
+    <text x="590" y="172" class="text-content" text-anchor="middle">行データ</text>
+    
+    <!-- Result -->
+    <rect x="730" y="90" width="120" height="100" class="policy-box" rx="10"/>
+    <text x="790" y="115" class="policy-title" text-anchor="middle">結果</text>
+    <rect x="745" y="125" width="90" height="25" class="component" rx="3"/>
+    <text x="790" y="142" class="text-content" text-anchor="middle">許可</text>
+    <rect x="745" y="155" width="90" height="25" class="denied-box" rx="3"/>
+    <text x="790" y="172" class="text-content" text-anchor="middle">拒否</text>
+    
+    <!-- Flow arrows -->
+    <path d="M 190 140 L 250 140" class="flow-arrow"/>
+    <path d="M 450 140 L 510 140" class="flow-arrow"/>
+    <path d="M 670 140 L 730 140" class="allow-arrow"/>
+    <path d="M 670 170 L 730 170" class="deny-arrow"/>
+  </g>
+
+  <!-- Policy Types -->
+  <g id="policy-types">
+    <rect x="50" y="220" width="800" height="180" fill="#f8f9fa" stroke="#dee2e6" stroke-width="1" rx="5"/>
+    <text x="450" y="245" class="section-title" text-anchor="middle">RLSポリシータイプ</text>
+    
+    <!-- SELECT Policy -->
+    <rect x="70" y="260" width="180" height="120" fill="#e6f3ff" stroke="#3498db" stroke-width="1" rx="3"/>
+    <text x="160" y="280" class="text-content" text-anchor="middle" font-weight="bold">SELECT ポリシー</text>
+    <text x="80" y="300" class="code-text">CREATE POLICY "読み取り"</text>
+    <text x="80" y="315" class="code-text">ON posts FOR SELECT</text>
+    <text x="80" y="330" class="code-text">USING (</text>
+    <text x="80" y="345" class="code-text">  auth.uid() = user_id</text>
+    <text x="80" y="360" class="code-text">  OR is_public = true</text>
+    <text x="80" y="375" class="code-text">);</text>
+    
+    <!-- INSERT Policy -->
+    <rect x="270" y="260" width="180" height="120" fill="#e6ffe6" stroke="#2ecc71" stroke-width="1" rx="3"/>
+    <text x="360" y="280" class="text-content" text-anchor="middle" font-weight="bold">INSERT ポリシー</text>
+    <text x="280" y="300" class="code-text">CREATE POLICY "作成"</text>
+    <text x="280" y="315" class="code-text">ON posts FOR INSERT</text>
+    <text x="280" y="330" class="code-text">WITH CHECK (</text>
+    <text x="280" y="345" class="code-text">  auth.uid() = user_id</text>
+    <text x="280" y="360" class="code-text">);</text>
+    
+    <!-- UPDATE Policy -->
+    <rect x="470" y="260" width="180" height="120" fill="#fff3cd" stroke="#f39c12" stroke-width="1" rx="3"/>
+    <text x="560" y="280" class="text-content" text-anchor="middle" font-weight="bold">UPDATE ポリシー</text>
+    <text x="480" y="300" class="code-text">CREATE POLICY "更新"</text>
+    <text x="480" y="315" class="code-text">ON posts FOR UPDATE</text>
+    <text x="480" y="330" class="code-text">USING (auth.uid()=user_id)</text>
+    <text x="480" y="345" class="code-text">WITH CHECK (</text>
+    <text x="480" y="360" class="code-text">  auth.uid() = user_id</text>
+    <text x="480" y="375" class="code-text">);</text>
+    
+    <!-- DELETE Policy -->
+    <rect x="670" y="260" width="160" height="120" fill="#ffe6e6" stroke="#e74c3c" stroke-width="1" rx="3"/>
+    <text x="750" y="280" class="text-content" text-anchor="middle" font-weight="bold">DELETE ポリシー</text>
+    <text x="680" y="300" class="code-text">CREATE POLICY "削除"</text>
+    <text x="680" y="315" class="code-text">ON posts FOR DELETE</text>
+    <text x="680" y="330" class="code-text">USING (</text>
+    <text x="680" y="345" class="code-text">  auth.uid() = user_id</text>
+    <text x="680" y="360" class="code-text">);</text>
+  </g>
+
+  <!-- Security Layers -->
+  <g id="security-layers">
+    <text x="450" y="430" class="section-title" text-anchor="middle">多層防御アーキテクチャ</text>
+    
+    <!-- Layer 1: API -->
+    <rect x="100" y="450" width="700" height="50" fill="#3498db" opacity="0.3" rx="5"/>
+    <text x="120" y="480" class="text-content" font-weight="bold">Layer 1: API Gateway</text>
+    <text x="300" y="480" class="small-text">• Rate Limiting</text>
+    <text x="450" y="480" class="small-text">• API Key認証</text>
+    <text x="600" y="480" class="small-text">• CORS設定</text>
+    
+    <!-- Layer 2: Auth -->
+    <rect x="150" y="510" width="600" height="50" fill="#e74c3c" opacity="0.3" rx="5"/>
+    <text x="170" y="540" class="text-content" font-weight="bold">Layer 2: Authentication</text>
+    <text x="350" y="540" class="small-text">• JWT検証</text>
+    <text x="480" y="540" class="small-text">• MFA</text>
+    <text x="600" y="540" class="small-text">• Session管理</text>
+    
+    <!-- Layer 3: RLS -->
+    <rect x="200" y="570" width="500" height="50" fill="#2ecc71" opacity="0.3" rx="5"/>
+    <text x="220" y="600" class="text-content" font-weight="bold">Layer 3: Row Level Security</text>
+    <text x="400" y="600" class="small-text">• 行レベル制御</text>
+    <text x="550" y="600" class="small-text">• 動的ポリシー</text>
+    
+    <!-- Layer 4: Column -->
+    <rect x="250" y="630" width="400" height="50" fill="#f39c12" opacity="0.3" rx="5"/>
+    <text x="270" y="660" class="text-content" font-weight="bold">Layer 4: Column Security</text>
+    <text x="450" y="660" class="small-text">• 列レベル権限</text>
+    <text x="570" y="660" class="small-text">• 暗号化</text>
+  </g>
+</svg>
