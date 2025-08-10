@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="800" height="600" viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
+  <title>Supabaseアーキテクチャパターン比較</title>
+  <desc>クライアントサイド、Edge Functions、APIサーバーの比較と適用シナリオ</desc>
+  <defs>
+    <style>
+      :root {
+        --svg-bg: #ffffff;
+        --svg-text: #1a1a1a;
+        --svg-primary: #0066cc;
+        --svg-success: #16a34a;
+        --svg-warning: #ca8a04;
+        --svg-error: #dc2626;
+        --svg-neutral: #6b7280;
+      }
+      .title-text { font-family: Inter, 'Helvetica Neue', Arial, sans-serif; font-size: 16px; font-weight: 600; fill: var(--svg-text); }
+      .pattern-title { font-family: Inter, 'Helvetica Neue', Arial, sans-serif; font-size: 12px; font-weight: 500; fill: var(--svg-bg); }
+      .metric-text { font-family: Inter, 'Helvetica Neue', Arial, sans-serif; font-size: 12px; font-weight: 400; fill: var(--svg-text); }
+      .annotation-text { font-family: Inter, 'Helvetica Neue', Arial, sans-serif; font-size: 10px; font-weight: 400; fill: var(--svg-neutral); }
+      .client-pattern { fill: var(--svg-primary); stroke: var(--svg-primary); stroke-width: 2; }
+      .edge-pattern { fill: var(--svg-warning); stroke: var(--svg-warning); stroke-width: 2; }
+      .server-pattern { fill: var(--svg-success); stroke: var(--svg-success); stroke-width: 2; }
+      .score-high { fill: var(--svg-success); fill-opacity: 0.3; }
+      .score-medium { fill: var(--svg-warning); fill-opacity: 0.3; }
+      .score-low { fill: var(--svg-error); fill-opacity: 0.3; }
+    </style>
+  </defs>
+
+  <!-- Title -->
+  <text x="400" y="30" class="title-text" text-anchor="middle">Supabaseアーキテクチャパターン比較</text>
+
+  <!-- Client-Side Pattern -->
+  <g id="client-side-pattern">
+    <rect x="60" y="60" width="220" height="200" class="client-pattern" rx="4"/>
+    <text x="170" y="80" class="pattern-title" text-anchor="middle">クライアントサイド直接接続</text>
+    
+    <!-- Architecture Diagram -->
+    <rect x="80" y="90" width="180" height="80" fill="var(--svg-bg)" stroke="var(--svg-primary)" stroke-width="1" rx="4"/>
+    <text x="170" y="110" class="metric-text" text-anchor="middle" font-weight="500">アーキテクチャ</text>
+    <text x="90" y="125" class="annotation-text">Browser/Mobile App</text>
+    <text x="130" y="140" class="annotation-text">↓ 直接接続</text>
+    <text x="90" y="155" class="annotation-text">Supabase Database</text>
+    <text x="90" y="165" class="annotation-text">(RLS有効)</text>
+    
+    <!-- Characteristics -->
+    <rect x="80" y="180" width="180" height="70" fill="var(--svg-bg)" stroke="var(--svg-primary)" stroke-width="1" rx="4"/>
+    <text x="170" y="195" class="metric-text" text-anchor="middle" font-weight="500">特徴</text>
+    <text x="90" y="210" class="annotation-text">✓ 実装が簡単</text>
+    <text x="90" y="225" class="annotation-text">✓ リアルタイム対応</text>
+    <text x="90" y="240" class="annotation-text">✗ ビジネスロジック制限</text>
+  </g>
+
+  <!-- Edge Functions Pattern -->
+  <g id="edge-functions-pattern">
+    <rect x="290" y="60" width="220" height="200" class="edge-pattern" rx="4"/>
+    <text x="400" y="80" class="pattern-title" text-anchor="middle">Edge Functions パターン</text>
+    
+    <!-- Architecture Diagram -->
+    <rect x="310" y="90" width="180" height="80" fill="var(--svg-bg)" stroke="var(--svg-warning)" stroke-width="1" rx="4"/>
+    <text x="400" y="110" class="metric-text" text-anchor="middle" font-weight="500">アーキテクチャ</text>
+    <text x="320" y="125" class="annotation-text">Browser/Mobile App</text>
+    <text x="360" y="140" class="annotation-text">↓ API呼出</text>
+    <text x="320" y="155" class="annotation-text">Edge Functions (Deno)</text>
+    <text x="320" y="165" class="annotation-text">→ Supabase DB</text>
+    
+    <!-- Characteristics -->
+    <rect x="310" y="180" width="180" height="70" fill="var(--svg-bg)" stroke="var(--svg-warning)" stroke-width="1" rx="4"/>
+    <text x="400" y="195" class="metric-text" text-anchor="middle" font-weight="500">特徴</text>
+    <text x="320" y="210" class="annotation-text">✓ サーバーレス</text>
+    <text x="320" y="225" class="annotation-text">✓ 低レイテンシ</text>
+    <text x="320" y="240" class="annotation-text">✓ カスタムロジック</text>
+  </g>
+
+  <!-- API Server Pattern -->
+  <g id="api-server-pattern">
+    <rect x="520" y="60" width="220" height="200" class="server-pattern" rx="4"/>
+    <text x="630" y="80" class="pattern-title" text-anchor="middle">APIサーバー パターン</text>
+    
+    <!-- Architecture Diagram -->
+    <rect x="540" y="90" width="180" height="80" fill="var(--svg-bg)" stroke="var(--svg-success)" stroke-width="1" rx="4"/>
+    <text x="630" y="110" class="metric-text" text-anchor="middle" font-weight="500">アーキテクチャ</text>
+    <text x="550" y="125" class="annotation-text">Browser/Mobile App</text>
+    <text x="590" y="140" class="annotation-text">↓ REST/GraphQL</text>
+    <text x="550" y="155" class="annotation-text">Backend Server</text>
+    <text x="550" y="165" class="annotation-text">→ Supabase Client</text>
+    
+    <!-- Characteristics -->
+    <rect x="540" y="180" width="180" height="70" fill="var(--svg-bg)" stroke="var(--svg-success)" stroke-width="1" rx="4"/>
+    <text x="630" y="195" class="metric-text" text-anchor="middle" font-weight="500">特徴</text>
+    <text x="550" y="210" class="annotation-text">✓ 完全な制御</text>
+    <text x="550" y="225" class="annotation-text">✓ 複雑なロジック対応</text>
+    <text x="550" y="240" class="annotation-text">✗ インフラ管理必要</text>
+  </g>
+
+  <!-- Performance Comparison -->
+  <g id="performance-comparison">
+    <rect x="60" y="280" width="680" height="140" fill="var(--svg-neutral)" fill-opacity="0.05" stroke="var(--svg-text)" stroke-width="2" rx="4"/>
+    <text x="400" y="300" class="metric-text" text-anchor="middle" font-weight="500">パフォーマンス比較</text>
+    
+    <!-- Metrics Table Headers -->
+    <text x="120" y="320" class="metric-text" font-weight="500">評価項目</text>
+    <text x="300" y="320" class="metric-text" text-anchor="middle">クライアント</text>
+    <text x="450" y="320" class="metric-text" text-anchor="middle">Edge Functions</text>
+    <text x="600" y="320" class="metric-text" text-anchor="middle">APIサーバー</text>
+    
+    <!-- Latency -->
+    <text x="120" y="340" class="annotation-text">レイテンシ</text>
+    <rect x="260" y="330" width="80" height="15" class="score-high" rx="2"/>
+    <text x="300" y="341" class="annotation-text" text-anchor="middle">低 (直接)</text>
+    <rect x="410" y="330" width="80" height="15" class="score-high" rx="2"/>
+    <text x="450" y="341" class="annotation-text" text-anchor="middle">低 (Edge)</text>
+    <rect x="560" y="330" width="80" height="15" class="score-medium" rx="2"/>
+    <text x="600" y="341" class="annotation-text" text-anchor="middle">中</text>
+    
+    <!-- Scalability -->
+    <text x="120" y="360" class="annotation-text">スケーラビリティ</text>
+    <rect x="260" y="350" width="80" height="15" class="score-medium" rx="2"/>
+    <text x="300" y="361" class="annotation-text" text-anchor="middle">中</text>
+    <rect x="410" y="350" width="80" height="15" class="score-high" rx="2"/>
+    <text x="450" y="361" class="annotation-text" text-anchor="middle">高 (自動)</text>
+    <rect x="560" y="350" width="80" height="15" class="score-high" rx="2"/>
+    <text x="600" y="361" class="annotation-text" text-anchor="middle">高</text>
+    
+    <!-- Security -->
+    <text x="120" y="380" class="annotation-text">セキュリティ</text>
+    <rect x="260" y="370" width="80" height="15" class="score-medium" rx="2"/>
+    <text x="300" y="381" class="annotation-text" text-anchor="middle">中 (RLS依存)</text>
+    <rect x="410" y="370" width="80" height="15" class="score-high" rx="2"/>
+    <text x="450" y="381" class="annotation-text" text-anchor="middle">高</text>
+    <rect x="560" y="370" width="80" height="15" class="score-high" rx="2"/>
+    <text x="600" y="381" class="annotation-text" text-anchor="middle">高</text>
+    
+    <!-- Complexity -->
+    <text x="120" y="400" class="annotation-text">実装複雑度</text>
+    <rect x="260" y="390" width="80" height="15" class="score-high" rx="2"/>
+    <text x="300" y="401" class="annotation-text" text-anchor="middle">低</text>
+    <rect x="410" y="390" width="80" height="15" class="score-medium" rx="2"/>
+    <text x="450" y="401" class="annotation-text" text-anchor="middle">中</text>
+    <rect x="560" y="390" width="80" height="15" class="score-low" rx="2"/>
+    <text x="600" y="401" class="annotation-text" text-anchor="middle">高</text>
+  </g>
+
+  <!-- Use Case Recommendations -->
+  <g id="use-cases">
+    <rect x="60" y="440" width="680" height="140" fill="var(--svg-primary)" fill-opacity="0.05" stroke="var(--svg-primary)" stroke-width="2" rx="4"/>
+    <text x="400" y="460" class="metric-text" text-anchor="middle" font-weight="500">推奨ユースケース</text>
+    
+    <!-- Client-Side Use Cases -->
+    <rect x="80" y="470" width="200" height="90" fill="var(--svg-bg)" stroke="var(--svg-primary)" stroke-width="1" rx="4"/>
+    <text x="180" y="490" class="metric-text" text-anchor="middle" font-weight="500">クライアントサイド</text>
+    <text x="90" y="505" class="annotation-text">• MVP/プロトタイプ</text>
+    <text x="90" y="520" class="annotation-text">• リアルタイムチャット</text>
+    <text x="90" y="535" class="annotation-text">• シンプルなCRUD</text>
+    <text x="90" y="550" class="annotation-text">• 個人プロジェクト</text>
+    
+    <!-- Edge Functions Use Cases -->
+    <rect x="300" y="470" width="200" height="90" fill="var(--svg-bg)" stroke="var(--svg-warning)" stroke-width="1" rx="4"/>
+    <text x="400" y="490" class="metric-text" text-anchor="middle" font-weight="500">Edge Functions</text>
+    <text x="310" y="505" class="annotation-text">• Webhook処理</text>
+    <text x="310" y="520" class="annotation-text">• 外部API統合</text>
+    <text x="310" y="535" class="annotation-text">• 軽量なビジネスロジック</text>
+    <text x="310" y="550" class="annotation-text">• イメージ処理</text>
+    
+    <!-- API Server Use Cases -->
+    <rect x="520" y="470" width="200" height="90" fill="var(--svg-bg)" stroke="var(--svg-success)" stroke-width="1" rx="4"/>
+    <text x="620" y="490" class="metric-text" text-anchor="middle" font-weight="500">APIサーバー</text>
+    <text x="530" y="505" class="annotation-text">• エンタープライズアプリ</text>
+    <text x="530" y="520" class="annotation-text">• 複雑なビジネスロジック</text>
+    <text x="530" y="535" class="annotation-text">• マイクロサービス</text>
+    <text x="530" y="550" class="annotation-text">• レガシーシステム統合</text>
+  </g>
+</svg>
