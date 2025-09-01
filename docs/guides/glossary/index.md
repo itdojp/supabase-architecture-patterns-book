@@ -6,7 +6,7 @@ title: "用語辞典"
 # 技術用語索引・用語集 📚
 
 ---
-**📚 目次に戻る**: [📖 学習ガイド]({{ site.baseurl }}/introduction/index.html)  
+**📚 目次に戻る**: [📖 学習ガイド]({{ '/introduction/' | relative_url }})  
 **🎯 用途**: 学習中の技術用語の即座な確認・復習  
 **📝 対象**: 全レベル（基礎〜上級）  
 **⏱️ 利用方法**: 不明な用語が出てきた時に参照  
@@ -59,14 +59,14 @@ title: "用語辞典"
 - **定義**: 「あなたは誰ですか？」を確認する仕組み
 - **Supabaseでの実装**: Supabase Auth + JWT
 - **実用例**: ログイン・パスワード確認
-- **参照章**: [Chapter 2: 認証・認可設計]({{ site.baseurl }}/chapters/chapter02/index.html)
+- **参照章**: [Chapter 2: 認証・認可設計]({{ '/chapters/chapter02/' | relative_url }})
 
 #### **Authorization（認可）**
 `#auth` `#security`
 - **定義**: 「何をする権限がありますか？」を制御する仕組み
 - **Supabaseでの実装**: RLS（Row Level Security）
 - **実用例**: 管理者のみが削除可能
-- **参照章**: [Chapter 2: 認証・認可設計]({{ site.baseurl }}/chapters/chapter02/index.html)
+- **参照章**: [Chapter 2: 認証・認可設計]({{ '/chapters/chapter02/' | relative_url }})
 
 ### B
 
@@ -75,7 +75,7 @@ title: "用語辞典"
 - **定義**: バックエンド機能をクラウドサービスとして提供する形態
 - **Supabaseでの位置づけ**: オープンソースBaaS
 - **実用例**: データベース・認証・ストレージを統合提供
-- **参照章**: [Chapter 1: Supabase概要]({{ site.baseurl }}/chapters/chapter01/index.html)
+- **参照章**: [Chapter 1: Supabase概要]({{ '/chapters/chapter01/' | relative_url }})
 
 ### C
 
@@ -84,14 +84,14 @@ title: "用語辞典"
 - **定義**: Create（作成）・Read（読み取り）・Update（更新）・Delete（削除）の4つの基本操作
 - **Supabaseでの実装**: PostgRESTが自動でCRUD APIを生成
 - **実用例**: ブログ記事の作成・表示・編集・削除
-- **参照章**: [Chapter 3: クライアントサイド実装]({{ site.baseurl }}/chapters/chapter03/index.html)
+- **参照章**: [Chapter 3: クライアントサイド実装]({{ '/chapters/chapter03/' | relative_url }})
 
 #### **CI/CD**
 `#deployment` `#automation`
 - **定義**: 継続的インテグレーション・継続的デプロイメント
 - **Supabaseでの実装**: GitHub Actions + Supabase CLI
 - **実用例**: コード変更の自動テスト・自動デプロイ
-- **参照章**: [Chapter 5-3: 本番運用]({{ site.baseurl }}/chapter05-3.md)
+- **参照章**: [Chapter 5-3: 本番運用]({{ '/chapter05-3.html' | relative_url }})
 
 ### D
 
@@ -100,7 +100,7 @@ title: "用語辞典"
 - **定義**: TypeScript/JavaScriptのモダンなランタイム環境
 - **Supabaseでの実装**: Edge Functions実行環境
 - **実用例**: サーバーレス関数の実行
-- **参照章**: [Chapter 4: Edge Functions]({{ site.baseurl }}/chapters/chapter04/index.html)
+- **参照章**: [Chapter 4: Edge Functions]({{ '/chapters/chapter04/' | relative_url }})
 
 #### **Docker**
 `#containerization` `#deployment`
@@ -116,7 +116,7 @@ title: "用語辞典"
 - **定義**: CDNエッジで実行されるサーバーレス関数
 - **Supabaseでの実装**: Deno Runtime上で動作
 - **実用例**: 決済処理・メール送信・複雑な計算
-- **参照章**: [Chapter 4: Edge Functions活用]({{ site.baseurl }}/chapters/chapter04/index.html)
+- **参照章**: [Chapter 4: Edge Functions活用]({{ '/chapters/chapter04/' | relative_url }})
 
 ### F
 
@@ -125,14 +125,14 @@ title: "用語辞典"
 - **定義**: Python製の高性能Webフレームワーク
 - **Supabaseでの組み合わせ**: 独立APIサーバーパターン
 - **実用例**: 複雑なビジネスロジック・エンタープライズAPI
-- **参照章**: [Chapter 5: 独立APIサーバー]({{ site.baseurl }}/chapter05-1.md)
+- **参照章**: [Chapter 5: 独立APIサーバー]({{ '/chapter05-1.html' | relative_url }})
 
 #### **Flet**
 `#framework` `#python` `#ui`
 - **定義**: PythonでネイティブUIアプリを作るフレームワーク
 - **Supabaseでの組み合わせ**: クライアントサイドパターン
 - **実用例**: デスクトップアプリ・内部管理ツール
-- **参照章**: [Chapter 3: クライアントサイド実装]({{ site.baseurl }}/chapters/chapter03/index.html)
+- **参照章**: [Chapter 3: クライアントサイド実装]({{ '/chapters/chapter03/' | relative_url }})
 
 ### J
 
@@ -141,7 +141,7 @@ title: "用語辞典"
 - **定義**: 安全な情報交換のためのトークン形式
 - **Supabaseでの実装**: 認証トークン・セッション管理
 - **実用例**: ログイン状態の維持・API認証
-- **参照章**: [Chapter 2: JWT詳細]({{ site.baseurl }}/chapters/chapter02/index.html)
+- **参照章**: [Chapter 2: JWT詳細]({{ '/chapters/chapter02/' | relative_url }})
 
 ### K
 
