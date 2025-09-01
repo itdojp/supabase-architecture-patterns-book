@@ -6,9 +6,9 @@ title: "第1章：Supabaseアーキテクチャ理解"
 # Chapter 1: Supabaseアーキテクチャ理解 🏥
 
 ---
-**📚 目次に戻る**: [📖 学習ガイド]({{ site.baseurl }}/introduction/index.html)  
+**📚 目次に戻る**: [📖 学習ガイド]({{ '/introduction/' | relative_url }})  
 **⬅️ 前の章**: なし（最初の章）  
-**➡️ 次の章**: [Chapter 2: 認証システムの実装]({{ site.baseurl }}/chapters/chapter02/index.html)  
+**➡️ 次の章**: [Chapter 2: 認証システムの実装]({{ '/chapters/chapter02/' | relative_url }})  
 **🎯 学習レベル**: 🌱 基礎 | 🚀 応用 | 💪 発展  
 **⏱️ 推定学習時間**: 3-5時間
 ---
@@ -1098,7 +1098,7 @@ Chapter 2では、「病院のカルテシステム」を例に、以下を学�
 ---
 
 **📍 ナビゲーション**
-- **📚 目次**: [📖 学習ガイド]({{ site.baseurl }}/introduction/index.html)
-- **➡️ 次の章**: [Chapter 2: 認証システムの実装]({{ site.baseurl }}/chapters/chapter02/index.html)  
-- **🏠 関連章**: [Chapter 3-5: アーキテクチャパターン]({{ site.baseurl }}/chapters/chapter03/index.html)
-- **🔧 リソース**: [動作検証]({{ site.baseurl }}/src/) | [トラブルシューティング]({{ site.baseurl }}/troubleshooting_guide.md)
+- **📚 目次**: [📖 学習ガイド]({{ '/introduction/' | relative_url }})
+- **➡️ 次の章**: [Chapter 2: 認証システムの実装]({{ '/chapters/chapter02/' | relative_url }})  
+- **🏠 関連章**: [Chapter 3-5: アーキテクチャパターン]({{ '/chapters/chapter03/' | relative_url }})
+- **🔧 リソース**: [動作検証]({{ site.baseurl }}/src/) | [トラブルシューティング]({{ '/troubleshooting_guide.html' | relative_url }})

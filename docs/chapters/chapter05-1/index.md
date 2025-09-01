@@ -6,9 +6,9 @@ title: "第5-1章：パターン3 - 独立APIサーバー"
 # Chapter 5: パターン3 - 独立APIサーバー 🏗️
 
 ---
-**📚 目次に戻る**: [📖 学習ガイド]({{ site.baseurl }}/introduction/index.html)  
-**⬅️ 前の章**: [Chapter 4: パターン2 - Edge Functions活用]({{ site.baseurl }}/chapters/chapter04/index.html)  
-**➡️ 次の章**: [Chapter 6: パフォーマンス最適化]({{ site.baseurl }}/chapters/chapter06/index.html)  
+**📚 目次に戻る**: [📖 学習ガイド]({{ '/introduction/' | relative_url }})  
+**⬅️ 前の章**: [Chapter 4: パターン2 - Edge Functions活用]({{ '/chapters/chapter04/' | relative_url }})  
+**➡️ 次の章**: [Chapter 6: パフォーマンス最適化]({{ '/chapters/chapter06/' | relative_url }})  
 **🏗️ アーキテクチャ**: 独立APIサーバー（FastAPI + SQLAlchemy）  
 **🎯 学習レベル**: 🌱 基礎 | 🚀 応用 | 💪 発展  
 **⏱️ 推定学習時間**: 6-8時間  
@@ -2270,8 +2270,8 @@ Chapter 5-2以降で学ぶ発展的機能：
 ---
 
 **📍 ナビゲーション**
-- **📚 目次**: [📖 学習ガイド]({{ site.baseurl }}/introduction/index.html)
-- **⬅️ 前の章**: [Chapter 4: Edge Functions活用]({{ site.baseurl }}/chapters/chapter04/index.html)  
-- **➡️ 続き**: [Chapter 5-2: マルチテナント実装]({{ site.baseurl }}/chapter05-2.md)
-- **🏠 関連章**: [Chapter 1: Supabase基礎]({{ site.baseurl }}/chapters/chapter01/index.html) | [Chapter 6: パフォーマンス]({{ site.baseurl }}/chapters/chapter06/index.html)
-- **🔧 リソース**: [動作検証]({{ site.baseurl }}/src/) | [トラブルシューティング]({{ site.baseurl }}/troubleshooting_guide.md)
+- **📚 目次**: [📖 学習ガイド]({{ '/introduction/' | relative_url }})
+- **⬅️ 前の章**: [Chapter 4: Edge Functions活用]({{ '/chapters/chapter04/' | relative_url }})  
+- **➡️ 続き**: [Chapter 5-2: マルチテナント実装]({{ '/chapter05-2.html' | relative_url }})
+- **🏠 関連章**: [Chapter 1: Supabase基礎]({{ '/chapters/chapter01/' | relative_url }}) | [Chapter 6: パフォーマンス]({{ '/chapters/chapter06/' | relative_url }})
+- **🔧 リソース**: [動作検証]({{ site.baseurl }}/src/) | [トラブルシューティング]({{ '/troubleshooting_guide.html' | relative_url }})

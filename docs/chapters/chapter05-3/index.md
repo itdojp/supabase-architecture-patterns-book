@@ -6,9 +6,9 @@ title: "第5-3章：拡張性設計とパフォーマンス最適化"
 # Chapter 5-3: 拡張性設計とパフォーマンス最適化 📈
 
 ---
-**📚 目次に戻る**: [📖 学習ガイド]({{ site.baseurl }}/introduction/index.html)  
-**⬅️ 前の章**: [Chapter 5-2: マルチテナンシーと複雑ビジネスロジック]({{ site.baseurl }}/chapter05-2.md)  
-**➡️ 次の章**: [Chapter 6: パフォーマンス最適化]({{ site.baseurl }}/chapters/chapter06/index.html)  
+**📚 目次に戻る**: [📖 学習ガイド]({{ '/introduction/' | relative_url }})  
+**⬅️ 前の章**: [Chapter 5-2: マルチテナンシーと複雑ビジネスロジック]({{ '/chapter05-2.html' | relative_url }})  
+**➡️ 次の章**: [Chapter 6: パフォーマンス最適化]({{ '/chapters/chapter06/' | relative_url }})  
 **🏗️ アーキテクチャ**: 独立APIサーバー（FastAPI + スケーリング・最適化）  
 **🎯 学習レベル**: 🌱 基礎 | 🚀 応用 | 💪 発展  
 **⏱️ 推定学習時間**: 5-7時間  
@@ -3965,8 +3965,8 @@ Chapter 6では、「**F1マシンのチューニング・エンジニア**」�
 ---
 
 **📍 ナビゲーション**
-- **📚 目次**: [📖 学習ガイド]({{ site.baseurl }}/introduction/index.html)
-- **⬅️ 前の章**: [Chapter 5-2: マルチテナンシーと複雑ビジネスロジック]({{ site.baseurl }}/chapter05-2.md)  
-- **➡️ 次の章**: [Chapter 6: パフォーマンス最適化]({{ site.baseurl }}/chapters/chapter06/index.html)
-- **🏠 関連章**: [Chapter 5-1: APIサーバー基礎]({{ site.baseurl }}/chapter05-1.md) | [Chapter 8: 運用監視]({{ site.baseurl }}/chapters/chapter08/index.html)
-- **🔧 リソース**: [スケーリング設計]({{ site.baseurl }}/src/) | [運用チェックリスト]({{ site.baseurl }}/operational_checklists.md)
+- **📚 目次**: [📖 学習ガイド]({{ '/introduction/' | relative_url }})
+- **⬅️ 前の章**: [Chapter 5-2: マルチテナンシーと複雑ビジネスロジック]({{ '/chapter05-2.html' | relative_url }})  
+- **➡️ 次の章**: [Chapter 6: パフォーマンス最適化]({{ '/chapters/chapter06/' | relative_url }})
+- **🏠 関連章**: [Chapter 5-1: APIサーバー基礎]({{ '/chapter05-1.html' | relative_url }}) | [Chapter 8: 運用監視]({{ '/chapters/chapter08/' | relative_url }})
+- **🔧 リソース**: [スケーリング設計]({{ site.baseurl }}/src/) | [運用チェックリスト]({{ '/operational_checklists.html' | relative_url }})

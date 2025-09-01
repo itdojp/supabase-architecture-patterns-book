@@ -361,11 +361,6 @@ a:hover {
     color: var(--text-primary);
 }
 
-/* Hide sidebar toggle by default (shown only on mobile via mobile-responsive.css) */
-.sidebar-toggle {
-    display: none;
-}
-
 .theme-icon {
     display: none;
 }
