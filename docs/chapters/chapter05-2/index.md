@@ -7,8 +7,8 @@ title: "第5-2章：マルチテナンシーと複雑ビジネスロジック"
 
 ---
 **📚 目次に戻る**: [📖 学習ガイド]({{ site.baseurl }}/introduction/index.html)  
-**⬅️ 前の章**: [Chapter 5-1: 独立APIサーバー基礎]({{ site.baseurl }}/chapter05-1.md)  
-**➡️ 次の章**: [Chapter 5-3: 本番運用機能]({{ site.baseurl }}/chapter05-3.md)  
+**⬅️ 前の章**: [Chapter 5-1: 独立APIサーバー基礎]({{ '/chapter05-1.html' | relative_url }})  
+**➡️ 次の章**: [Chapter 5-3: 本番運用機能]({{ '/chapter05-3.html' | relative_url }})  
 **🏗️ アーキテクチャ**: 独立APIサーバー（FastAPI + マルチテナント）  
 **🎯 学習レベル**: 🌱 基礎 | 🚀 応用 | 💪 発展  
 **⏱️ 推定学習時間**: 4-6時間  
@@ -1784,8 +1784,8 @@ Chapter 5-3で学ぶ本番運用機能の前提知識：
 ---
 
 **📍 ナビゲーション**
-- **📚 目次**: [📖 学習ガイド]({{ site.baseurl }}/introduction/index.html)
-- **⬅️ 前の章**: [Chapter 5-1: 独立APIサーバー基礎]({{ site.baseurl }}/chapter05-1.md)  
-- **➡️ 次の章**: [Chapter 5-3: 本番運用機能]({{ site.baseurl }}/chapter05-3.md)
-- **🏠 関連章**: [Chapter 6: パフォーマンス最適化]({{ site.baseurl }}/chapters/chapter06/index.html) | [Chapter 8: 運用監視]({{ site.baseurl }}/chapters/chapter08/index.html)
-- **🔧 リソース**: [マルチテナント設計]({{ site.baseurl }}/src/) | [運用チェックリスト]({{ site.baseurl }}/operational_checklists.md)
+- **📚 目次**: [📖 学習ガイド]({{ '/introduction/' | relative_url }})
+- **⬅️ 前の章**: [Chapter 5-1: 独立APIサーバー基礎]({{ '/chapter05-1.html' | relative_url }})  
+- **➡️ 次の章**: [Chapter 5-3: 本番運用機能]({{ '/chapter05-3.html' | relative_url }})
+- **🏠 関連章**: [Chapter 6: パフォーマンス最適化]({{ '/chapters/chapter06/' | relative_url }}) | [Chapter 8: 運用監視]({{ '/chapters/chapter08/' | relative_url }})
+- **🔧 リソース**: [マルチテナント設計]({{ '/src/' | relative_url }}) | [運用チェックリスト]({{ '/operational_checklists.html' | relative_url }})
