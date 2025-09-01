@@ -6,9 +6,9 @@ title: "第7章：セキュリティ強化"
 # Chapter 7: セキュリティ強化 🔐
 
 ---
-**📚 目次に戻る**: [📖 学習ガイド]({{ site.baseurl }}/introduction/index.html)  
-**⬅️ 前の章**: [Chapter 6: パフォーマンス最適化]({{ site.baseurl }}/chapters/chapter06/index.html)  
-**➡️ 次の章**: [Chapter 8: 運用監視と自動化]({{ site.baseurl }}/chapters/chapter08/index.html)  
+**📚 目次に戻る**: [📖 学習ガイド]({{ '/introduction/' | relative_url }})  
+**⬅️ 前の章**: [Chapter 6: パフォーマンス最適化]({{ '/chapters/chapter06/' | relative_url }})  
+**➡️ 次の章**: [Chapter 8: 運用監視と自動化]({{ '/chapters/chapter08/' | relative_url }})  
 **🎯 学習フェーズ**: Part III - 実装・運用編（セキュリティ）  
 **🎯 学習レベル**: 🌱 基礎 | 🚀 応用 | 💪 発展  
 **⏱️ 推定学習時間**: 6-8時間  
@@ -1204,8 +1204,8 @@ Chapter 8では、「**病院の生命維持管理システム**」レベルの�
 ---
 
 **📍 ナビゲーション**
-- **📚 目次**: [📖 学習ガイド]({{ site.baseurl }}/introduction/index.html)
-- **⬅️ 前の章**: [Chapter 6: パフォーマンス最適化]({{ site.baseurl }}/chapters/chapter06/index.html)  
-- **➡️ 次の章**: [Chapter 8: 運用監視と自動化]({{ site.baseurl }}/chapters/chapter08/index.html)
-- **🏠 関連章**: [Chapter 1: 認証基礎]({{ site.baseurl }}/chapters/chapter01/index.html) | [Chapter 9: 演習]({{ site.baseurl }}/chapters/chapter09/index.html)
-- **🔧 リソース**: [セキュリティ・チェックリスト]({{ site.baseurl }}/operational_checklists.md) | [脅威対策ガイド]({{ site.baseurl }}/troubleshooting_guide.md)
+- **📚 目次**: [📖 学習ガイド]({{ '/introduction/' | relative_url }})
+- **⬅️ 前の章**: [Chapter 6: パフォーマンス最適化]({{ '/chapters/chapter06/' | relative_url }})  
+- **➡️ 次の章**: [Chapter 8: 運用監視と自動化]({{ '/chapters/chapter08/' | relative_url }})
+- **🏠 関連章**: [Chapter 1: 認証基礎]({{ '/chapters/chapter01/' | relative_url }}) | [Chapter 9: 演習]({{ '/chapters/chapter09/' | relative_url }})
+- **🔧 リソース**: [セキュリティ・チェックリスト]({{ '/operational_checklists.html' | relative_url }}) | [脅威対策ガイド]({{ '/troubleshooting_guide.html' | relative_url }})

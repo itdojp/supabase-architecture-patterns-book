@@ -6,8 +6,8 @@ title: "第10章：統合実践プロジェクト"
 # Chapter 10: 統合実践プロジェクト 🏗️
 
 ---
-**📚 目次に戻る**: [📖 学習ガイド]({{ site.baseurl }}/introduction/index.html)  
-**⬅️ 前の章**: [Chapter 9: アーキテクチャ選択演習]({{ site.baseurl }}/chapters/chapter09/index.html)  
+**📚 目次に戻る**: [📖 学習ガイド]({{ '/introduction/' | relative_url }})  
+**⬅️ 前の章**: [Chapter 9: アーキテクチャ選択演習]({{ '/chapters/chapter09/' | relative_url }})  
 **➡️ 完了**: [🎓 学習修了・次のステップ]({{ site.baseurl }}/introduction/index.html#🎓-学習修了後の進路)  
 **🎯 学習フェーズ**: Part IV - 実践・応用編（統合実践）  
 **🎯 学習レベル**: 🌱 基礎 | 🚀 応用 | 💪 発展  
@@ -1834,7 +1834,7 @@ echo "🚀 EduConnect統合プラットフォーム デプロイメント完了"
 
 | 前の章 | 現在の章 | 次の段階 |
 |---------|----------|----------|
-| [Chapter 9: スケーリング戦略]({{ site.baseurl }}/chapters/chapter09/index.html) | **Chapter 10: 統合実践プロジェクト** | **実務適用** |
+| [Chapter 9: スケーリング戦略]({{ '/chapters/chapter09/' | relative_url }}) | **Chapter 10: 統合実践プロジェクト** | **実務適用** |
 
 ### 学習完了
 
@@ -1895,8 +1895,8 @@ Supabaseアーキテクチャパターンの学習が完了しました。実際
 ---
 
 **📍 最終ナビゲーション**
-- **📚 目次**: [📖 学習ガイド]({{ site.baseurl }}/introduction/index.html)
-- **⬅️ 前の章**: [Chapter 9: アーキテクチャ選択演習]({{ site.baseurl }}/chapters/chapter09/index.html)  
+- **📚 目次**: [📖 学習ガイド]({{ '/introduction/' | relative_url }})
+- **⬅️ 前の章**: [Chapter 9: アーキテクチャ選択演習]({{ '/chapters/chapter09/' | relative_url }})  
 - **🎓 修了後**: [学習継続ガイド]({{ site.baseurl }}/introduction/index.html#🎓-学習修了後の進路)
-- **🏠 復習**: [全章まとめ]({{ site.baseurl }}/introduction/index.html) | [パターン比較]({{ site.baseurl }}/pattern_selection_guide.md)
+- **🏠 復習**: [全章まとめ]({{ '/introduction/' | relative_url }}) | [パターン比較]({{ '/pattern_selection_guide.html' | relative_url }})
 - **🔧 リソース**: [コミュニティ](https://supabase.com/community) | [公式ドキュメント](https://supabase.com/docs)

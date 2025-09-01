@@ -2185,7 +2185,7 @@ def main(page: ft.Page):
 ### 関連リソース
 - [Flet公式ドキュメント](https://flet.dev/docs/)
 - [Supabase Python クライアント](https://supabase.com/docs/reference/python/introduction)
-- [環境構築ガイド]({{ site.baseurl }}/environment_setup_guide.md)
+- [環境構築ガイド]({{ '/environment_setup_guide.html' | relative_url }})
 
 ---
 
@@ -2334,4 +2334,4 @@ Chapter 4では、「病院薬剤管理システム」を例に、**プレハブ
 - 🔧 [トラブルシューティング]({{ '/troubleshooting_guide.html' | relative_url }})
 - 🎯 [パターン選択ガイド]({{ '/pattern_selection_guide.html' | relative_url }})  
 - 📋 [運用チェックリスト]({{ '/operational_checklists.html' | relative_url }})
-- 🔍 [コード検証ガイド]({{ site.baseurl }}/code_verification.md)
+- 🔍 [コード検証ガイド]({{ '/code_verification.html' | relative_url }})

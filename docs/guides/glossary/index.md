@@ -150,7 +150,7 @@ title: "用語辞典"
 - **定義**: API ゲートウェイ・ルーティング・プロキシ
 - **Supabaseでの実装**: 各サービスへのリクエスト振り分け
 - **実用例**: API リクエストのルーティング・レート制限
-- **参照章**: [Chapter 1: Supabase内部構造]({{ site.baseurl }}/chapters/chapter01/index.html)
+- **参照章**: [Chapter 1: Supabase内部構造]({{ '/chapters/chapter01/' | relative_url }})
 
 ### M
 
@@ -159,7 +159,7 @@ title: "用語辞典"
 - **定義**: 1つのシステムで複数の組織・顧客を安全に分離する設計
 - **Supabaseでの実装**: RLS + 組織ID分離
 - **実用例**: SaaS製品・複数企業の管理システム
-- **参照章**: [Chapter 5-2: マルチテナンシー]({{ site.baseurl }}/chapter05-2.md)
+- **参照章**: [Chapter 5-2: マルチテナンシー]({{ '/chapter05-2.html' | relative_url }})
 
 ### P
 
@@ -191,14 +191,14 @@ title: "用語辞典"
 - **定義**: 高速インメモリデータストア・キャッシュ
 - **Supabaseでの組み合わせ**: 独立APIサーバーでのキャッシュ層
 - **実用例**: セッション保存・API レスポンスキャッシュ
-- **参照章**: [Chapter 5-2: Redis活用]({{ site.baseurl }}/chapter05-2.md)
+- **参照章**: [Chapter 5-2: Redis活用]({{ '/chapter05-2.html' | relative_url }})
 
 #### **RLS（Row Level Security）**
 `#security` `#database`
 - **定義**: データベースの行レベルでアクセス制御を行う機能
 - **Supabaseでの実装**: PostgreSQL RLS + JWT Claims
 - **実用例**: ユーザーが自分のデータのみアクセス可能
-- **参照章**: [Chapter 2: RLS実装]({{ site.baseurl }}/chapters/chapter02/index.html)
+- **参照章**: [Chapter 2: RLS実装]({{ '/chapters/chapter02/' | relative_url }})
 
 ### S
 
@@ -207,14 +207,14 @@ title: "用語辞典"
 - **定義**: データベースの操作・問い合わせを行う言語
 - **Supabaseでの実装**: PostgreSQL SQLの完全サポート
 - **実用例**: データ取得・更新・分析
-- **参照章**: 全章（特に[Chapter 1]({{ site.baseurl }}/chapters/chapter01/index.html)）
+- **参照章**: 全章（特に[Chapter 1]({{ '/chapters/chapter01/' | relative_url }})）
 
 #### **SQLAlchemy**
 `#orm` `#python`
 - **定義**: PythonのORM（オブジェクト関係マッピング）ライブラリ
 - **Supabaseでの組み合わせ**: FastAPI + PostgreSQL連携
 - **実用例**: Pythonコードでのデータベース操作
-- **参照章**: [Chapter 5: SQLAlchemy活用]({{ site.baseurl }}/chapter05-1.md)
+- **参照章**: [Chapter 5: SQLAlchemy活用]({{ '/chapter05-1.html' | relative_url }})
 
 ### W
 
@@ -281,7 +281,7 @@ title: "用語辞典"
 ---
 
 **📍 ナビゲーション**
-- **📚 目次**: [📖 学習ガイド]({{ site.baseurl }}/introduction/index.html)
-- **🏠 各章**: [Chapter 1-10]({{ site.baseurl }}/introduction/index.html) での学習時に参照
-- **🔧 関連リソース**: [付録]({{ site.baseurl }}/appendix.md) | [トラブルシューティング]({{ site.baseurl }}/troubleshooting_guide.md)
+- **📚 目次**: [📖 学習ガイド]({{ '/introduction/' | relative_url }})
+- **🏠 各章**: [Chapter 1-10]({{ '/introduction/' | relative_url }}) での学習時に参照
+- **🔧 関連リソース**: [付録]({{ '/appendix.html' | relative_url }}) | [トラブルシューティング]({{ '/troubleshooting_guide.html' | relative_url }})
 - **🌐 公式**: [Supabase公式ドキュメント](https://supabase.com/docs)

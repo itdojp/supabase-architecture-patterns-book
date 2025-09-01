@@ -6,7 +6,7 @@ title: "第5-2章：マルチテナンシーと複雑ビジネスロジック"
 # Chapter 5-2: マルチテナンシーと複雑ビジネスロジック 🏢
 
 ---
-**📚 目次に戻る**: [📖 学習ガイド]({{ site.baseurl }}/introduction/index.html)  
+**📚 目次に戻る**: [📖 学習ガイド]({{ '/introduction/' | relative_url }})  
 **⬅️ 前の章**: [Chapter 5-1: 独立APIサーバー基礎]({{ '/chapter05-1.html' | relative_url }})  
 **➡️ 次の章**: [Chapter 5-3: 本番運用機能]({{ '/chapter05-3.html' | relative_url }})  
 **🏗️ アーキテクチャ**: 独立APIサーバー（FastAPI + マルチテナント）  
