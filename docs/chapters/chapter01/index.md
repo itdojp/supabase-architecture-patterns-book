@@ -131,6 +131,11 @@ flowchart TB
 - 🔐 **Supabase Auth**: ログイン・ログアウトを管理
 - 📄 **PostgreSQL**: 全てのデータを保存する倉庫
 
+> **ここから先の読み方の目安**
+>  
+> ここまでの内容で、🌱 初心者レベルとしては「Supabase の全体像」と「主なコンポーネントの役割」が分かっていれば十分です。  
+> 以降では PostgreSQL や Supabase の内部構成、拡張機能など、より深い技術的背景に踏み込んでいきます。🚀/💪 レベル向けの内容となるため、一度手を動かしてから戻って読む、必要になったときに参照する、といった読み方でも問題ありません。
+
 ## 📄 PostgreSQL：「データの倉庫」を詳しく見てみよう
 
 ### 🤔 そもそもデータベースって何？
@@ -197,6 +202,8 @@ SELECT name, default_version, installed_version
 FROM pg_available_extensions 
 WHERE name IN ('pg_graphql', 'pgsodium', 'pg_stat_statements');
 ```
+
+この例が伝えたいポイントは、「Supabase は標準的な PostgreSQL を土台にしつつ、`pg_graphql` や `pgsodium` などの拡張機能を組み合わせることで、REST／GraphQL／暗号化／監視といった機能を一体として提供している」という点です。実際に SQL を実行する際は、必ず検証環境や Supabase の SQL エディタを用い、十分な権限を持つユーザーで実行してください。
 
 ## 🔗 PostgREST：「API自動生成の魔法」
 
