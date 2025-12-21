@@ -7,7 +7,6 @@ title: "本書について"
 
 **初心者から上級者まで段階的に学べる、Supabase完全マスターガイド**
 
-![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)
 ![Version: 1.0](https://img.shields.io/badge/Version-1.0-brightgreen.svg)
 ![Status: Active Development](https://img.shields.io/badge/Status-Active%20Development-green.svg)
 
@@ -309,7 +308,8 @@ src/
 
 ## 📄 ライセンス・サポート
 
-**ライセンス**: MIT License  
+**ライセンス**: Creative Commons BY-NC-SA 4.0  
+**ライセンス（詳細）**: https://github.com/itdojp/it-engineer-knowledge-architecture/blob/main/LICENSE.md  
 **著者**: 株式会社アイティードゥ  
 **サポート**: [GitHub Issues](https://github.com/itdojp/supabase-architecture-patterns-book/issues) にて対応  
 
@@ -319,4 +319,4 @@ src/
 
 **📖 今すぐ学習開始**: [Chapter 1: Supabase基礎知識]({{ '/chapters/chapter01/' | relative_url }})  
 **💬 質問・相談**: [GitHub Discussions](https://github.com/itdojp/supabase-architecture-patterns-book/discussions)  
-**📧 フィードバック**: [お問い合わせ](mailto:contact@itdo.jp)
+**📧 フィードバック**: [お問い合わせ](mailto:knowledge@itdo.jp)
