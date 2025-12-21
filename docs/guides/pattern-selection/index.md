@@ -1,7 +1,7 @@
 ---
 layout: book
 order: 15
-title: "パターン選択ガイド"
+title: "Supabase アーキテクチャパターン選択ガイド"
 ---
 # Supabase アーキテクチャパターン選択ガイド
 
