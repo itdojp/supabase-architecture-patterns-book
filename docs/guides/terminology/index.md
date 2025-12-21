@@ -1,7 +1,7 @@
 ---
 layout: book
 order: 18
-title: "専門用語集"
+title: "Terminology Guide - 用語統一ガイド"
 ---
 # Terminology Guide - 用語統一ガイド
 

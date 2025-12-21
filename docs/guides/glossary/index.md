@@ -1,7 +1,7 @@
 ---
 layout: book
 order: 19
-title: "用語辞典"
+title: "技術用語索引・用語集 📚"
 ---
 # 技術用語索引・用語集 📚
 
