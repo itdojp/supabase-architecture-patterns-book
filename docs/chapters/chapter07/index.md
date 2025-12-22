@@ -1,7 +1,7 @@
 ---
 layout: book
 order: 11
-title: "第7章：セキュリティ強化"
+title: "Chapter 7: セキュリティ強化 🔐"
 ---
 # Chapter 7: セキュリティ強化 🔐
 
