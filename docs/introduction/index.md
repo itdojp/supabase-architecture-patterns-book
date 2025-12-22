@@ -1,7 +1,7 @@
 ---
 layout: book
 order: 2
-title: "本書について"
+title: "🏗️ Supabaseアーキテクチャパターン実践技術書 - 学習ガイド"
 ---
 # 🏗️ Supabaseアーキテクチャパターン実践技術書 - 学習ガイド
 
