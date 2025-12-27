@@ -1,7 +1,7 @@
 ---
 layout: book
 order: 20
-title: "付録A: 追加リソース"
+title: "付録A: 設定リファレンス"
 ---
 # 付録A: 設定リファレンス
 
