@@ -1,9 +1,9 @@
 ---
 layout: book
 order: 7
-title: "Chapter 5: パターン3 - 独立APIサーバー 🏗️"
+title: "Chapter 5-1: パターン3 - 独立APIサーバー 🏗️"
 ---
-# Chapter 5: パターン3 - 独立APIサーバー 🏗️
+# Chapter 5-1: パターン3 - 独立APIサーバー 🏗️
 
 ---
 **📚 目次に戻る**: [📖 学習ガイド]({{ '/introduction/' | relative_url }})  
