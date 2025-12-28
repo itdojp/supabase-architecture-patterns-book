@@ -1,7 +1,7 @@
 ---
 layout: book
 order: 14
-title: "第10章：統合実践プロジェクト"
+title: "Chapter 10: 統合実践プロジェクト 🏗️"
 ---
 # Chapter 10: 統合実践プロジェクト 🏗️
 
