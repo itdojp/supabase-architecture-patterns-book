@@ -28,7 +28,7 @@ graph TD
     B -->|4-10人| D{ビジネスロジックの複雑さは？}
     B -->|10人以上| E{エンタープライズ要件は？}
     
-    C -->|1-3ヶ月| F[クライアント実装]
+    C -->|1〜3ヶ月| F[クライアント実装]
     C -->|3ヶ月以上| G{外部連携必要？}
     
     G -->|はい| H[Edge Functions]
@@ -304,7 +304,7 @@ const mvpRequirements = {
     reason: '最速での市場投入と低コストを実現',
     migrationPath: ['edge_functions', 'independent_api'],
     keyBenefits: [
-      '2-4週間での初期リリース可能',
+      '2〜4週間での初期リリース可能',
       '初期コスト$5K以下',
       'スキル要件が低い'
     ]

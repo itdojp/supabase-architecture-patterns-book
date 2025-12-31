@@ -203,12 +203,12 @@
     <!-- Latency -->
     <rect x="590" y="470" width="130" height="40" fill="var(--svg-bg)" stroke="var(--svg-primary)" stroke-width="1" rx="4"/>
     <text x="655" y="490" class="cache-text" text-anchor="middle" font-weight="500">レイテンシ削減</text>
-    <text x="655" y="505" class="annotation-text" text-anchor="middle">50-80% 改善</text>
+    <text x="655" y="505" class="annotation-text" text-anchor="middle">50〜80% 改善</text>
     
     <!-- Bandwidth -->
     <rect x="440" y="520" width="140" height="40" fill="var(--svg-bg)" stroke="var(--svg-primary)" stroke-width="1" rx="4"/>
     <text x="510" y="540" class="cache-text" text-anchor="middle" font-weight="500">帯域幅削減</text>
-    <text x="510" y="555" class="annotation-text" text-anchor="middle">60-70% 削減</text>
+    <text x="510" y="555" class="annotation-text" text-anchor="middle">60〜70% 削減</text>
     
     <!-- Cost -->
     <rect x="590" y="520" width="130" height="40" fill="var(--svg-bg)" stroke="var(--svg-primary)" stroke-width="1" rx="4"/>
