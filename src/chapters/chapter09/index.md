@@ -1729,8 +1729,8 @@ class DataSensitivity(Enum):
 
 class PerformanceRequirement(Enum):
     LOW = "low"          # >2秒
-    MEDIUM = "medium"    # 500ms-2秒
-    HIGH = "high"        # 100ms-500ms
+    MEDIUM = "medium"    # 500ms〜2秒
+    HIGH = "high"        # 100ms〜500ms
     CRITICAL = "critical" # <100ms
 
 @dataclass
