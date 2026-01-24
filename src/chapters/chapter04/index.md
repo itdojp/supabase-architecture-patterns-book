@@ -195,7 +195,7 @@ serve(async (req: Request): Promise<Response> => {
     // 2. Supabaseに接続
     const supabase = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
-      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
+      Deno.env.get('SUPABASE_SECRET_KEY') ?? ''
     )
 
     // 3. ユーザー認証
@@ -528,7 +528,7 @@ export class DatabaseConnection {
 export function initDatabase(): DatabaseConnection {
   const config: DatabaseConfig = {
     url: Deno.env.get('SUPABASE_URL')!,
-    serviceKey: Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
+    serviceKey: Deno.env.get('SUPABASE_SECRET_KEY')!
   }
   
   return DatabaseConnection.getInstance(config)
@@ -2149,7 +2149,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.0'
 
 export async function diagnosticDatabaseConnection() {
   const url = Deno.env.get('SUPABASE_URL')
-  const serviceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')
+  const serviceKey = Deno.env.get('SUPABASE_SECRET_KEY')
   
   console.log('Database URL configured:', !!url)
   console.log('Service Key configured:', !!serviceKey)
@@ -2215,7 +2215,7 @@ class DatabasePool {
     
     const client = createClient(
       Deno.env.get('SUPABASE_URL')!,
-      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
+      Deno.env.get('SUPABASE_SECRET_KEY')!
     )
     
     this.clients.set(clientId, client)

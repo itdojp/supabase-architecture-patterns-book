@@ -67,7 +67,7 @@ title: "統合トラブルシューティング・FAQ 🔧"
    // ✓ 正しい
    const supabase = createClient(
      'https://your-project.supabase.co',
-     'your-anon-key'
+     'sb_publishable_XXXXXXXXXXXXXXXX'
    )
    ```
 
@@ -75,7 +75,7 @@ title: "統合トラブルシューティング・FAQ 🔧"
    ```bash
    # .env.local を確認
    NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
-   NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+   NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=sb_publishable_XXXXXXXXXXXXXXXX
    ```
 
 3. **CORS設定の問題**
@@ -85,8 +85,8 @@ title: "統合トラブルシューティング・FAQ 🔧"
 
 **診断コマンド**:
 ```bash
-# 接続テスト
-curl -H "apikey: YOUR_ANON_KEY" \
+# 接続テスト（apikey は publishable key）
+curl -H "apikey: YOUR_PUBLISHABLE_KEY" \
      "https://your-project.supabase.co/rest/v1/your_table?select=*&limit=1"
 ```
 
@@ -329,7 +329,7 @@ curl -H "apikey: YOUR_ANON_KEY" \
    
    const supabase = createClient(
      process.env.SUPABASE_URL,
-     process.env.SUPABASE_SERVICE_KEY,
+     process.env.SUPABASE_SECRET_KEY,
      {
        db: {
          schema: 'public',
@@ -522,7 +522,7 @@ curl -H "apikey: YOUR_ANON_KEY" \
    ```bash
    # Vercel
    vercel env add NEXT_PUBLIC_SUPABASE_URL
-   vercel env add NEXT_PUBLIC_SUPABASE_ANON_KEY
+   vercel env add NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
    
    # Netlify
    netlify env:set NEXT_PUBLIC_SUPABASE_URL "your-url"
@@ -585,7 +585,7 @@ import { createClient } from '@supabase/supabase-js'
 async function diagnoseConnection() {
   const supabase = createClient(
     process.env.SUPABASE_URL,
-    process.env.SUPABASE_ANON_KEY
+    process.env.SUPABASE_PUBLISHABLE_KEY
   )
 
   try {
@@ -687,7 +687,7 @@ echo "=== Supabase Health Check ==="
 # 1. API接続確認
 echo "1. Testing API connection..."
 curl -s -o /dev/null -w "%{http_code}" \
-  -H "apikey: $SUPABASE_ANON_KEY" \
+  -H "apikey: $SUPABASE_PUBLISHABLE_KEY" \
   "$SUPABASE_URL/rest/v1/" | grep -q "200" && echo "✓ API accessible" || echo "✗ API not accessible"
 
 # 2. リアルタイム接続確認
@@ -698,7 +698,7 @@ curl -s -o /dev/null -w "%{http_code}" \
 # 3. Storage接続確認
 echo "3. Testing Storage connection..."
 curl -s -o /dev/null -w "%{http_code}" \
-  -H "apikey: $SUPABASE_ANON_KEY" \
+  -H "apikey: $SUPABASE_PUBLISHABLE_KEY" \
   "$SUPABASE_URL/storage/v1/bucket" | grep -q "200" && echo "✓ Storage accessible" || echo "✗ Storage not accessible"
 
 echo "=== Health Check Complete ==="

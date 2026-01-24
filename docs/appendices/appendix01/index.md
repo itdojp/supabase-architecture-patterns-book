@@ -77,8 +77,9 @@ create_env_files() {
     cat > .env << EOF
 # Supabase設定
 SUPABASE_URL=http://localhost:54321
-SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0
-SUPABASE_SERVICE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImV4cCI6MTk4MzgxMjk5Nn0.EGIM96RAZx35lJzdJsyH-qQwv8Hdp7fsn3W0YpN81IU
+# ローカル（セルフホスト）の場合は legacy JWT（anon/service_role）を設定
+SUPABASE_PUBLISHABLE_KEY=sb_publishable_XXXXXXXXXXXXXXXX
+SUPABASE_SECRET_KEY=sb_secret_XXXXXXXXXXXXXXXX
 
 # データベース設定
 POSTGRES_HOST=localhost
@@ -105,8 +106,8 @@ EOF
     cat > .env.production.template << EOF
 # 本番環境用設定テンプレート
 SUPABASE_URL=https://your-project.supabase.co
-SUPABASE_ANON_KEY=your-anon-key
-SUPABASE_SERVICE_KEY=your-service-key
+SUPABASE_PUBLISHABLE_KEY=sb_publishable_XXXXXXXXXXXXXXXX
+SUPABASE_SECRET_KEY=sb_secret_XXXXXXXXXXXXXXXX
 
 POSTGRES_HOST=your-production-host
 POSTGRES_PORT=5432
@@ -153,8 +154,8 @@ services:
     container_name: supabase-studio
     environment:
       SUPABASE_URL: http://localhost:54321
-      SUPABASE_ANON_KEY: ${SUPABASE_ANON_KEY}
-      SUPABASE_SERVICE_KEY: ${SUPABASE_SERVICE_KEY}
+      SUPABASE_PUBLISHABLE_KEY: ${SUPABASE_PUBLISHABLE_KEY}
+      SUPABASE_SECRET_KEY: ${SUPABASE_SECRET_KEY}
     ports:
       - "3000:3000"
     depends_on:
@@ -276,10 +277,10 @@ _transform: true
 consumers:
   - username: anon
     keyauth_credentials:
-      - key: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0
+      - key: your-legacy-anon-jwt
   - username: service_role
     keyauth_credentials:
-      - key: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImV4cCI6MTk4MzgxMjk5Nn0.EGIM96RAZx35lJzdJsyH-qQwv8Hdp7fsn3W0YpN81IU
+      - key: your-legacy-service-role-jwt
 
 acls:
   - consumer: anon
@@ -1021,8 +1022,8 @@ class Settings(BaseSettings):
     
     # Supabase設定
     SUPABASE_URL: str
-    SUPABASE_ANON_KEY: str
-    SUPABASE_SERVICE_KEY: str
+    SUPABASE_PUBLISHABLE_KEY: str
+    SUPABASE_SECRET_KEY: str
     
     # Redis設定
     REDIS_URL: str = "redis://localhost:6379"
@@ -1385,8 +1386,8 @@ pre-request = "public.check_permissions"
 
 ```bash
 SUPABASE_URL=https://your-project.supabase.co
-SUPABASE_ANON_KEY=your-anon-key
-SUPABASE_SERVICE_ROLE_KEY=your-service-key
+SUPABASE_PUBLISHABLE_KEY=sb_publishable_XXXXXXXXXXXXXXXX
+SUPABASE_SECRET_KEY=sb_secret_XXXXXXXXXXXXXXXX
 
 # 外部サービス
 STRIPE_SECRET_KEY=sk_test_...
