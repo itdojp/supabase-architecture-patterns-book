@@ -344,6 +344,37 @@ AIアプリでは「まず試す→あとで登録」の導線が一般的です
 - RLSは **匿名ユーザーの読み書き許可範囲を最小化**
 - 昇格時に **tenant_id / user_id の整合**をチェック
 
+**実装例（概念）**:
+```typescript
+// 1) 匿名セッション作成（API名はSDKバージョンで確認）
+const { data: anon, error: anonError } = await supabase.auth.signInAnonymously()
+if (anonError) throw anonError
+
+const anonUserId = anon.user.id
+
+// 2) 匿名ユーザーに作業データを紐付け
+await supabase.from('drafts').insert({
+  tenant_id: tenantId,
+  owner_id: anonUserId,
+  content: 'tmp draft'
+})
+
+// 3) 本登録（メール確認などは運用方針に従う）
+const { data: registered, error: regError } = await supabase.auth.signUp({
+  email,
+  password
+})
+if (regError) throw regError
+
+// 4) 匿名データを本登録ユーザーへ移行
+await supabase.from('drafts')
+  .update({ owner_id: registered.user.id })
+  .eq('owner_id', anonUserId)
+```
+
+> 補足: 匿名サインインのAPI名・可否はSDKのバージョン/設定に依存します。  
+> 利用中のSDKドキュメントで確認してください。
+
 ### LLM生成SQL/RLSのレビュー手順（安全策）
 
 LLMが生成したSQLやRLSはそのまま適用しない方針にします。  

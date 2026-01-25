@@ -1553,6 +1553,68 @@ Edge Functionsを **AIゲートウェイ**として設計し、次を必ず記�
 - モデル名 / プロンプトバージョン / 推定コスト
 - 出力のハッシュ（監査や再現性のため）
 
+**実装例（概念）**:
+```typescript
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+
+const supabase = createClient(
+  Deno.env.get('SUPABASE_URL')!,
+  Deno.env.get('SUPABASE_SECRET_KEY')!
+)
+
+Deno.serve(async (req) => {
+  const authHeader = req.headers.get('Authorization') || ''
+  if (!authHeader.startsWith('Bearer ')) {
+    return new Response('Unauthorized', { status: 401 })
+  }
+  const jwt = authHeader.replace('Bearer ', '')
+  const { data: userData } = await supabase.auth.getUser(jwt)
+  const user = userData?.user
+  if (!user) return new Response('Unauthorized', { status: 401 })
+
+  const body = await req.json()
+  if (!body.prompt || typeof body.prompt !== 'string') {
+    return new Response('Invalid input', { status: 400 })
+  }
+
+  // 例: 簡易レート制限（実運用は専用ストアで管理）
+  // await checkRateLimit(user.id)
+
+  // 外部LLM呼び出し（概念例）
+  const llmRes = await fetch(Deno.env.get('LLM_ENDPOINT_URL')!, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${Deno.env.get('LLM_API_KEY')}`
+    },
+    body: JSON.stringify({ prompt: body.prompt })
+  })
+  const llmJson = await llmRes.json()
+
+  // 監査ログ保存
+  const outputText = llmJson.output ?? ''
+  const hashBuf = await crypto.subtle.digest(
+    'SHA-256',
+    new TextEncoder().encode(outputText)
+  )
+  const outputHash = Array.from(new Uint8Array(hashBuf))
+    .map(b => b.toString(16).padStart(2, '0')).join('')
+
+  await supabase.from('ai_audit_logs').insert({
+    tenant_id: body.tenant_id,
+    user_id: user.id,
+    model_name: llmJson.model ?? 'unknown',
+    prompt_hash: body.prompt_hash ?? null,
+    output_hash: outputHash,
+    cost_usd: body.cost_usd ?? null
+  })
+
+  return new Response(JSON.stringify(llmJson), {
+    headers: { 'Content-Type': 'application/json' }
+  })
+})
+```
+
 ### 4.2.7 自動埋め込み生成（後章への接続）
 
 埋め込み生成は **Edge Functions + キュー + トリガ**で自動化できます。  

@@ -101,6 +101,22 @@ CREATE TABLE retrieval_logs (
   cost_usd NUMERIC(10,4),
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
+
+-- インデックス定義（RAGパフォーマンス最適化 / マルチテナント対応）
+-- マルチテナントフィルタ用
+CREATE INDEX IF NOT EXISTS idx_chunks_tenant_id ON chunks (tenant_id);
+CREATE INDEX IF NOT EXISTS idx_embeddings_tenant_id ON embeddings (tenant_id);
+CREATE INDEX IF NOT EXISTS idx_retrieval_logs_tenant_id_created_at
+  ON retrieval_logs (tenant_id, created_at DESC);
+
+-- 外部キー用（JOIN 最適化）
+CREATE INDEX IF NOT EXISTS idx_chunks_document_id ON chunks (document_id);
+CREATE INDEX IF NOT EXISTS idx_embeddings_chunk_id ON embeddings (chunk_id);
+
+-- 類似度検索用ベクトルインデックス（pgvector）
+CREATE INDEX IF NOT EXISTS idx_embeddings_embedding_hnsw
+  ON embeddings
+  USING hnsw (embedding vector_cosine_ops);
 ```
 
 ---
@@ -113,6 +129,11 @@ CREATE TABLE retrieval_logs (
 3. Edge Functions が埋め込み生成
 4. `embeddings` に保存
 5. 失敗時は **再試行（pg_cron）**
+
+**補足（pgmqについて）**:
+- `pgmq` は PostgreSQL 上にメッセージキューを実装する拡張機能です
+- Supabaseの標準コンポーネントではないため、導入が難しい場合は  
+  **jobsテーブル方式**（`status`, `retry_count`, `last_error` など）で代替できます
 
 **運用上の注意**:
 - 失敗ジョブの **dead letter** を必ず残す
@@ -128,8 +149,12 @@ RAGは **tenant_id を最優先キー**にします。
 ALTER TABLE documents ENABLE ROW LEVEL SECURITY;
 ALTER TABLE embeddings ENABLE ROW LEVEL SECURITY;
 ALTER TABLE retrieval_logs ENABLE ROW LEVEL SECURITY;
+ALTER TABLE chunks ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "tenant_read" ON documents
+  FOR SELECT USING (tenant_id = (auth.jwt() ->> 'tenant_id')::uuid);
+
+CREATE POLICY "tenant_read" ON chunks
   FOR SELECT USING (tenant_id = (auth.jwt() ->> 'tenant_id')::uuid);
 
 CREATE POLICY "tenant_log" ON retrieval_logs

@@ -3627,7 +3627,7 @@ Chapter 7では、「**銀行の金庫システム**」並みの堅牢なセキ�
 
 **📍 ナビゲーション**
 - **📚 目次**: [📖 学習ガイド](./textbook_index.md)
-- **⬅️ 前の章**: [Chapter 5-3: 本番運用機能](./chapter05-3.md)  
+- **⬅️ 前の章**: [Chapter 5-4: RAG/ベクトル検索アーキテクチャ](./chapter05-4.md)  
 - **➡️ 次の章**: [Chapter 7: セキュリティ強化](./chapter07.md)
 - **🏠 関連章**: [Chapter 5: 独立API サーバー](./chapter05-1.md) | [Chapter 8: 運用監視](./chapter08.md)
 - **🔧 リソース**: [動作検証](./src/) | [パフォーマンス・チェックリスト](./operational_checklists.md)
