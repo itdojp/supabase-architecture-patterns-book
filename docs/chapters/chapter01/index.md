@@ -662,8 +662,8 @@ services:
     image: supabase/studio:20231123-fb9c70e
     environment:
       SUPABASE_URL: http://localhost:54321
-      SUPABASE_PUBLISHABLE_KEY: ${SUPABASE_PUBLISHABLE_KEY} # ローカルではlegacy JWTを設定
-      SUPABASE_SECRET_KEY: ${SUPABASE_SECRET_KEY}           # ローカルではlegacy JWTを設定
+      SUPABASE_PUBLISHABLE_KEY: ${SUPABASE_LEGACY_ANON_JWT}          # ローカル開発では legacy JWT の anon を指定
+      SUPABASE_SECRET_KEY: ${SUPABASE_LEGACY_SERVICE_ROLE_JWT}       # ローカル開発では legacy JWT の service_role を指定
     ports:
       - "3000:3000"
 
@@ -936,7 +936,8 @@ curl http://localhost:54321/rest/v1/
 **問題**: "Invalid API key"
 
 **解決方法**:
-> 補足: `Authorization` に設定するのは **Supabase Auth のアクセストークン（JWT）** です。
+> 補足: `Authorization` に設定するのは **Supabase Auth のアクセストークン（JWT）** です。  
+> `SUPABASE_ACCESS_TOKEN` はログイン後に取得する値で、`.env` に固定保存しません。
 ```javascript
 // ヘッダー確認
 // - publishable key は apikey にのみ使う

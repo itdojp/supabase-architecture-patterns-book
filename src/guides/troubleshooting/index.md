@@ -80,7 +80,7 @@
 
 **診断コマンド**:
 ```bash
-# 接続テスト（apikey は publishable key）
+# 接続テスト（ヘッダー apikey には publishable key を使用。認証済みユーザーとしてアクセスする場合は、別途 Authorization: Bearer <JWT_ACCESS_TOKEN> ヘッダーも付与する）
 curl -H "apikey: YOUR_PUBLISHABLE_KEY" \
      "https://your-project.supabase.co/rest/v1/your_table?select=*&limit=1"
 ```
