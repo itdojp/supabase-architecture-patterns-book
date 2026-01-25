@@ -10,6 +10,11 @@
 **📝 難易度**: 中級（JavaScript/TypeScript知識必要）
 ---
 
+### 🧭 この章で扱う構成
+- 構成: Edge Functions（サーバーレス実装）
+- 推奨用途: 軽量API・外部連携・低レイテンシ処理
+- 非推奨用途: 長時間バッチや重い計算を前提とするケース
+
 ## 🔄 **前章の復習**（Chapter 3からの継続）
 
 Chapter 3で学んだ**クライアントサイド実装**を振り返りましょう：
@@ -1571,6 +1576,8 @@ Deno.serve(async (req) => {
   if (!body.prompt || typeof body.prompt !== 'string') {
     return new Response('Invalid input', { status: 400 })
   }
+  const tenantId = user.app_metadata?.tenant_id ?? user.user_metadata?.tenant_id
+  if (!tenantId) return new Response('Missing tenant', { status: 400 })
 
   // 例: 簡易レート制限（実運用は専用ストアで管理）
   // await checkRateLimit(user.id)
@@ -1595,13 +1602,20 @@ Deno.serve(async (req) => {
   const outputHash = Array.from(new Uint8Array(hashBuf))
     .map(b => b.toString(16).padStart(2, '0')).join('')
 
+  const promptHashBuf = await crypto.subtle.digest(
+    'SHA-256',
+    new TextEncoder().encode(body.prompt)
+  )
+  const promptHash = Array.from(new Uint8Array(promptHashBuf))
+    .map(b => b.toString(16).padStart(2, '0')).join('')
+
   await supabase.from('ai_audit_logs').insert({
-    tenant_id: body.tenant_id,
+    tenant_id: tenantId,
     user_id: user.id,
     model_name: llmJson.model ?? 'unknown',
-    prompt_hash: body.prompt_hash ?? null,
+    prompt_hash: promptHash,
     output_hash: outputHash,
-    cost_usd: body.cost_usd ?? null
+    cost_usd: llmJson.cost_usd ?? null
   })
 
   return new Response(JSON.stringify(llmJson), {
