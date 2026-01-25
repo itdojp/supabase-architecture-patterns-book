@@ -329,6 +329,84 @@ class GoogleProvider implements OAuthProvider {
 }
 ```
 
+### 匿名サインイン → 本登録の昇格パターン（AIアプリの試用導線）
+
+AIアプリでは「まず試す→あとで登録」の導線が一般的です。  
+そのため **匿名ユーザーの作業データを維持したまま正式登録へ昇格**できる設計が必要です。
+
+**基本の流れ**:
+1. 匿名セッションを作成（匿名ユーザーIDを確保）
+2. そのユーザーIDに作業データ（チャット履歴・下書き・学習ログなど）を紐付け
+3. 登録時に同一ユーザーとして昇格（またはデータを新アカウントへ移行）
+
+**設計ポイント**:
+- 匿名ユーザー用データには **期限（TTL）** を設ける
+- RLSは **匿名ユーザーの読み書き許可範囲を最小化**
+- 昇格時に **tenant_id / user_id の整合**をチェック
+
+### LLM生成SQL/RLSのレビュー手順（安全策）
+
+LLMが生成したSQLやRLSはそのまま適用しない方針にします。  
+**実運用での安全策**として以下をチェックします：
+
+- **deny-by-default** になっているか（無条件許可を避ける）
+- **境界条件**（tenant_id / user_id / role）の漏れがないか
+- `EXPLAIN` で **意図したインデックス**が使われているか
+- **ステージング環境**で想定外の読み書きが起きないか
+
+---
+
+### 🔐 AI時代のRLS設計（マルチテナント + 監査ログ）
+
+AIアプリでは **RAG/ログ/評価テーブル**にもRLSを適用し、  
+「どのテナントのデータにアクセスしているか」を明示します。
+
+**典型スキーマ例**:
+
+```sql
+CREATE TABLE ai_documents (
+  id BIGSERIAL PRIMARY KEY,
+  tenant_id UUID NOT NULL,
+  owner_id UUID NOT NULL,
+  content TEXT NOT NULL,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE ai_retrieval_logs (
+  id BIGSERIAL PRIMARY KEY,
+  tenant_id UUID NOT NULL,
+  user_id UUID NOT NULL,
+  query_text TEXT NOT NULL,
+  retrieved_doc_ids BIGINT[],
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+```
+
+**RLSポリシー例（tenant_id + user_id）**:
+
+```sql
+ALTER TABLE ai_documents ENABLE ROW LEVEL SECURITY;
+ALTER TABLE ai_retrieval_logs ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "tenant_owner_read" ON ai_documents
+  FOR SELECT USING (
+    tenant_id = (auth.jwt() ->> 'tenant_id')::uuid
+    AND owner_id = auth.uid()
+  );
+
+CREATE POLICY "tenant_user_log" ON ai_retrieval_logs
+  FOR INSERT WITH CHECK (
+    tenant_id = (auth.jwt() ->> 'tenant_id')::uuid
+    AND user_id = auth.uid()
+  );
+```
+
+### 🔐 SecretsはDBに置かない
+
+APIキーや外部LLMの秘密情報は **DBに保存しない** 方針にします。  
+必要な場合は **Vault / Edge Function Secrets** に集約し、  
+**ログ・監査・ローテーション**の運用フローを定義します。
+
 ### JWT検証とミドルウェア
 
 **PostgRESTでのJWT検証**:

@@ -35,6 +35,7 @@ permalink: /
 - [第5章: 実装編その1: ユーザー管理システム]({{ site.baseurl }}/chapters/chapter05-1/) — 認証・権限管理を含むユーザー管理パターン
 - [第5章: 実装編その2: ストライプ決済との統合]({{ site.baseurl }}/chapters/chapter05-2/) — 決済連携を伴うサブシステム統合パターン
 - [第5章: 実装編その3: リアルタイム通知システム]({{ site.baseurl }}/chapters/chapter05-3/) — Realtime を用いた通知・更新パターン
+- [第5章: 実装編その4: RAG/ベクトル検索]({{ site.baseurl }}/chapters/chapter05-4/) — RAG・埋め込み・監査ログの設計
 - [第6章: モニタリングとロギング]({{ site.baseurl }}/chapters/chapter06/) — 運用監視とログ設計の基本
 - [第7章: スケーリングとパフォーマンス最適化]({{ site.baseurl }}/chapters/chapter07/) — 負荷増大に対応するスケーリング戦略
 - [第8章: セキュリティベストプラクティス]({{ site.baseurl }}/chapters/chapter08/) — Supabase を用いた実践的セキュリティ対策

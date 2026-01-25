@@ -1,6 +1,6 @@
 ---
 layout: book
-order: 11
+order: 12
 title: "Chapter 7: セキュリティ強化 🔐"
 ---
 # Chapter 7: セキュリティ強化 🔐

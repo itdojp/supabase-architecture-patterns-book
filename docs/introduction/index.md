@@ -128,6 +128,7 @@ Supabaseマスターの核心部分
 | 5.1 基本設計 | [chapter05-1.md]({{ '/chapter05-1.html' | relative_url }}) | FastAPI基本構成・DB設計 | 3〜4時間 | 🌱🚀 |
 | 5.2 高度実装 | [chapter05-2.md]({{ '/chapter05-2.html' | relative_url }}) | マルチテナント・高度機能 | 4〜6時間 | 🚀💪 |
 | 5.3 運用・拡張 | [chapter05-3.md]({{ '/chapter05-3.html' | relative_url }}) | スケーリング・運用最適化 | 3〜4時間 | 💪 |
+| 5.4 AI/RAG | [chapter05-4.md]({{ '/chapter05-4.html' | relative_url }}) | RAG・埋め込み・監査ログ | 5〜7時間 | 💪 |
 
 **成果物**: エンタープライズ級病院管理システム
 

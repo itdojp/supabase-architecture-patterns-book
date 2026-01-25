@@ -1,6 +1,6 @@
 ---
 layout: book
-order: 10
+order: 11
 title: "Chapter 6: パフォーマンス最適化（システムの高速化マスター） 🚀"
 ---
 # Chapter 6: パフォーマンス最適化（システムの高速化マスター） 🚀

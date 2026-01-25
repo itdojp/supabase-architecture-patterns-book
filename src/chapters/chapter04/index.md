@@ -1511,7 +1511,80 @@ async function handlePaymentRequiresAction(
 
 ---
 
+### 4.2.4 Edge FunctionsでのAI推論（内蔵AI API）
+
+Supabase Edge Functionsには **内蔵AI API** があり、外部依存なしで推論が実行できます。  
+**埋め込み生成・チャット・分類**などの処理を、エッジで完結させる構成が取れます。
+
+```typescript
+// Edge Functions AI API（概念例）
+import 'jsr:@supabase/functions-js/edge-runtime.d.ts'
+
+const session = new Supabase.ai.Session('model-name')
+const embedding = await session.run('search query')
+```
+
+**補足**:
+- 低レイテンシで実行できるため **RAGの前処理**に有効
+- 外部APIを使わないため **鍵管理やコスト見積り**が容易
+
+### 4.2.5 外部LLM連携（Ollama/Llamafile など）
+
+外部LLMを使う場合は **Edge Functionsをゲートウェイ**にして  
+**認証・レート制限・監査ログ**を一箇所に集約します。
+
+**典型構成**:
+1. クライアント → Edge Function（認証/入力検証）
+2. Edge Function → 外部LLM（Ollama / Llamafile / OpenAI など）
+3. Edge Function → DB（プロンプト/出力/コスト/モデルを記録）
+
+### 4.2.6 AIゲートウェイ・パターン（監査と安全性）
+
+AIアプリでは「**誰が何に対して、どのモデルで何を生成したか**」が重要です。  
+Edge Functionsを **AIゲートウェイ**として設計し、次を必ず記録します：
+
+- リクエスト元（tenant_id / user_id）
+- 参照したドキュメントID（RAGのretrievalログ）
+- モデル名 / プロンプトバージョン / 推定コスト
+- 出力のハッシュ（監査や再現性のため）
+
+### 4.2.7 自動埋め込み生成（後章への接続）
+
+埋め込み生成は **Edge Functions + キュー + トリガ**で自動化できます。  
+詳しい構成は **Chapter 5-4（RAG/ベクトル検索アーキテクチャ）** で扱います。
+
+---
+
 ## 4.3 運用考慮事項とモニタリング
+
+### 4.3.1 ファイルストレージ（/tmp と /s3 の使い分け）
+
+Edge Functions には **永続ストレージ**と**一時ストレージ**の2種類があります。  
+用途に応じて使い分けると、安全性とコストの両面で有利です。
+
+**永続ストレージ（S3互換）**:
+- `/s3/<bucket>` にマウントされる
+- Supabase Storage や S3互換バケットを利用可能
+- **成果物・キャッシュ・監査ログ**など長期保存向け
+
+**一時ストレージ（/tmp）**:
+- 呼び出しごとにリセットされる
+- 変換処理・一時ファイルに限定
+
+```typescript
+// 永続ストレージ（S3互換）への読み書き
+const data = await Deno.readFile('/s3/my-bucket/results.csv')
+await Deno.writeTextFile('/s3/my-bucket/output.txt', 'hello')
+
+// 一時ストレージ
+await Deno.writeTextFile('/tmp/work.txt', 'temp')
+```
+
+**永続ストレージ利用時の環境変数（Secrets）**:
+- `S3FS_ENDPOINT_URL`
+- `S3FS_REGION`
+- `S3FS_ACCESS_KEY_ID`
+- `S3FS_SECRET_ACCESS_KEY`
 
 ### パフォーマンス最適化
 
