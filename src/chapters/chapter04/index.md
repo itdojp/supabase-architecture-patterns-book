@@ -1511,7 +1511,142 @@ async function handlePaymentRequiresAction(
 
 ---
 
+### 4.2.4 Edge FunctionsでのAI推論（内蔵AI API）
+
+Supabase Edge Functionsには **内蔵AI API** があり、外部依存なしで推論が実行できます。  
+**埋め込み生成・チャット・分類**などの処理を、エッジで完結させる構成が取れます。
+
+```typescript
+// Edge Functions AI API（概念例）
+import 'jsr:@supabase/functions-js/edge-runtime.d.ts'
+
+const session = new Supabase.ai.Session('model-name')
+const embedding = await session.run('search query')
+```
+
+**補足**:
+- 低レイテンシで実行できるため **RAGの前処理**に有効
+- 外部APIを使わないため **鍵管理やコスト見積り**が容易
+
+### 4.2.5 外部LLM連携（Ollama/Llamafile など）
+
+外部LLMを使う場合は **Edge Functionsをゲートウェイ**にして  
+**認証・レート制限・監査ログ**を一箇所に集約します。
+
+**典型構成**:
+1. クライアント → Edge Function（認証/入力検証）
+2. Edge Function → 外部LLM（Ollama / Llamafile / OpenAI など）
+3. Edge Function → DB（プロンプト/出力/コスト/モデルを記録）
+
+### 4.2.6 AIゲートウェイ・パターン（監査と安全性）
+
+AIアプリでは「**誰が何に対して、どのモデルで何を生成したか**」が重要です。  
+Edge Functionsを **AIゲートウェイ**として設計し、次を必ず記録します：
+
+- リクエスト元（tenant_id / user_id）
+- 参照したドキュメントID（RAGのretrievalログ）
+- モデル名 / プロンプトバージョン / 推定コスト
+- 出力のハッシュ（監査や再現性のため）
+
+**実装例（概念）**:
+```typescript
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+
+const supabase = createClient(
+  Deno.env.get('SUPABASE_URL')!,
+  Deno.env.get('SUPABASE_SECRET_KEY')!
+)
+
+Deno.serve(async (req) => {
+  const authHeader = req.headers.get('Authorization') || ''
+  if (!authHeader.startsWith('Bearer ')) {
+    return new Response('Unauthorized', { status: 401 })
+  }
+  const jwt = authHeader.replace('Bearer ', '')
+  const { data: userData } = await supabase.auth.getUser(jwt)
+  const user = userData?.user
+  if (!user) return new Response('Unauthorized', { status: 401 })
+
+  const body = await req.json()
+  if (!body.prompt || typeof body.prompt !== 'string') {
+    return new Response('Invalid input', { status: 400 })
+  }
+
+  // 例: 簡易レート制限（実運用は専用ストアで管理）
+  // await checkRateLimit(user.id)
+
+  // 外部LLM呼び出し（概念例）
+  const llmRes = await fetch(Deno.env.get('LLM_ENDPOINT_URL')!, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${Deno.env.get('LLM_API_KEY')}`
+    },
+    body: JSON.stringify({ prompt: body.prompt })
+  })
+  const llmJson = await llmRes.json()
+
+  // 監査ログ保存
+  const outputText = llmJson.output ?? ''
+  const hashBuf = await crypto.subtle.digest(
+    'SHA-256',
+    new TextEncoder().encode(outputText)
+  )
+  const outputHash = Array.from(new Uint8Array(hashBuf))
+    .map(b => b.toString(16).padStart(2, '0')).join('')
+
+  await supabase.from('ai_audit_logs').insert({
+    tenant_id: body.tenant_id,
+    user_id: user.id,
+    model_name: llmJson.model ?? 'unknown',
+    prompt_hash: body.prompt_hash ?? null,
+    output_hash: outputHash,
+    cost_usd: body.cost_usd ?? null
+  })
+
+  return new Response(JSON.stringify(llmJson), {
+    headers: { 'Content-Type': 'application/json' }
+  })
+})
+```
+
+### 4.2.7 自動埋め込み生成（後章への接続）
+
+埋め込み生成は **Edge Functions + キュー + トリガ**で自動化できます。  
+詳しい構成は **Chapter 5-4（RAG/ベクトル検索アーキテクチャ）** で扱います。
+
+---
+
 ## 4.3 運用考慮事項とモニタリング
+
+### 4.3.1 ファイルストレージ（/tmp と /s3 の使い分け）
+
+Edge Functions には **永続ストレージ**と**一時ストレージ**の2種類があります。  
+用途に応じて使い分けると、安全性とコストの両面で有利です。
+
+**永続ストレージ（S3互換）**:
+- `/s3/<bucket>` にマウントされる
+- Supabase Storage や S3互換バケットを利用可能
+- **成果物・キャッシュ・監査ログ**など長期保存向け
+
+**一時ストレージ（/tmp）**:
+- 呼び出しごとにリセットされる
+- 変換処理・一時ファイルに限定
+
+```typescript
+// 永続ストレージ（S3互換）への読み書き
+const data = await Deno.readFile('/s3/my-bucket/results.csv')
+await Deno.writeTextFile('/s3/my-bucket/output.txt', 'hello')
+
+// 一時ストレージ
+await Deno.writeTextFile('/tmp/work.txt', 'temp')
+```
+
+**永続ストレージ利用時の環境変数（Secrets）**:
+- `S3FS_ENDPOINT_URL`
+- `S3FS_REGION`
+- `S3FS_ACCESS_KEY_ID`
+- `S3FS_SECRET_ACCESS_KEY`
 
 ### パフォーマンス最適化
 

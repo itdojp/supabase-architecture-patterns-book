@@ -16,6 +16,8 @@ chapters:
   path: /chapters/chapter05-2/
 - title: 第5-3章：拡張性設計とパフォーマンス最適化
   path: /chapters/chapter05-3/
+- title: 第5-4章：RAG/ベクトル検索アーキテクチャ
+  path: /chapters/chapter05-4/
 - title: 第6章：パフォーマンス最適化
   path: /chapters/chapter06/
 - title: 第7章：セキュリティ強化

@@ -1,13 +1,13 @@
 ---
 layout: book
-order: 10
+order: 11
 title: "Chapter 6: パフォーマンス最適化（システムの高速化マスター） 🚀"
 ---
 # Chapter 6: パフォーマンス最適化（システムの高速化マスター） 🚀
 
 ---
 **📚 目次に戻る**: [📖 学習ガイド]({{ '/introduction/' | relative_url }})  
-**⬅️ 前の章**: [Chapter 5-3: 本番運用機能]({{ '/chapter05-3.html' | relative_url }})  
+**⬅️ 前の章**: [Chapter 5-4: RAG/ベクトル検索アーキテクチャ]({{ '/chapter05-4.html' | relative_url }})  
 **➡️ 次の章**: [Chapter 7: セキュリティ強化]({{ '/chapters/chapter07/' | relative_url }})  
 **🎯 学習フェーズ**: Part III - 実装・運用編（パフォーマンス）  
 **🎯 学習レベル**: 🌱 基礎 | 🚀 応用 | 💪 発展  
@@ -3632,7 +3632,7 @@ Chapter 7では、「**銀行の金庫システム**」並みの堅牢なセキ�
 
 **📍 ナビゲーション**
 - **📚 目次**: [📖 学習ガイド]({{ '/introduction/' | relative_url }})
-- **⬅️ 前の章**: [Chapter 5-3: 本番運用機能]({{ '/chapter05-3.html' | relative_url }})  
+- **⬅️ 前の章**: [Chapter 5-4: RAG/ベクトル検索アーキテクチャ]({{ '/chapter05-4.html' | relative_url }})  
 - **➡️ 次の章**: [Chapter 7: セキュリティ強化]({{ '/chapters/chapter07/' | relative_url }})
 - **🏠 関連章**: [Chapter 5: 独立API サーバー]({{ '/chapter05-1.html' | relative_url }}) | [Chapter 8: 運用監視]({{ '/chapters/chapter08/' | relative_url }})
 - **🔧 リソース**: [動作検証]({{ site.baseurl }}/src/) | [パフォーマンス・チェックリスト]({{ '/operational_checklists.html' | relative_url }})
