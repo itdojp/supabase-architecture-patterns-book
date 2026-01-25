@@ -262,7 +262,7 @@ class AuthService:
     def __init__(self):
         # Supabaseに接続
         url = os.getenv("SUPABASE_URL")
-        key = os.getenv("SUPABASE_ANON_KEY")
+        key = os.getenv("SUPABASE_PUBLISHABLE_KEY")
         self.supabase = create_client(url, key)
     
     async def login(self, email: str, password: str):
@@ -447,13 +447,13 @@ cp .env.example .env
 
 2. **API設定の取得**
    - Project Settings → API
-   - 「URL」と「anon public key」をコピー
+   - 「URL」と「publishable key」をコピー
 
 3. **環境変数設定**
    ```bash
    # .env ファイルを編集
    SUPABASE_URL=https://your-project.supabase.co
-   SUPABASE_ANON_KEY=your-anon-key-here
+   SUPABASE_PUBLISHABLE_KEY=sb_publishable_XXXXXXXXXXXXXXXX
    ```
 
 ### 📋 Step 3: データベーステーブル作成
@@ -535,7 +535,7 @@ pip install flet==0.21.2
 
 **原因**: 環境変数の設定ミス
 **対処法**:
-1. `.env` ファイルの `SUPABASE_URL` と `SUPABASE_ANON_KEY` を確認
+1. `.env` ファイルの `SUPABASE_URL` と `SUPABASE_PUBLISHABLE_KEY` を確認
 2. Supabase Dashboard で正しいキーをコピー
 3. アプリを再起動
 
@@ -742,8 +742,8 @@ import os
 class Settings(BaseSettings):
     # Supabase設定
     SUPABASE_URL: str
-    SUPABASE_ANON_KEY: str
-    SUPABASE_SERVICE_KEY: Optional[str] = None
+    SUPABASE_PUBLISHABLE_KEY: str
+    SUPABASE_SECRET_KEY: Optional[str] = None
     
     # アプリケーション設定
     APP_NAME: str = "Task Manager"
@@ -788,7 +788,7 @@ class SupabaseManager:
             try:
                 self._client = create_client(
                     supabase_url=settings.SUPABASE_URL,
-                    supabase_key=settings.SUPABASE_ANON_KEY
+                    supabase_key=settings.SUPABASE_PUBLISHABLE_KEY
                 )
                 logging.info("Supabaseクライアント初期化完了")
             except Exception as e:
@@ -1957,13 +1957,13 @@ from supabase import create_client
 
 # 環境変数確認
 print(f"URL: {os.getenv('SUPABASE_URL')}")
-print(f"Key: {os.getenv('SUPABASE_ANON_KEY')[:10]}...")
+print(f"Key: {os.getenv('SUPABASE_PUBLISHABLE_KEY')[:10]}...")
 
 # 接続テスト
 try:
     supabase = create_client(
         os.getenv('SUPABASE_URL'),
-        os.getenv('SUPABASE_ANON_KEY')
+        os.getenv('SUPABASE_PUBLISHABLE_KEY')
     )
     # 簡単なクエリでテスト
     response = supabase.table('_test').select('*').limit(1).execute()
@@ -2124,7 +2124,7 @@ def main(page: ft.Page):
     # デバッグ用クライアント
     supabase = DebugSupabaseClient(
         os.getenv('SUPABASE_URL'),
-        os.getenv('SUPABASE_ANON_KEY')
+        os.getenv('SUPABASE_PUBLISHABLE_KEY')
     )
     
     # アプリケーション処理...

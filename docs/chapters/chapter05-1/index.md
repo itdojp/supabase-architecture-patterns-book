@@ -475,8 +475,8 @@ class Settings(BaseSettings):
     
     # Supabase設定
     SUPABASE_URL: str              # Supabaseプロジェクトの URL
-    SUPABASE_ANON_KEY: str         # 匿名アクセス用キー
-    SUPABASE_SERVICE_KEY: str      # 管理者権限キー
+    SUPABASE_PUBLISHABLE_KEY: str         # クライアント公開キー
+    SUPABASE_SECRET_KEY: str      # サーバー専用の秘密キー
     
     # Redis設定（キャッシュ用）
     REDIS_URL: str = "redis://localhost:6379"
@@ -501,8 +501,8 @@ class Settings(BaseSettings):
         # 必須設定チェック
         if not self.SUPABASE_URL:
             errors.append("SUPABASE_URL is required")
-        if not self.SUPABASE_ANON_KEY:
-            errors.append("SUPABASE_ANON_KEY is required")
+        if not self.SUPABASE_PUBLISHABLE_KEY:
+            errors.append("SUPABASE_PUBLISHABLE_KEY is required")
         
         if errors:
             print("❌ 設定エラー:")
@@ -546,7 +546,7 @@ class DatabaseManager:
         # Supabaseクライアント初期化
         self.supabase: Client = create_client(
             settings.SUPABASE_URL,
-            settings.SUPABASE_SERVICE_KEY
+            settings.SUPABASE_SECRET_KEY
         )
         
         # 直接PostgreSQL接続（SQLAlchemy）
@@ -1127,8 +1127,8 @@ cp backend/.env.example backend/.env
    ```bash
    # backend/.env ファイルを編集
    SUPABASE_URL=https://your-project.supabase.co
-   SUPABASE_ANON_KEY=your-anon-key
-   SUPABASE_SERVICE_KEY=your-service-role-key
+   SUPABASE_PUBLISHABLE_KEY=sb_publishable_XXXXXXXXXXXXXXXX
+   SUPABASE_SECRET_KEY=sb_secret_XXXXXXXXXXXXXXXX
    SECRET_KEY=your-secret-key
    DEBUG=True
    ```
@@ -1326,8 +1326,8 @@ class Settings(BaseSettings):
     
     # Supabase設定
     SUPABASE_URL: str
-    SUPABASE_ANON_KEY: str
-    SUPABASE_SERVICE_KEY: str
+    SUPABASE_PUBLISHABLE_KEY: str
+    SUPABASE_SECRET_KEY: str
     SUPABASE_JWT_SECRET: str
     
     # PostgreSQL設定（直接接続用）
@@ -1395,7 +1395,7 @@ from supabase import create_client, Client
 def get_supabase_client() -> Client:
     return create_client(
         supabase_url=settings.SUPABASE_URL,
-        supabase_key=settings.SUPABASE_SERVICE_KEY
+        supabase_key=settings.SUPABASE_SECRET_KEY
     )
 
 def get_db() -> Generator:

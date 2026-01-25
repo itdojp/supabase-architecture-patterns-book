@@ -115,7 +115,7 @@ class SystemHealthMonitor:
     
     def __init__(self):
         self.supabase_url = "https://your-project.supabase.co"
-        self.supabase_key = "your-anon-key"
+        self.supabase_key = "sb_publishable_XXXXXXXXXXXXXXXX"
         
         # 🎯 健康しきい値設定（病院の正常値範囲）
         self.thresholds = {

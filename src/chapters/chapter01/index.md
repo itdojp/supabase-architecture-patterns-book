@@ -285,7 +285,7 @@ CREATE POLICY "認証されたユーザーはコメントを作成可能"
 import { createClient } from '@supabase/supabase-js';
 
 const supabaseUrl = 'YOUR_SUPABASE_URL';
-const supabaseKey = 'YOUR_SUPABASE_ANON_KEY';
+const supabaseKey = 'YOUR_SUPABASE_PUBLISHABLE_KEY';
 
 export const supabase = createClient(supabaseUrl, supabaseKey);
 
@@ -1162,8 +1162,8 @@ services:
     image: supabase/studio:20231123-fb9c70e
     environment:
       SUPABASE_URL: http://localhost:54321
-      SUPABASE_ANON_KEY: ${SUPABASE_ANON_KEY}
-      SUPABASE_SERVICE_KEY: ${SUPABASE_SERVICE_KEY}
+      SUPABASE_PUBLISHABLE_KEY: ${SUPABASE_LEGACY_ANON_JWT}          # ローカル開発では legacy JWT の anon を指定
+      SUPABASE_SECRET_KEY: ${SUPABASE_LEGACY_SERVICE_ROLE_JWT}       # ローカル開発では legacy JWT の service_role を指定
     ports:
       - "3000:3000"
 
@@ -1239,8 +1239,10 @@ if [ ! -f .env ]; then
     echo "📝 環境変数ファイル作成"
     cat > .env << EOF
 SUPABASE_URL=http://localhost:54321
-SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0
-SUPABASE_SERVICE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImV4cCI6MTk4MzgxMjk5Nn0.EGIM96RAZx35lJzdJsyH-qQwv8Hdp7fsn3W0YpN81IU
+SUPABASE_PUBLISHABLE_KEY=sb_publishable_XXXXXXXXXXXXXXXX
+SUPABASE_SECRET_KEY=sb_secret_XXXXXXXXXXXXXXXX
+SUPABASE_LEGACY_ANON_JWT=your-legacy-anon-jwt
+SUPABASE_LEGACY_SERVICE_ROLE_JWT=your-legacy-service-role-jwt
 EOF
 fi
 
@@ -1262,6 +1264,26 @@ echo "✅ セットアップ完了"
 echo "🌐 Supabase Studio: http://localhost:3000"
 echo "🔗 API Endpoint: http://localhost:54321"
 ```
+
+### 🔑 APIキー仕様の更新（publishable/secret）
+
+Supabase Cloud では **APIキー仕様が publishable/secret に移行**しています。  
+セルフホスト環境は legacy JWT キー（`anon`/`service_role`）が前提のため、**用途ごとに区別**して扱います。
+
+**キー種別の役割**:
+- **publishable key**（`sb_publishable_`）: クライアント利用可（`apikey` ヘッダー専用）
+- **secret key**（`sb_secret_`）: サーバー/Edge Functions専用（クライアント禁止）
+- **legacy JWT key**（`anon`/`service_role`）: セルフホスト・旧プロジェクト向け
+
+**使い分けの基本**:
+- RESTアクセス時は **`apikey` に publishable key** を設定
+- **`Authorization` はユーザーのアクセストークン（JWT）** を使用
+- secret key は **サーバー側のみ**で使用し、クライアントに配布しない
+
+**移行ガイド（Cloud）**:
+1. `.env` のキー名を `SUPABASE_PUBLISHABLE_KEY` / `SUPABASE_SECRET_KEY` に統一
+2. `Authorization` にキーを入れていた箇所を **ユーザーJWT** に切り替え
+3. 旧キーのローテーションと削除を実施（期限・手順はSupabaseの告知を確認）
 
 ### 基本スキーマ
 
@@ -1336,14 +1358,14 @@ Error: getaddrinfo ENOTFOUND your-project.supabase.co
 ```javascript
 // 1. 環境変数を確認
 console.log('SUPABASE_URL:', process.env.SUPABASE_URL);
-console.log('SUPABASE_ANON_KEY:', process.env.SUPABASE_ANON_KEY);
+console.log('SUPABASE_PUBLISHABLE_KEY:', process.env.SUPABASE_PUBLISHABLE_KEY);
 
 // 2. 正しい接続方法
 import { createClient } from '@supabase/supabase-js';
 
 const supabase = createClient(
   process.env.SUPABASE_URL || '',
-  process.env.SUPABASE_ANON_KEY || ''
+  process.env.SUPABASE_PUBLISHABLE_KEY || ''
 );
 
 // 3. 接続テスト
@@ -1414,11 +1436,15 @@ curl http://localhost:54321/rest/v1/
 **問題**: "Invalid API key"
 
 **解決方法**:
+> 補足: `Authorization` に設定するのは **Supabase Auth のアクセストークン（JWT）** です。  
+> `SUPABASE_ACCESS_TOKEN` はログイン後に取得する値で、`.env` に固定保存しません。
 ```javascript
 // ヘッダー確認
+// - publishable key は apikey にのみ使う
+// - Authorization はユーザーのアクセストークン（JWT）を使う
 const headers = {
-  'apikey': process.env.SUPABASE_ANON_KEY,
-  'Authorization': `Bearer ${process.env.SUPABASE_ANON_KEY}`,
+  'apikey': process.env.SUPABASE_PUBLISHABLE_KEY,
+  'Authorization': `Bearer ${process.env.SUPABASE_ACCESS_TOKEN}`,
   'Content-Type': 'application/json',
   'Prefer': 'return=minimal'
 };

@@ -259,8 +259,8 @@ services:
       - "54324:54324"  # 📡 Realtime（ライブ通信アンテナ）
     environment:
       POSTGRES_PASSWORD: postgres                    # 🔑 管理者パスワード
-      ANON_KEY: ${SUPABASE_ANON_KEY}                # 🎫 一般利用者用アクセスキー
-      SERVICE_ROLE_KEY: ${SUPABASE_SERVICE_ROLE_KEY} # 🔐 システム管理者用マスターキー
+      ANON_KEY: ${SUPABASE_LEGACY_ANON_JWT}                # 🎫 セルフホスト用legacy JWT
+      SERVICE_ROLE_KEY: ${SUPABASE_LEGACY_SERVICE_ROLE_JWT} # 🔐 セルフホスト用legacy JWT
     volumes:
       - supabase_data:/var/lib/supabase             # 💾 永続データ保存庫
     networks:
@@ -275,7 +275,7 @@ services:
       - "8080:8080"           # 🚪 住宅棟の入口（ポート8080番）
     environment:
       SUPABASE_URL: http://supabase:54321           # 🔌 共通インフラへの接続先
-      SUPABASE_ANON_KEY: ${SUPABASE_ANON_KEY}      # 🎫 住民用アクセスパス
+      SUPABASE_PUBLISHABLE_KEY: ${SUPABASE_PUBLISHABLE_KEY}      # 🎫 住民用アクセスパス
     depends_on:
       - supabase              # 🏭 インフラが準備できてから建設開始
     networks:
@@ -292,7 +292,7 @@ services:
       # 🔌 データベース直結専用線（本社ビル特権）
       DATABASE_URL: postgresql://postgres:postgres@supabase:5432/postgres
       SUPABASE_URL: http://supabase:54321           # 🔌 共通インフラへの接続
-      SUPABASE_SERVICE_KEY: ${SUPABASE_SERVICE_ROLE_KEY}  # 🔐 管理者専用マスターキー
+      SUPABASE_SECRET_KEY: ${SUPABASE_SECRET_KEY}  # 🔐 管理者専用マスターキー
     depends_on:
       - supabase              # 🏭 インフラが準備できてから
       - redis                 # 📦 高速キャッシュシステムが準備できてから
@@ -367,8 +367,10 @@ networks:
 
 # 🔐 Supabase認証キー（建物の入場パス）
 SUPABASE_URL=http://localhost:54321
-SUPABASE_ANON_KEY=your_anon_key_here        # 🎫 一般利用者パス
-SUPABASE_SERVICE_ROLE_KEY=your_service_key_here  # 🔑 管理者マスターキー
+SUPABASE_PUBLISHABLE_KEY=sb_publishable_XXXXXXXXXXXXXXXX        # 🎫 一般利用者パス
+SUPABASE_SECRET_KEY=sb_secret_XXXXXXXXXXXXXXXX  # 🔑 管理者マスターキー
+SUPABASE_LEGACY_ANON_JWT=your-legacy-anon-jwt                 # 🎫 セルフホスト用legacy JWT
+SUPABASE_LEGACY_SERVICE_ROLE_JWT=your-legacy-service-role-jwt # 🔑 セルフホスト用legacy JWT
 
 # 🗄️ データベース接続情報（金庫の暗証番号）
 DATABASE_URL=postgresql://postgres:postgres@localhost:5432/postgres
@@ -836,7 +838,7 @@ serve(async (req: Request): Promise<Response> => {
 
     const supabase = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
-      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
+      Deno.env.get('SUPABASE_SECRET_KEY') ?? ''
     )
 
     // ユーザー認証

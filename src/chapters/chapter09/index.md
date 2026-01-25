@@ -2261,9 +2261,9 @@ from supabase import create_client
 class EnvironmentSyncDiagnostics:
     def __init__(self):
         self.environments = {
-            'local': {'url': 'http://localhost:54321', 'key': 'local_anon_key'},
-            'staging': {'url': 'https://staging.supabase.co', 'key': 'staging_anon_key'},
-            'production': {'url': 'https://prod.supabase.co', 'key': 'prod_anon_key'}
+            'local': {'url': 'http://localhost:54321', 'key': 'local_publishable_key'},
+            'staging': {'url': 'https://staging.supabase.co', 'key': 'staging_publishable_key'},
+            'production': {'url': 'https://prod.supabase.co', 'key': 'prod_publishable_key'}
         }
     
     async def diagnose_schema_differences(self):
@@ -2582,8 +2582,8 @@ class DeploymentValidator:
         
         required_vars = [
             'SUPABASE_URL',
-            'SUPABASE_ANON_KEY', 
-            'SUPABASE_SERVICE_ROLE_KEY',
+            'SUPABASE_PUBLISHABLE_KEY', 
+            'SUPABASE_SECRET_KEY',
             'DATABASE_URL'
         ]
         
@@ -2953,4 +2953,3 @@ Chapter 10では、「**緊急救命室の医師**」レベルの問題解決力
 - **➡️ 最終章**: [Chapter 10: トラブルシューティング](./chapter10.md)
 - **🏠 関連章**: [Chapter 3-5: アーキテクチャパターン](./chapter03.md) | [選択ガイド](./pattern_selection_guide.md)
 - **🔧 リソース**: [アーキテクチャ決定ツール](./src/) | [移行チェックリスト](./operational_checklists.md)
-

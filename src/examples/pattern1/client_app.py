@@ -22,16 +22,16 @@ class SupabaseClientApp:
     def __init__(self):
         # Supabaseクライアントの初期化
         supabase_url = os.getenv("SUPABASE_URL")
-        supabase_anon_key = os.getenv("SUPABASE_ANON_KEY")
+        supabase_publishable_key = os.getenv("SUPABASE_PUBLISHABLE_KEY")
         
         if not supabase_url:
             raise RuntimeError("Environment variable SUPABASE_URL is not set.")
-        if not supabase_anon_key:
-            raise RuntimeError("Environment variable SUPABASE_ANON_KEY is not set.")
+        if not supabase_publishable_key:
+            raise RuntimeError("Environment variable SUPABASE_PUBLISHABLE_KEY is not set.")
         
         self.supabase: Client = create_client(
             url=supabase_url,
-            key=supabase_anon_key
+            key=supabase_publishable_key
         )
         self.current_user: Optional[Dict[str, Any]] = None
         self.realtime_subscription = None
