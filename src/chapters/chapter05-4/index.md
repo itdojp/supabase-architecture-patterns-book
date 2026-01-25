@@ -10,6 +10,11 @@
 **📝 難易度**: 中上級（RLS・Edge Functions 基礎必須）
 ---
 
+### 🧭 この章で扱う構成
+- 構成: RAG/ベクトル検索
+- 推奨用途: AI検索・FAQ・ナレッジ活用
+- 非推奨用途: AI機能が不要、またはデータが極小のケース
+
 ## 🎯 この章で学ぶこと
 
 - Supabaseで **RAG（Retrieval Augmented Generation）** を構成するための全体像
