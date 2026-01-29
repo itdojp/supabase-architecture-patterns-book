@@ -1,10 +1,10 @@
 {
-  "title": "Supabaseアーキテクチャパターン - 実践的な設計手法",
-  "description": "Supabaseアーキテクチャパターン - 実践的な設計手法",
-  "author": "ITDO Inc.（株式会社アイティードゥ）",
+  "title": "Supabase\u30a2\u30fc\u30ad\u30c6\u30af\u30c1\u30e3\u30d1\u30bf\u30fc\u30f3 - \u5b9f\u8df5\u7684\u306a\u8a2d\u8a08\u624b\u6cd5",
+  "description": "Supabase\u30a2\u30fc\u30ad\u30c6\u30af\u30c1\u30e3\u30d1\u30bf\u30fc\u30f3 - \u5b9f\u8df5\u7684\u306a\u8a2d\u8a08\u624b\u6cd5",
+  "author": "ITDO Inc.\uff08\u682a\u5f0f\u4f1a\u793e\u30a2\u30a4\u30c6\u30a3\u30fc\u30c9\u30a5\uff09",
   "version": "1.0.0",
   "language": "ja",
-  "license": "MIT",
+  "license": "CC BY-NC-SA 4.0",
   "repository": {
     "url": "https://github.com/itdojp/supabase-architecture-patterns-book.git",
     "branch": "main"
@@ -13,8 +13,8 @@
     "chapters": [
       {
         "id": "chapter01",
-        "title": "第1章：基礎概念",
-        "description": "基本的な概念と原理"
+        "title": "\u7b2c1\u7ae0\uff1a\u57fa\u790e\u6982\u5ff5",
+        "description": "\u57fa\u672c\u7684\u306a\u6982\u5ff5\u3068\u539f\u7406"
       }
     ]
   },
