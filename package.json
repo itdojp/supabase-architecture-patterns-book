@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Supabaseアーキテクチャパターン - 実践的な設計手法",
   "author": "ITDO Inc.（株式会社アイティードゥ）",
-  "license": "MIT",
+  "license": "CC-BY-NC-SA-4.0",
   "engines": {
     "node": ">=18.0.0"
   },
