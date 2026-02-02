@@ -1,190 +1,138 @@
-<!-- Sidebar Navigation - Supabase Architecture Patterns -->
+<!-- Sidebar Navigation (data-driven) -->
+{% assign navigation = site.data.navigation %}
+
 <div class="sidebar-content">
-    <!-- Book Info -->
     <div class="book-info">
-        <h2 class="book-title">🚀 Supabaseアーキテクチャパターン実践技術書</h2>
-        
-        <p class="book-subtitle">スケーラブルな3層構成の設計と実装 - 初心者から上級者まで段階的に学べる、Supabase完全マスターガイド</p>
-        
+        <h2 class="book-title">{{ site.title | escape }}</h2>
+        {% if site.subtitle %}
+        <p class="book-subtitle">{{ site.subtitle | escape }}</p>
+        {% elsif site.description %}
+        <p class="book-subtitle">{{ site.description | escape }}</p>
+        {% endif %}
     </div>
 
-    <!-- Table of Contents -->
     <div class="toc">
         <h3 class="toc-title">目次</h3>
-        
-        <!-- Introduction -->
+
         <div class="toc-section">
             <ul class="toc-list">
                 <li class="toc-item">
                     <a href="{{ '/' | relative_url }}" class="toc-link {% if page.url == '/' %}active{% endif %}">
-                        🏠 はじめに
-                    </a>
-                </li>
-                <li class="toc-item">
-                    <a href="{{ '/introduction/index.html' | relative_url }}" class="toc-link {% if page.url contains 'introduction' %}active{% endif %}">
-                        📖 本書について
+                        はじめに
                     </a>
                 </li>
             </ul>
         </div>
 
-        <!-- Part I: 基礎理解と認証 -->
-        <div class="toc-section">
-            <h3 class="toc-section-title">🏗️ Part I: 基礎理解と認証</h3>
-            <ul class="toc-list">
-                <li class="toc-item toc-chapter">
-                    <a href="{{ '/chapters/chapter01/index.html' | relative_url }}" class="toc-link {% if page.url contains 'chapter01' %}active{% endif %}">
-                        <span class="chapter-number">1.</span>Supabaseアーキテクチャ理解
-                    </a>
-                </li>
-                <li class="toc-item toc-chapter">
-                    <a href="{{ '/chapters/chapter02/index.html' | relative_url }}" class="toc-link {% if page.url contains 'chapter02' %}active{% endif %}">
-                        <span class="chapter-number">2.</span>認証・認可設計
-                    </a>
-                </li>
-            </ul>
-        </div>
+        {% if navigation %}
+            {% if navigation.introduction %}
+            <div class="toc-section">
+                <h4 class="toc-section-title">導入</h4>
+                <ul class="toc-list">
+                    {% for item in navigation.introduction %}
+                    <li class="toc-item">
+                        <a href="{{ item.path | relative_url }}" class="toc-link {% if page.url == item.path %}active{% endif %}">
+                            {{ item.title }}
+                        </a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
 
-        <!-- Part II: アーキテクチャパターン -->
-        <div class="toc-section">
-            <h3 class="toc-section-title">🎯 Part II: アーキテクチャパターン</h3>
-            <ul class="toc-list">
-                <li class="toc-item toc-chapter">
-                    <a href="{{ '/chapters/chapter03/index.html' | relative_url }}" class="toc-link {% if page.url contains 'chapter03' %}active{% endif %}">
-                        <span class="chapter-number">3.</span>パターン1 - クライアントサイド実装
-                    </a>
-                </li>
-                <li class="toc-item toc-chapter">
-                    <a href="{{ '/chapters/chapter04/index.html' | relative_url }}" class="toc-link {% if page.url contains 'chapter04' %}active{% endif %}">
-                        <span class="chapter-number">4.</span>パターン2 - Edge Functions活用
-                    </a>
-                </li>
-                <li class="toc-item toc-chapter">
-                    <a href="{{ '/chapters/chapter05-1/index.html' | relative_url }}" class="toc-link {% if page.url contains 'chapter05-1' %}active{% endif %}">
-                        <span class="chapter-number">5-1.</span>パターン3 - 独立APIサーバー
-                    </a>
-                </li>
-                <li class="toc-item toc-chapter">
-                    <a href="{{ '/chapters/chapter05-2/index.html' | relative_url }}" class="toc-link {% if page.url contains 'chapter05-2' %}active{% endif %}">
-                        <span class="chapter-number">5-2.</span>マルチテナンシーと複雑ビジネスロジック
-                    </a>
-                </li>
-                <li class="toc-item toc-chapter">
-                    <a href="{{ '/chapters/chapter05-3/index.html' | relative_url }}" class="toc-link {% if page.url contains 'chapter05-3' %}active{% endif %}">
-                        <span class="chapter-number">5-3.</span>拡張性設計とパフォーマンス最適化
-                    </a>
-                </li>
-            </ul>
-        </div>
+            {% if navigation.chapters %}
+            <div class="toc-section">
+                <h4 class="toc-section-title">本編</h4>
+                <ul class="toc-list">
+                    {% for chapter in navigation.chapters %}
+                    <li class="toc-item toc-chapter">
+                        <a href="{{ chapter.path | relative_url }}" class="toc-link {% if page.url == chapter.path or page.url contains chapter.path %}active{% endif %}">
+                            {{ chapter.title }}
+                        </a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
 
-        <!-- Part III: パフォーマンスとセキュリティ -->
-        <div class="toc-section">
-            <h3 class="toc-section-title">🔒 Part III: パフォーマンスとセキュリティ</h3>
-            <ul class="toc-list">
-                <li class="toc-item toc-chapter">
-                    <a href="{{ '/chapters/chapter06/index.html' | relative_url }}" class="toc-link {% if page.url contains 'chapter06' %}active{% endif %}">
-                        <span class="chapter-number">6.</span>パフォーマンス最適化
-                    </a>
-                </li>
-                <li class="toc-item toc-chapter">
-                    <a href="{{ '/chapters/chapter07/index.html' | relative_url }}" class="toc-link {% if page.url contains 'chapter07' %}active{% endif %}">
-                        <span class="chapter-number">7.</span>セキュリティ強化
-                    </a>
-                </li>
-                <li class="toc-item toc-chapter">
-                    <a href="{{ '/chapters/chapter08/index.html' | relative_url }}" class="toc-link {% if page.url contains 'chapter08' %}active{% endif %}">
-                        <span class="chapter-number">8.</span>運用監視と自動化
-                    </a>
-                </li>
-            </ul>
-        </div>
+            {% if navigation.additional %}
+            <div class="toc-section">
+                <h4 class="toc-section-title">追加</h4>
+                <ul class="toc-list">
+                    {% for item in navigation.additional %}
+                    <li class="toc-item">
+                        <a href="{{ item.path | relative_url }}" class="toc-link {% if page.url == item.path or page.url contains item.path %}active{% endif %}">
+                            {{ item.title }}
+                        </a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
 
-        <!-- Part IV: 実践プロジェクト -->
-        <div class="toc-section">
-            <h3 class="toc-section-title">🚀 Part IV: 実践プロジェクト</h3>
-            <ul class="toc-list">
-                <li class="toc-item toc-chapter">
-                    <a href="{{ '/chapters/chapter09/index.html' | relative_url }}" class="toc-link {% if page.url contains 'chapter09' %}active{% endif %}">
-                        <span class="chapter-number">9.</span>アーキテクチャ選択演習
-                    </a>
-                </li>
-                <li class="toc-item toc-chapter">
-                    <a href="{{ '/chapters/chapter10/index.html' | relative_url }}" class="toc-link {% if page.url contains 'chapter10' %}active{% endif %}">
-                        <span class="chapter-number">10.</span>統合実践プロジェクト
-                    </a>
-                </li>
-            </ul>
-        </div>
+            {% if navigation.resources %}
+            <div class="toc-section">
+                <h4 class="toc-section-title">リソース</h4>
+                <ul class="toc-list">
+                    {% for item in navigation.resources %}
+                    <li class="toc-item">
+                        <a href="{{ item.path | relative_url }}" class="toc-link {% if page.url == item.path or page.url contains item.path %}active{% endif %}">
+                            {{ item.title }}
+                        </a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
 
-        <!-- Guides -->
-        <div class="toc-section">
-            <h3 class="toc-section-title">📚 実践ガイド</h3>
-            <ul class="toc-list">
-                <li class="toc-item">
-                    <a href="{{ '/guides/pattern-selection/index.html' | relative_url }}" class="toc-link {% if page.url contains 'pattern-selection' %}active{% endif %}">
-                        🎯 パターン選択ガイド
-                    </a>
-                </li>
-                <li class="toc-item">
-                    <a href="{{ '/guides/error-handling/index.html' | relative_url }}" class="toc-link {% if page.url contains 'error-handling' %}active{% endif %}">
-                        🔧 エラーハンドリング
-                    </a>
-                </li>
-                <li class="toc-item">
-                    <a href="{{ '/guides/troubleshooting/index.html' | relative_url }}" class="toc-link {% if page.url contains 'troubleshooting' %}active{% endif %}">
-                        🛠️ トラブルシューティング
-                    </a>
-                </li>
-                <li class="toc-item">
-                    <a href="{{ '/guides/terminology/index.html' | relative_url }}" class="toc-link {% if page.url contains 'terminology' %}active{% endif %}">
-                        📝 専門用語集
-                    </a>
-                </li>
-                <li class="toc-item">
-                    <a href="{{ '/guides/glossary/index.html' | relative_url }}" class="toc-link {% if page.url contains 'glossary' %}active{% endif %}">
-                        📖 用語辞典
-                    </a>
-                </li>
-            </ul>
-        </div>
+            {% if navigation.appendices %}
+            <div class="toc-section">
+                <h4 class="toc-section-title">付録</h4>
+                <ul class="toc-list">
+                    {% for item in navigation.appendices %}
+                    <li class="toc-item">
+                        <a href="{{ item.path | relative_url }}" class="toc-link {% if page.url == item.path or page.url contains item.path %}active{% endif %}">
+                            {{ item.title }}
+                        </a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
 
-        <!-- Appendices -->
-        <div class="toc-section">
-            <h3 class="toc-section-title">📋 付録</h3>
-            <ul class="toc-list">
-                <li class="toc-item">
-                    <a href="{{ '/appendices/appendix-a/index.html' | relative_url }}" class="toc-link {% if page.url contains 'appendix-a' %}active{% endif %}">
-                        付録A: 追加リソース
-                    </a>
-                </li>
-                <li class="toc-item">
-                    <a href="{{ '/appendices/appendix01/index.html' | relative_url }}" class="toc-link {% if page.url contains 'appendix01' %}active{% endif %}">
-                        付録B: 参考資料
-                    </a>
-                </li>
-            </ul>
-        </div>
+            {% if navigation.afterword %}
+            <div class="toc-section">
+                <h4 class="toc-section-title">あとがき</h4>
+                <ul class="toc-list">
+                    {% for item in navigation.afterword %}
+                    <li class="toc-item">
+                        <a href="{{ item.path | relative_url }}" class="toc-link {% if page.url == item.path or page.url contains item.path %}active{% endif %}">
+                            {{ item.title }}
+                        </a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+        {% endif %}
+    </div>
 
-        <!-- Additional Resources -->
-        <div class="toc-section">
-            <h3 class="toc-section-title">📚 リソース</h3>
-            <ul class="toc-list">
-                <li class="toc-item">
-                    <a href="https://github.com/itdojp/supabase-architecture-patterns-book" class="toc-link" target="_blank" rel="noopener">
-                        💾 GitHubリポジトリ
-                    </a>
-                </li>
-                <li class="toc-item">
-                    <a href="https://itdojp.github.io/it-engineer-knowledge-architecture/" class="toc-link" target="_blank" rel="noopener">
-                        📚 書籍一覧
-                    </a>
-                </li>
-                <li class="toc-item">
-                    <a href="https://itdo.jp" class="toc-link" target="_blank" rel="noopener">
-                        🏢 株式会社アイティードゥ
-                    </a>
-                </li>
-            </ul>
+    <div class="sidebar-footer">
+        {% assign repo_url = site.github.repository_url | default: site.repository_url | default: site.repository.github | default: site.repository %}
+        {% if repo_url and repo_url != '' %}
+            {% unless repo_url contains 'http' %}
+                {% assign repo_url = 'https://github.com/' | append: repo_url %}
+            {% endunless %}
+        {% endif %}
+
+        <div class="external-links">
+            {% if repo_url %}
+            <a href="{{ repo_url }}" target="_blank" rel="noopener" class="external-link">GitHub</a>
+            {% endif %}
+            {% if site.contact.email %}
+            <a href="mailto:{{ site.contact.email | escape }}" class="external-link">Contact</a>
+            {% endif %}
         </div>
     </div>
 </div>
+
