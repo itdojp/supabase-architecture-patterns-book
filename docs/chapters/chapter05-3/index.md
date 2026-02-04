@@ -36,7 +36,7 @@ title: "Chapter 5-3: 拡張性設計とパフォーマンス最適化 📈"
 🍜 人気ラーメンチェーン「麺屋サプリ」の成長ストーリー
 
 📍 Phase 1: 個人店（現在のシステム）
-├── 👨‍🍳 店長1人：注文から配膳まで全て対応
+├── 👨🍳 店長1人：注文から配膳まで全て対応
 ├── 🪑 座席10席：お客さん10人まで
 └── 📝 手書き注文：メモ帳で管理
 
@@ -1325,7 +1325,7 @@ jobs:
       run: |
         pytest tests/integration/ -v
     
-    - name: 🏃‍♂️ API テスト実行
+    - name: 🏃♂️ API テスト実行
       env:
         DATABASE_URL: postgresql://postgres:postgres@localhost:5432/test_db
         REDIS_URL: redis://localhost:6379/0
