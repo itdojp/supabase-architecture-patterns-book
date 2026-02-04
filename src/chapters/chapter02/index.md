@@ -1,9 +1,9 @@
 # Chapter 2: 認証・認可設計 🔐
 
 ---
-**📚 目次に戻る**: [📖 学習ガイド](./textbook_index.md)  
-**⬅️ 前の章**: [Chapter 1: Supabaseアーキテクチャ理解](./chapter01.md)  
-**➡️ 次の章**: [Chapter 3: パターン1 - クライアントサイド実装](./chapter03.md)  
+**📚 目次に戻る**: [📖 学習ガイド](../../introduction/)  
+**⬅️ 前の章**: [Chapter 1: Supabaseアーキテクチャ理解](../chapter01/)  
+**➡️ 次の章**: [Chapter 3: パターン1 - クライアントサイド実装](../chapter03/)  
 **🎯 学習フェーズ**: Part I - 基礎編（認証・認可）  
 **🎯 学習レベル**: 🌱 基礎 | 🚀 応用 | 💪 発展  
 **⏱️ 推定学習時間**: 3〜4時間  
@@ -24,7 +24,7 @@ Chapter 1で学んだ**Supabaseの3つの基本コンポーネント**を振り�
 
 これらの基盤の上に、今度は**「誰がアクセスできるか」「何をしていいか」**を制御するセキュリティの仕組みを構築します。
 
-> 💡 **Chapter 1の理解度確認**: PostgreSQL・PostgREST・Realtimeの役割を説明できますか？不安な場合は[Chapter 1](./chapter01.md)を復習してください。
+> 💡 **Chapter 1の理解度確認**: PostgreSQL・PostgREST・Realtimeの役割を説明できますか？不安な場合は[Chapter 1](../chapter01/)を復習してください。
 
 ## 🎯 この章で学ぶこと（初心者向け）
 
@@ -1022,14 +1022,14 @@ Chapter 3のクライアントサイド実装をスムーズに進めるため�
 
 #### **準備が不安な場合**
 - 🔍 [Supabase公式チュートリアル](https://supabase.com/docs/guides/getting-started) を実施
-- 📚 [付録：環境構築](./appendix.md#a-環境構築スクリプト集) で開発環境を準備
+- 📚 [付録：環境構築](../../appendices/appendix01/#a-環境構築スクリプト集) で開発環境を準備
 - 💬 不明点は [GitHub Discussions](https://github.com/supabase/supabase/discussions) で質問
 
 ---
 
 **📍 ナビゲーション**
-- **📚 目次**: [📖 学習ガイド](./textbook_index.md)
-- **⬅️ 前の章**: [Chapter 1: Supabaseアーキテクチャ理解](./chapter01.md)  
-- **➡️ 次の章**: [Chapter 3: クライアントサイド実装](./chapter03.md)
-- **🏠 関連章**: [Chapter 7: セキュリティ強化](./chapter07.md) | [全体設計](./pattern_selection_guide.md)
-- **🔧 リソース**: [認証テンプレート](./src/) | [セキュリティ・ガイド](./troubleshooting_guide.md)
+- **📚 目次**: [📖 学習ガイド](../../introduction/)
+- **⬅️ 前の章**: [Chapter 1: Supabaseアーキテクチャ理解](../chapter01/)  
+- **➡️ 次の章**: [Chapter 3: クライアントサイド実装](../chapter03/)
+- **🏠 関連章**: [Chapter 7: セキュリティ強化](../chapter07/) | [全体設計](../../guides/pattern-selection/)
+- **🔧 リソース**: [認証テンプレート](../../examples/) | [セキュリティ・ガイド](../../guides/troubleshooting/)

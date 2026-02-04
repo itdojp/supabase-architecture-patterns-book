@@ -1,9 +1,9 @@
 # Chapter 5: パターン3 - 独立APIサーバー 🏗️
 
 ---
-**📚 目次に戻る**: [📖 学習ガイド](./textbook_index.md)  
-**⬅️ 前の章**: [Chapter 4: パターン2 - Edge Functions活用](./chapter04.md)  
-**➡️ 次の章**: [Chapter 6: パフォーマンス最適化](./chapter06.md)  
+**📚 目次に戻る**: [📖 学習ガイド](../../introduction/)  
+**⬅️ 前の章**: [Chapter 4: パターン2 - Edge Functions活用](../chapter04/)  
+**➡️ 次の章**: [Chapter 6: パフォーマンス最適化](../chapter06/)  
 **🏗️ アーキテクチャ**: 独立APIサーバー（FastAPI + SQLAlchemy）  
 **🎯 学習レベル**: 🌱 基礎 | 🚀 応用 | 💪 発展  
 **⏱️ 推定学習時間**: 6〜8時間  
@@ -2270,8 +2270,8 @@ Chapter 5-2以降で学ぶ発展的機能：
 ---
 
 **📍 ナビゲーション**
-- **📚 目次**: [📖 学習ガイド](./textbook_index.md)
-- **⬅️ 前の章**: [Chapter 4: Edge Functions活用](./chapter04.md)  
-- **➡️ 続き**: [Chapter 5-2: マルチテナント実装](./chapter05-2.md)
-- **🏠 関連章**: [Chapter 1: Supabase基礎](./chapter01.md) | [Chapter 6: パフォーマンス](./chapter06.md)
-- **🔧 リソース**: [動作検証](./src/) | [トラブルシューティング](./troubleshooting_guide.md)
+- **📚 目次**: [📖 学習ガイド](../../introduction/)
+- **⬅️ 前の章**: [Chapter 4: Edge Functions活用](../chapter04/)  
+- **➡️ 続き**: [Chapter 5-2: マルチテナント実装](../chapter05-2/)
+- **🏠 関連章**: [Chapter 1: Supabase基礎](../chapter01/) | [Chapter 6: パフォーマンス](../chapter06/)
+- **🔧 リソース**: [動作検証](../../examples/) | [トラブルシューティング](../../guides/troubleshooting/)

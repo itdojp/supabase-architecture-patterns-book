@@ -58,7 +58,7 @@
 
 基礎から確実に積み上げる土台作りパート
 
-#### [🏥 Chapter 1: Supabase基礎知識と環境構築](./chapter01.md)
+#### [🏥 Chapter 1: Supabase基礎知識と環境構築](../chapters/chapter01/)
 **学習目標**: Supabaseの全体像理解と開発環境整備
 
 | セクション | 内容 | 学習時間 | レベル |
@@ -69,7 +69,7 @@
 
 **成果物**: 動作するSupabase開発環境
 
-#### [🔐 Chapter 2: 認証システムの実装](./chapter02.md)
+#### [🔐 Chapter 2: 認証システムの実装](../chapters/chapter02/)
 **学習目標**: セキュアな認証・認可システムの理解と実装
 
 | セクション | 内容 | 学習時間 | レベル |
@@ -86,7 +86,7 @@
 
 Supabaseマスターの核心部分
 
-#### [🏠 Chapter 3: パターン1 - クライアントサイド実装](./chapter03.md)
+#### [🏠 Chapter 3: パターン1 - クライアントサイド実装](../chapters/chapter03/)
 **比喩**: 木造住宅（シンプル・高速・個人向け）  
 **技術**: Python Flet + Supabase Client  
 **サンプル**: 病院患者管理システム
@@ -100,7 +100,7 @@ Supabaseマスターの核心部分
 
 **成果物**: デスクトップ患者管理アプリ
 
-#### [🏢 Chapter 4: パターン2 - Edge Functions活用](./chapter04.md)
+#### [🏢 Chapter 4: パターン2 - Edge Functions活用](../chapters/chapter04/)
 **比喩**: プレハブ工法（柔軟・自動化・中規模向け）  
 **技術**: Deno + TypeScript Edge Functions  
 **サンプル**: 病院薬剤管理システム
@@ -114,17 +114,17 @@ Supabaseマスターの核心部分
 
 **成果物**: サーバーレス薬剤管理システム
 
-#### [🏦 Chapter 5: パターン3 - 独立APIサーバー](./chapter05-1.md)
+#### [🏦 Chapter 5: パターン3 - 独立APIサーバー](../chapters/chapter05-1/)
 **比喩**: 鉄筋コンクリート（堅牢・高性能・企業向け）  
 **技術**: FastAPI + SQLAlchemy + Supabase  
 **サンプル**: 病院総合管理システム
 
 | セクション | ファイル | 内容 | 学習時間 | レベル |
 |:----------|:--------|:-----|:---------|:-------|
-| 5.1 基本設計 | [chapter05-1.md](./chapter05-1.md) | FastAPI基本構成・DB設計 | 3〜4時間 | 🌱🚀 |
-| 5.2 高度実装 | [chapter05-2.md](./chapter05-2.md) | マルチテナント・高度機能 | 4〜6時間 | 🚀💪 |
-| 5.3 運用・拡張 | [chapter05-3.md](./chapter05-3.md) | スケーリング・運用最適化 | 3〜4時間 | 💪 |
-| 5.4 AI/RAG | [chapter05-4.md](./chapter05-4.md) | RAG・埋め込み・監査ログ | 5〜7時間 | 💪 |
+| 5.1 基本設計 | [chapter05-1.md](../chapters/chapter05-1/) | FastAPI基本構成・DB設計 | 3〜4時間 | 🌱🚀 |
+| 5.2 高度実装 | [chapter05-2.md](../chapters/chapter05-2/) | マルチテナント・高度機能 | 4〜6時間 | 🚀💪 |
+| 5.3 運用・拡張 | [chapter05-3.md](../chapters/chapter05-3/) | スケーリング・運用最適化 | 3〜4時間 | 💪 |
+| 5.4 AI/RAG | [chapter05-4.md](../chapters/chapter05-4/) | RAG・埋め込み・監査ログ | 5〜7時間 | 💪 |
 
 **成果物**: エンタープライズ級病院管理システム
 
@@ -143,7 +143,7 @@ Supabaseマスターの核心部分
 
 商用運用レベルへの引き上げ
 
-#### [⚡ Chapter 6: パフォーマンス最適化](./chapter06.md)
+#### [⚡ Chapter 6: パフォーマンス最適化](../chapters/chapter06/)
 **比喩**: 病院設備最適化（効率的な患者フロー設計）
 
 | セクション | 内容 | 学習時間 | レベル |
@@ -153,7 +153,7 @@ Supabaseマスターの核心部分
 | 6.3 キャッシュ戦略 | Redis・クライアントキャッシュ | 2〜3時間 | 💪 |
 | 6.4 監視・計測 | APM・メトリクス収集 | 2〜3時間 | 💪 |
 
-#### [🛡️ Chapter 7: セキュリティ強化](./chapter07.md)
+#### [🛡️ Chapter 7: セキュリティ強化](../chapters/chapter07/)
 **比喩**: 城郭防御システム（多層防御・侵入検知）
 
 | セクション | 内容 | 学習時間 | レベル |
@@ -162,7 +162,7 @@ Supabaseマスターの核心部分
 | 7.2 監査システム | ログ収集・不正検知 | 2〜3時間 | 🚀 |
 | 7.3 侵入検知 | 異常パターン検知・自動防御 | 3〜4時間 | 💪 |
 
-#### [📊 Chapter 8: 運用監視と自動化](./chapter08.md)
+#### [📊 Chapter 8: 運用監視と自動化](../chapters/chapter08/)
 **比喩**: 病院管理システム（24時間運用・自動化）
 
 | セクション | 内容 | 学習時間 | レベル |
@@ -177,7 +177,7 @@ Supabaseマスターの核心部分
 
 実際のプロジェクトレベルの総合演習
 
-#### [🎯 Chapter 9: アーキテクチャ選択演習](./chapter09.md)
+#### [🎯 Chapter 9: アーキテクチャ選択演習](../chapters/chapter09/)
 **比喩**: 建築コンサルタント（要件に応じた最適工法選択）
 
 | セクション | 内容 | 学習時間 | レベル |
@@ -187,7 +187,7 @@ Supabaseマスターの核心部分
 | 9.3 移行戦略 | パターン間移行・リスク管理 | 2〜3時間 | 💪 |
 | 9.4 演習問題 | 実際のビジネス要件での選択演習 | 3〜4時間 | 💪 |
 
-#### [🏗️ Chapter 10: 統合実践プロジェクト](./chapter10.md)
+#### [🏗️ Chapter 10: 統合実践プロジェクト](../chapters/chapter10/)
 **比喩**: 複合施設建設（3パターン統合の大規模プロジェクト）
 
 | セクション | 内容 | 学習時間 | レベル |
@@ -287,16 +287,16 @@ src/
 ## 📚 関連ドキュメント・リソース
 
 ### 📋 **実践ガイド集**
-- [🔧 トラブルシューティングガイド](./troubleshooting_guide.md) - 開発時の問題解決
-- [⚠️ エラーハンドリングガイド](./error_handling_guide.md) - 高度なエラー処理
-- [🎯 パターン選択ガイド](./pattern_selection_guide.md) - AI支援選択システム
-- [🔄 移行戦略ガイド](./migration_strategy.md) - パターン間移行戦略
-- [✅ 運用チェックリスト](./operational_checklists.md) - 本番運用対応
+- [🔧 トラブルシューティングガイド](../guides/troubleshooting/) - 開発時の問題解決
+- [⚠️ エラーハンドリングガイド](../guides/error-handling/) - 高度なエラー処理
+- [🎯 パターン選択ガイド](../guides/pattern-selection/) - AI支援選択システム
+- [🔄 移行戦略ガイド](../chapters/chapter09/#93-移行戦略パターン間の段階的移行) - パターン間移行戦略
+- [✅ 運用チェックリスト](../appendices/appendix01/#c-チェックリスト集) - 本番運用対応
 
 ### 🔗 **統合ドキュメント**
-- [📖 バージョン履歴](./VERSION.md) - 改訂計画・変更履歴
-- [📋 技術書統合版](./supabase_textbook.md) - 全章統合版
-- [📊 コード検証ガイド](./code_verification.md) - 品質保証・検証手順
+- [📖 バージョン履歴](../../CHANGELOG.md) - 改訂計画・変更履歴
+- [📋 技術書トップページ](../../docs/index.md) - 目次・読み方ガイド
+- [📊 品質検証（Chapter 10）](../chapters/chapter10/#最終成果物と検証) - 品質保証・検証手順
 
 ### 🌍 **外部リソース**
 - [Supabase公式ドキュメント](https://supabase.com/docs)
@@ -306,7 +306,7 @@ src/
 
 ---
 
-## 💼 学習成果の活用方法
+## 🎓 学習修了後の進路
 
 ### 🏆 **キャリア活用**
 - **転職活動**: 3つのアーキテクチャパターン実装をポートフォリオとして活用
@@ -331,6 +331,6 @@ src/
 
 **🚀 さあ、Supabaseアーキテクチャマスターへの旅を始めましょう！**
 
-**📖 今すぐ学習開始**: [Chapter 1: Supabase基礎知識](./chapter01.md)  
+**📖 今すぐ学習開始**: [Chapter 1: Supabase基礎知識](../chapters/chapter01/)  
 **💬 質問・相談**: [GitHub Discussions](https://github.com/itdojp/supabase-architecture-patterns-book/discussions)  
 **📧 フィードバック**: [お問い合わせ](mailto:contact@itdo.jp)
