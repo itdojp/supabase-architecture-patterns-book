@@ -1,9 +1,9 @@
 # Chapter 5-2: マルチテナンシーと複雑ビジネスロジック 🏢
 
 ---
-**📚 目次に戻る**: [📖 学習ガイド](./textbook_index.md)  
-**⬅️ 前の章**: [Chapter 5-1: 独立APIサーバー基礎](./chapter05-1.md)  
-**➡️ 次の章**: [Chapter 5-3: 本番運用機能](./chapter05-3.md)  
+**📚 目次に戻る**: [📖 学習ガイド](../../introduction/)  
+**⬅️ 前の章**: [Chapter 5-1: 独立APIサーバー基礎](../chapter05-1/)  
+**➡️ 次の章**: [Chapter 5-3: 本番運用機能](../chapter05-3/)  
 **🏗️ アーキテクチャ**: 独立APIサーバー（FastAPI + マルチテナント）  
 **🎯 学習レベル**: 🌱 基礎 | 🚀 応用 | 💪 発展  
 **⏱️ 推定学習時間**: 4〜6時間  
@@ -1784,8 +1784,8 @@ Chapter 5-3で学ぶ本番運用機能の前提知識：
 ---
 
 **📍 ナビゲーション**
-- **📚 目次**: [📖 学習ガイド](./textbook_index.md)
-- **⬅️ 前の章**: [Chapter 5-1: 独立APIサーバー基礎](./chapter05-1.md)  
-- **➡️ 次の章**: [Chapter 5-3: 本番運用機能](./chapter05-3.md)
-- **🏠 関連章**: [Chapter 6: パフォーマンス最適化](./chapter06.md) | [Chapter 8: 運用監視](./chapter08.md)
-- **🔧 リソース**: [マルチテナント設計](./src/) | [運用チェックリスト](./operational_checklists.md)
+- **📚 目次**: [📖 学習ガイド](../../introduction/)
+- **⬅️ 前の章**: [Chapter 5-1: 独立APIサーバー基礎](../chapter05-1/)  
+- **➡️ 次の章**: [Chapter 5-3: 本番運用機能](../chapter05-3/)
+- **🏠 関連章**: [Chapter 6: パフォーマンス最適化](../chapter06/) | [Chapter 8: 運用監視](../chapter08/)
+- **🔧 リソース**: [マルチテナント設計](../../examples/) | [運用チェックリスト](../../appendices/appendix01/#c-チェックリスト集)
