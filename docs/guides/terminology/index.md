@@ -57,8 +57,8 @@ This guide ensures consistent terminology usage throughout the Supabase Architec
 | PostgREST | PostGREST, postgrest | Note the 'g' placement |
 | Supabase | supabase, SupaBase | Capital 'S' only |
 | WebSocket | Websocket, websocket | Capital 'W' and 'S' |
-| JavaScript | Javascript, JS | Full name preferred |
-| TypeScript | Typescript, TS | Full name preferred |
+| JavaScript | `Javascript`, JS | Full name preferred |
+| TypeScript | `Typescript`, TS | Full name preferred |
 | Row Level Security | row level security, RLS | Use full name first, then RLS |
 | Write-Ahead Log | write-ahead log | Use capitals or WAL |
 
