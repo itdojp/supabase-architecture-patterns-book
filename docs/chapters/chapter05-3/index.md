@@ -1533,7 +1533,8 @@ Chapter 5-3では、大規模なSaaSプラットフォームを支えるスケ�
 
 **次章予告**:
 Chapter 6では、セキュリティとコンプライアンス対応を深掘りします。
-    
+
+```python
     def get_connection_pool_status(self):
         """データベース接続の使用状況確認（駐車場の空き状況みたいな）"""
         pool = self.engine.pool
