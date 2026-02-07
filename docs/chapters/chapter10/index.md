@@ -402,8 +402,6 @@ SMTP_PASSWORD=your_app_password           # アプリパスワード
 LOG_LEVEL=INFO                            # ログレベル
 MONITORING_ENABLED=true                   # 監視機能の有効化
 ```
-  supabase_data:
-```
 
 ### 1.2 統合データベース設計
 
