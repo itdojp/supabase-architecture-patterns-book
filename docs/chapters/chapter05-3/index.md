@@ -1283,7 +1283,7 @@ jobs:
     
     steps:
     - name: 📥 コードチェックアウト
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
     
     - name: 🐍 Python環境セットアップ
       uses: actions/setup-python@v4
@@ -1355,7 +1355,7 @@ jobs:
     
     steps:
     - name: 📥 コードチェックアウト
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
     
     - name: 🔧 Docker Buildx セットアップ
       uses: docker/setup-buildx-action@v2
@@ -1478,7 +1478,7 @@ jobs:
     
     steps:
     - name: 📥 コードチェックアウト
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
     
     - name: 🐍 Python環境セットアップ
       uses: actions/setup-python@v4
@@ -2696,7 +2696,7 @@ jobs:
           - 6379:6379
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     
     - name: Set up Python
       uses: actions/setup-python@v4
@@ -2738,7 +2738,7 @@ jobs:
   security:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     
     - name: Run security scan
       run: |
@@ -2752,7 +2752,7 @@ jobs:
     if: github.event_name == 'push'
     
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v2

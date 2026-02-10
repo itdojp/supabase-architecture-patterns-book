@@ -1591,7 +1591,7 @@ jobs:
           --health-retries 5
     
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     
     - name: Setup Python
       uses: actions/setup-python@v4
@@ -1634,7 +1634,7 @@ jobs:
   security:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     
     - name: Run security scan
       run: |
@@ -1651,7 +1651,7 @@ jobs:
     if: github.ref == 'refs/heads/main'
     
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     
     - name: Log in to Container Registry
       uses: docker/login-action@v2
