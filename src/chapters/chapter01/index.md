@@ -1253,17 +1253,17 @@ fi
 
 # Docker環境起動
 echo "🐳 Docker Compose起動"
-docker-compose up -d
+docker compose up -d
 
 # データベース接続待機
 echo "⏳ PostgreSQL起動待機"
-until docker-compose exec supabase-db pg_isready; do
+until docker compose exec supabase-db pg_isready; do
     sleep 2
 done
 
 # マイグレーション実行
 echo "📊 初期スキーマ作成"
-docker-compose exec supabase-db psql -U postgres -d postgres -f /docker-entrypoint-initdb.d/001_initial_schema.sql
+docker compose exec supabase-db psql -U postgres -d postgres -f /docker-entrypoint-initdb.d/001_initial_schema.sql
 
 echo "✅ セットアップ完了"
 echo "🌐 Supabase Studio: http://localhost:3000"
@@ -1421,16 +1421,16 @@ SELECT * FROM your_table_name;
 **チェックリスト**:
 ```bash
 # 1. ログ確認
-docker-compose logs supabase-db
-docker-compose logs supabase-auth
+docker compose logs supabase-db
+docker compose logs supabase-auth
 
 # 2. ポート競合確認
 sudo lsof -i :54321
 sudo lsof -i :54322
 
 # 3. 環境リセット
-docker-compose down -v
-docker-compose up -d
+docker compose down -v
+docker compose up -d
 
 # 4. ヘルスチェック
 curl http://localhost:54321/rest/v1/
