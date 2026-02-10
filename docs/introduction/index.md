@@ -283,7 +283,7 @@ src/
 各サンプルは以下で動作確認済み：
 - ✅ Supabase v2.39.0
 - ✅ Python 3.11+
-- ✅ Node.js 18+
+- ✅ Node.js 20+
 - ✅ Docker Compose v2.0+
 
 ---
