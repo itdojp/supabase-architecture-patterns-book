@@ -1144,8 +1144,8 @@ cp backend/.env.example backend/.env
 # Docker でRedis起動
 docker run -d --name redis-saas -p 6379:6379 redis:7-alpine
 
-# または docker-compose 使用
-docker-compose up -d redis
+# または docker compose 使用
+docker compose up -d redis
 ```
 
 ### 📋 Step 4: アプリケーション起動

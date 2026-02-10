@@ -55,13 +55,19 @@ echo "プロジェクト名: $PROJECT_NAME"
 
 # 必要なツールのチェック
 check_dependencies() {
-    local deps=("docker" "docker-compose" "psql" "curl" "jq")
+    local deps=("docker" "psql" "curl" "jq" "openssl")
     for dep in "${deps[@]}"; do
         if ! command -v "$dep" &> /dev/null; then
             echo "❌ $dep がインストールされていません"
             exit 1
         fi
     done
+
+    # Compose v2（docker compose）前提。Compose v1（docker-compose）は前提にしない。
+    if ! docker compose version &> /dev/null; then
+        echo "❌ Docker Compose（Compose v2）が利用できません（'docker compose version' が失敗しました）"
+        exit 1
+    fi
     echo "✅ 依存関係チェック完了"
 }
 
@@ -525,7 +531,7 @@ create_dev_scripts() {
     cat > scripts/start.sh << 'EOF'
 #!/bin/bash
 echo "🚀 Supabase開発環境起動中..."
-docker-compose up -d
+docker compose up -d
 
 echo "⏳ サービス起動待機中..."
 sleep 10
@@ -546,7 +552,7 @@ EOF
     cat > scripts/stop.sh << 'EOF'
 #!/bin/bash
 echo "🛑 Supabase開発環境停止中..."
-docker-compose down
+docker compose down
 echo "✅ 停止完了"
 EOF
 
@@ -554,8 +560,8 @@ EOF
     cat > scripts/reset.sh << 'EOF'
 #!/bin/bash
 echo "🔄 Supabase開発環境リセット中..."
-docker-compose down -v
-docker-compose up -d
+docker compose down -v
+docker compose up -d
 echo "✅ リセット完了"
 EOF
 
@@ -566,7 +572,7 @@ BACKUP_DIR="backups/$(date +%Y%m%d_%H%M%S)"
 mkdir -p "$BACKUP_DIR"
 
 echo "💾 データベースバックアップ中..."
-docker-compose exec -T supabase-db pg_dump -U postgres -d postgres > "$BACKUP_DIR/database.sql"
+docker compose exec -T supabase-db pg_dump -U postgres -d postgres > "$BACKUP_DIR/database.sql"
 
 echo "📁 設定ファイルバックアップ中..."
 cp -r supabase/migrations "$BACKUP_DIR/"

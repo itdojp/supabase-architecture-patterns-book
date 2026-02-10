@@ -1401,7 +1401,7 @@ class AlertManager:
       
       - name: Start test environment
         run: |
-          docker-compose -f docker-compose.test.yml up -d
+          docker compose -f docker-compose.test.yml up -d
           sleep 30  # アプリケーション起動待機
       
       - name: Run load tests
