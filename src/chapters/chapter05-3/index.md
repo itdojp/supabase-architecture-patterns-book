@@ -1375,7 +1375,7 @@ jobs:
     
     - name: 🔨 Docker イメージビルド・プッシュ
       id: build
-      uses: docker/build-push-action@v4
+      uses: docker/build-push-action@v6
       with:
         context: .
         file: ./Dockerfile
@@ -2769,7 +2769,7 @@ jobs:
           type=sha
           
     - name: Build and push
-      uses: docker/build-push-action@v4
+      uses: docker/build-push-action@v6
       with:
         context: .
         push: true

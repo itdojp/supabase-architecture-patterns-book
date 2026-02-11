@@ -1661,14 +1661,14 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
     
     - name: Build and push Backend
-      uses: docker/build-push-action@v4
+      uses: docker/build-push-action@v6
       with:
         context: ./backend
         push: true
         tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/backend:latest
     
     - name: Build and push Frontend  
-      uses: docker/build-push-action@v4
+      uses: docker/build-push-action@v6
       with:
         context: ./frontend
         push: true
