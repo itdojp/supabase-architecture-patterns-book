@@ -1509,7 +1509,7 @@ class AlertManager:
     if: github.event_name != 'pull_request'
     steps:
       - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@0.33.1
         with:
           image-ref: ${{ needs.build-and-push.outputs.image-tag }}
           format: 'sarif'
