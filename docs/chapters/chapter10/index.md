@@ -1599,7 +1599,7 @@ jobs:
         python-version: '3.11'
     
     - name: Setup Deno  
-      uses: denoland/setup-deno@v1
+      uses: denoland/setup-deno@v2
       with:
         deno-version: v1.40.x
     
@@ -1643,7 +1643,7 @@ jobs:
         bandit -r backend/app/
     
     - name: Dependency vulnerability scan
-      uses: pypa/gh-action-pip-audit@v1.0.8
+      uses: pypa/gh-action-pip-audit@v1.1.0
 
   build-and-deploy:
     needs: [test, security]
