@@ -1352,7 +1352,7 @@ class AlertManager:
           python-version: ${{ matrix.python-version }}
       
       - name: Cache dependencies
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ~/.cache/pip
           key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements*.txt') }}
@@ -1379,7 +1379,7 @@ class AlertManager:
           pytest tests/integration/ -v --junitxml=junit-integration.xml --cov=app --cov-append --cov-report=xml:coverage-integration.xml
       
       - name: Upload test results
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: always()
         with:
           name: test-results-${{ matrix.python-version }}-${{ matrix.os }}
@@ -1412,7 +1412,7 @@ class AlertManager:
                  --html=performance-report.html --csv=performance
       
       - name: Upload performance results
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: performance-results
           path: |
