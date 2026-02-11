@@ -907,7 +907,7 @@ jobs:
         pytest tests/ -v --cov=app --cov-report=xml
     
     - name: Upload coverage
-      uses: codecov/codecov-action@v3
+      uses: codecov/codecov-action@v5
       with:
         file: ./coverage.xml
 
