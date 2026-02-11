@@ -1286,7 +1286,7 @@ jobs:
       uses: actions/checkout@v4
     
     - name: 🐍 Python環境セットアップ
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v6
       with:
         python-version: ${{ env.PYTHON_VERSION }}
         cache: 'pip'
@@ -1481,7 +1481,7 @@ jobs:
       uses: actions/checkout@v4
     
     - name: 🐍 Python環境セットアップ
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v6
       with:
         python-version: ${{ env.PYTHON_VERSION }}
     
@@ -2699,7 +2699,7 @@ jobs:
     - uses: actions/checkout@v4
     
     - name: Set up Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v6
       with:
         python-version: '3.11'
         
