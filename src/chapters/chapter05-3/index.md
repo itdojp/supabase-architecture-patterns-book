@@ -213,8 +213,6 @@ def get_user_dashboard_data(user_id: int):
         "completed_tasks": 127,
         "team_members": 8
     }
-```
-
 **🔰 初心者向け解説**：
 
 | 概念 | 何をしているか | 身近な例 |
@@ -1634,7 +1632,6 @@ for table in heavy_tables[:3]:  # 上位3つを表示
 unused = optimizer.find_unused_indexes()
 if unused:
     print(f"🗑️ 使われていないインデックス: {len(unused)}個")
-```text
 
 **🔰 初心者向け解説**：
 

@@ -1304,6 +1304,7 @@ class AlertManager:
 | **SMS** | 即座 | 最高 | 真の緊急事態 | 確実な到達・どこでも受信 |
 | **Discord** | 即座 | 中 | カジュアルなチーム連携 | コミュニティ感・画像対応 |
 
+```yaml
   ## テスト実行
   test:
     runs-on: ${{ matrix.os }}
@@ -1582,7 +1583,7 @@ class AlertManager:
           status: ${{ job.status }}
           channel: '#deployments'
           webhook_url: ${{ secrets.SLACK_WEBHOOK }}
-```text
+```
 
 ### 高度なテスト戦略
 

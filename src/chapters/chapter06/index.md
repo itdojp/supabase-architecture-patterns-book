@@ -637,7 +637,6 @@ SELECT * FROM vacuum_report() WHERE dead_tuples > 100;
 | `pg_cron` | 定期実行スケジューラー | 「毎日朝2時に自動お掃除」の設定 |
 
 ---
-```text
 
 ---
 
@@ -647,7 +646,7 @@ SELECT * FROM vacuum_report() WHERE dead_tuples > 100;
 
 PostgRESTは、**「レストランの注文受付システム」**のようなものです。お客さんからの注文を効率よく処理できるように設定を最適化しましょう：
 
-```
+```text
 🍽️ レストランの注文システム
 ├── 📋 メニュー：何が注文できるか（APIエンドポイント）
 ├── 👨💼 ウェイター：注文を受ける人（PostgREST）
@@ -659,7 +658,7 @@ PostgRESTは、**「レストランの注文受付システム」**のような�
 ├── 👨💼 ウェイターの人数最適化（接続プール）
 ├── 🔄 よく注文される料理の事前準備（キャッシュ）
 └── 📊 大量注文時の効率的な処理
-```text
+```
 
 ### 📄 実際の設定ファイル最適化
 
@@ -1570,8 +1569,6 @@ Perfect! I've successfully transformed major sections of Chapter 6 with comprehe
         if len(parts) >= 2 and parts[0] == "rest" and parts[1] == "v1":
             return parts[2] if len(parts) > 2 else None
         return None
-```text
-
 ---
 
 ## 6.3 クライアントサイドキャッシュ戦略
@@ -3636,4 +3633,3 @@ Chapter 7では、「**銀行の金庫システム**」並みの堅牢なセキ�
 - **➡️ 次の章**: [Chapter 7: セキュリティ強化](../chapter07/)
 - **🏠 関連章**: [Chapter 5: 独立API サーバー](../chapter05-1/) | [Chapter 8: 運用監視](../chapter08/)
 - **🔧 リソース**: [動作検証](../../examples/) | [パフォーマンス・チェックリスト](../../appendices/appendix01/#c-チェックリスト集)
-
