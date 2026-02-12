@@ -2,7 +2,7 @@
 
 ## 🔗 ライブプレビュー
 
-**✨ [ライブデザインプレビューを見る](https://itdojp.github.io/book-publishing-template2/)**
+**✨ [ライブデザインプレビューを見る](https://itdojp.github.io/supabase-architecture-patterns-book/)**
 
 > 上記リンクをクリックして、実際のデザインをインタラクティブに体験できます。右上のボタンでライト/ダークモードの切り替えも可能です。
 
@@ -14,7 +14,7 @@
 3. 右上の🌙/☀️ボタンでテーマ切り替えを試す
 
 ### オプション2: ローカルファイル
-1. [design-preview.html](https://raw.githubusercontent.com/itdojp/book-publishing-template2/main/design-preview.html) を右クリック
+1. [design-preview.html](./design-preview.html?raw=1) を右クリック
 2. "名前を付けてリンク先を保存" を選択
 3. ダウンロードしたHTMLファイルをブラウザで開く
 
@@ -167,26 +167,26 @@ const codeBlock = {
 ### 開発者向け
 ```bash
 # リポジトリをクローン
-git clone https://github.com/itdojp/book-publishing-template2.git
+git clone https://github.com/itdojp/supabase-architecture-patterns-book.git
 
 # プレビューを確認
 open design-preview.html
 
 # または GitHub Pages で確認
-# https://itdojp.github.io/book-publishing-template2/
+# https://itdojp.github.io/supabase-architecture-patterns-book/
 ```
 
 ### 書籍作成者向け
 1. プレビューでデザインを確認
-2. [GitHub Issue #1](https://github.com/itdojp/book-publishing-template2/issues/1) でフィードバック
+2. [book-formatter Issues](https://github.com/itdojp/book-formatter/issues) でフィードバック
 3. 実装完了後にテンプレートとして利用
 
 ## 🔗 関連リンク
 
-- **📋 提案イシュー**: [GitHub Issue #1](https://github.com/itdojp/book-publishing-template2/issues/1)
-- **🔄 ライブプレビュー**: [GitHub Pages](https://itdojp.github.io/book-publishing-template2/)
-- **📁 ソースコード**: [design-preview.html](https://github.com/itdojp/book-publishing-template2/blob/main/design-preview.html)
-- **📖 実装ガイド**: [Templates フォルダ](https://github.com/itdojp/book-publishing-template2/tree/main/templates)
+- **📋 提案イシュー**: [book-formatter Issues](https://github.com/itdojp/book-formatter/issues)
+- **🔄 ライブプレビュー**: [GitHub Pages](https://itdojp.github.io/supabase-architecture-patterns-book/)
+- **📁 ソースコード**: [design-preview.html](./design-preview.html)
+- **📖 実装ガイド**: [Templates フォルダ](https://github.com/itdojp/book-formatter/tree/main/templates)
 
 ---
 
