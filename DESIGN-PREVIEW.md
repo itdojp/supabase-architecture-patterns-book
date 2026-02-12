@@ -14,7 +14,7 @@
 3. 右上の🌙/☀️ボタンでテーマ切り替えを試す
 
 ### オプション2: ローカルファイル
-1. [design-preview.html](https://raw.githubusercontent.com/itdojp/supabase-architecture-patterns-book/main/design-preview.html) を右クリック
+1. [design-preview.html](./design-preview.html) を右クリック
 2. "名前を付けてリンク先を保存" を選択
 3. ダウンロードしたHTMLファイルをブラウザで開く
 
@@ -185,7 +185,7 @@ open design-preview.html
 
 - **📋 提案イシュー**: [book-formatter Issues](https://github.com/itdojp/book-formatter/issues)
 - **🔄 ライブプレビュー**: [GitHub Pages](https://itdojp.github.io/supabase-architecture-patterns-book/)
-- **📁 ソースコード**: [design-preview.html](https://github.com/itdojp/supabase-architecture-patterns-book/blob/main/design-preview.html)
+- **📁 ソースコード**: [design-preview.html](./design-preview.html)
 - **📖 実装ガイド**: [Templates フォルダ](https://github.com/itdojp/book-formatter/tree/main/templates)
 
 ---
