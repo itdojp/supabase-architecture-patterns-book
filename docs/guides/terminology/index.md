@@ -74,7 +74,7 @@ This guide ensures consistent terminology usage throughout the Supabase Architec
 ## 🎯 Usage Guidelines / 使用ガイドライン
 
 ### 1. First Mention / 初出時
-```
+```text
 正: Row Level Security (RLS) は、データベースレベルでアクセス制御を行います。
 誤: RLSは、データベースレベルでアクセス制御を行います。
 ```
@@ -89,13 +89,13 @@ const supabase = createClient(url, key); // クライアント作成
 ```
 
 ### 3. Section Headers / セクションヘッダー
-```
+```text
 正: ## 認証システムの実装
 誤: ## Authentication System Implementation
 ```
 
 ### 4. Technical Explanations / 技術説明
-```
+```text
 正: PostgreSQLデータベースにデータを保存します
 誤: Postgresデータベースにデータを保存します
 ```
