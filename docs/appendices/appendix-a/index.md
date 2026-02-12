@@ -285,7 +285,7 @@ node scripts/build-simple.js --legacy
 ## A.6 ファイル構造
 
 ### テンプレートファイル
-```
+```text
 templates/
 ├── styles/
 │   ├── main.css                    # メインCSS
@@ -305,7 +305,7 @@ templates/
 ```
 
 ### ビルド出力
-```
+```text
 docs/
 ├── assets/
 │   ├── css/
