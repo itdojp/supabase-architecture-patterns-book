@@ -10,7 +10,7 @@
 **📝 難易度**: 上級（5-1,5-2完了・インフラ・運用知識必要）
 ---
 
-### 🧭 この章で扱う構成
+## 🧭 この章で扱う構成
 - 構成: 独立APIサーバー + 運用/拡張
 - 推奨用途: 成長期の性能・拡張要件への対応
 - 非推奨用途: 初期段階で運用要件が小さいケース
@@ -27,7 +27,7 @@
 
 想像してみてください。あなたの**小さなラーメン店**が大人気になって、全国チェーン展開することになりました：
 
-```
+```text
 🍜 人気ラーメンチェーン「麺屋サプリ」の成長ストーリー
 
 📍 Phase 1: 個人店（現在のシステム）
@@ -213,8 +213,6 @@ def get_user_dashboard_data(user_id: int):
         "completed_tasks": 127,
         "team_members": 8
     }
-```
-
 **🔰 初心者向け解説**：
 
 | 概念 | 何をしているか | 身近な例 |
@@ -1543,7 +1541,7 @@ Chapter 6では、セキュリティとコンプライアンス対応を深掘�
     def analyze_table_sizes(self):
         """どのテーブルが重いかを調査（図書館のどの棚が重いか確認）"""
         with self.engine.connect() as conn:
-            # テーブルサイズ情報を取得
+            ## テーブルサイズ情報を取得
             result = conn.execute(text("""
                 SELECT 
                     tablename as table_name,
@@ -1596,7 +1594,7 @@ Chapter 6では、セキュリティとコンプライアンス対応を深掘�
         partition_name = f"{table_name}_y{year}m{month:02d}"
         start_date = f"{year}-{month:02d}-01"
         
-        # 次月の1日を終了日とする
+        ## 次月の1日を終了日とする
         if month == 12:
             end_date = f"{year + 1}-01-01"
         else:
@@ -1618,23 +1616,22 @@ Chapter 6では、セキュリティとコンプライアンス対応を深掘�
         
         return create_sql
 
-# 使用例：賢いデータベース管理
+## 使用例：賢いデータベース管理
 optimizer = DatabaseOptimizer(engine)
 
-# 接続状況をチェック
+## 接続状況をチェック
 pool_status = optimizer.get_connection_pool_status()
 print(f"データベース接続: {pool_status['status']}")
 
-# 重いテーブルを確認
+## 重いテーブルを確認
 heavy_tables = optimizer.analyze_table_sizes()
 for table in heavy_tables[:3]:  # 上位3つを表示
     print(f"📊 {table['table_name']}: {table['readable_size']}")
 
-# 無駄なインデックスを確認
+## 無駄なインデックスを確認
 unused = optimizer.find_unused_indexes()
 if unused:
     print(f"🗑️ 使われていないインデックス: {len(unused)}個")
-```
 
 **🔰 初心者向け解説**：
 
@@ -1651,7 +1648,7 @@ if unused:
 大量のアクセスを複数のサーバーに振り分ける「案内係」の仕組みを見てみましょう：
 
 ```python
-# src/chapter05-saas-platform/backend/app/core/load_balancer.py（重要部分を抜粋）
+## src/chapter05-saas-platform/backend/app/core/load_balancer.py（重要部分を抜粋）
 
 from typing import List, Dict, Any
 import random
@@ -1704,7 +1701,7 @@ class LoadBalancer:
         if not healthy_servers:
             raise Exception("❌ 営業中の店舗がありません！")
         
-        # 案内方法による選択
+        ## 案内方法による選択
         if self.algorithm == "round_robin":
             return self._round_robin_selection(healthy_servers)
         elif self.algorithm == "weighted_round_robin":
@@ -1712,7 +1709,7 @@ class LoadBalancer:
         elif self.algorithm == "least_connections":
             return self._least_connections_selection(healthy_servers)
         else:
-            # ランダム選択（お任せ案内）
+            ## ランダム選択（お任せ案内）
             return random.choice(healthy_servers)
     
     def _round_robin_selection(self, servers: List[ServerInstance]) -> ServerInstance:
@@ -1748,7 +1745,7 @@ class LoadBalancer:
         
         for server in self.servers:
             try:
-                # 店舗に「元気ですか？」と確認
+                ## 店舗に「元気ですか？」と確認
                 start_time = time.time()
                 is_healthy = await self._check_server_health(server)
                 response_time = time.time() - start_time
@@ -1777,21 +1774,21 @@ class LoadBalancer:
         
         try:
             async with httpx.AsyncClient(timeout=5.0) as client:
-                # 店舗のヘルスチェックAPI呼び出し
+                ## 店舗のヘルスチェックAPI呼び出し
                 response = await client.get(f"http://{server.host}:{server.port}/health")
                 return response.status_code == 200
         except:
             return False
 
-# 使用例：実際のロードバランサー運用
+## 使用例：実際のロードバランサー運用
 load_balancer = LoadBalancer()
 
-# 店舗を追加
+## 店舗を追加
 load_balancer.add_server(ServerInstance("tokyo-1", "10.0.1.100", 8000, weight=2))    # 大型店舗
 load_balancer.add_server(ServerInstance("osaka-1", "10.0.1.101", 8000, weight=2))    # 大型店舗  
 load_balancer.add_server(ServerInstance("backup-1", "10.0.1.102", 8000, weight=1))   # 予備店舗
 
-# お客さんが来たら適切な店舗に案内
+## お客さんが来たら適切な店舗に案内
 try:
     selected_server = load_balancer.select_server()
     print(f"🎉 {selected_server.id} にお客様をご案内しました！")
@@ -1810,10 +1807,10 @@ except Exception as e:
 | `Least Connections` | 一番空いているサーバーを選択 | 待ち時間が一番短い店舗を案内 |
 | `Health Check` | 定期的にサーバーの状態を確認 | 店長が各店舗に「営業できてる？」と確認電話 |
 
-### データベース最適化
+## データベース最適化
 
 ```python
-# app/core/database_optimization.py
+## app/core/database_optimization.py
 from sqlalchemy import event, text
 from sqlalchemy.engine import Engine
 from sqlalchemy.pool import QueuePool
@@ -1822,7 +1819,7 @@ import logging
 
 from app.core.config import settings
 
-# スロークエリ監視
+## スロークエリ監視
 @event.listens_for(Engine, "before_cursor_execute")
 def receive_before_cursor_execute(conn, cursor, statement, parameters, context, executemany):
     context._query_start_time = time.time()
@@ -1831,7 +1828,7 @@ def receive_before_cursor_execute(conn, cursor, statement, parameters, context, 
 def receive_after_cursor_execute(conn, cursor, statement, parameters, context, executemany):
     total = time.time() - context._query_start_time
     
-    # 1秒以上のクエリを警告
+    ## 1秒以上のクエリを警告
     if total > 1.0:
         logging.warning(
             f"Slow query: {total:.2f}s\n"
@@ -1857,7 +1854,7 @@ class DatabaseOptimizer:
     def analyze_query_performance(self, query: str, limit: int = 10):
         """クエリパフォーマンス分析"""
         with self.engine.connect() as conn:
-            # EXPLAIN ANALYZE実行
+            ## EXPLAIN ANALYZE実行
             explain_query = f"EXPLAIN (ANALYZE, BUFFERS, FORMAT JSON) {query}"
             result = conn.execute(text(explain_query))
             explain_data = result.fetchone()[0]
@@ -1871,7 +1868,7 @@ class DatabaseOptimizer:
     def get_database_statistics(self):
         """データベース統計情報取得"""
         with self.engine.connect() as conn:
-            # テーブルサイズ
+            ## テーブルサイズ
             table_sizes = conn.execute(text("""
                 SELECT 
                     schemaname,
@@ -1883,7 +1880,7 @@ class DatabaseOptimizer:
                 ORDER BY pg_total_relation_size(schemaname||'.'||tablename) DESC;
             """)).fetchall()
             
-            # インデックス効率
+            ## インデックス効率
             index_usage = conn.execute(text("""
                 SELECT 
                     schemaname,
@@ -1896,7 +1893,7 @@ class DatabaseOptimizer:
                 ORDER BY idx_scan DESC;
             """)).fetchall()
             
-            # 未使用インデックス
+            ## 未使用インデックス
             unused_indexes = conn.execute(text("""
                 SELECT 
                     schemaname,
@@ -1914,7 +1911,7 @@ class DatabaseOptimizer:
                 "unused_indexes": [dict(row._mapping) for row in unused_indexes]
             }
 
-# パーティショニング実装例
+## パーティショニング実装例
 def create_audit_log_partition(year: int, month: int):
     """監査ログパーティション作成"""
     partition_name = f"audit_logs_y{year}m{month:02d}"
@@ -1943,7 +1940,7 @@ def create_audit_log_partition(year: int, month: int):
 ### ロードバランシング設定
 
 ```python
-# app/core/load_balancer.py
+## app/core/load_balancer.py
 from typing import List, Dict, Any
 import random
 import time
@@ -2028,7 +2025,7 @@ class LoadBalancer:
         """ヘルスチェック実行"""
         for server in self.servers:
             try:
-                # HTTPヘルスチェック実行
+                ## HTTPヘルスチェック実行
                 start_time = time.time()
                 is_healthy = await self._check_server_health(server)
                 response_time = time.time() - start_time
@@ -2058,7 +2055,7 @@ class LoadBalancer:
         except:
             return False
 
-# 使用例
+## 使用例
 load_balancer = LoadBalancer()
 ```
 
@@ -2071,7 +2068,7 @@ load_balancer = LoadBalancer()
 全国チェーンになったら、各店舗の状況をリアルタイムで監視する「本部の監視センター」が必要になります：
 
 ```python
-# app/core/metrics.py
+## app/core/metrics.py
 import time
 import psutil
 from typing import Dict, Any, List
@@ -2105,7 +2102,7 @@ class MetricsCollector:
         self.app_metrics_history: List[ApplicationMetrics] = []
         self.max_history_size = 1000
         
-        # カウンター
+        ## カウンター
         self.request_count = 0
         self.error_count = 0
         self.response_times: List[float] = []
@@ -2129,7 +2126,7 @@ class MetricsCollector:
             process_count=len(psutil.pids())
         )
         
-        # 履歴保存
+        ## 履歴保存
         self.system_metrics_history.append(metrics)
         if len(self.system_metrics_history) > self.max_history_size:
             self.system_metrics_history.pop(0)
@@ -2141,18 +2138,18 @@ class MetricsCollector:
         from app.core.database import engine
         from app.core.cache import cache
         
-        # データベース接続数
+        ## データベース接続数
         db_connections = 0
         if hasattr(engine.pool, 'checkedout'):
             db_connections = engine.pool.checkedout()
         
-        # レスポンス時間平均
+        ## レスポンス時間平均
         avg_response_time = 0
         if self.response_times:
             avg_response_time = sum(self.response_times) / len(self.response_times)
             self.response_times = self.response_times[-100:]  # 直近100件のみ保持
         
-        # キャッシュヒット率
+        ## キャッシュヒット率
         cache_hit_ratio = 0
         try:
             cache_info = cache.redis_client.info('stats')
@@ -2213,10 +2210,10 @@ class MetricsCollector:
             "timestamp": datetime.utcnow().isoformat()
         }
 
-# グローバルメトリクスコレクター
+## グローバルメトリクスコレクター
 metrics_collector = MetricsCollector()
 
-# ミドルウェア
+## ミドルウェア
 from fastapi import Request, Response
 from starlette.middleware.base import BaseHTTPMiddleware
 import time
@@ -2228,12 +2225,12 @@ class MetricsMiddleware(BaseHTTPMiddleware):
         try:
             response = await call_next(request)
             
-            # リクエスト記録
+            ## リクエスト記録
             response_time = time.time() - start_time
             is_error = response.status_code >= 400
             metrics_collector.record_request(response_time, is_error)
             
-            # レスポンスヘッダーに追加
+            ## レスポンスヘッダーに追加
             response.headers["X-Response-Time"] = f"{response_time:.3f}"
             
             return response
@@ -2247,7 +2244,7 @@ class MetricsMiddleware(BaseHTTPMiddleware):
 ### ログ管理
 
 ```python
-# app/core/logging_config.py
+## app/core/logging_config.py
 import logging
 import logging.handlers
 import json
@@ -2271,7 +2268,7 @@ class JSONFormatter(logging.Formatter):
             "line": record.lineno
         }
         
-        # 例外情報追加
+        ## 例外情報追加
         if record.exc_info:
             log_entry["exception"] = {
                 "type": record.exc_info[0].__name__,
@@ -2279,7 +2276,7 @@ class JSONFormatter(logging.Formatter):
                 "traceback": traceback.format_exception(*record.exc_info)
             }
         
-        # 追加フィールド
+        ## 追加フィールド
         if hasattr(record, 'user_id'):
             log_entry["user_id"] = record.user_id
         
@@ -2294,20 +2291,20 @@ class JSONFormatter(logging.Formatter):
 def setup_logging():
     """ログ設定初期化"""
     
-    # ルートロガー設定
+    ## ルートロガー設定
     root_logger = logging.getLogger()
     root_logger.setLevel(getattr(logging, settings.LOG_LEVEL))
     
-    # 既存ハンドラー削除
+    ## 既存ハンドラー削除
     for handler in root_logger.handlers[:]:
         root_logger.removeHandler(handler)
     
-    # コンソールハンドラー
+    ## コンソールハンドラー
     console_handler = logging.StreamHandler()
     console_handler.setFormatter(JSONFormatter())
     root_logger.addHandler(console_handler)
     
-    # ファイルハンドラー（本番環境）
+    ## ファイルハンドラー（本番環境）
     if not settings.DEBUG:
         file_handler = logging.handlers.RotatingFileHandler(
             "app.log",
@@ -2317,7 +2314,7 @@ def setup_logging():
         file_handler.setFormatter(JSONFormatter())
         root_logger.addHandler(file_handler)
     
-    # 外部ログ収集（例：Datadog）
+    ## 外部ログ収集（例：Datadog）
     if hasattr(settings, 'DATADOG_API_KEY'):
         datadog_handler = DatadogHandler(settings.DATADOG_API_KEY)
         root_logger.addHandler(datadog_handler)
@@ -2341,10 +2338,10 @@ class StructuredLogger:
         extra = {k: v for k, v in kwargs.items() if k not in ['exc_info']}
         self.logger.log(level, message, extra=extra, exc_info=kwargs.get('exc_info'))
 
-# アプリケーションロガー
+## アプリケーションロガー
 app_logger = StructuredLogger("saas_platform")
 
-# 使用例
+## 使用例
 def log_user_action(user_id: int, action: str, details: Dict[str, Any]):
     app_logger.info(
         f"User action: {action}",
@@ -2357,7 +2354,7 @@ def log_user_action(user_id: int, action: str, details: Dict[str, Any]):
 ### アラート システム
 
 ```python
-# app/core/alerting.py
+## app/core/alerting.py
 from typing import Dict, Any, List, Callable
 from enum import Enum
 from dataclasses import dataclass
@@ -2400,7 +2397,7 @@ class AlertRule:
     
     def should_trigger(self, metrics: Dict[str, Any]) -> bool:
         """アラート発火条件チェック"""
-        # クールダウン期間中は発火しない
+        ## クールダウン期間中は発火しない
         if self.last_triggered and datetime.utcnow() - self.last_triggered < self.cooldown:
             return False
         
@@ -2426,7 +2423,7 @@ class AlertManager:
         self.active_alerts: Dict[str, Alert] = {}
         self.alert_handlers: List[Callable[[Alert], None]] = []
         
-        # デフォルトルール設定
+        ## デフォルトルール設定
         self._setup_default_rules()
     
     def add_rule(self, rule: AlertRule):
@@ -2448,7 +2445,7 @@ class AlertManager:
         """アラート処理"""
         self.active_alerts[alert.id] = alert
         
-        # 各ハンドラーで処理
+        ## 各ハンドラーで処理
         for handler in self.alert_handlers:
             try:
                 await self._run_handler(handler, alert)
@@ -2473,7 +2470,7 @@ class AlertManager:
     def _setup_default_rules(self):
         """デフォルトアラートルール設定"""
         
-        # CPU使用率アラート
+        ## CPU使用率アラート
         self.add_rule(AlertRule(
             name="high_cpu_usage",
             condition=lambda m: m.get("system", {}).get("avg_cpu", 0) > 80,
@@ -2481,7 +2478,7 @@ class AlertManager:
             description="CPU使用率が80%を超えています"
         ))
         
-        # メモリ使用率アラート
+        ## メモリ使用率アラート
         self.add_rule(AlertRule(
             name="high_memory_usage",
             condition=lambda m: m.get("system", {}).get("avg_memory", 0) > 85,
@@ -2489,7 +2486,7 @@ class AlertManager:
             description="メモリ使用率が85%を超えています"
         ))
         
-        # エラー率アラート
+        ## エラー率アラート
         self.add_rule(AlertRule(
             name="high_error_rate",
             condition=lambda m: m.get("application", {}).get("error_rate", 0) > 5,
@@ -2497,7 +2494,7 @@ class AlertManager:
             description="エラー率が5%を超えています"
         ))
         
-        # レスポンス時間アラート
+        ## レスポンス時間アラート
         self.add_rule(AlertRule(
             name="slow_response_time",
             condition=lambda m: m.get("application", {}).get("avg_response_time", 0) > 2.0,
@@ -2505,7 +2502,7 @@ class AlertManager:
             description="平均レスポンス時間が2秒を超えています"
         ))
 
-# Slack通知ハンドラー
+## Slack通知ハンドラー
 async def slack_alert_handler(alert: Alert):
     """Slack通知送信"""
     import httpx
@@ -2537,7 +2534,7 @@ async def slack_alert_handler(alert: Alert):
     async with httpx.AsyncClient() as client:
         await client.post(webhook_url, json=message)
 
-# グローバルアラートマネージャー
+## グローバルアラートマネージャー
 alert_manager = AlertManager()
 alert_manager.add_handler(slack_alert_handler)
 ```
@@ -2549,30 +2546,30 @@ alert_manager.add_handler(slack_alert_handler)
 ### Docker設定
 
 ```dockerfile
-# Dockerfile
+## Dockerfile
 FROM python:3.11-slim
 
 WORKDIR /app
 
-# システム依存関係
+## システム依存関係
 RUN apt-get update && apt-get install -y \
     gcc \
     postgresql-client \
     && rm -rf /var/lib/apt/lists/*
 
-# Python依存関係
+## Python依存関係
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# アプリケーションコード
+## アプリケーションコード
 COPY . .
 
-# 非rootユーザー作成
+## 非rootユーザー作成
 RUN useradd --create-home --shell /bin/bash app \
     && chown -R app:app /app
 USER app
 
-# ヘルスチェック
+## ヘルスチェック
 HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
     CMD curl -f http://localhost:8000/health || exit 1
 
@@ -2582,7 +2579,7 @@ CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
 ```
 
 ```yaml
-# docker-compose.yml
+## docker-compose.yml
 version: '3.8'
 
 services:
@@ -2648,7 +2645,7 @@ volumes:
 ### GitHub Actions CI/CD
 
 ```yaml
-# .github/workflows/ci-cd.yml
+## .github/workflows/ci-cd.yml
 name: CI/CD Pipeline
 
 on:
@@ -2788,7 +2785,7 @@ jobs:
     - name: Deploy to production
       run: |
         echo "Deploying to production..."
-        # Kubernetes deployment script
+        ## Kubernetes deployment script
         kubectl set image deployment/saas-platform-app \
           app=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
 ```
@@ -2808,7 +2805,7 @@ jobs:
 
 **診断手順**:
 ```python
-# app/core/database_diagnostics.py
+## app/core/database_diagnostics.py
 import sqlalchemy
 from sqlalchemy import text, create_engine
 from sqlalchemy.pool import StaticPool
@@ -2822,12 +2819,12 @@ async def diagnose_database_connection():
     
     logger.info("Starting database connection diagnostics...")
     
-    # 1. 設定確認
+    ## 1. 設定確認
     db_url = settings.database_url
     logger.info(f"Database URL configured: {bool(db_url)}")
     logger.info(f"Database URL (masked): {db_url[:20]}...{db_url[-10:] if len(db_url) > 30 else db_url}")
     
-    # 2. 基本接続テスト
+    ## 2. 基本接続テスト
     try:
         engine = create_engine(
             db_url,
@@ -2845,7 +2842,7 @@ async def diagnose_database_connection():
         logger.error(f"Basic connection failed: {e}")
         return False
     
-    # 3. 接続プール診断
+    ## 3. 接続プール診断
     try:
         from app.core.database import engine as app_engine
         pool = app_engine.pool
@@ -2859,13 +2856,13 @@ async def diagnose_database_connection():
     except Exception as e:
         logger.error(f"Pool diagnostics failed: {e}")
     
-    # 4. パフォーマンステスト
+    ## 4. パフォーマンステスト
     try:
         import time
         start_time = time.time()
         
         with engine.connect() as connection:
-            # 複数クエリ実行
+            ## 複数クエリ実行
             for i in range(10):
                 connection.execute(text("SELECT pg_sleep(0.1)"))
         
@@ -2880,7 +2877,7 @@ async def diagnose_database_connection():
     
     return True
 
-# 使用例
+## 使用例
 async def startup_diagnostics():
     success = await diagnose_database_connection()
     if not success:
@@ -2889,7 +2886,7 @@ async def startup_diagnostics():
 
 **解決策**:
 ```python
-# app/core/database_optimized.py
+## app/core/database_optimized.py
 from sqlalchemy import create_engine, event
 from sqlalchemy.pool import QueuePool, StaticPool
 from sqlalchemy.orm import sessionmaker
@@ -2908,7 +2905,7 @@ class OptimizedDatabaseManager:
     def _setup_engine(self):
         """最適化されたエンジン設定"""
         
-        # 本番環境用設定
+        ## 本番環境用設定
         if settings.ENVIRONMENT == "production":
             self.engine = create_engine(
                 self.database_url,
@@ -2924,7 +2921,7 @@ class OptimizedDatabaseManager:
                 }
             )
         else:
-            # 開発環境用設定
+            ## 開発環境用設定
             self.engine = create_engine(
                 self.database_url,
                 poolclass=StaticPool,
@@ -2933,7 +2930,7 @@ class OptimizedDatabaseManager:
                 connect_args={"check_same_thread": False} if "sqlite" in self.database_url else {}
             )
         
-        # 接続イベントリスナー
+        ## 接続イベントリスナー
         @event.listens_for(self.engine, "connect")
         def set_sqlite_pragma(dbapi_connection, connection_record):
             if "sqlite" in self.database_url:
@@ -2986,7 +2983,7 @@ class OptimizedDatabaseManager:
             "invalid": pool.invalid()
         }
 
-# グローバルインスタンス
+## グローバルインスタンス
 db_manager = OptimizedDatabaseManager(settings.database_url)
 ```
 
@@ -2999,7 +2996,7 @@ db_manager = OptimizedDatabaseManager(settings.database_url)
 
 **診断手順**:
 ```python
-# scripts/migration_diagnostics.py
+## scripts/migration_diagnostics.py
 import alembic
 from alembic.config import Config
 from alembic import command
@@ -3020,7 +3017,7 @@ class MigrationDiagnostics:
         
         logger.info("Checking migration status...")
         
-        # 現在のリビジョン確認
+        ## 現在のリビジョン確認
         try:
             with self.engine.connect() as connection:
                 context = EnvironmentContext(
@@ -3037,13 +3034,13 @@ class MigrationDiagnostics:
             logger.error(f"Failed to get current revision: {e}")
             return False
         
-        # 利用可能なマイグレーション確認
+        ## 利用可能なマイグレーション確認
         try:
             script_dir = ScriptDirectory.from_config(self.alembic_cfg)
             heads = script_dir.get_heads()
             logger.info(f"Available heads: {heads}")
             
-            # 待機中のマイグレーション
+            ## 待機中のマイグレーション
             revisions = script_dir.walk_revisions("head", current_rev)
             pending = list(revisions)
             logger.info(f"Pending migrations: {len(pending)}")
@@ -3063,14 +3060,14 @@ class MigrationDiagnostics:
         try:
             from app.models import Base
             
-            # モデルから期待されるメタデータ
+            ## モデルから期待されるメタデータ
             model_metadata = Base.metadata
             
-            # データベースの実際のメタデータ
+            ## データベースの実際のメタデータ
             db_metadata = MetaData()
             db_metadata.reflect(bind=self.engine)
             
-            # テーブル比較
+            ## テーブル比較
             model_tables = set(model_metadata.tables.keys())
             db_tables = set(db_metadata.tables.keys())
             
@@ -3083,7 +3080,7 @@ class MigrationDiagnostics:
             if extra_in_db:
                 logger.warning(f"Extra tables in database: {extra_in_db}")
             
-            # 共通テーブルのカラム比較
+            ## 共通テーブルのカラム比較
             common_tables = model_tables & db_tables
             for table_name in common_tables:
                 model_table = model_metadata.tables[table_name]
@@ -3113,10 +3110,10 @@ class MigrationDiagnostics:
         logger.info("Attempting to repair migration state...")
         
         try:
-            # 1. データベースのバックアップ推奨メッセージ
+            ## 1. データベースのバックアップ推奨メッセージ
             logger.warning("IMPORTANT: Please backup your database before proceeding!")
             
-            # 2. マイグレーション履歴テーブル確認
+            ## 2. マイグレーション履歴テーブル確認
             with self.engine.connect() as connection:
                 result = connection.execute(text("""
                     SELECT table_name 
@@ -3128,7 +3125,7 @@ class MigrationDiagnostics:
                     logger.info("Creating alembic_version table...")
                     command.stamp(self.alembic_cfg, "head")
                 
-            # 3. 強制的に最新リビジョンにスタンプ（慎重に）
+            ## 3. 強制的に最新リビジョンにスタンプ（慎重に）
             logger.info("Stamping database to head revision...")
             command.stamp(self.alembic_cfg, "head")
             
@@ -3139,7 +3136,7 @@ class MigrationDiagnostics:
             logger.error(f"Migration repair failed: {e}")
             return False
 
-# 使用例
+## 使用例
 diagnostics = MigrationDiagnostics()
 diagnostics.check_migration_status()
 diagnostics.validate_models_vs_database()
@@ -3147,18 +3144,18 @@ diagnostics.validate_models_vs_database()
 
 **解決策**:
 ```bash
-# scripts/safe_migration.sh
+## scripts/safe_migration.sh
 #!/bin/bash
 
 set -e
 
 echo "🔍 Starting safe migration process..."
 
-# 1. バックアップ作成
+## 1. バックアップ作成
 echo "📦 Creating database backup..."
 pg_dump $DATABASE_URL > backup_$(date +%Y%m%d_%H%M%S).sql
 
-# 2. マイグレーション状態確認
+## 2. マイグレーション状態確認
 echo "📋 Checking migration status..."
 python -c "
 from scripts.migration_diagnostics import MigrationDiagnostics
@@ -3167,12 +3164,12 @@ diag.check_migration_status()
 diag.validate_models_vs_database()
 "
 
-# 3. ドライラン実行
+## 3. ドライラン実行
 echo "🧪 Performing dry run..."
 alembic upgrade head --sql > migration_preview.sql
 echo "Migration preview saved to migration_preview.sql"
 
-# 4. 確認プロンプト
+## 4. 確認プロンプト
 read -p "🤔 Continue with migration? (y/N): " -n 1 -r
 echo
 if [[ ! $REPLY =~ ^[Yy]$ ]]; then
@@ -3180,11 +3177,11 @@ if [[ ! $REPLY =~ ^[Yy]$ ]]; then
     exit 1
 fi
 
-# 5. 実際のマイグレーション実行
+## 5. 実際のマイグレーション実行
 echo "🚀 Running migration..."
 alembic upgrade head
 
-# 6. 検証
+## 6. 検証
 echo "✅ Verifying migration..."
 python -c "
 from scripts.migration_diagnostics import MigrationDiagnostics
@@ -3205,7 +3202,7 @@ echo "🎉 Migration completed successfully!"
 
 **診断手順**:
 ```python
-# app/utils/tenant_diagnostics.py
+## app/utils/tenant_diagnostics.py
 from typing import List, Dict, Any
 from sqlalchemy.orm import Session
 from sqlalchemy import text
@@ -3225,7 +3222,7 @@ class TenantIsolationDiagnostics:
         
         logger.info("Verifying RLS policies...")
         
-        # 1. RLS が有効なテーブル確認
+        ## 1. RLS が有効なテーブル確認
         result = self.db.execute(text("""
             SELECT schemaname, tablename, rowsecurity 
             FROM pg_tables 
@@ -3239,7 +3236,7 @@ class TenantIsolationDiagnostics:
         
         logger.info(f"RLS status: {rls_status}")
         
-        # 2. 適用されているポリシー確認
+        ## 2. 適用されているポリシー確認
         policies = self.db.execute(text("""
             SELECT schemaname, tablename, policyname, cmd, qual, with_check
             FROM pg_policies 
@@ -3276,12 +3273,12 @@ class TenantIsolationDiagnostics:
         logger.info("Testing tenant isolation...")
         
         try:
-            # 1. ユーザー1でログイン状態をシミュレート
+            ## 1. ユーザー1でログイン状態をシミュレート
             self.db.execute(text("""
                 SELECT set_config('request.jwt.claim.sub', :user_id, true)
             """), {"user_id": str(user1_id)})
             
-            # 2. 組織1のプロジェクト確認
+            ## 2. 組織1のプロジェクト確認
             org1_projects = self.db.execute(text("""
                 SELECT id, name, organization_id 
                 FROM projects 
@@ -3290,7 +3287,7 @@ class TenantIsolationDiagnostics:
             
             logger.info(f"User1 can see {len(org1_projects)} projects from org1")
             
-            # 3. 組織2のプロジェクト確認（見えてはいけない）
+            ## 3. 組織2のプロジェクト確認（見えてはいけない）
             org2_projects = self.db.execute(text("""
                 SELECT id, name, organization_id 
                 FROM projects 
@@ -3299,12 +3296,12 @@ class TenantIsolationDiagnostics:
             
             logger.info(f"User1 can see {len(org2_projects)} projects from org2")
             
-            # 4. 分離確認
+            ## 4. 分離確認
             if len(org2_projects) > 0:
                 logger.error("SECURITY VIOLATION: User can see other tenant's data!")
                 return False
             
-            # 5. ユーザー2でテスト
+            ## 5. ユーザー2でテスト
             self.db.execute(text("""
                 SELECT set_config('request.jwt.claim.sub', :user_id, true)
             """), {"user_id": str(user2_id)})
@@ -3331,7 +3328,7 @@ class TenantIsolationDiagnostics:
         
         logger.info("Checking and fixing RLS policies...")
         
-        # 必要なポリシー定義
+        ## 必要なポリシー定義
         required_policies = [
             {
                 'table': 'projects',
@@ -3366,7 +3363,7 @@ class TenantIsolationDiagnostics:
         
         for policy_def in required_policies:
             try:
-                # 既存ポリシー確認
+                ## 既存ポリシー確認
                 existing = self.db.execute(text(f"""
                     SELECT 1 FROM pg_policies 
                     WHERE tablename = '{policy_def['table']}' 
@@ -3377,7 +3374,7 @@ class TenantIsolationDiagnostics:
                     logger.info(f"Creating policy {policy_def['policy']} for {policy_def['table']}")
                     self.db.execute(text(policy_def['sql']))
                     
-                    # RLS有効化
+                    ## RLS有効化
                     self.db.execute(text(f"""
                         ALTER TABLE {policy_def['table']} ENABLE ROW LEVEL SECURITY
                     """))
@@ -3388,15 +3385,15 @@ class TenantIsolationDiagnostics:
                 logger.error(f"Failed to create policy for {policy_def['table']}: {e}")
                 self.db.rollback()
 
-# 使用例
+## 使用例
 async def diagnose_tenant_security():
     db = next(get_db())
     diagnostics = TenantIsolationDiagnostics(db)
     
-    # RLS確認
+    ## RLS確認
     rls_info = await diagnostics.verify_rls_policies()
     
-    # テナント分離テスト
+    ## テナント分離テスト
     isolation_ok = await diagnostics.test_tenant_isolation(
         user1_id=1, user2_id=2, org1_id=1, org2_id=2
     )
@@ -3416,7 +3413,7 @@ async def diagnose_tenant_security():
 
 **診断手順**:
 ```python
-# app/utils/query_diagnostics.py
+## app/utils/query_diagnostics.py
 import time
 import logging
 from typing import List, Dict, Any
@@ -3450,7 +3447,7 @@ class QueryDiagnostics:
             if self.monitoring:
                 total = time.time() - context._query_start_time
                 
-                # クエリ正規化（パラメータを除去）
+                ## クエリ正規化（パラメータを除去）
                 normalized_query = self._normalize_query(statement)
                 
                 query_info = {
@@ -3464,7 +3461,7 @@ class QueryDiagnostics:
                 self.queries.append(query_info)
                 self.query_counts[normalized_query] += 1
                 
-                # スロークエリ警告
+                ## スロークエリ警告
                 if total > 1.0:
                     logger.warning(f"Slow query detected: {total:.2f}s - {statement[:100]}...")
     
@@ -3475,10 +3472,10 @@ class QueryDiagnostics:
     def _normalize_query(self, query: str) -> str:
         """クエリ正規化"""
         import re
-        # パラメータを置換
+        ## パラメータを置換
         normalized = re.sub(r'%\([^)]*\)s', '?', query)
         normalized = re.sub(r'\$\d+', '?', normalized)
-        # 複数の空白を単一に
+        ## 複数の空白を単一に
         normalized = re.sub(r'\s+', ' ', normalized.strip())
         return normalized
     
@@ -3490,7 +3487,7 @@ class QueryDiagnostics:
         total_queries = len(self.queries)
         total_time = sum(q['duration'] for q in self.queries)
         
-        # N+1問題検出
+        ## N+1問題検出
         n_plus_one_patterns = []
         for normalized, count in self.query_counts.items():
             if count > 10 and 'SELECT' in normalized and 'WHERE' in normalized:
@@ -3500,10 +3497,10 @@ class QueryDiagnostics:
                     'severity': 'high' if count > 50 else 'medium'
                 })
         
-        # 最遅クエリ
+        ## 最遅クエリ
         slowest_queries = sorted(self.queries, key=lambda x: x['duration'], reverse=True)[:5]
         
-        # 頻繁なクエリ
+        ## 頻繁なクエリ
         frequent_queries = sorted(
             self.query_counts.items(), 
             key=lambda x: x[1], 
@@ -3541,7 +3538,7 @@ class QueryDiagnostics:
             self.stop_monitoring()
             analysis = self.analyze_queries()
             
-            # N+1問題警告
+            ## N+1問題警告
             if analysis.get('n_plus_one_patterns'):
                 logger.warning(f"N+1 query patterns detected in {endpoint}:")
                 for pattern in analysis['n_plus_one_patterns']:
@@ -3549,30 +3546,30 @@ class QueryDiagnostics:
             
             logger.info(f"Query analysis for {endpoint}: {analysis['total_queries']} queries, {analysis['total_time']:.2f}s total")
 
-# グローバルインスタンス
+## グローバルインスタンス
 query_diagnostics = QueryDiagnostics()
 
-# FastAPI依存性注入
+## FastAPI依存性注入
 from fastapi import Depends
 
 def get_query_monitor():
     return query_diagnostics
 
-# 使用例
+## 使用例
 @app.get("/api/v1/projects")
 async def get_projects(
     current_user: User = Depends(get_current_user),
     query_monitor: QueryDiagnostics = Depends(get_query_monitor)
 ):
     with query_monitor.monitor_request("GET /api/v1/projects"):
-        # この中でのクエリが監視される
+        ## この中でのクエリが監視される
         projects = await project_service.get_user_projects(current_user.id)
         return projects
 ```
 
 **解決策**:
 ```python
-# app/services/optimized_project_service.py
+## app/services/optimized_project_service.py
 from sqlalchemy.orm import Session, joinedload, selectinload
 from typing import List
 from app.models.project import Project
@@ -3585,12 +3582,12 @@ class OptimizedProjectService:
     def get_user_projects_optimized(self, user_id: int) -> List[Project]:
         """N+1問題を解決したプロジェクト取得"""
         
-        # 悪い例（N+1問題あり）:
-        # projects = self.db.query(Project).filter_by(user_id=user_id).all()
-        # for project in projects:
-        #     _ = project.tasks  # これが各プロジェクトごとに別のクエリを実行
+        ## 悪い例（N+1問題あり）:
+        ## projects = self.db.query(Project).filter_by(user_id=user_id).all()
+        ## for project in projects:
+        ## _ = project.tasks  # これが各プロジェクトごとに別のクエリを実行
         
-        # 良い例（eager loading使用）:
+        ## 良い例（eager loading使用）:
         projects = (
             self.db.query(Project)
             .options(
@@ -3611,7 +3608,7 @@ class OptimizedProjectService:
         
         from app.models.task import Task
         
-        # プロジェクトIDでタスクを一括取得
+        ## プロジェクトIDでタスクを一括取得
         tasks = (
             self.db.query(Task)
             .options(joinedload(Task.assignee))
@@ -3619,7 +3616,7 @@ class OptimizedProjectService:
             .all()
         )
         
-        # プロジェクトIDでグループ化
+        ## プロジェクトIDでグループ化
         tasks_by_project = defaultdict(list)
         for task in tasks:
             tasks_by_project[task.project_id].append(task)
@@ -3629,7 +3626,7 @@ class OptimizedProjectService:
     async def get_dashboard_data_optimized(self, user_id: int) -> Dict[str, Any]:
         """ダッシュボード用最適化クエリ"""
         
-        # 1つのクエリで必要なデータを全て取得
+        ## 1つのクエリで必要なデータを全て取得
         result = self.db.execute(text("""
             WITH user_projects AS (
                 SELECT DISTINCT p.id, p.name, p.status, p.organization_id
@@ -3683,7 +3680,7 @@ class OptimizedProjectService:
 #### 包括的ログ設定
 
 ```python
-# app/core/logging_config.py
+## app/core/logging_config.py
 import logging
 import logging.config
 from typing import Dict, Any
@@ -3705,7 +3702,7 @@ class JSONFormatter(logging.Formatter):
             'line': record.lineno
         }
         
-        # 例外情報追加
+        ## 例外情報追加
         if record.exc_info:
             log_entry['exception'] = {
                 'type': record.exc_info[0].__name__,
@@ -3713,7 +3710,7 @@ class JSONFormatter(logging.Formatter):
                 'traceback': traceback.format_exception(*record.exc_info)
             }
         
-        # カスタム属性追加
+        ## カスタム属性追加
         for key, value in record.__dict__.items():
             if key.startswith('custom_'):
                 log_entry[key[7:]] = value  # 'custom_' プレフィックス除去
@@ -3782,7 +3779,7 @@ def setup_logging(environment: str = "development") -> None:
             }
         }
     else:
-        # 開発環境用設定
+        ## 開発環境用設定
         config = {
             'version': 1,
             'disable_existing_loggers': False,
@@ -3818,7 +3815,7 @@ def setup_logging(environment: str = "development") -> None:
     
     logging.config.dictConfig(config)
 
-# ログヘルパー関数
+## ログヘルパー関数
 def log_function_call(func):
     """関数呼び出しログデコレーター"""
     def wrapper(*args, **kwargs):
@@ -3838,7 +3835,7 @@ def log_function_call(func):
     
     return wrapper
 
-# 使用例
+## 使用例
 logger = logging.getLogger(__name__)
 
 @log_function_call
@@ -3848,7 +3845,7 @@ def create_project(project_data: dict):
         'custom_organization_id': project_data.get('organization_id')
     })
     
-    # プロジェクト作成処理...
+    ## プロジェクト作成処理...
     
     logger.info("Project created successfully", extra={
         'custom_project_id': project.id

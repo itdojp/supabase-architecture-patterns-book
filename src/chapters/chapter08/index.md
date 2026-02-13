@@ -1,6 +1,6 @@
 # Chapter 8: 運用監視と自動化 🏥
 
-```
+```text
 🏥 システム運用を病院の管理システムで考えてみよう
 ├── 👩⚕️ 健康診断（パフォーマンス監視）：定期的な状態チェック
 ├── 📊 バイタルサイン（メトリクス監視）：心拍数・血圧・体温の常時測定
@@ -62,7 +62,7 @@ def api_endpoint():
 
 病院で患者の心拍数や血圧を常時監視するように、**システムの健康状態を24時間365日監視**することで、問題を早期発見し、迅速に対処できます。
 
-```
+```text
 🏥 患者の健康監視システム
 ├── 💓 心拍数モニター：1分間の心拍数を測定
 ├── 🩸 血圧計：最高血圧・最低血圧を定期測定
@@ -859,7 +859,7 @@ async def get_health_status():
 
 病院で患者の容体が急変したときに看護師や医師に緊急通報するように、**システムに異常が発生したときに管理者に即座に通知**するシステムを構築します。
 
-```
+```text
 🏥 病院の緊急通報システム
 ├── 🚨 ナースコール：ベッドサイドから緊急時に看護師呼び出し
 ├── 📱 PHS・スマホ通知：担当医に即座にメッセージ送信
@@ -1304,7 +1304,8 @@ class AlertManager:
 | **SMS** | 即座 | 最高 | 真の緊急事態 | 確実な到達・どこでも受信 |
 | **Discord** | 即座 | 中 | カジュアルなチーム連携 | コミュニティ感・画像対応 |
 
-  # テスト実行
+```yaml
+  ## テスト実行
   test:
     runs-on: ${{ matrix.os }}
     needs: [detect-changes, quality-check]
@@ -1381,7 +1382,7 @@ class AlertManager:
             junit-*.xml
             coverage-*.xml
 
-  # パフォーマンステスト
+  ## パフォーマンステスト
   performance-test:
     runs-on: ubuntu-latest
     needs: [detect-changes, test]
@@ -1413,7 +1414,7 @@ class AlertManager:
             performance-report.html
             performance_*.csv
 
-  # データベースマイグレーション検証
+  ## データベースマイグレーション検証
   migration-test:
     runs-on: ubuntu-latest
     needs: detect-changes
@@ -1440,19 +1441,19 @@ class AlertManager:
       
       - name: Test migration rollback/forward
         run: |
-          # ベースブランチからのマイグレーション実行
+          ## ベースブランチからのマイグレーション実行
           git checkout ${{ github.base_ref || 'main' }}
           supabase db reset --db-url postgresql://postgres:postgres@localhost:5432/migration_test
           
-          # 新しいマイグレーション適用
+          ## 新しいマイグレーション適用
           git checkout ${{ github.sha }}
           supabase db push --db-url postgresql://postgres:postgres@localhost:5432/migration_test
           
-          # ロールバックテスト
+          ## ロールバックテスト
           git checkout ${{ github.base_ref || 'main' }}
           supabase db push --db-url postgresql://postgres:postgres@localhost:5432/migration_test
 
-  # ビルド・レジストリプッシュ
+  ## ビルド・レジストリプッシュ
   build-and-push:
     runs-on: ubuntu-latest
     needs: [security-scan, test, migration-test]
@@ -1502,7 +1503,7 @@ class AlertManager:
             BUILDKIT_INLINE_CACHE=1
             VERSION=${{ github.sha }}
 
-  # セキュリティスキャン（イメージ）
+  ## セキュリティスキャン（イメージ）
   image-security-scan:
     runs-on: ubuntu-latest
     needs: build-and-push
@@ -1520,7 +1521,7 @@ class AlertManager:
         with:
           sarif_file: 'trivy-image-results.sarif'
 
-  # 開発環境デプロイ
+  ## 開発環境デプロイ
   deploy-dev:
     runs-on: ubuntu-latest
     needs: [build-and-push, image-security-scan]
@@ -1532,9 +1533,9 @@ class AlertManager:
       - name: Deploy to development
         run: |
           echo "Deploying to development environment"
-          # Kubernetesデプロイメント、Terraformなど
+          ## Kubernetesデプロイメント、Terraformなど
 
-  # ステージング環境デプロイ
+  ## ステージング環境デプロイ
   deploy-staging:
     runs-on: ubuntu-latest
     needs: [build-and-push, image-security-scan]
@@ -1549,10 +1550,10 @@ class AlertManager:
           
       - name: Run smoke tests
         run: |
-          # スモークテスト実行
+          ## スモークテスト実行
           echo "Running smoke tests"
 
-  # 本番デプロイ
+  ## 本番デプロイ
   deploy-production:
     runs-on: ubuntu-latest
     needs: [deploy-staging, performance-test]
@@ -1567,10 +1568,10 @@ class AlertManager:
           
       - name: Post-deployment verification
         run: |
-          # 本番環境検証
+          ## 本番環境検証
           echo "Verifying production deployment"
 
-  # 結果通知
+  ## 結果通知
   notify:
     runs-on: ubuntu-latest
     needs: [deploy-dev, deploy-staging, deploy-production]
@@ -1587,7 +1588,7 @@ class AlertManager:
 ### 高度なテスト戦略
 
 ```python
-# tests/conftest.py
+## tests/conftest.py
 import pytest
 import asyncio
 from typing import AsyncGenerator, Generator
@@ -1688,7 +1689,7 @@ Supabase Cloud の **Branching/Preview** を使うと、
 ### データベースマイグレーション自動化
 
 ```python
-# scripts/migration_manager.py
+## scripts/migration_manager.py
 import asyncio
 import logging
 from typing import List, Dict, Any, Optional
@@ -1753,7 +1754,7 @@ class MigrationManager:
             return migrations
         
         for file_path in self.migrations_dir.glob("*.sql"):
-            # ファイル名からバージョン抽出 (例: 001_initial_schema.sql)
+            ## ファイル名からバージョン抽出 (例: 001_initial_schema.sql)
             filename = file_path.name
             version = filename.split("_")[0]
             
@@ -1785,10 +1786,10 @@ class MigrationManager:
             self.logger.info(f"Applying migration {migration['version']}: {migration['filename']}")
             
             async with self.engine.begin() as conn:
-                # マイグレーション実行
+                ## マイグレーション実行
                 await conn.execute(text(migration["content"]))
                 
-                # 実行記録
+                ## 実行記録
                 execution_time = int((datetime.now() - start_time).total_seconds() * 1000)
                 await conn.execute(text("""
                     INSERT INTO schema_migrations 
@@ -1809,7 +1810,7 @@ class MigrationManager:
             error_message = str(e)
             self.logger.error(f"Migration {migration['version']} failed: {error_message}")
             
-            # エラー記録
+            ## エラー記録
             try:
                 async with self.engine.begin() as conn:
                     await conn.execute(text("""
@@ -1835,7 +1836,7 @@ class MigrationManager:
         pending_migrations = await self.get_pending_migrations()
         
         if target_version:
-            # 指定バージョンまでのマイグレーション
+            ## 指定バージョンまでのマイグレーション
             pending_migrations = [
                 m for m in pending_migrations 
                 if m["version"] <= target_version
@@ -1861,7 +1862,7 @@ class MigrationManager:
                 applied += 1
             else:
                 failed += 1
-                # 失敗時は停止
+                ## 失敗時は停止
                 break
         
         return {
@@ -1872,7 +1873,7 @@ class MigrationManager:
     
     async def rollback(self, target_version: str) -> Dict[str, Any]:
         """ロールバック実行"""
-        # ロールバック用マイグレーション探索
+        ## ロールバック用マイグレーション探索
         rollback_dir = self.migrations_dir / "rollback"
         if not rollback_dir.exists():
             raise ValueError("Rollback directory not found")
@@ -1895,14 +1896,14 @@ class MigrationManager:
                     "content": content
                 })
         
-        # ロールバック実行
+        ## ロールバック実行
         rolled_back = 0
         for migration in rollback_migrations:
             try:
                 async with self.engine.begin() as conn:
                     await conn.execute(text(migration["content"]))
                     
-                    # マイグレーション記録削除
+                    ## マイグレーション記録削除
                     await conn.execute(text("""
                         DELETE FROM schema_migrations 
                         WHERE version = :version
@@ -1917,7 +1918,7 @@ class MigrationManager:
         
         return {"rolled_back": rolled_back}
 
-# マイグレーション生成
+## マイグレーション生成
 class MigrationGenerator:
     """マイグレーション生成"""
     
@@ -1927,7 +1928,7 @@ class MigrationGenerator:
     
     def generate_migration(self, name: str, content: str = None) -> Path:
         """新しいマイグレーション生成"""
-        # バージョン番号生成
+        ## バージョン番号生成
         existing_versions = [
             int(f.name.split("_")[0]) 
             for f in self.migrations_dir.glob("*.sql")
@@ -1936,11 +1937,11 @@ class MigrationGenerator:
         
         next_version = str(max(existing_versions, default=0) + 1).zfill(3)
         
-        # ファイル名生成
+        ## ファイル名生成
         filename = f"{next_version}_{name}.sql"
         file_path = self.migrations_dir / filename
         
-        # テンプレート内容
+        ## テンプレート内容
         if content is None:
             content = f"""-- Migration: {name}
 -- Created: {datetime.now().isoformat()}
@@ -1958,7 +1959,7 @@ BEGIN;
 COMMIT;
 """
         
-        # ファイル作成
+        ## ファイル作成
         with open(file_path, 'w', encoding='utf-8') as f:
             f.write(content)
         
@@ -1990,7 +1991,7 @@ COMMIT;
         print(f"Generated rollback: {file_path}")
         return file_path
 
-# CLI コマンド
+## CLI コマンド
 async def migrate_command(target_version: str = None):
     """マイグレーション実行コマンド"""
     manager = MigrationManager(settings.database_url)
@@ -2064,7 +2065,7 @@ Supabase Storage は **S3互換プロトコル**を前提に外部ツールと�
 ### 自動バックアップシステム
 
 ```python
-# scripts/backup_manager.py
+## scripts/backup_manager.py
 import asyncio
 import gzip
 import boto3
@@ -2111,7 +2112,7 @@ class BackupManager:
         backup_file = Path(f"/tmp/{backup_name}.sql")
         
         try:
-            # pg_dumpでバックアップ作成
+            ## pg_dumpでバックアップ作成
             cmd = [
                 "pg_dump",
                 "--host", settings.POSTGRES_SERVER,
@@ -2138,15 +2139,15 @@ class BackupManager:
             if result.returncode != 0:
                 raise Exception(f"pg_dump failed: {result.stderr}")
             
-            # バックアップファイル情報取得
+            ## バックアップファイル情報取得
             file_size = backup_file.stat().st_size
             
-            # S3アップロード
+            ## S3アップロード
             s3_key = None
             if self.s3_client:
                 s3_key = await self._upload_to_s3(backup_file, f"database/{backup_name}.sql")
             
-            # メタデータ保存
+            ## メタデータ保存
             metadata = {
                 "backup_name": backup_name,
                 "backup_type": "database",
@@ -2166,7 +2167,7 @@ class BackupManager:
             
         except Exception as e:
             self.logger.error(f"Database backup failed: {e}")
-            # クリーンアップ
+            ## クリーンアップ
             if backup_file.exists():
                 backup_file.unlink()
             raise
@@ -2174,12 +2175,12 @@ class BackupManager:
     async def restore_database_backup(self, backup_name: str, target_db: str = None) -> bool:
         """データベースバックアップ復元"""
         try:
-            # バックアップメタデータ取得
+            ## バックアップメタデータ取得
             metadata = await self._get_backup_metadata(backup_name)
             if not metadata:
                 raise ValueError(f"Backup not found: {backup_name}")
             
-            # S3からダウンロード（必要に応じて）
+            ## S3からダウンロード（必要に応じて）
             backup_file = Path(metadata["local_path"])
             if not backup_file.exists() and metadata.get("s3_key"):
                 backup_file = await self._download_from_s3(metadata["s3_key"])
@@ -2187,16 +2188,16 @@ class BackupManager:
             if not backup_file.exists():
                 raise FileNotFoundError(f"Backup file not found: {backup_file}")
             
-            # 復元実行
+            ## 復元実行
             target_database = target_db or settings.POSTGRES_DB
             
-            # 既存接続を切断
+            ## 既存接続を切断
             await self._terminate_database_connections(target_database)
             
-            # データベース再作成
+            ## データベース再作成
             await self._recreate_database(target_database)
             
-            # pg_restore で復元
+            ## pg_restore で復元
             cmd = [
                 "pg_restore",
                 "--host", settings.POSTGRES_SERVER,
@@ -2221,7 +2222,7 @@ class BackupManager:
             )
             
             if result.returncode != 0:
-                # 一部のエラーは無視（clean時の存在しないオブジェクト等）
+                ## 一部のエラーは無視（clean時の存在しないオブジェクト等）
                 if "does not exist" not in result.stderr:
                     raise Exception(f"pg_restore failed: {result.stderr}")
             
@@ -2241,7 +2242,7 @@ class BackupManager:
         backup_file = Path(f"/tmp/{backup_name}.tar.gz")
         
         try:
-            # tar.gz でアーカイブ作成
+            ## tar.gz でアーカイブ作成
             cmd = ["tar", "-czf", str(backup_file)] + paths
             
             result = subprocess.run(
@@ -2256,7 +2257,7 @@ class BackupManager:
             
             file_size = backup_file.stat().st_size
             
-            # S3アップロード
+            ## S3アップロード
             s3_key = None
             if self.s3_client:
                 s3_key = await self._upload_to_s3(backup_file, f"files/{backup_name}.tar.gz")
@@ -2328,7 +2329,7 @@ class BackupManager:
     
     async def _save_backup_metadata(self, metadata: Dict[str, Any]):
         """バックアップメタデータ保存"""
-        # データベースまたはファイルに保存
+        ## データベースまたはファイルに保存
         metadata_file = Path(f"/app/backups/metadata/{metadata['backup_name']}.json")
         metadata_file.parent.mkdir(parents=True, exist_ok=True)
         
@@ -2360,32 +2361,32 @@ class BackupManager:
     
     async def _delete_backup(self, backup: Dict[str, Any]):
         """バックアップ削除"""
-        # ローカルファイル削除
+        ## ローカルファイル削除
         local_path = Path(backup["local_path"])
         if local_path.exists():
             local_path.unlink()
         
-        # S3から削除
+        ## S3から削除
         if backup.get("s3_key") and self.s3_client:
             bucket_name = settings.S3_BACKUP_BUCKET
             self.s3_client.delete_object(Bucket=bucket_name, Key=backup["s3_key"])
         
-        # メタデータ削除
+        ## メタデータ削除
         metadata_file = Path(f"/app/backups/metadata/{backup['backup_name']}.json")
         if metadata_file.exists():
             metadata_file.unlink()
     
     async def _terminate_database_connections(self, database_name: str):
         """データベース接続終了"""
-        # 実装省略（PostgreSQL固有のクエリ実行）
+        ## 実装省略（PostgreSQL固有のクエリ実行）
         pass
     
     async def _recreate_database(self, database_name: str):
         """データベース再作成"""
-        # 実装省略（DROP/CREATE DATABASE）
+        ## 実装省略（DROP/CREATE DATABASE）
         pass
 
-# ディザスタリカバリ計画
+## ディザスタリカバリ計画
 class DisasterRecoveryPlan:
     """ディザスタリカバリ計画実行"""
     
@@ -2418,7 +2419,7 @@ class DisasterRecoveryPlan:
         steps = []
         
         try:
-            # 1. 最新バックアップ特定
+            ## 1. 最新バックアップ特定
             if not backup_name:
                 backups = await self.backup_manager._list_all_backups()
                 db_backups = [b for b in backups if b["backup_type"] == "database"]
@@ -2430,21 +2431,21 @@ class DisasterRecoveryPlan:
             
             steps.append(f"Selected backup: {backup_name}")
             
-            # 2. アプリケーション停止
+            ## 2. アプリケーション停止
             await self._stop_application()
             steps.append("Application stopped")
             
-            # 3. データベース復元
+            ## 3. データベース復元
             success = await self.backup_manager.restore_database_backup(backup_name)
             if not success:
                 raise Exception("Database restore failed")
             steps.append("Database restored")
             
-            # 4. アプリケーション再起動
+            ## 4. アプリケーション再起動
             await self._start_application()
             steps.append("Application restarted")
             
-            # 5. 整合性チェック
+            ## 5. 整合性チェック
             integrity_check = await self._verify_database_integrity()
             steps.append(f"Integrity check: {integrity_check}")
             
@@ -2464,47 +2465,47 @@ class DisasterRecoveryPlan:
     
     async def _recover_from_application_failure(self) -> Dict[str, Any]:
         """アプリケーション障害からの復旧"""
-        # 実装省略
+        ## 実装省略
         return {"status": "success", "steps": ["Application recovery completed"]}
     
     async def _recover_from_infrastructure_failure(self) -> Dict[str, Any]:
         """インフラ障害からの復旧"""
-        # 実装省略
+        ## 実装省略
         return {"status": "success", "steps": ["Infrastructure recovery completed"]}
     
     async def _recover_from_security_breach(self) -> Dict[str, Any]:
         """セキュリティ侵害からの復旧"""
-        # 実装省略
+        ## 実装省略
         return {"status": "success", "steps": ["Security breach recovery completed"]}
     
     async def _stop_application(self):
         """アプリケーション停止"""
-        # Kubernetes、Docker Compose等での停止処理
+        ## Kubernetes、Docker Compose等での停止処理
         pass
     
     async def _start_application(self):
         """アプリケーション開始"""
-        # Kubernetes、Docker Compose等での開始処理
+        ## Kubernetes、Docker Compose等での開始処理
         pass
     
     async def _verify_database_integrity(self) -> bool:
         """データベース整合性検証"""
-        # データベース固有の整合性チェック
+        ## データベース固有の整合性チェック
         return True
 
-# 定期バックアップスケジューラー
+## 定期バックアップスケジューラー
 async def scheduled_backup():
     """定期バックアップ実行"""
     backup_manager = BackupManager()
     
     try:
-        # データベースバックアップ
+        ## データベースバックアップ
         await backup_manager.create_database_backup()
         
-        # ファイルバックアップ
+        ## ファイルバックアップ
         await backup_manager.create_file_backup()
         
-        # 古いバックアップクリーンアップ
+        ## 古いバックアップクリーンアップ
         await backup_manager.cleanup_old_backups()
         
     except Exception as e:
@@ -2521,7 +2522,7 @@ if __name__ == "__main__":
 ### 包括的監視システム
 
 ```python
-# app/monitoring/comprehensive_monitor.py
+## app/monitoring/comprehensive_monitor.py
 import asyncio
 import aiohttp
 import psutil
@@ -2577,7 +2578,7 @@ class ComprehensiveMonitor:
         self.monitoring_config = self._load_monitoring_config()
         self.logger = logging.getLogger(__name__)
         
-        # 監視間隔
+        ## 監視間隔
         self.collection_interval = 30  # 30秒
         self.health_check_interval = 60  # 1分
         
@@ -2614,7 +2615,7 @@ class ComprehensiveMonitor:
         """監視開始"""
         self.logger.info("Starting comprehensive monitoring")
         
-        # 並行タスク開始
+        ## 並行タスク開始
         tasks = [
             asyncio.create_task(self._collect_metrics_loop()),
             asyncio.create_task(self._health_check_loop()),
@@ -2642,28 +2643,28 @@ class ComprehensiveMonitor:
         """全メトリクス収集"""
         now = datetime.now()
         
-        # アプリケーションメトリクス
+        ## アプリケーションメトリクス
         app_metrics = await self._collect_application_metrics()
         
-        # インフラストラクチャメトリクス
+        ## インフラストラクチャメトリクス
         infra_metrics = await self._collect_infrastructure_metrics()
         
-        # データベースメトリクス
+        ## データベースメトリクス
         db_metrics = await self._collect_database_metrics()
         
-        # 外部サービスメトリクス
+        ## 外部サービスメトリクス
         external_metrics = await self._collect_external_service_metrics()
         
-        # 全メトリクスを履歴に追加
+        ## 全メトリクスを履歴に追加
         all_metrics = app_metrics + infra_metrics + db_metrics + external_metrics
         self.metrics_history.extend(all_metrics)
         
-        # 履歴サイズ制限
+        ## 履歴サイズ制限
         max_history = 10000
         if len(self.metrics_history) > max_history:
             self.metrics_history = self.metrics_history[-max_history:]
         
-        # アラートチェック
+        ## アラートチェック
         for metric in all_metrics:
             await self._check_metric_thresholds(metric)
     
@@ -2672,7 +2673,7 @@ class ComprehensiveMonitor:
         metrics = []
         now = datetime.now()
         
-        # メモリ使用量
+        ## メモリ使用量
         process = psutil.Process()
         memory_info = process.memory_info()
         memory_percent = process.memory_percent()
@@ -2687,7 +2688,7 @@ class ComprehensiveMonitor:
             threshold_critical=self.monitoring_config["application"]["memory_usage_critical"]
         ))
         
-        # CPU使用量
+        ## CPU使用量
         cpu_percent = process.cpu_percent()
         
         metrics.append(MonitoringMetric(
@@ -2698,7 +2699,7 @@ class ComprehensiveMonitor:
             labels={"component": "application"}
         ))
         
-        # ファイルディスクリプタ数
+        ## ファイルディスクリプタ数
         try:
             fd_count = process.num_fds()
             metrics.append(MonitoringMetric(
@@ -2709,7 +2710,7 @@ class ComprehensiveMonitor:
                 labels={"component": "application"}
             ))
         except AttributeError:
-            # Windowsでは利用不可
+            ## Windowsでは利用不可
             pass
         
         return metrics
@@ -2719,7 +2720,7 @@ class ComprehensiveMonitor:
         metrics = []
         now = datetime.now()
         
-        # システムCPU使用量
+        ## システムCPU使用量
         cpu_percent = psutil.cpu_percent(interval=1)
         metrics.append(MonitoringMetric(
             name="system_cpu_usage_percent",
@@ -2731,7 +2732,7 @@ class ComprehensiveMonitor:
             threshold_critical=self.monitoring_config["infrastructure"]["cpu_usage_critical"]
         ))
         
-        # システムメモリ使用量
+        ## システムメモリ使用量
         memory = psutil.virtual_memory()
         metrics.append(MonitoringMetric(
             name="system_memory_usage_percent",
@@ -2743,7 +2744,7 @@ class ComprehensiveMonitor:
             threshold_critical=self.monitoring_config["infrastructure"]["memory_usage_critical"]
         ))
         
-        # ディスク使用量
+        ## ディスク使用量
         disk = psutil.disk_usage('/')
         disk_percent = (disk.used / disk.total) * 100
         metrics.append(MonitoringMetric(
@@ -2756,7 +2757,7 @@ class ComprehensiveMonitor:
             threshold_critical=self.monitoring_config["infrastructure"]["disk_usage_critical"]
         ))
         
-        # ネットワークI/O
+        ## ネットワークI/O
         network = psutil.net_io_counters()
         metrics.extend([
             MonitoringMetric(
@@ -2785,7 +2786,7 @@ class ComprehensiveMonitor:
         try:
             from app.core.database import engine
             
-            # 接続プール情報
+            ## 接続プール情報
             pool = engine.pool
             if hasattr(pool, 'size'):
                 total_connections = pool.size()
@@ -2809,9 +2810,9 @@ class ComprehensiveMonitor:
                     labels={"component": "connection_pool"}
                 ))
             
-            # データベース固有メトリクス（PostgreSQL）
+            ## データベース固有メトリクス（PostgreSQL）
             async with engine.begin() as conn:
-                # データベースサイズ
+                ## データベースサイズ
                 result = await conn.execute("""
                     SELECT pg_database_size(current_database()) as size
                 """)
@@ -2825,7 +2826,7 @@ class ComprehensiveMonitor:
                     labels={"component": "storage"}
                 ))
                 
-                # アクティブクエリ数
+                ## アクティブクエリ数
                 result = await conn.execute("""
                     SELECT count(*) FROM pg_stat_activity 
                     WHERE state = 'active' AND pid != pg_backend_pid()
@@ -2850,7 +2851,7 @@ class ComprehensiveMonitor:
         metrics = []
         now = datetime.now()
         
-        # 外部サービスのヘルスチェック
+        ## 外部サービスのヘルスチェック
         external_services = [
             {"name": "supabase_api", "url": "https://api.supabase.io/health"},
             {"name": "stripe_api", "url": "https://status.stripe.com/api/v2/status.json"},
@@ -2899,10 +2900,10 @@ class ComprehensiveMonitor:
         """メトリクス閾値チェック"""
         alert_id = f"{metric.target.value}_{metric.name}_{hash(str(metric.labels))}"
         
-        # 既存のアラートをチェック
+        ## 既存のアラートをチェック
         existing_alert = self.active_alerts.get(alert_id)
         
-        # 閾値チェック
+        ## 閾値チェック
         severity = None
         if metric.threshold_critical and metric.value >= metric.threshold_critical:
             severity = AlertSeverity.CRITICAL
@@ -2911,7 +2912,7 @@ class ComprehensiveMonitor:
         
         if severity:
             if not existing_alert or existing_alert.severity != severity:
-                # 新しいアラートまたは重要度変更
+                ## 新しいアラートまたは重要度変更
                 alert = Alert(
                     id=alert_id,
                     title=f"{metric.name} threshold exceeded",
@@ -2925,7 +2926,7 @@ class ComprehensiveMonitor:
                 self.active_alerts[alert_id] = alert
                 await self._trigger_alert(alert)
         else:
-            # 閾値以下の場合、既存アラートを解決
+            ## 閾値以下の場合、既存アラートを解決
             if existing_alert and not existing_alert.resolved_at:
                 existing_alert.resolved_at = datetime.now()
                 await self._resolve_alert(existing_alert)
@@ -2957,9 +2958,9 @@ class ComprehensiveMonitor:
     
     async def _perform_health_checks(self):
         """ヘルスチェック実行"""
-        # アプリケーションヘルスチェック
+        ## アプリケーションヘルスチェック
         try:
-            # 内部エンドポイントチェック
+            ## 内部エンドポイントチェック
             async with aiohttp.ClientSession() as session:
                 async with session.get("http://localhost:8000/health") as response:
                     if response.status != 200:
@@ -2967,7 +2968,7 @@ class ComprehensiveMonitor:
         except Exception as e:
             await self._create_health_alert("application_health", f"Application unreachable: {e}")
         
-        # データベースヘルスチェック
+        ## データベースヘルスチェック
         try:
             from app.core.database import engine
             async with engine.begin() as conn:
@@ -2997,10 +2998,10 @@ class ComprehensiveMonitor:
         """アラート処理ループ"""
         while True:
             try:
-                # アラート自動復旧チェック
+                ## アラート自動復旧チェック
                 await self._check_alert_auto_recovery()
                 
-                # アラート集約処理
+                ## アラート集約処理
                 await self._aggregate_similar_alerts()
                 
                 await asyncio.sleep(30)
@@ -3010,12 +3011,12 @@ class ComprehensiveMonitor:
     
     async def _check_alert_auto_recovery(self):
         """アラート自動復旧チェック"""
-        # 実装省略
+        ## 実装省略
         pass
     
     async def _aggregate_similar_alerts(self):
         """類似アラート集約"""
-        # 実装省略
+        ## 実装省略
         pass
     
     def add_alert_handler(self, handler: Callable[[Alert], None]):
@@ -3027,14 +3028,14 @@ class ComprehensiveMonitor:
         if not self.metrics_history:
             return {}
         
-        # 最新の各メトリクス取得
+        ## 最新の各メトリクス取得
         latest_metrics = {}
         for metric in reversed(self.metrics_history):
             key = f"{metric.target.value}_{metric.name}"
             if key not in latest_metrics:
                 latest_metrics[key] = metric
         
-        # サマリー生成
+        ## サマリー生成
         summary = {
             "timestamp": datetime.now().isoformat(),
             "total_metrics": len(self.metrics_history),
@@ -3069,9 +3070,9 @@ class ComprehensiveMonitor:
 #### パイプライン実行失敗の診断手順
 
 ```bash
-# CI/CDログ分析スクリプト
+## CI/CDログ分析スクリプト
 #!/bin/bash
-# analyze_pipeline_failure.sh
+## analyze_pipeline_failure.sh
 
 WORKFLOW_RUN_ID="$1"
 REPO="$2"
@@ -3087,17 +3088,17 @@ echo "Repository: $REPO"
 echo "Timestamp: $(date)"
 echo
 
-# ワークフロー実行情報取得
+## ワークフロー実行情報取得
 echo "--- ワークフロー実行概要 ---"
 gh api repos/$REPO/actions/runs/$WORKFLOW_RUN_ID \
     --jq '.conclusion, .status, .created_at, .updated_at, .head_commit.message'
 
-# 失敗したジョブ特定
+## 失敗したジョブ特定
 echo "--- 失敗ジョブ一覧 ---"
 gh api repos/$REPO/actions/runs/$WORKFLOW_RUN_ID/jobs \
     --jq '.jobs[] | select(.conclusion == "failure") | .name, .conclusion, .completed_at'
 
-# 詳細ログ取得
+## 詳細ログ取得
 echo "--- 失敗ジョブの詳細ログ ---"
 FAILED_JOB_ID=$(gh api repos/$REPO/actions/runs/$WORKFLOW_RUN_ID/jobs \
     --jq '.jobs[] | select(.conclusion == "failure") | .id' | head -1)
@@ -3106,7 +3107,7 @@ if [ -n "$FAILED_JOB_ID" ]; then
     gh api repos/$REPO/actions/jobs/$FAILED_JOB_ID/logs
 fi
 
-# 一般的な問題パターンチェック
+## 一般的な問題パターンチェック
 echo "--- 問題パターン分析 ---"
 LOGS=$(gh api repos/$REPO/actions/jobs/$FAILED_JOB_ID/logs)
 
@@ -3145,7 +3146,7 @@ echo "4. 必要に応じてワークフロー再実行"
 #### 一般的なCI/CD問題と解決策
 
 ```python
-# ci_cd_troubleshooter.py
+## ci_cd_troubleshooter.py
 from typing import Dict, List, Tuple
 import re
 import json
@@ -3246,7 +3247,7 @@ class CICDTroubleshooter:
         
         recommendations = []
         
-        # 優先度順での推奨事項
+        ## 優先度順での推奨事項
         priority_order = ['resource_issues', 'dependency_issues', 'configuration_issues', 'permission_issues', 'network_issues']
         
         for issue_type in priority_order:
@@ -3257,7 +3258,7 @@ class CICDTroubleshooter:
         
         return list(dict.fromkeys(recommendations))  # 重複除去
 
-# 使用例
+## 使用例
 def analyze_ci_failure(log_file_path: str):
     """CI失敗分析実行"""
     troubleshooter = CICDTroubleshooter()
@@ -3291,7 +3292,7 @@ def analyze_ci_failure(log_file_path: str):
 #### データベースマイグレーション失敗の対処
 
 ```python
-# migration_troubleshooter.py
+## migration_troubleshooter.py
 import asyncio
 from sqlalchemy import text
 from sqlalchemy.ext.asyncio import create_async_engine
@@ -3314,7 +3315,7 @@ class MigrationTroubleshooter:
             'safety_checks': []
         }
         
-        # 基本的な接続確認
+        ## 基本的な接続確認
         connection_status = await self._check_database_connection()
         if not connection_status['connected']:
             diagnosis['issues_found'].append({
@@ -3325,11 +3326,11 @@ class MigrationTroubleshooter:
             diagnosis['recommendations'].append('데이터베이스 접속 정보 및 네트워크 확인')
             return diagnosis
         
-        # マイグレーション状態確認
+        ## マイグレーション状態確認
         migration_state = await self._check_migration_state(migration_version)
         diagnosis['migration_state'] = migration_state
         
-        # ロック状態確認
+        ## ロック状態確認
         lock_info = await self._check_migration_locks()
         if lock_info['locked']:
             diagnosis['issues_found'].append({
@@ -3343,7 +3344,7 @@ class MigrationTroubleshooter:
                 '必要に応じてロックを手動解除'
             ])
         
-        # 依存関係確認
+        ## 依存関係確認
         dependency_issues = await self._check_migration_dependencies(migration_version)
         if dependency_issues:
             diagnosis['issues_found'].append({
@@ -3353,7 +3354,7 @@ class MigrationTroubleshooter:
             })
             diagnosis['recommendations'].append('依存するマイグレーションを先に実行')
         
-        # スキーマ競合確認
+        ## スキーマ競合確認
         schema_conflicts = await self._check_schema_conflicts(migration_version)
         if schema_conflicts:
             diagnosis['issues_found'].append({
@@ -3367,7 +3368,7 @@ class MigrationTroubleshooter:
                 'マイグレーション内容の見直し'
             ])
         
-        # 権限確認
+        ## 権限確認
         permission_issues = await self._check_database_permissions()
         if permission_issues:
             diagnosis['issues_found'].append({
@@ -3377,7 +3378,7 @@ class MigrationTroubleshooter:
             })
             diagnosis['recommendations'].append('必要なデータベース権限を付与')
         
-        # 安全性チェック
+        ## 安全性チェック
         safety_issues = await self._perform_safety_checks(migration_version)
         diagnosis['safety_checks'] = safety_issues
         
@@ -3396,7 +3397,7 @@ class MigrationTroubleshooter:
         """マイグレーション状態確認"""
         try:
             async with self.engine.begin() as conn:
-                # マイグレーション記録確認
+                ## マイグレーション記録確認
                 result = await conn.execute(text("""
                     SELECT version, filename, executed_at, success, error_message
                     FROM schema_migrations 
@@ -3422,7 +3423,7 @@ class MigrationTroubleshooter:
         """マイグレーションロック確認"""
         try:
             async with self.engine.begin() as conn:
-                # PostgreSQLのロック情報を確認
+                ## PostgreSQLのロック情報を確認
                 result = await conn.execute(text("""
                     SELECT 
                         pg_locks.locktype,
@@ -3453,8 +3454,8 @@ class MigrationTroubleshooter:
     async def _check_migration_dependencies(self, version: str) -> List[str]:
         """マイグレーション依存関係確認"""
         try:
-            # マイグレーションファイルから依存関係を読み取る
-            # 実装簡略化のため、基本的なバージョン順序チェックのみ
+            ## マイグレーションファイルから依存関係を読み取る
+            ## 実装簡略化のため、基本的なバージョン順序チェックのみ
             async with self.engine.begin() as conn:
                 result = await conn.execute(text("""
                     SELECT version FROM schema_migrations 
@@ -3464,7 +3465,7 @@ class MigrationTroubleshooter:
                 
                 applied_versions = [row[0] for row in result.fetchall()]
                 
-                # 現在のバージョンより前のバージョンが全て適用されているか確認
+                ## 現在のバージョンより前のバージョンが全て適用されているか確認
                 missing_versions = []
                 for i in range(1, int(version)):
                     version_str = str(i).zfill(3)
@@ -3481,10 +3482,10 @@ class MigrationTroubleshooter:
         conflicts = []
         
         try:
-            # マイグレーション内容を解析して潜在的な競合を検出
-            # 実際の実装では、マイグレーションファイルを解析する
+            ## マイグレーション内容を解析して潜在的な競合を検出
+            ## 実際の実装では、マイグレーションファイルを解析する
             async with self.engine.begin() as conn:
-                # 既存のテーブル・カラム・インデックスを確認
+                ## 既存のテーブル・カラム・インデックスを確認
                 result = await conn.execute(text("""
                     SELECT table_name, column_name 
                     FROM information_schema.columns 
@@ -3493,8 +3494,8 @@ class MigrationTroubleshooter:
                 
                 existing_objects = result.fetchall()
                 
-                # 簡単な例: 重複テーブル名チェック
-                # 実際の実装では、マイグレーション内容との照合が必要
+                ## 簡単な例: 重複テーブル名チェック
+                ## 実際の実装では、マイグレーション内容との照合が必要
                 
         except Exception as e:
             self.logger.error(f"スキーマ競合確認エラー: {e}")
@@ -3507,7 +3508,7 @@ class MigrationTroubleshooter:
         
         try:
             async with self.engine.begin() as conn:
-                # 基本的な操作権限確認
+                ## 基本的な操作権限確認
                 test_operations = [
                     ("CREATE TABLE", "CREATE TEMPORARY TABLE test_permissions (id INT)"),
                     ("ALTER TABLE", "ALTER TABLE test_permissions ADD COLUMN test_col INT"),
@@ -3529,7 +3530,7 @@ class MigrationTroubleshooter:
         """安全性チェック"""
         checks = []
         
-        # バックアップ存在確認
+        ## バックアップ存在確認
         backup_check = await self._verify_backup_exists()
         checks.append({
             'name': 'backup_verification',
@@ -3537,7 +3538,7 @@ class MigrationTroubleshooter:
             'details': backup_check
         })
         
-        # データ量確認
+        ## データ量確認
         data_size_check = await self._check_data_size()
         checks.append({
             'name': 'data_size_check',
@@ -3549,7 +3550,7 @@ class MigrationTroubleshooter:
     
     async def _verify_backup_exists(self) -> Dict[str, any]:
         """バックアップ存在確認"""
-        # 実装省略 - 実際のバックアップストレージ確認
+        ## 実装省略 - 実際のバックアップストレージ確認
         return {'exists': True, 'latest_backup': 'backup_20240101_120000'}
     
     async def _check_data_size(self) -> Dict[str, any]:
@@ -3564,7 +3565,7 @@ class MigrationTroubleshooter:
                 row = result.fetchone()
                 size_bytes = row[1] if row else 0
                 
-                # 1GB以上の場合は注意喚起
+                ## 1GB以上の場合は注意喚起
                 return {
                     'safe': size_bytes < 1024 * 1024 * 1024,
                     'size_pretty': row[0] if row else 'unknown',
@@ -3574,14 +3575,14 @@ class MigrationTroubleshooter:
         except Exception as e:
             return {'safe': False, 'error': str(e)}
 
-# マイグレーション復旧スクリプト
+## マイグレーション復旧スクリプト
 async def emergency_migration_recovery(database_url: str, failed_version: str):
     """緊急マイグレーション復旧"""
     troubleshooter = MigrationTroubleshooter(database_url)
     
     print(f"マイグレーション復旧開始: version {failed_version}")
     
-    # 診断実行
+    ## 診断実行
     diagnosis = await troubleshooter.diagnose_migration_failure(failed_version)
     
     print("\n=== 診断結果 ===")
@@ -3592,7 +3593,7 @@ async def emergency_migration_recovery(database_url: str, failed_version: str):
     for i, rec in enumerate(diagnosis['recommendations'], 1):
         print(f"{i}. {rec}")
     
-    # 自動復旧可能な問題の処理
+    ## 自動復旧可能な問題の処理
     recovery_actions = []
     
     for issue in diagnosis['issues_found']:
@@ -3605,9 +3606,9 @@ async def emergency_migration_recovery(database_url: str, failed_version: str):
         print("\n=== 自動復旧アクション ===")
         for action in recovery_actions:
             print(f"実行: {action}")
-            # 実際の復旧処理を実装
+            ## 実際の復旧処理を実装
 
-# 使用例
+## 使用例
 if __name__ == "__main__":
     import sys
     
@@ -3626,7 +3627,7 @@ if __name__ == "__main__":
 #### バックアップ失敗の診断と対処
 
 ```python
-# backup_troubleshooter.py
+## backup_troubleshooter.py
 import os
 import subprocess
 import boto3
@@ -3656,7 +3657,7 @@ class BackupTroubleshooter:
             'recovery_steps': []
         }
         
-        # エラーパターン分析
+        ## エラーパターン分析
         error_patterns = {
             'disk_space': [
                 'No space left on device',
@@ -3697,14 +3698,14 @@ class BackupTroubleshooter:
                     detected_issues.append(issue_type)
                     break
         
-        # 問題別対処法
+        ## 問題別対処法
         for issue_type in detected_issues:
             issue_info = self._get_issue_info(issue_type, backup_type)
             diagnosis['issues_found'].append(issue_info)
             diagnosis['recommendations'].extend(issue_info['solutions'])
             diagnosis['recovery_steps'].extend(issue_info['recovery_steps'])
         
-        # 環境診断
+        ## 環境診断
         env_check = self._check_backup_environment(backup_type)
         diagnosis['environment_check'] = env_check
         
@@ -3808,7 +3809,7 @@ class BackupTroubleshooter:
             result = subprocess.run(['df', '-h'], capture_output=True, text=True)
             disk_usage = result.stdout
             
-            # 使用率90%以上の警告
+            ## 使用率90%以上の警告
             warning_filesystems = []
             for line in disk_usage.split('\n')[1:]:
                 if line.strip():
@@ -3859,7 +3860,7 @@ class BackupTroubleshooter:
         """接続性確認"""
         if backup_type == 's3' and self.s3_client:
             try:
-                # S3接続テスト
+                ## S3接続テスト
                 self.s3_client.list_buckets()
                 return {'status': 'ok', 'type': 's3'}
             except Exception as e:
@@ -3893,10 +3894,10 @@ class BackupTroubleshooter:
             ''
         ]
         
-        # 環境チェック結果に基づく修正コマンド
+        ## 環境チェック結果に基づく修正コマンド
         env_check = diagnosis.get('environment_check', {})
         
-        # ディスク容量問題
+        ## ディスク容量問題
         if env_check.get('disk_space', {}).get('status') == 'warning':
             script_lines.extend([
                 '# ディスク容量警告への対処',
@@ -3907,7 +3908,7 @@ class BackupTroubleshooter:
                 ''
             ])
         
-        # 依存関係問題
+        ## 依存関係問題
         missing_tools = env_check.get('dependencies', {}).get('missing_tools', [])
         if missing_tools:
             script_lines.extend([
@@ -3923,7 +3924,7 @@ class BackupTroubleshooter:
             
             script_lines.append('')
         
-        # 権限問題
+        ## 権限問題
         permission_issues = env_check.get('permissions', {}).get('issues', [])
         if permission_issues:
             script_lines.extend([
@@ -3935,7 +3936,7 @@ class BackupTroubleshooter:
                 ''
             ])
         
-        # バックアップ再実行
+        ## バックアップ再実行
         script_lines.extend([
             '# バックアップ再実行',
             'echo "バックアップを再実行中..."',
@@ -3946,7 +3947,7 @@ class BackupTroubleshooter:
         
         return '\n'.join(script_lines)
 
-# コマンドライン診断ツール
+## コマンドライン診断ツール
 def backup_diagnosis_cli():
     """バックアップ診断CLI"""
     import argparse
@@ -4004,7 +4005,7 @@ if __name__ == "__main__":
 #### 監視システム障害の診断
 
 ```python
-# monitoring_troubleshooter.py
+## monitoring_troubleshooter.py
 import asyncio
 import aiohttp
 import psutil
@@ -4029,7 +4030,7 @@ class MonitoringTroubleshooter:
             'recommendations': []
         }
         
-        # 各監視コンポーネント診断
+        ## 各監視コンポーネント診断
         components = [
             ('metrics_collection', self._diagnose_metrics_collection),
             ('alerting_system', self._diagnose_alerting_system),
@@ -4051,10 +4052,10 @@ class MonitoringTroubleshooter:
                     'error': str(e)
                 }
         
-        # 全体的な健全性評価
+        ## 全体的な健全性評価
         diagnosis['overall_health'] = self._evaluate_overall_health(diagnosis['components'])
         
-        # 総合推奨事項生成
+        ## 総合推奨事項生成
         diagnosis['recommendations'] = self._generate_comprehensive_recommendations(diagnosis)
         
         return diagnosis
@@ -4064,13 +4065,13 @@ class MonitoringTroubleshooter:
         issues = []
         status = 'healthy'
         
-        # システムリソース確認
+        ## システムリソース確認
         try:
             cpu_percent = psutil.cpu_percent(interval=1)
             memory = psutil.virtual_memory()
             disk = psutil.disk_usage('/')
             
-            # 閾値チェック
+            ## 閾値チェック
             if cpu_percent > 90:
                 issues.append(f'CPU使用率が高い: {cpu_percent:.1f}%')
                 status = 'warning'
@@ -4087,7 +4088,7 @@ class MonitoringTroubleshooter:
             issues.append(f'システムメトリクス取得エラー: {str(e)}')
             status = 'error'
         
-        # メトリクス収集プロセス確認
+        ## メトリクス収集プロセス確認
         monitoring_processes = self._check_monitoring_processes()
         if not monitoring_processes['running']:
             issues.extend(monitoring_processes['missing_processes'])
@@ -4144,19 +4145,19 @@ class MonitoringTroubleshooter:
         issues = []
         status = 'healthy'
         
-        # Alertmanager健全性確認
+        ## Alertmanager健全性確認
         alertmanager_health = await self._check_alertmanager_health()
         if not alertmanager_health['healthy']:
             issues.append('Alertmanagerが応答しません')
             status = 'critical'
         
-        # アラートルール設定確認
+        ## アラートルール設定確認
         alert_rules_check = await self._check_alert_rules()
         if alert_rules_check['errors']:
             issues.extend(alert_rules_check['errors'])
             status = 'warning'
         
-        # 過去24時間のアラート統計
+        ## 過去24時間のアラート統計
         alert_stats = await self._get_alert_statistics()
         
         return {
@@ -4187,7 +4188,7 @@ class MonitoringTroubleshooter:
     async def _check_alert_rules(self) -> Dict[str, any]:
         """アラートルール確認"""
         try:
-            # Prometheus API経由でルール確認
+            ## Prometheus API経由でルール確認
             async with aiohttp.ClientSession() as session:
                 async with session.get('http://localhost:9090/api/v1/rules') as response:
                     if response.status == 200:
@@ -4204,7 +4205,7 @@ class MonitoringTroubleshooter:
                                 if rule.get('type') == 'alerting' and rule.get('alerts'):
                                     active_alerts += len(rule['alerts'])
                                 
-                                # ルール健全性チェック
+                                ## ルール健全性チェック
                                 if rule.get('health') != 'ok':
                                     errors.append(f"ルール '{rule.get('name')}' に問題: {rule.get('lastError')}")
                         
@@ -4229,11 +4230,11 @@ class MonitoringTroubleshooter:
     async def _get_alert_statistics(self) -> Dict[str, any]:
         """アラート統計取得"""
         try:
-            # 過去24時間のアラート数を取得
+            ## 過去24時間のアラート数を取得
             end_time = datetime.now()
             start_time = end_time - timedelta(hours=24)
             
-            # 実装簡略化 - 実際は時系列データベースから取得
+            ## 実装簡略化 - 実際は時系列データベースから取得
             return {
                 'last_24h_alerts': 15,
                 'resolved_alerts': 12,
@@ -4250,13 +4251,13 @@ class MonitoringTroubleshooter:
         issues = []
         status = 'healthy'
         
-        # ログファイル確認
+        ## ログファイル確認
         log_files_check = self._check_log_files()
         if log_files_check['issues']:
             issues.extend(log_files_check['issues'])
             status = 'warning'
         
-        # ログ転送確認
+        ## ログ転送確認
         log_forwarding_check = await self._check_log_forwarding()
         if not log_forwarding_check['working']:
             issues.append('ログ転送が動作していません')
@@ -4288,11 +4289,11 @@ class MonitoringTroubleshooter:
                     size_mb = stat.st_size / (1024 * 1024)
                     last_modified = datetime.fromtimestamp(stat.st_mtime)
                     
-                    # 過去1時間以内に更新されているか
+                    ## 過去1時間以内に更新されているか
                     if datetime.now() - last_modified > timedelta(hours=1):
                         issues.append(f'{log_path} が1時間以上更新されていません')
                     
-                    # ファイルサイズが異常に大きくないか
+                    ## ファイルサイズが異常に大きくないか
                     if size_mb > 1000:  # 1GB
                         issues.append(f'{log_path} のサイズが大きすぎます: {size_mb:.1f}MB')
                     
@@ -4317,7 +4318,7 @@ class MonitoringTroubleshooter:
     
     async def _check_log_forwarding(self) -> Dict[str, any]:
         """ログ転送確認"""
-        # ログ転送サービス（Fluent Bit, Filebeat等）の確認
+        ## ログ転送サービス（Fluent Bit, Filebeat等）の確認
         log_forwarders = ['fluent-bit', 'filebeat', 'fluentd']
         
         for forwarder in log_forwarders:
@@ -4383,7 +4384,7 @@ class MonitoringTroubleshooter:
     
     async def _diagnose_notification_delivery(self) -> Dict[str, any]:
         """通知配信診断"""
-        # 通知チャネル確認
+        ## 通知チャネル確認
         notification_channels = {
             'email': self._test_email_delivery,
             'slack': self._test_slack_delivery,
@@ -4417,7 +4418,7 @@ class MonitoringTroubleshooter:
     
     async def _test_email_delivery(self) -> Dict[str, any]:
         """メール配信テスト"""
-        # 実装簡略化 - 実際はSMTPサーバー接続テスト
+        ## 実装簡略化 - 実際はSMTPサーバー接続テスト
         return {
             'working': True,
             'test_result': 'SMTP接続確認済み'
@@ -4425,7 +4426,7 @@ class MonitoringTroubleshooter:
     
     async def _test_slack_delivery(self) -> Dict[str, any]:
         """Slack配信テスト"""
-        # 実装簡略化 - 実際はSlack Webhook テスト
+        ## 実装簡略化 - 実際はSlack Webhook テスト
         return {
             'working': True,
             'test_result': 'Slack Webhook接続確認済み'
@@ -4433,7 +4434,7 @@ class MonitoringTroubleshooter:
     
     async def _test_sms_delivery(self) -> Dict[str, any]:
         """SMS配信テスト"""
-        # 実装簡略化 - 実際はSMS API テスト
+        ## 実装簡略化 - 実際はSMS API テスト
         return {
             'working': False,
             'test_result': 'SMS API未設定'
@@ -4466,7 +4467,7 @@ class MonitoringTroubleshooter:
                 '運用チームに即座に連絡してください'
             ])
         
-        # コンポーネント別推奨事項
+        ## コンポーネント別推奨事項
         components = diagnosis['components']
         
         if components.get('metrics_collection', {}).get('status') in ['critical', 'warning']:
@@ -4495,7 +4496,7 @@ class MonitoringTroubleshooter:
         
         return recommendations
 
-# 監視システム診断実行
+## 監視システム診断実行
 async def run_monitoring_diagnosis():
     """監視システム診断実行"""
     troubleshooter = MonitoringTroubleshooter()
@@ -4529,7 +4530,7 @@ async def run_monitoring_diagnosis():
     for i, rec in enumerate(diagnosis['recommendations'], 1):
         print(f"  {i}. {rec}")
     
-    # 詳細レポート保存
+    ## 詳細レポート保存
     report_file = f"monitoring_diagnosis_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
     with open(report_file, 'w', encoding='utf-8') as f:
         json.dump(diagnosis, f, indent=2, ensure_ascii=False, default=str)
@@ -4545,11 +4546,11 @@ if __name__ == "__main__":
 #### プロアクティブ監視設定
 
 ```yaml
-# proactive_monitoring_rules.yml
+## proactive_monitoring_rules.yml
 groups:
 - name: operational_health
   rules:
-  # CI/CDパイプライン監視
+  ## CI/CDパイプライン監視
   - alert: GitHubActionsFailed
     expr: github_actions_workflow_run_conclusion{conclusion="failure"} > 0
     for: 0m
@@ -4561,7 +4562,7 @@ groups:
       description: "Repository {{ $labels.repository }} のワークフロー {{ $labels.workflow_name }} が失敗しました"
       runbook_url: "https://docs.company.com/runbooks/github-actions-failure"
   
-  # バックアップ監視
+  ## バックアップ監視
   - alert: BackupJobFailed
     expr: |
       (
@@ -4585,7 +4586,7 @@ groups:
       summary: "バックアップストレージ容量が不足しています"
       description: "バックアップストレージの残り容量が {{ $value | humanizePercentage }} です"
   
-  # データベースマイグレーション監視
+  ## データベースマイグレーション監視
   - alert: MigrationStuck
     expr: migration_in_progress_duration_seconds > 3600  # 1時間
     for: 0m
@@ -4596,7 +4597,7 @@ groups:
       summary: "マイグレーションが1時間以上進行中です"
       description: "Migration version {{ $labels.version }} が {{ $value | humanizeDuration }} 実行されています"
   
-  # システムリソース監視
+  ## システムリソース監視
   - alert: SystemResourceExhaustion
     expr: |
       (
@@ -4614,7 +4615,7 @@ groups:
       summary: "システムリソースが枯渇しています"
       description: "{{ $labels.instance }} でリソース枯渇が検出されました"
   
-  # アプリケーション健全性監視
+  ## アプリケーション健全性監視
   - alert: ApplicationUnhealthy
     expr: up{job="app"} == 0
     for: 1m
@@ -4639,7 +4640,7 @@ groups:
       summary: "アプリケーションのエラー率が高くなっています"
       description: "{{ $labels.service }} のエラー率が {{ $value | humanizePercentage }} です"
   
-  # Edge Functions監視
+  ## Edge Functions監視
   - alert: EdgeFunctionColdStartHigh
     expr: supabase_edge_function_cold_start_duration_ms > 5000
     for: 2m
@@ -4660,7 +4661,7 @@ groups:
       summary: "Edge Function でタイムアウトが頻発しています"
       description: "Function {{ $labels.function_name }} でタイムアウトが発生しています"
   
-  # データベース接続監視
+  ## データベース接続監視
   - alert: DatabaseConnectionPoolExhausted
     expr: database_active_connections / database_max_connections > 0.9
     for: 2m
@@ -4683,7 +4684,7 @@ groups:
 
 - name: security_monitoring
   rules:
-  # セキュリティイベント監視
+  ## セキュリティイベント監視
   - alert: SuspiciousLoginActivity
     expr: rate(auth_failed_login_attempts_total[5m]) > 10
     for: 1m
@@ -4708,7 +4709,7 @@ groups:
 #### 運用チェックリスト自動化
 
 ```python
-# operational_checklist.py
+## operational_checklist.py
 from typing import Dict, List, Callable, Any
 from dataclasses import dataclass
 from datetime import datetime
@@ -4840,7 +4841,7 @@ class OperationalChecklistAutomator:
             'remediation_required': []
         }
         
-        # 頻度に基づくフィルタリング
+        ## 頻度に基づくフィルタリング
         relevant_checks = [
             item for item in self.checklist_items 
             if item.frequency == frequency or frequency == "all"
@@ -4874,7 +4875,7 @@ class OperationalChecklistAutomator:
                     execution_report['summary']['failed'] += 1
                     execution_report['failed_checks'].append(check_result)
                     
-                    # 修復アクション追加
+                    ## 修復アクション追加
                     execution_report['remediation_required'].append({
                         'check_id': check_item.id,
                         'check_name': check_item.name,
@@ -4899,23 +4900,23 @@ class OperationalChecklistAutomator:
                 execution_report['summary']['failed'] += 1
                 execution_report['failed_checks'].append(error_result)
         
-        # 実行履歴に追加
+        ## 実行履歴に追加
         self.execution_history.append(execution_report)
         
-        # レポート保存
+        ## レポート保存
         await self._save_execution_report(execution_report)
         
         return execution_report
     
     async def _check_backup_status(self) -> Dict[str, Any]:
         """バックアップ状態確認"""
-        # 実装簡略化 - 実際はバックアップシステムAPI呼び出し
+        ## 実装簡略化 - 実際はバックアップシステムAPI呼び出し
         try:
-            # バックアップログ確認（例）
+            ## バックアップログ確認（例）
             last_backup_time = datetime.now()  # 実際はログから取得
             backup_size_gb = 15.5  # 実際はバックアップファイルサイズ
             
-            # 24時間以内のバックアップ確認
+            ## 24時間以内のバックアップ確認
             hours_since_backup = (datetime.now() - last_backup_time).total_seconds() / 3600
             
             if hours_since_backup > 24:
@@ -4968,7 +4969,7 @@ class OperationalChecklistAutomator:
                     with context.wrap_socket(sock, server_hostname=domain) as ssock:
                         cert = ssock.getpeercert()
                         
-                        # 有効期限確認
+                        ## 有効期限確認
                         not_after = datetime.strptime(cert['notAfter'], '%b %d %H:%M:%S %Y %Z')
                         days_until_expiry = (not_after - datetime.now()).days
                         
@@ -5015,9 +5016,9 @@ class OperationalChecklistAutomator:
     
     async def _check_database_performance(self) -> Dict[str, Any]:
         """データベースパフォーマンス確認"""
-        # 実装簡略化 - 実際はデータベース監視メトリクス取得
+        ## 実装簡略化 - 実際はデータベース監視メトリクス取得
         try:
-            # サンプルメトリクス
+            ## サンプルメトリクス
             avg_query_time_ms = 150  # 実際は監視システムから取得
             active_connections = 25
             max_connections = 100
@@ -5061,9 +5062,9 @@ class OperationalChecklistAutomator:
     
     async def _analyze_error_logs(self) -> Dict[str, Any]:
         """エラーログ分析"""
-        # 実装簡略化 - 実際はログ集約システムからデータ取得
+        ## 実装簡略化 - 実際はログ集約システムからデータ取得
         try:
-            # サンプルエラー統計
+            ## サンプルエラー統計
             error_counts = {
                 'database_connection_error': 5,
                 'authentication_failed': 12,
@@ -5073,7 +5074,7 @@ class OperationalChecklistAutomator:
             
             total_errors = sum(error_counts.values())
             
-            # 異常な増加の検出
+            ## 異常な増加の検出
             concerning_errors = []
             for error_type, count in error_counts.items():
                 if count > 20:  # 閾値
@@ -5106,9 +5107,9 @@ class OperationalChecklistAutomator:
     
     async def _check_security_updates(self) -> Dict[str, Any]:
         """セキュリティ更新確認"""
-        # 実装簡略化 - 実際はパッケージマネージャーやCVEデータベース確認
+        ## 実装簡略化 - 実際はパッケージマネージャーやCVEデータベース確認
         try:
-            # サンプル：利用可能な更新
+            ## サンプル：利用可能な更新
             available_updates = {
                 'critical': 2,
                 'high': 5,
@@ -5148,9 +5149,9 @@ class OperationalChecklistAutomator:
     
     async def _check_capacity_trends(self) -> Dict[str, Any]:
         """キャパシティトレンド確認"""
-        # 実装簡略化 - 実際は監視システムから過去データ取得
+        ## 実装簡略化 - 実際は監視システムから過去データ取得
         try:
-            # サンプルトレンドデータ
+            ## サンプルトレンドデータ
             capacity_metrics = {
                 'cpu_trend_7d': 65.2,  # 7日間平均
                 'memory_trend_7d': 72.8,
@@ -5211,7 +5212,7 @@ class OperationalChecklistAutomator:
         plan.append(f"生成日時: {datetime.now().isoformat()}\n")
         plan.append(f"実行頻度: {execution_report['frequency']}\n")
         
-        # 優先度別でソート
+        ## 優先度別でソート
         priority_order = {'critical': 0, 'high': 1, 'medium': 2, 'low': 3}
         sorted_items = sorted(
             execution_report['remediation_required'],
@@ -5238,17 +5239,17 @@ class OperationalChecklistAutomator:
         
         return ''.join(plan)
 
-# 使用例
+## 使用例
 async def run_daily_checklist():
     """日次チェックリスト実行"""
     automator = OperationalChecklistAutomator()
     
     print("日次運用チェックリストを実行中...\n")
     
-    # 日次チェック実行
+    ## 日次チェック実行
     report = await automator.run_automated_checks("daily")
     
-    # 結果表示
+    ## 結果表示
     print("\n" + "=" * 60)
     print("日次チェックリスト実行結果")
     print("=" * 60)
@@ -5266,7 +5267,7 @@ async def run_daily_checklist():
     if report['remediation_required']:
         print("\n📋 修復が必要な項目があります")
         
-        # 修復計画生成
+        ## 修復計画生成
         remediation_plan = automator.generate_remediation_plan(report)
         plan_filename = f"remediation_plan_{datetime.now().strftime('%Y%m%d_%H%M%S')}.md"
         
@@ -5306,7 +5307,7 @@ async def diagnose_performance():
     
     supabase = create_client(url, key)
     
-    # 1. 基本接続テスト
+    ## 1. 基本接続テスト
     start_time = time.time()
     try:
         response = await supabase.table('_health').select('*').limit(1).execute()
@@ -5316,7 +5317,7 @@ async def diagnose_performance():
         print(f"接続エラー: {e}")
         return
     
-    # 2. データベースメトリクス取得
+    ## 2. データベースメトリクス取得
     metrics_query = """
     SELECT 
         schemaname,
@@ -5336,7 +5337,7 @@ async def diagnose_performance():
     
     print(f"メトリクス取得時間: {query_time:.3f}秒")
     
-    # 3. 接続プール状態確認
+    ## 3. 接続プール状態確認
     pool_query = """
     SELECT 
         count(*) as total_connections,
@@ -5348,13 +5349,13 @@ async def diagnose_performance():
     pool_result = await supabase.rpc('execute_sql', {'query': pool_query}).execute()
     print("接続プール状態:", pool_result.data)
 
-# 実行
+## 実行
 asyncio.run(diagnose_performance())
 ```
 
 **解決策**:
 ```python
-# パフォーマンス最適化設定
+## パフォーマンス最適化設定
 class PerformanceOptimizer:
     def __init__(self, supabase_client):
         self.client = supabase_client
@@ -5363,7 +5364,7 @@ class PerformanceOptimizer:
     async def optimize_queries(self):
         """クエリ最適化実行"""
         
-        # 1. インデックス分析
+        ## 1. インデックス分析
         index_analysis = """
         SELECT 
             t.tablename,
@@ -5381,7 +5382,7 @@ class PerformanceOptimizer:
         result = await self.client.rpc('execute_sql', 
                                      {'query': index_analysis}).execute()
         
-        # 2. 低使用インデックスの特定
+        ## 2. 低使用インデックスの特定
         unused_indexes = [
             idx for idx in result.data 
             if idx['index_scans'] < 10
@@ -5436,7 +5437,7 @@ class BackupDiagnostics:
             "recommendations": []
         }
         
-        # 1. 接続テスト
+        ## 1. 接続テスト
         try:
             connection_result = subprocess.run([
                 'psql', 
@@ -5464,7 +5465,7 @@ class BackupDiagnostics:
                 "details": "接続タイムアウト"
             })
         
-        # 2. ディスク容量チェック
+        ## 2. ディスク容量チェック
         disk_result = subprocess.run(['df', '-h'], capture_output=True, text=True)
         results["checks"].append({
             "name": "ディスク容量",
@@ -5472,7 +5473,7 @@ class BackupDiagnostics:
             "details": disk_result.stdout
         })
         
-        # 3. バックアップサイズ予測
+        ## 3. バックアップサイズ予測
         size_query = """
         SELECT 
             schemaname,
@@ -5511,13 +5512,13 @@ class BackupDiagnostics:
         test_db = f"test_backup_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
         
         try:
-            # 1. テストデータベース作成
+            ## 1. テストデータベース作成
             create_result = subprocess.run([
                 'createdb',
                 f'postgresql://postgres:{self.password}@db.{self.project_ref}.supabase.co:5432/{test_db}'
             ], capture_output=True, text=True)
             
-            # 2. 小規模バックアップテスト
+            ## 2. 小規模バックアップテスト
             backup_result = subprocess.run([
                 'pg_dump',
                 f'postgresql://postgres:{self.password}@db.{self.project_ref}.supabase.co:5432/postgres',
@@ -5526,7 +5527,7 @@ class BackupDiagnostics:
                 '--file=test_backup.sql'
             ], capture_output=True, text=True)
             
-            # 3. リストアテスト
+            ## 3. リストアテスト
             restore_result = subprocess.run([
                 'psql',
                 f'postgresql://postgres:{self.password}@db.{self.project_ref}.supabase.co:5432/{test_db}',
@@ -5541,7 +5542,7 @@ class BackupDiagnostics:
             }
             
         finally:
-            # クリーンアップ
+            ## クリーンアップ
             subprocess.run([
                 'dropdb', 
                 f'postgresql://postgres:{self.password}@db.{self.project_ref}.supabase.co:5432/{test_db}'
@@ -5578,7 +5579,7 @@ class MetricsCollector:
             "recommendations": []
         }
         
-        # 1. メトリクステーブル存在確認
+        ## 1. メトリクステーブル存在確認
         try:
             table_check = await self.client.table(self.metrics_table)\
                 .select('*')\
@@ -5594,7 +5595,7 @@ class MetricsCollector:
             )
             return verification_results
         
-        # 2. 最新データ確認
+        ## 2. 最新データ確認
         recent_data = await self.client.table(self.metrics_table)\
             .select('*')\
             .gte('collected_at', (datetime.now() - timedelta(hours=1)).isoformat())\
@@ -5609,7 +5610,7 @@ class MetricsCollector:
             verification_results["data_quality"]["recent_data"] = True
             verification_results["data_quality"]["record_count"] = len(recent_data.data)
         
-        # 3. データ完全性チェック
+        ## 3. データ完全性チェック
         required_fields = ['cpu_usage', 'memory_usage', 'response_time', 'error_rate']
         incomplete_records = []
         
@@ -5634,7 +5635,7 @@ class MetricsCollector:
         
         repair_actions = []
         
-        # 1. メトリクステーブル再作成
+        ## 1. メトリクステーブル再作成
         create_table_sql = """
         CREATE TABLE IF NOT EXISTS system_metrics (
             id SERIAL PRIMARY KEY,
@@ -5655,7 +5656,7 @@ class MetricsCollector:
         except Exception as e:
             repair_actions.append(f"テーブル作成エラー: {e}")
         
-        # 2. インデックス作成
+        ## 2. インデックス作成
         index_sql = """
         CREATE INDEX IF NOT EXISTS idx_metrics_collected_at 
         ON system_metrics(collected_at);
@@ -5692,12 +5693,12 @@ class AutoScalingMonitor:
     async def monitor_scaling_triggers(self):
         """スケーリングトリガー監視"""
         
-        # 現在のメトリクス取得
+        ## 現在のメトリクス取得
         current_metrics = await self._get_current_metrics()
         
         scaling_recommendations = []
         
-        # CPU使用率チェック
+        ## CPU使用率チェック
         if current_metrics['cpu_usage'] > self.thresholds['cpu_threshold']:
             scaling_recommendations.append({
                 "metric": "CPU",
@@ -5707,7 +5708,7 @@ class AutoScalingMonitor:
                 "priority": "high"
             })
         
-        # メモリ使用率チェック
+        ## メモリ使用率チェック
         if current_metrics['memory_usage'] > self.thresholds['memory_threshold']:
             scaling_recommendations.append({
                 "metric": "Memory",
@@ -5717,7 +5718,7 @@ class AutoScalingMonitor:
                 "priority": "high"
             })
         
-        # 接続数チェック
+        ## 接続数チェック
         connection_usage = (current_metrics['active_connections'] / 
                           current_metrics['max_connections']) * 100
         
@@ -5802,7 +5803,7 @@ class EmergencyResponse:
     async def _handle_database_deadlock(self):
         """デッドロック対応"""
         
-        # 1. アクティブなクエリ確認
+        ## 1. アクティブなクエリ確認
         active_queries = """
         SELECT 
             pid,
@@ -5819,13 +5820,13 @@ class EmergencyResponse:
         
         result = await self.client.rpc('execute_sql', {'query': active_queries}).execute()
         
-        # 2. 長時間実行クエリの特定
+        ## 2. 長時間実行クエリの特定
         long_queries = [
             query for query in result.data 
             if (datetime.now() - datetime.fromisoformat(query['query_start'].replace('Z', '+00:00'))).seconds > 300
         ]
         
-        # 3. 必要に応じてクエリ終了
+        ## 3. 必要に応じてクエリ終了
         killed_queries = []
         for query in long_queries:
             try:
@@ -5845,7 +5846,7 @@ class EmergencyResponse:
     async def _handle_connection_exhaustion(self):
         """接続枯渇対応"""
         
-        # 1. アイドル接続の終了
+        ## 1. アイドル接続の終了
         idle_connections_query = """
         SELECT pg_terminate_backend(pid)
         FROM pg_stat_activity 
@@ -5856,7 +5857,7 @@ class EmergencyResponse:
         
         await self.client.rpc('execute_sql', {'query': idle_connections_query}).execute()
         
-        # 2. 接続プール設定確認
+        ## 2. 接続プール設定確認
         pool_settings = """
         SELECT name, setting, unit, context 
         FROM pg_settings 
