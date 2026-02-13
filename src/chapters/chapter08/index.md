@@ -3940,7 +3940,30 @@ class BackupTroubleshooter:
         script_lines.extend([
             '# バックアップ再実行',
             'echo "バックアップを再実行中..."',
-            '# 実際のバックアップコマンドをここに追加',
+        ])
+
+        backup_type = diagnosis.get('backup_type')
+        if backup_type == 'database':
+            script_lines.extend([
+                '# 例: Database バックアップ（環境変数 DATABASE_URL を想定）',
+                'pg_dump "$DATABASE_URL" -Fc -f "/var/backups/db_$(date +%Y%m%d%H%M%S).dump"',
+            ])
+        elif backup_type == 'files':
+            script_lines.extend([
+                '# 例: ファイルバックアップ（/app/data を想定）',
+                'tar -czf "/var/backups/files_$(date +%Y%m%d%H%M%S).tar.gz" /app/data',
+            ])
+        elif backup_type == 's3':
+            script_lines.extend([
+                '# 例: S3 バックアップ（環境変数 S3_BUCKET を想定）',
+                'aws s3 sync /var/backups "s3://$S3_BUCKET/backups/"',
+            ])
+        else:
+            script_lines.extend([
+                '# バックアップタイプが不明です。コマンドを確認して実行してください。',
+            ])
+
+        script_lines.extend([
             '',
             'echo "復旧スクリプト完了"'
         ])

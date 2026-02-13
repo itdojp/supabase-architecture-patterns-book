@@ -1105,10 +1105,29 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 -- 2. プロジェクトメンバーは プロジェクト内のタスクを閲覧可能
 -- 3. 組織管理者は組織内の全タスクを閲覧可能
 
--- あなたの回答をここに記述してください
+-- 解答例（テーブル/カラム名は本章のスキーマに合わせて調整）
 CREATE POLICY "task_access_policy" ON tasks
 FOR SELECT USING (
-    -- ここにポリシーを記述
+    -- 1. ユーザーは自分が作成したタスクのみ閲覧可能
+    created_by = auth.uid()
+    OR
+    -- 2. プロジェクトメンバーは プロジェクト内のタスクを閲覧可能
+    project_id IN (
+        SELECT pm.project_id
+        FROM project_members pm
+        WHERE pm.user_id = auth.uid()
+          AND pm.is_active = true
+    )
+    OR
+    -- 3. 組織管理者（owner/admin）は組織内の全タスクを閲覧可能
+    project_id IN (
+        SELECT p.id
+        FROM projects p
+        JOIN user_organizations uo ON uo.organization_id = p.organization_id
+        WHERE uo.user_id = auth.uid()
+          AND uo.is_active = true
+          AND uo.role IN ('owner', 'admin')
+    )
 );
 ```
 
