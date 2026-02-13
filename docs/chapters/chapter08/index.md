@@ -3863,7 +3863,7 @@ class BackupTroubleshooter:
     
     def _check_connectivity(self, backup_type: str) -> Dict[str, any]:
         """接続性確認"""
-        if backup_type == 's3' and self.s3_client:
+        if self.s3_client:
             try:
                 # S3接続テスト
                 self.s3_client.list_buckets()
@@ -3945,7 +3945,30 @@ class BackupTroubleshooter:
         script_lines.extend([
             '# バックアップ再実行',
             'echo "バックアップを再実行中..."',
-            '# 実際のバックアップコマンドをここに追加',
+        ])
+
+        backup_type = diagnosis.get('backup_type')
+        if backup_type == 'database':
+            script_lines.extend([
+                '# 例: Database バックアップ（環境変数 DATABASE_URL を想定）',
+                'pg_dump "$DATABASE_URL" -Fc -f "/var/backups/db_$(date +%Y%m%d%H%M%S).dump"',
+            ])
+        elif backup_type == 'files':
+            script_lines.extend([
+                '# 例: ファイルバックアップ（/app/uploads と /app/logs を想定）',
+                'tar -czf "/var/backups/files_$(date +%Y%m%d%H%M%S).tar.gz" /app/uploads /app/logs',
+            ])
+        elif backup_type == 'application_data':
+            script_lines.extend([
+                '# 例: アプリケーションデータのバックアップ（アプリ設定や追加データを想定）',
+                'tar -czf "/var/backups/app_data_$(date +%Y%m%d%H%M%S).tar.gz" /app/config /app/extra_data',
+            ])
+        else:
+            script_lines.extend([
+                '# バックアップタイプが不明です。コマンドを確認して実行してください。',
+            ])
+
+        script_lines.extend([
             '',
             'echo "復旧スクリプト完了"'
         ])
@@ -3958,7 +3981,7 @@ def backup_diagnosis_cli():
     import argparse
     
     parser = argparse.ArgumentParser(description='バックアップ失敗診断ツール')
-    parser.add_argument('--type', required=True, choices=['database', 'files', 's3'], 
+    parser.add_argument('--type', required=True, choices=['database', 'files', 'application_data'], 
                        help='バックアップタイプ')
     parser.add_argument('--log-file', required=True, help='エラーログファイルパス')
     parser.add_argument('--generate-script', action='store_true', 
