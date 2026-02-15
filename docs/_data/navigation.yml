@@ -29,7 +29,7 @@ chapters:
 - title: 第10章：統合実践プロジェクト
   path: /chapters/chapter10/
 appendices:
-- title: '付録A: 追加リソース'
+- title: '付録A: 技術リソース集'
   path: /appendices/appendix-a/
 - title: '付録B: 参考資料'
   path: /appendices/appendix01/
