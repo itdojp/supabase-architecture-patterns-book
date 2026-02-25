@@ -2961,5 +2961,5 @@ Chapter 10では、「**緊急救命室の医師**」レベルの問題解決力
 - **📚 目次**: [📖 学習ガイド]({{ '/introduction/' | relative_url }})
 - **⬅️ 前の章**: [Chapter 8: 運用監視と自動化]({{ '/chapters/chapter08/' | relative_url }})  
 - **➡️ 最終章**: [Chapter 10: トラブルシューティング]({{ '/chapters/chapter10/' | relative_url }})
-- **🏠 関連章**: [Chapter 3-5: アーキテクチャパターン]({{ '/chapters/chapter03/' | relative_url }}) | [選択ガイド]({{ '/pattern_selection_guide.html' | relative_url }})
-- **🔧 リソース**: [アーキテクチャ決定ツール]({{ site.baseurl }}/src/) | [移行チェックリスト]({{ '/operational_checklists.html' | relative_url }})
+- **🏠 関連章**: [Chapter 3-5: アーキテクチャパターン]({{ '/chapters/chapter03/' | relative_url }}) | [選択ガイド]({{ '/guides/pattern-selection/' | relative_url }})
+- **🔧 リソース**: [アーキテクチャ決定ツール]({{ site.repository }}/tree/main/src/chapters/chapter09/) | [移行チェックリスト]({{ '/appendices/appendix01/' | relative_url }}#operational-checklists)

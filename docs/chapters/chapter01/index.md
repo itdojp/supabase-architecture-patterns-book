@@ -1139,4 +1139,4 @@ Chapter 2では、「病院のカルテシステム」を例に、以下を学�
 - **📚 目次**: [📖 学習ガイド]({{ '/introduction/' | relative_url }})
 - **➡️ 次の章**: [Chapter 2: 認証システムの実装]({{ '/chapters/chapter02/' | relative_url }})  
 - **🏠 関連章**: [Chapter 3-5: アーキテクチャパターン]({{ '/chapters/chapter03/' | relative_url }})
-- **🔧 リソース**: [動作検証]({{ site.baseurl }}/src/) | [トラブルシューティング]({{ '/troubleshooting_guide.html' | relative_url }})
+- **🔧 リソース**: [動作検証]({{ '/guides/code-verification/' | relative_url }}) | [トラブルシューティング]({{ '/guides/troubleshooting/' | relative_url }})

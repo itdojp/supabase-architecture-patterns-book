@@ -1027,7 +1027,7 @@ Chapter 3のクライアントサイド実装をスムーズに進めるため�
 
 #### **準備が不安な場合**
 - 🔍 [Supabase公式チュートリアル](https://supabase.com/docs/guides/getting-started) を実施
-- 📚 [付録：環境構築]({{ site.baseurl }}/appendix.md#a-環境構築スクリプト集) で開発環境を準備
+- 📚 [付録：環境構築]({{ '/appendices/appendix01/' | relative_url }}#appendix-env-setup-scripts) で開発環境を準備
 - 💬 不明点は [GitHub Discussions](https://github.com/supabase/supabase/discussions) で質問
 
 ---
@@ -1036,5 +1036,5 @@ Chapter 3のクライアントサイド実装をスムーズに進めるため�
 - **📚 目次**: [📖 学習ガイド]({{ '/introduction/' | relative_url }})
 - **⬅️ 前の章**: [Chapter 1: Supabaseアーキテクチャ理解]({{ '/chapters/chapter01/' | relative_url }})  
 - **➡️ 次の章**: [Chapter 3: クライアントサイド実装]({{ '/chapters/chapter03/' | relative_url }})
-- **🏠 関連章**: [Chapter 7: セキュリティ強化]({{ '/chapters/chapter07/' | relative_url }}) | [全体設計]({{ '/pattern_selection_guide.html' | relative_url }})
-- **🔧 リソース**: [認証テンプレート]({{ site.baseurl }}/src/) | [セキュリティ・ガイド]({{ '/troubleshooting_guide.html' | relative_url }})
+- **🏠 関連章**: [Chapter 7: セキュリティ強化]({{ '/chapters/chapter07/' | relative_url }}) | [全体設計]({{ '/guides/pattern-selection/' | relative_url }})
+- **🔧 リソース**: [認証テンプレート]({{ site.repository }}/tree/main/src/examples/) | [セキュリティ・ガイド]({{ '/guides/troubleshooting/' | relative_url }})

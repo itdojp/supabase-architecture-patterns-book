@@ -118,17 +118,17 @@ Supabaseマスターの核心部分
 
 **成果物**: サーバーレス薬剤管理システム
 
-#### [🏦 Chapter 5: パターン3 - 独立APIサーバー]({{ '/chapter05-1.html' | relative_url }})
+#### [🏦 Chapter 5: パターン3 - 独立APIサーバー]({{ '/chapters/chapter05-1/' | relative_url }})
 **比喩**: 鉄筋コンクリート（堅牢・高性能・企業向け）  
 **技術**: FastAPI + SQLAlchemy + Supabase  
 **サンプル**: 病院総合管理システム
 
 | セクション | ファイル | 内容 | 学習時間 | レベル |
 |:----------|:--------|:-----|:---------|:-------|
-| 5.1 基本設計 | [chapter05-1.md]({{ '/chapter05-1.html' | relative_url }}) | FastAPI基本構成・DB設計 | 3〜4時間 | 🌱🚀 |
-| 5.2 高度実装 | [chapter05-2.md]({{ '/chapter05-2.html' | relative_url }}) | マルチテナント・高度機能 | 4〜6時間 | 🚀💪 |
-| 5.3 運用・拡張 | [chapter05-3.md]({{ '/chapter05-3.html' | relative_url }}) | スケーリング・運用最適化 | 3〜4時間 | 💪 |
-| 5.4 AI/RAG | [chapter05-4.md]({{ '/chapter05-4.html' | relative_url }}) | RAG・埋め込み・監査ログ | 5〜7時間 | 💪 |
+| 5.1 基本設計 | [chapter05-1.md]({{ '/chapters/chapter05-1/' | relative_url }}) | FastAPI基本構成・DB設計 | 3〜4時間 | 🌱🚀 |
+| 5.2 高度実装 | [chapter05-2.md]({{ '/chapters/chapter05-2/' | relative_url }}) | マルチテナント・高度機能 | 4〜6時間 | 🚀💪 |
+| 5.3 運用・拡張 | [chapter05-3.md]({{ '/chapters/chapter05-3/' | relative_url }}) | スケーリング・運用最適化 | 3〜4時間 | 💪 |
+| 5.4 AI/RAG | [chapter05-4.md]({{ '/chapters/chapter05-4/' | relative_url }}) | RAG・埋め込み・監査ログ | 5〜7時間 | 💪 |
 
 **成果物**: エンタープライズ級病院管理システム
 
@@ -291,16 +291,16 @@ src/
 ## 📚 関連ドキュメント・リソース
 
 ### 📋 **実践ガイド集**
-- [🔧 トラブルシューティングガイド]({{ '/troubleshooting_guide.html' | relative_url }}) - 開発時の問題解決
-- [⚠️ エラーハンドリングガイド]({{ '/error_handling_guide.html' | relative_url }}) - 高度なエラー処理
-- [🎯 パターン選択ガイド]({{ '/pattern_selection_guide.html' | relative_url }}) - AI支援選択システム
-- [🔄 移行戦略ガイド]({{ '/migration_strategy.html' | relative_url }}) - パターン間移行戦略
-- [✅ 運用チェックリスト]({{ '/operational_checklists.html' | relative_url }}) - 本番運用対応
+- [🔧 トラブルシューティングガイド]({{ '/guides/troubleshooting/' | relative_url }}) - 開発時の問題解決
+- [⚠️ エラーハンドリングガイド]({{ '/guides/error-handling/' | relative_url }}) - 高度なエラー処理
+- [🎯 パターン選択ガイド]({{ '/guides/pattern-selection/' | relative_url }}) - AI支援選択システム
+- [🔄 移行戦略ガイド]({{ '/chapters/chapter09/' | relative_url }}) - パターン間移行戦略
+- [✅ 運用チェックリスト]({{ '/appendices/appendix01/' | relative_url }}#operational-checklists) - 本番運用対応
 
 ### 🔗 **統合ドキュメント**
-- [📖 バージョン履歴]({{ '/VERSION.html' | relative_url }}) - 改訂計画・変更履歴
-- [📋 技術書統合版]({{ '/supabase_textbook.html' | relative_url }}) - 全章統合版
-- [📊 コード検証ガイド]({{ '/code_verification.html' | relative_url }}) - 品質保証・検証手順
+- [📖 バージョン履歴]({{ site.repository }}/blob/main/CHANGELOG.md) - 改訂計画・変更履歴
+- [📄 EPUB/PDFガイド]({{ site.repository }}/blob/main/EPUB-PDF-GUIDE.md) - オフライン版の作成手順
+- [📊 コード検証ガイド]({{ '/guides/code-verification/' | relative_url }}) - 品質保証・検証手順
 
 ### 🌍 **外部リソース**
 - [Supabase公式ドキュメント](https://supabase.com/docs)

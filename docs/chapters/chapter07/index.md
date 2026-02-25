@@ -1232,4 +1232,4 @@ Chapter 8では、「**病院の生命維持管理システム**」レベルの�
 - **⬅️ 前の章**: [Chapter 6: パフォーマンス最適化]({{ '/chapters/chapter06/' | relative_url }})  
 - **➡️ 次の章**: [Chapter 8: 運用監視と自動化]({{ '/chapters/chapter08/' | relative_url }})
 - **🏠 関連章**: [Chapter 1: 認証基礎]({{ '/chapters/chapter01/' | relative_url }}) | [Chapter 9: 演習]({{ '/chapters/chapter09/' | relative_url }})
-- **🔧 リソース**: [セキュリティ・チェックリスト]({{ '/operational_checklists.html' | relative_url }}) | [脅威対策ガイド]({{ '/troubleshooting_guide.html' | relative_url }})
+- **🔧 リソース**: [セキュリティ・チェックリスト]({{ '/appendices/appendix01/' | relative_url }}#operational-checklists) | [脅威対策ガイド]({{ '/guides/troubleshooting/' | relative_url }})

@@ -7,8 +7,8 @@ title: "Chapter 5-2: マルチテナンシーと複雑ビジネスロジック �
 
 ---
 **📚 目次に戻る**: [📖 学習ガイド]({{ '/introduction/' | relative_url }})  
-**⬅️ 前の章**: [Chapter 5-1: 独立APIサーバー基礎]({{ '/chapter05-1.html' | relative_url }})  
-**➡️ 次の章**: [Chapter 5-3: 本番運用機能]({{ '/chapter05-3.html' | relative_url }})  
+**⬅️ 前の章**: [Chapter 5-1: 独立APIサーバー基礎]({{ '/chapters/chapter05-1/' | relative_url }})  
+**➡️ 次の章**: [Chapter 5-3: 本番運用機能]({{ '/chapters/chapter05-3/' | relative_url }})  
 **🏗️ アーキテクチャ**: 独立APIサーバー（FastAPI + マルチテナント）  
 **🎯 学習レベル**: 🌱 基礎 | 🚀 応用 | 💪 発展  
 **⏱️ 推定学習時間**: 4〜6時間  
@@ -1790,7 +1790,7 @@ Chapter 5-3で学ぶ本番運用機能の前提知識：
 
 **📍 ナビゲーション**
 - **📚 目次**: [📖 学習ガイド]({{ '/introduction/' | relative_url }})
-- **⬅️ 前の章**: [Chapter 5-1: 独立APIサーバー基礎]({{ '/chapter05-1.html' | relative_url }})  
-- **➡️ 次の章**: [Chapter 5-3: 本番運用機能]({{ '/chapter05-3.html' | relative_url }})
+- **⬅️ 前の章**: [Chapter 5-1: 独立APIサーバー基礎]({{ '/chapters/chapter05-1/' | relative_url }})  
+- **➡️ 次の章**: [Chapter 5-3: 本番運用機能]({{ '/chapters/chapter05-3/' | relative_url }})
 - **🏠 関連章**: [Chapter 6: パフォーマンス最適化]({{ '/chapters/chapter06/' | relative_url }}) | [Chapter 8: 運用監視]({{ '/chapters/chapter08/' | relative_url }})
-- **🔧 リソース**: [マルチテナント設計]({{ '/src/' | relative_url }}) | [運用チェックリスト]({{ '/operational_checklists.html' | relative_url }})
+- **🔧 リソース**: [マルチテナント設計]({{ site.repository }}/tree/main/src/examples/pattern3/) | [運用チェックリスト]({{ '/appendices/appendix01/' | relative_url }}#operational-checklists)
