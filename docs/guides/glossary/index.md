@@ -283,5 +283,5 @@ title: "技術用語索引・用語集 📚"
 **📍 ナビゲーション**
 - **📚 目次**: [📖 学習ガイド]({{ '/introduction/' | relative_url }})
 - **🏠 各章**: [Chapter 1-10]({{ '/introduction/' | relative_url }}) での学習時に参照
-- **🔧 関連リソース**: [付録]({{ '/appendix.html' | relative_url }}) | [トラブルシューティング]({{ '/guides/troubleshooting/' | relative_url }})
+- **🔧 関連リソース**: [付録]({{ '/appendices/appendix-a/' | relative_url }}) | [トラブルシューティング]({{ '/guides/troubleshooting/' | relative_url }})
 - **🌐 公式**: [Supabase公式ドキュメント](https://supabase.com/docs)
