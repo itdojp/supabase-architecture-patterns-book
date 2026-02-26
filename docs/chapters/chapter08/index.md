@@ -3070,7 +3070,7 @@ class ComprehensiveMonitor:
 
 ## トラブルシューティング
 
-### 8.4.1 CI/CDパイプライン障害対応
+### 8.5.1 CI/CDパイプライン障害対応
 
 #### パイプライン実行失敗の診断手順
 
@@ -3292,7 +3292,7 @@ def analyze_ci_failure(log_file_path: str):
         print(f"分析中にエラーが発生しました: {e}")
 ```
 
-### 8.4.2 マイグレーション問題診断
+### 8.5.2 マイグレーション問題診断
 
 #### データベースマイグレーション失敗の対処
 
@@ -3627,7 +3627,7 @@ if __name__ == "__main__":
     asyncio.run(emergency_migration_recovery(database_url, migration_version))
 ```
 
-### 8.4.3 バックアップ・復旧問題対応
+### 8.5.3 バックアップ・復旧問題対応
 
 #### バックアップ失敗の診断と対処
 
@@ -4028,7 +4028,7 @@ if __name__ == "__main__":
     backup_diagnosis_cli()
 ```
 
-### 8.4.4 監視・アラート問題対応
+### 8.5.4 監視・アラート問題対応
 
 #### 監視システム障害の診断
 
@@ -4569,7 +4569,7 @@ if __name__ == "__main__":
     asyncio.run(run_monitoring_diagnosis())
 ```
 
-### 8.4.5 運用自動化問題の予防策
+### 8.5.5 運用自動化問題の予防策
 
 #### プロアクティブ監視設定
 

@@ -2277,6 +2277,6 @@ Chapter 5-2以降で学ぶ発展的機能：
 **📍 ナビゲーション**
 - **📚 目次**: [📖 学習ガイド]({{ '/introduction/' | relative_url }})
 - **⬅️ 前の章**: [Chapter 4: Edge Functions活用]({{ '/chapters/chapter04/' | relative_url }})  
-- **➡️ 続き**: [Chapter 5-2: マルチテナント実装]({{ '/chapter05-2.html' | relative_url }})
+- **➡️ 続き**: [Chapter 5-2: マルチテナント実装]({{ '/chapters/chapter05-2/' | relative_url }})
 - **🏠 関連章**: [Chapter 1: Supabase基礎]({{ '/chapters/chapter01/' | relative_url }}) | [Chapter 6: パフォーマンス]({{ '/chapters/chapter06/' | relative_url }})
-- **🔧 リソース**: [動作検証]({{ site.baseurl }}/src/) | [トラブルシューティング]({{ '/troubleshooting_guide.html' | relative_url }})
+- **🔧 リソース**: [動作検証]({{ '/guides/code-verification/' | relative_url }}) | [トラブルシューティング]({{ '/guides/troubleshooting/' | relative_url }})

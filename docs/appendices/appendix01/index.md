@@ -34,7 +34,7 @@ title: "付録B: 参考資料"
 
 ---
 
-## A. 環境構築スクリプト集
+## A. 環境構築スクリプト集 {#appendix-env-setup-scripts}
 
 ### A.1 Supabase開発環境セットアップ
 
@@ -1121,7 +1121,7 @@ settings = Settings()
 - [ ] CDNが設定されているか
 - [ ] 監視・アラートが設定されているか
 
-### C.3 運用チェックリスト
+### C.3 運用チェックリスト {#operational-checklists}
 
 #### デプロイ前
 
@@ -1528,5 +1528,5 @@ LIMIT 20;
 **📍 最終ナビゲーション**
 - **📚 目次**: [📖 学習ガイド]({{ '/introduction/' | relative_url }})
 - **🏠 全章**: [Chapter 1-10]({{ '/introduction/' | relative_url }}) での実装時に参照
-- **🔧 関連リソース**: [動作検証]({{ site.baseurl }}/src/) | [チェックリスト]({{ '/operational_checklists.html' | relative_url }}) | [トラブルシューティング]({{ '/troubleshooting_guide.html' | relative_url }})
+- **🔧 関連リソース**: [動作検証]({{ '/guides/code-verification/' | relative_url }}) | [チェックリスト]({{ '/appendices/appendix01/' | relative_url }}#operational-checklists) | [トラブルシューティング]({{ '/guides/troubleshooting/' | relative_url }})
 - **🌐 コミュニティ**: [Supabase公式](https://supabase.com) | [GitHub](https://github.com/supabase/supabase)

@@ -8,7 +8,7 @@ title: "Chapter 10: 統合実践プロジェクト 🏗️"
 ---
 **📚 目次に戻る**: [📖 学習ガイド]({{ '/introduction/' | relative_url }})  
 **⬅️ 前の章**: [Chapter 9: アーキテクチャ選択演習]({{ '/chapters/chapter09/' | relative_url }})  
-**➡️ 完了**: [🎓 学習修了・次のステップ]({{ site.baseurl }}/introduction/index.html#🎓-学習修了後の進路)  
+**➡️ 完了**: [🎓 学習修了・次のステップ]({{ '/introduction/' | relative_url }})  
 **🎯 学習フェーズ**: Part IV - 実践・応用編（統合実践）  
 **🎯 学習レベル**: 🌱 基礎 | 🚀 応用 | 💪 発展  
 **⏱️ 推定学習時間**: 8〜12時間  
@@ -1902,6 +1902,6 @@ Supabaseアーキテクチャパターンの学習が完了しました。実際
 **📍 最終ナビゲーション**
 - **📚 目次**: [📖 学習ガイド]({{ '/introduction/' | relative_url }})
 - **⬅️ 前の章**: [Chapter 9: アーキテクチャ選択演習]({{ '/chapters/chapter09/' | relative_url }})  
-- **🎓 修了後**: [学習継続ガイド]({{ site.baseurl }}/introduction/index.html#🎓-学習修了後の進路)
-- **🏠 復習**: [全章まとめ]({{ '/introduction/' | relative_url }}) | [パターン比較]({{ '/pattern_selection_guide.html' | relative_url }})
+- **🎓 修了後**: [学習継続ガイド]({{ '/introduction/' | relative_url }})
+- **🏠 復習**: [全章まとめ]({{ '/introduction/' | relative_url }}) | [パターン比較]({{ '/guides/pattern-selection/' | relative_url }})
 - **🔧 リソース**: [コミュニティ](https://supabase.com/community) | [公式ドキュメント](https://supabase.com/docs)

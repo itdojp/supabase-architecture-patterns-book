@@ -91,7 +91,7 @@ title: "技術用語索引・用語集 📚"
 - **定義**: 継続的インテグレーション・継続的デプロイメント
 - **Supabaseでの実装**: GitHub Actions + Supabase CLI
 - **実用例**: コード変更の自動テスト・自動デプロイ
-- **参照章**: [Chapter 5-3: 本番運用]({{ '/chapter05-3.html' | relative_url }})
+- **参照章**: [Chapter 5-3: 本番運用]({{ '/chapters/chapter05-3/' | relative_url }})
 
 ### D
 
@@ -125,7 +125,7 @@ title: "技術用語索引・用語集 📚"
 - **定義**: Python製の高性能Webフレームワーク
 - **Supabaseでの組み合わせ**: 独立APIサーバーパターン
 - **実用例**: 複雑なビジネスロジック・エンタープライズAPI
-- **参照章**: [Chapter 5: 独立APIサーバー]({{ '/chapter05-1.html' | relative_url }})
+- **参照章**: [Chapter 5: 独立APIサーバー]({{ '/chapters/chapter05-1/' | relative_url }})
 
 #### **Flet**
 `#framework` `#python` `#ui`
@@ -159,7 +159,7 @@ title: "技術用語索引・用語集 📚"
 - **定義**: 1つのシステムで複数の組織・顧客を安全に分離する設計
 - **Supabaseでの実装**: RLS + 組織ID分離
 - **実用例**: SaaS製品・複数企業の管理システム
-- **参照章**: [Chapter 5-2: マルチテナンシー]({{ '/chapter05-2.html' | relative_url }})
+- **参照章**: [Chapter 5-2: マルチテナンシー]({{ '/chapters/chapter05-2/' | relative_url }})
 
 ### P
 
@@ -191,7 +191,7 @@ title: "技術用語索引・用語集 📚"
 - **定義**: 高速インメモリデータストア・キャッシュ
 - **Supabaseでの組み合わせ**: 独立APIサーバーでのキャッシュ層
 - **実用例**: セッション保存・API レスポンスキャッシュ
-- **参照章**: [Chapter 5-2: Redis活用]({{ '/chapter05-2.html' | relative_url }})
+- **参照章**: [Chapter 5-2: Redis活用]({{ '/chapters/chapter05-2/' | relative_url }})
 
 #### **RLS（Row Level Security）**
 `#security` `#database`
@@ -214,7 +214,7 @@ title: "技術用語索引・用語集 📚"
 - **定義**: PythonのORM（オブジェクト関係マッピング）ライブラリ
 - **Supabaseでの組み合わせ**: FastAPI + PostgreSQL連携
 - **実用例**: Pythonコードでのデータベース操作
-- **参照章**: [Chapter 5: SQLAlchemy活用]({{ '/chapter05-1.html' | relative_url }})
+- **参照章**: [Chapter 5: SQLAlchemy活用]({{ '/chapters/chapter05-1/' | relative_url }})
 
 ### W
 
@@ -283,5 +283,5 @@ title: "技術用語索引・用語集 📚"
 **📍 ナビゲーション**
 - **📚 目次**: [📖 学習ガイド]({{ '/introduction/' | relative_url }})
 - **🏠 各章**: [Chapter 1-10]({{ '/introduction/' | relative_url }}) での学習時に参照
-- **🔧 関連リソース**: [付録]({{ '/appendix.html' | relative_url }}) | [トラブルシューティング]({{ '/troubleshooting_guide.html' | relative_url }})
+- **🔧 関連リソース**: [付録]({{ '/appendices/appendix-a/' | relative_url }}) | [トラブルシューティング]({{ '/guides/troubleshooting/' | relative_url }})
 - **🌐 公式**: [Supabase公式ドキュメント](https://supabase.com/docs)

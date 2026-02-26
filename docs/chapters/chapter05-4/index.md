@@ -7,7 +7,7 @@ title: "Chapter 5-4: RAG/ベクトル検索アーキテクチャ 🧠"
 
 ---
 **📚 目次に戻る**: [📖 学習ガイド]({{ '/introduction/' | relative_url }})  
-**⬅️ 前の章**: [Chapter 5-3: 本番運用機能]({{ '/chapter05-3.html' | relative_url }})  
+**⬅️ 前の章**: [Chapter 5-3: 本番運用機能]({{ '/chapters/chapter05-3/' | relative_url }})  
 **➡️ 次の章**: [Chapter 6: パフォーマンス最適化]({{ '/chapters/chapter06/' | relative_url }})  
 **🏗️ アーキテクチャ**: RAG / ベクトル検索 / 監査ログ  
 **🎯 学習レベル**: 🌱 基礎 | 🚀 応用 | 💪 発展  

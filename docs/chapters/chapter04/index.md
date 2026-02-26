@@ -8,7 +8,7 @@ title: "Chapter 4: パターン2 - Edge Functions活用 ⚡"
 ---
 **📚 目次に戻る**: [📖 学習ガイド]({{ '/introduction/' | relative_url }})  
 **⬅️ 前の章**: [Chapter 3: パターン1 - クライアントサイド実装]({{ '/chapters/chapter03/' | relative_url }})  
-**➡️ 次の章**: [Chapter 5: パターン3 - 独立API サーバー]({{ '/chapter05-1.html' | relative_url }})  
+**➡️ 次の章**: [Chapter 5: パターン3 - 独立API サーバー]({{ '/chapters/chapter05-1/' | relative_url }})  
 **🏗️ アーキテクチャ**: Edge Functions（サーバーレス関数）  
 **🎯 学習レベル**: 🌱 基礎 | 🚀 応用 | 💪 発展  
 **⏱️ 推定学習時間**: 4〜6時間  
@@ -3322,6 +3322,6 @@ Chapter 5では、「**大病院の基幹システム**」を例に、エンタ�
 **📍 ナビゲーション**
 - **📚 目次**: [📖 学習ガイド]({{ '/introduction/' | relative_url }})
 - **⬅️ 前の章**: [Chapter 3: クライアントサイド実装]({{ '/chapters/chapter03/' | relative_url }})  
-- **➡️ 次の章**: [Chapter 5: 独立API サーバー]({{ '/chapter05-1.html' | relative_url }})
+- **➡️ 次の章**: [Chapter 5: 独立API サーバー]({{ '/chapters/chapter05-1/' | relative_url }})
 - **🏠 関連章**: [Chapter 1: Supabase基礎]({{ '/chapters/chapter01/' | relative_url }}) | [Chapter 6: パフォーマンス]({{ '/chapters/chapter06/' | relative_url }})
-- **🔧 リソース**: [動作検証]({{ site.baseurl }}/src/) | [トラブルシューティング]({{ '/troubleshooting_guide.html' | relative_url }})
+- **🔧 リソース**: [動作検証]({{ '/guides/code-verification/' | relative_url }}) | [トラブルシューティング]({{ '/guides/troubleshooting/' | relative_url }})

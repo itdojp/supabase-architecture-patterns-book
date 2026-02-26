@@ -2190,7 +2190,7 @@ def main(page: ft.Page):
 ### 関連リソース
 - [Flet公式ドキュメント](https://flet.dev/docs/)
 - [Supabase Python クライアント](https://supabase.com/docs/reference/python/introduction)
-- [環境構築ガイド]({{ '/environment_setup_guide.html' | relative_url }})
+- [環境構築ガイド]({{ '/appendices/appendix01/' | relative_url }}#appendix-env-setup-scripts)
 
 ---
 
@@ -2332,11 +2332,11 @@ Chapter 4では、「病院薬剤管理システム」を例に、**プレハブ
 - **📚 目次**: [📖 学習ガイド]({{ '/introduction/' | relative_url }})
 - **⬅️ 前の章**: [Chapter 2: 認証システム]({{ '/chapters/chapter02/' | relative_url }})
 - **➡️ 次の章**: [Chapter 4: Edge Functions活用]({{ '/chapters/chapter04/' | relative_url }})
-- **🏠 同レベル**: [Chapter 5: API Server実装]({{ '/chapter05-1.html' | relative_url }})
-- **🔧 実践**: [サンプルコード]({{ site.baseurl }}/src/chapter03-task-manager/) | [動作検証]({{ site.baseurl }}/src/verify_apps.py)
+- **🏠 同レベル**: [Chapter 5: API Server実装]({{ '/chapters/chapter05-1/' | relative_url }})
+- **🔧 実践**: [サンプルコード]({{ site.repository }}/tree/main/src/examples/pattern1/) | [動作検証]({{ '/guides/code-verification/' | relative_url }})
 
 ### 📚 **関連リソース**
-- 🔧 [トラブルシューティング]({{ '/troubleshooting_guide.html' | relative_url }})
-- 🎯 [パターン選択ガイド]({{ '/pattern_selection_guide.html' | relative_url }})  
-- 📋 [運用チェックリスト]({{ '/operational_checklists.html' | relative_url }})
-- 🔍 [コード検証ガイド]({{ '/code_verification.html' | relative_url }})
+- 🔧 [トラブルシューティング]({{ '/guides/troubleshooting/' | relative_url }})
+- 🎯 [パターン選択ガイド]({{ '/guides/pattern-selection/' | relative_url }})  
+- 📋 [運用チェックリスト]({{ '/appendices/appendix01/' | relative_url }}#operational-checklists)
+- 🔍 [コード検証ガイド]({{ '/guides/code-verification/' | relative_url }})
