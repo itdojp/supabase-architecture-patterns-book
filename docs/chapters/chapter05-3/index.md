@@ -1,14 +1,14 @@
 ---
 layout: book
 order: 9
-title: "Chapter 5-3: 拡張性設計とパフォーマンス最適化 📈"
+title: "第5-3章：拡張性設計とパフォーマンス最適化"
 ---
-# Chapter 5-3: 拡張性設計とパフォーマンス最適化 📈
+# 第5-3章：拡張性設計とパフォーマンス最適化
 
 ---
-**📚 目次に戻る**: [📖 学習ガイド]({{ '/introduction/' | relative_url }})  
-**⬅️ 前の章**: [Chapter 5-2: マルチテナンシーと複雑ビジネスロジック]({{ '/chapters/chapter05-2/' | relative_url }})  
-**➡️ 次の章**: [Chapter 5-4: RAG/ベクトル検索アーキテクチャ]({{ '/chapters/chapter05-4/' | relative_url }})  
+**📚 目次に戻る**: [はじめに]({{ '/introduction/' | relative_url }})  
+**⬅️ 前の章**: [第5-2章：マルチテナンシーと複雑ビジネスロジック]({{ '/chapters/chapter05-2/' | relative_url }})  
+**➡️ 次の章**: [第5-4章：RAG/ベクトル検索アーキテクチャ]({{ '/chapters/chapter05-4/' | relative_url }})  
 **🏗️ アーキテクチャ**: 独立APIサーバー（FastAPI + スケーリング・最適化）  
 **🎯 学習レベル**: 🌱 基礎 | 🚀 応用 | 💪 発展  
 **⏱️ 推定学習時間**: 5〜7時間  

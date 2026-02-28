@@ -1,13 +1,13 @@
 ---
 layout: book
 order: 15
-title: "Chapter 10: 統合実践プロジェクト 🏗️"
+title: "第10章：統合実践プロジェクト"
 ---
-# Chapter 10: 統合実践プロジェクト 🏗️
+# 第10章：統合実践プロジェクト
 
 ---
-**📚 目次に戻る**: [📖 学習ガイド]({{ '/introduction/' | relative_url }})  
-**⬅️ 前の章**: [Chapter 9: アーキテクチャ選択演習]({{ '/chapters/chapter09/' | relative_url }})  
+**📚 目次に戻る**: [はじめに]({{ '/introduction/' | relative_url }})  
+**⬅️ 前の章**: [第9章：アーキテクチャ選択演習]({{ '/chapters/chapter09/' | relative_url }})  
 **➡️ 完了**: [🎓 学習修了・次のステップ]({{ '/introduction/' | relative_url }})  
 **🎯 学習フェーズ**: Part IV - 実践・応用編（統合実践）  
 **🎯 学習レベル**: 🌱 基礎 | 🚀 応用 | 💪 発展  

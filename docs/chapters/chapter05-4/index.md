@@ -1,14 +1,14 @@
 ---
 layout: book
 order: 10
-title: "Chapter 5-4: RAG/ベクトル検索アーキテクチャ 🧠"
+title: "第5-4章：RAG/ベクトル検索アーキテクチャ"
 ---
-# Chapter 5-4: RAG/ベクトル検索アーキテクチャ 🧠
+# 第5-4章：RAG/ベクトル検索アーキテクチャ
 
 ---
-**📚 目次に戻る**: [📖 学習ガイド]({{ '/introduction/' | relative_url }})  
-**⬅️ 前の章**: [Chapter 5-3: 本番運用機能]({{ '/chapters/chapter05-3/' | relative_url }})  
-**➡️ 次の章**: [Chapter 6: パフォーマンス最適化]({{ '/chapters/chapter06/' | relative_url }})  
+**📚 目次に戻る**: [はじめに]({{ '/introduction/' | relative_url }})  
+**⬅️ 前の章**: [第5-3章：拡張性設計とパフォーマンス最適化]({{ '/chapters/chapter05-3/' | relative_url }})  
+**➡️ 次の章**: [第6章：パフォーマンス最適化]({{ '/chapters/chapter06/' | relative_url }})  
 **🏗️ アーキテクチャ**: RAG / ベクトル検索 / 監査ログ  
 **🎯 学習レベル**: 🌱 基礎 | 🚀 応用 | 💪 発展  
 **⏱️ 推定学習時間**: 5〜7時間  

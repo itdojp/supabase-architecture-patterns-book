@@ -1,14 +1,14 @@
 ---
 layout: book
 order: 5
-title: "Chapter 3: パターン1 - クライアントサイド実装 🏠"
+title: "第3章：パターン1 - クライアントサイド実装"
 ---
-# Chapter 3: パターン1 - クライアントサイド実装 🏠
+# 第3章：パターン1 - クライアントサイド実装
 
 ---
-**📚 目次に戻る**: [📖 学習ガイド]({{ '/introduction/' | relative_url }})  
-**⬅️ 前の章**: [Chapter 2: 認証システムの実装]({{ '/chapters/chapter02/' | relative_url }})  
-**➡️ 次の章**: [Chapter 4: Edge Functions活用]({{ '/chapters/chapter04/' | relative_url }})  
+**📚 目次に戻る**: [はじめに]({{ '/introduction/' | relative_url }})  
+**⬅️ 前の章**: [第2章：認証・認可設計]({{ '/chapters/chapter02/' | relative_url }})  
+**➡️ 次の章**: [第4章：パターン2 - Edge Functions活用]({{ '/chapters/chapter04/' | relative_url }})  
 **🎯 学習レベル**: 🌱 基礎 ➜ 🚀 応用  
 **⏱️ 推定学習時間**: 6〜10時間  
 **🏗️ アーキテクチャ**: 木造住宅工法（シンプル・高速・個人向け）

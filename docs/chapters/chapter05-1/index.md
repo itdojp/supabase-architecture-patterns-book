@@ -1,14 +1,14 @@
 ---
 layout: book
 order: 7
-title: "Chapter 5-1: パターン3 - 独立APIサーバー 🏗️"
+title: "第5-1章：パターン3 - 独立APIサーバー"
 ---
-# Chapter 5-1: パターン3 - 独立APIサーバー 🏗️
+# 第5-1章：パターン3 - 独立APIサーバー
 
 ---
-**📚 目次に戻る**: [📖 学習ガイド]({{ '/introduction/' | relative_url }})  
-**⬅️ 前の章**: [Chapter 4: パターン2 - Edge Functions活用]({{ '/chapters/chapter04/' | relative_url }})  
-**➡️ 次の章**: [Chapter 6: パフォーマンス最適化]({{ '/chapters/chapter06/' | relative_url }})  
+**📚 目次に戻る**: [はじめに]({{ '/introduction/' | relative_url }})  
+**⬅️ 前の章**: [第4章：パターン2 - Edge Functions活用]({{ '/chapters/chapter04/' | relative_url }})  
+**➡️ 次の章**: [第5-2章：マルチテナンシーと複雑ビジネスロジック]({{ '/chapters/chapter05-2/' | relative_url }})  
 **🏗️ アーキテクチャ**: 独立APIサーバー（FastAPI + SQLAlchemy）  
 **🎯 学習レベル**: 🌱 基礎 | 🚀 応用 | 💪 発展  
 **⏱️ 推定学習時間**: 6〜8時間  

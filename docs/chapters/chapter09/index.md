@@ -3,12 +3,12 @@ layout: book
 order: 14
 title: "第9章：アーキテクチャ選択演習"
 ---
-# Chapter 9: アーキテクチャ選択演習 🏗️
+# 第9章：アーキテクチャ選択演習
 
 ---
-**📚 目次に戻る**: [📖 学習ガイド]({{ '/introduction/' | relative_url }})  
-**⬅️ 前の章**: [Chapter 8: 運用監視と自動化]({{ '/chapters/chapter08/' | relative_url }})  
-**➡️ 次の章**: [Chapter 10: トラブルシューティング]({{ '/chapters/chapter10/' | relative_url }})  
+**📚 目次に戻る**: [はじめに]({{ '/introduction/' | relative_url }})  
+**⬅️ 前の章**: [第8章：運用監視と自動化]({{ '/chapters/chapter08/' | relative_url }})  
+**➡️ 次の章**: [第10章：統合実践プロジェクト]({{ '/chapters/chapter10/' | relative_url }})  
 **🎯 学習フェーズ**: Part IV - 実践・応用編（演習）  
 **🎯 学習レベル**: 🌱 基礎 | 🚀 応用 | 💪 発展  
 **⏱️ 推定学習時間**: 4〜6時間  

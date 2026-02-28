@@ -1,14 +1,14 @@
 ---
 layout: book
 order: 12
-title: "Chapter 7: セキュリティ強化 🔐"
+title: "第7章：セキュリティ強化"
 ---
-# Chapter 7: セキュリティ強化 🔐
+# 第7章：セキュリティ強化
 
 ---
-**📚 目次に戻る**: [📖 学習ガイド]({{ '/introduction/' | relative_url }})  
-**⬅️ 前の章**: [Chapter 6: パフォーマンス最適化]({{ '/chapters/chapter06/' | relative_url }})  
-**➡️ 次の章**: [Chapter 8: 運用監視と自動化]({{ '/chapters/chapter08/' | relative_url }})  
+**📚 目次に戻る**: [はじめに]({{ '/introduction/' | relative_url }})  
+**⬅️ 前の章**: [第6章：パフォーマンス最適化]({{ '/chapters/chapter06/' | relative_url }})  
+**➡️ 次の章**: [第8章：運用監視と自動化]({{ '/chapters/chapter08/' | relative_url }})  
 **🎯 学習フェーズ**: Part III - 実装・運用編（セキュリティ）  
 **🎯 学習レベル**: 🌱 基礎 | 🚀 応用 | 💪 発展  
 **⏱️ 推定学習時間**: 6〜8時間  

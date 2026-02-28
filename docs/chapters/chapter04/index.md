@@ -1,14 +1,14 @@
 ---
 layout: book
 order: 6
-title: "Chapter 4: パターン2 - Edge Functions活用 ⚡"
+title: "第4章：パターン2 - Edge Functions活用"
 ---
-# Chapter 4: パターン2 - Edge Functions活用 ⚡
+# 第4章：パターン2 - Edge Functions活用
 
 ---
-**📚 目次に戻る**: [📖 学習ガイド]({{ '/introduction/' | relative_url }})  
-**⬅️ 前の章**: [Chapter 3: パターン1 - クライアントサイド実装]({{ '/chapters/chapter03/' | relative_url }})  
-**➡️ 次の章**: [Chapter 5: パターン3 - 独立API サーバー]({{ '/chapters/chapter05-1/' | relative_url }})  
+**📚 目次に戻る**: [はじめに]({{ '/introduction/' | relative_url }})  
+**⬅️ 前の章**: [第3章：パターン1 - クライアントサイド実装]({{ '/chapters/chapter03/' | relative_url }})  
+**➡️ 次の章**: [第5-1章：パターン3 - 独立APIサーバー]({{ '/chapters/chapter05-1/' | relative_url }})  
 **🏗️ アーキテクチャ**: Edge Functions（サーバーレス関数）  
 **🎯 学習レベル**: 🌱 基礎 | 🚀 応用 | 💪 発展  
 **⏱️ 推定学習時間**: 4〜6時間  

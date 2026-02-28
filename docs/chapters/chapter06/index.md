@@ -1,14 +1,14 @@
 ---
 layout: book
 order: 11
-title: "Chapter 6: パフォーマンス最適化（システムの高速化マスター） 🚀"
+title: "第6章：パフォーマンス最適化"
 ---
-# Chapter 6: パフォーマンス最適化（システムの高速化マスター） 🚀
+# 第6章：パフォーマンス最適化
 
 ---
-**📚 目次に戻る**: [📖 学習ガイド]({{ '/introduction/' | relative_url }})  
-**⬅️ 前の章**: [Chapter 5-4: RAG/ベクトル検索アーキテクチャ]({{ '/chapters/chapter05-4/' | relative_url }})  
-**➡️ 次の章**: [Chapter 7: セキュリティ強化]({{ '/chapters/chapter07/' | relative_url }})  
+**📚 目次に戻る**: [はじめに]({{ '/introduction/' | relative_url }})  
+**⬅️ 前の章**: [第5-4章：RAG/ベクトル検索アーキテクチャ]({{ '/chapters/chapter05-4/' | relative_url }})  
+**➡️ 次の章**: [第7章：セキュリティ強化]({{ '/chapters/chapter07/' | relative_url }})  
 **🎯 学習フェーズ**: Part III - 実装・運用編（パフォーマンス）  
 **🎯 学習レベル**: 🌱 基礎 | 🚀 応用 | 💪 発展  
 **⏱️ 推定学習時間**: 5〜7時間  

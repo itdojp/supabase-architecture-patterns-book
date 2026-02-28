@@ -1,14 +1,14 @@
 ---
 layout: book
 order: 4
-title: "Chapter 2: 認証・認可設計 🔐"
+title: "第2章：認証・認可設計"
 ---
-# Chapter 2: 認証・認可設計 🔐
+# 第2章：認証・認可設計
 
 ---
-**📚 目次に戻る**: [📖 学習ガイド]({{ '/introduction/' | relative_url }})  
-**⬅️ 前の章**: [Chapter 1: Supabaseアーキテクチャ理解]({{ '/chapters/chapter01/' | relative_url }})  
-**➡️ 次の章**: [Chapter 3: パターン1 - クライアントサイド実装]({{ '/chapters/chapter03/' | relative_url }})  
+**📚 目次に戻る**: [はじめに]({{ '/introduction/' | relative_url }})  
+**⬅️ 前の章**: [第1章：Supabaseアーキテクチャ理解]({{ '/chapters/chapter01/' | relative_url }})  
+**➡️ 次の章**: [第3章：パターン1 - クライアントサイド実装]({{ '/chapters/chapter03/' | relative_url }})  
 **🎯 学習フェーズ**: Part I - 基礎編（認証・認可）  
 **🎯 学習レベル**: 🌱 基礎 | 🚀 応用 | 💪 発展  
 **⏱️ 推定学習時間**: 3〜4時間  

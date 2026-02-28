@@ -43,19 +43,19 @@ permalink: /
 ## 目次
 
 - [はじめに]({{ site.baseurl }}/introduction/)
-- [第1章: Supabaseプロジェクトの基本セットアップ]({{ site.baseurl }}/chapters/chapter01/) — Supabase 全体像と開発環境構築
-- [第2章: Flet UIクライアントの基本実装]({{ site.baseurl }}/chapters/chapter02/) — クライアントサイドでの基本連携
-- [第3章: FastAPIサーバーの設計と実装]({{ site.baseurl }}/chapters/chapter03/) — バックエンドAPIサーバーの設計と実装
-- [第4章: 3層構成での通信とデータフロー]({{ site.baseurl }}/chapters/chapter04/) — クライアント・サーバー・DB間のデータフロー整理
-- [第5章: 実装編その1: ユーザー管理システム]({{ site.baseurl }}/chapters/chapter05-1/) — 認証・権限管理を含むユーザー管理パターン
-- [第5章: 実装編その2: ストライプ決済との統合]({{ site.baseurl }}/chapters/chapter05-2/) — 決済連携を伴うサブシステム統合パターン
-- [第5章: 実装編その3: リアルタイム通知システム]({{ site.baseurl }}/chapters/chapter05-3/) — Realtime を用いた通知・更新パターン
-- [第5章: 実装編その4: RAG/ベクトル検索]({{ site.baseurl }}/chapters/chapter05-4/) — RAG・埋め込み・監査ログの設計
-- [第6章: モニタリングとロギング]({{ site.baseurl }}/chapters/chapter06/) — 運用監視とログ設計の基本
-- [第7章: スケーリングとパフォーマンス最適化]({{ site.baseurl }}/chapters/chapter07/) — 負荷増大に対応するスケーリング戦略
-- [第8章: セキュリティベストプラクティス]({{ site.baseurl }}/chapters/chapter08/) — Supabase を用いた実践的セキュリティ対策
-- [第9章: エンタープライズアーキテクチャパターン]({{ site.baseurl }}/chapters/chapter09/) — 大規模・複数プロジェクト向け構成
-- [第10章: 実運用とトラブルシューティング]({{ site.baseurl }}/chapters/chapter10/) — 障害対応・運用課題への対処パターン
+- [第1章：Supabaseアーキテクチャ理解]({{ site.baseurl }}/chapters/chapter01/) — Supabase 全体像と基本構成
+- [第2章：認証・認可設計]({{ site.baseurl }}/chapters/chapter02/) — 認証・認可と RLS 設計
+- [第3章：パターン1 - クライアントサイド実装]({{ site.baseurl }}/chapters/chapter03/) — クライアント直結パターン
+- [第4章：パターン2 - Edge Functions活用]({{ site.baseurl }}/chapters/chapter04/) — Edge Functions を用いたサーバーレス実装
+- [第5-1章：パターン3 - 独立APIサーバー]({{ site.baseurl }}/chapters/chapter05-1/) — 独立APIサーバーの導入
+- [第5-2章：マルチテナンシーと複雑ビジネスロジック]({{ site.baseurl }}/chapters/chapter05-2/) — SaaS向け設計
+- [第5-3章：拡張性設計とパフォーマンス最適化]({{ site.baseurl }}/chapters/chapter05-3/) — スケーリング/最適化
+- [第5-4章：RAG/ベクトル検索アーキテクチャ]({{ site.baseurl }}/chapters/chapter05-4/) — RAG/ベクトル検索
+- [第6章：パフォーマンス最適化]({{ site.baseurl }}/chapters/chapter06/) — ボトルネック特定と最適化
+- [第7章：セキュリティ強化]({{ site.baseurl }}/chapters/chapter07/) — セキュリティ設計/運用
+- [第8章：運用監視と自動化]({{ site.baseurl }}/chapters/chapter08/) — 監視/自動化
+- [第9章：アーキテクチャ選択演習]({{ site.baseurl }}/chapters/chapter09/) — 演習
+- [第10章：統合実践プロジェクト]({{ site.baseurl }}/chapters/chapter10/) — 統合実践
 
 ## ガイド
 
@@ -66,8 +66,8 @@ permalink: /
 
 ## 付録
 
-- [実践的リファレンス集]({{ site.baseurl }}/appendices/appendix01/)
-- [技術リソース集]({{ site.baseurl }}/appendices/appendix-a/)
+- [付録B: 参考資料]({{ site.baseurl }}/appendices/appendix01/)
+- [付録A: 技術リソース集]({{ site.baseurl }}/appendices/appendix-a/)
 
 ## 著者について
 
