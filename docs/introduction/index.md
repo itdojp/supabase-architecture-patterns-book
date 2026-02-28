@@ -62,7 +62,7 @@ title: "はじめに"
 
 基礎から確実に積み上げる土台作りパート
 
-#### [🏥 Chapter 1: Supabase基礎知識と環境構築]({{ '/chapters/chapter01/' | relative_url }})
+#### [🏥 第1章：Supabaseアーキテクチャ理解]({{ '/chapters/chapter01/' | relative_url }})
 **学習目標**: Supabaseの全体像理解と開発環境整備
 
 | セクション | 内容 | 学習時間 | レベル |
@@ -73,7 +73,7 @@ title: "はじめに"
 
 **成果物**: 動作するSupabase開発環境
 
-#### [🔐 Chapter 2: 認証システムの実装]({{ '/chapters/chapter02/' | relative_url }})
+#### [🔐 第2章：認証・認可設計]({{ '/chapters/chapter02/' | relative_url }})
 **学習目標**: セキュアな認証・認可システムの理解と実装
 
 | セクション | 内容 | 学習時間 | レベル |
@@ -90,7 +90,7 @@ title: "はじめに"
 
 Supabaseマスターの核心部分
 
-#### [🏠 Chapter 3: パターン1 - クライアントサイド実装]({{ '/chapters/chapter03/' | relative_url }})
+#### [🏠 第3章：パターン1 - クライアントサイド実装]({{ '/chapters/chapter03/' | relative_url }})
 **比喩**: 木造住宅（シンプル・高速・個人向け）  
 **技術**: Python Flet + Supabase Client  
 **サンプル**: 病院患者管理システム
@@ -104,7 +104,7 @@ Supabaseマスターの核心部分
 
 **成果物**: デスクトップ患者管理アプリ
 
-#### [🏢 Chapter 4: パターン2 - Edge Functions活用]({{ '/chapters/chapter04/' | relative_url }})
+#### [🏢 第4章：パターン2 - Edge Functions活用]({{ '/chapters/chapter04/' | relative_url }})
 **比喩**: プレハブ工法（柔軟・自動化・中規模向け）  
 **技術**: Deno + TypeScript Edge Functions  
 **サンプル**: 病院薬剤管理システム
@@ -118,7 +118,7 @@ Supabaseマスターの核心部分
 
 **成果物**: サーバーレス薬剤管理システム
 
-#### [🏦 Chapter 5: パターン3 - 独立APIサーバー]({{ '/chapters/chapter05-1/' | relative_url }})
+#### [🏦 第5-1章：パターン3 - 独立APIサーバー]({{ '/chapters/chapter05-1/' | relative_url }})
 **比喩**: 鉄筋コンクリート（堅牢・高性能・企業向け）  
 **技術**: FastAPI + SQLAlchemy + Supabase  
 **サンプル**: 病院総合管理システム
@@ -147,7 +147,7 @@ Supabaseマスターの核心部分
 
 商用運用レベルへの引き上げ
 
-#### [⚡ Chapter 6: パフォーマンス最適化]({{ '/chapters/chapter06/' | relative_url }})
+#### [⚡ 第6章：パフォーマンス最適化]({{ '/chapters/chapter06/' | relative_url }})
 **比喩**: 病院設備最適化（効率的な患者フロー設計）
 
 | セクション | 内容 | 学習時間 | レベル |
@@ -157,7 +157,7 @@ Supabaseマスターの核心部分
 | 6.3 キャッシュ戦略 | Redis・クライアントキャッシュ | 2〜3時間 | 💪 |
 | 6.4 監視・計測 | APM・メトリクス収集 | 2〜3時間 | 💪 |
 
-#### [🛡️ Chapter 7: セキュリティ強化]({{ '/chapters/chapter07/' | relative_url }})
+#### [🛡️ 第7章：セキュリティ強化]({{ '/chapters/chapter07/' | relative_url }})
 **比喩**: 城郭防御システム（多層防御・侵入検知）
 
 | セクション | 内容 | 学習時間 | レベル |
@@ -166,7 +166,7 @@ Supabaseマスターの核心部分
 | 7.2 監査システム | ログ収集・不正検知 | 2〜3時間 | 🚀 |
 | 7.3 侵入検知 | 異常パターン検知・自動防御 | 3〜4時間 | 💪 |
 
-#### [📊 Chapter 8: 運用監視と自動化]({{ '/chapters/chapter08/' | relative_url }})
+#### [📊 第8章：運用監視と自動化]({{ '/chapters/chapter08/' | relative_url }})
 **比喩**: 病院管理システム（24時間運用・自動化）
 
 | セクション | 内容 | 学習時間 | レベル |
@@ -181,7 +181,7 @@ Supabaseマスターの核心部分
 
 実際のプロジェクトレベルの総合演習
 
-#### [🎯 Chapter 9: アーキテクチャ選択演習]({{ '/chapters/chapter09/' | relative_url }})
+#### [🎯 第9章：アーキテクチャ選択演習]({{ '/chapters/chapter09/' | relative_url }})
 **比喩**: 建築コンサルタント（要件に応じた最適工法選択）
 
 | セクション | 内容 | 学習時間 | レベル |
@@ -191,7 +191,7 @@ Supabaseマスターの核心部分
 | 9.3 移行戦略 | パターン間移行・リスク管理 | 2〜3時間 | 💪 |
 | 9.4 演習問題 | 実際のビジネス要件での選択演習 | 3〜4時間 | 💪 |
 
-#### [🏗️ Chapter 10: 統合実践プロジェクト]({{ '/chapters/chapter10/' | relative_url }})
+#### [🏗️ 第10章：統合実践プロジェクト]({{ '/chapters/chapter10/' | relative_url }})
 **比喩**: 複合施設建設（3パターン統合の大規模プロジェクト）
 
 | セクション | 内容 | 学習時間 | レベル |
@@ -220,26 +220,26 @@ Supabaseマスターの核心部分
 
 #### 🌱 **初心者向けパス**
 ```text
-Week 1-2: Chapter 1-2（基礎固め）
-Week 3-4: Chapter 3（木造住宅パターン）
-Week 5-6: Chapter 4（プレハブパターン）  
-Week 7-8: Chapter 5-1（鉄筋基礎）
-Week 9-10: Chapter 6-7（最適化基礎）
-Week 11-12: Chapter 9（選択基準理解）
+Week 1-2: 第1章〜第2章（基礎固め）
+Week 3-4: 第3章（木造住宅パターン）
+Week 5-6: 第4章（プレハブパターン）  
+Week 7-8: 第5-1章（鉄筋基礎）
+Week 9-10: 第6章〜第7章（最適化基礎）
+Week 11-12: 第9章（選択基準理解）
 ```
 
 #### 🚀 **中級者向けパス**
 ```text
-Week 1: Chapter 3-5（パターン比較習得）
-Week 2-3: Chapter 6-8（運用技術習得）
-Week 4-5: Chapter 9（設計判断力習得）
-Week 6-8: Chapter 10（統合プロジェクト）
+Week 1: 第3章〜第5章（パターン比較習得）
+Week 2-3: 第6章〜第8章（運用技術習得）
+Week 4-5: 第9章（設計判断力習得）
+Week 6-8: 第10章（統合プロジェクト）
 ```
 
 #### 💪 **上級者向けパス**
 ```text
-Week 1: Chapter 9-10（設計・統合重点）
-Week 2-3: Chapter 6-8（エンタープライズ運用）
+Week 1: 第9章〜第10章（設計・統合重点）
+Week 2-3: 第6章〜第8章（エンタープライズ運用）
 Week 4: 実プロジェクトへの適用・改良
 ```
 
@@ -336,6 +336,6 @@ src/
 
 **🚀 さあ、Supabaseアーキテクチャマスターへの旅を始めましょう！**
 
-**📖 今すぐ学習開始**: [Chapter 1: Supabase基礎知識]({{ '/chapters/chapter01/' | relative_url }})  
+**📖 今すぐ学習開始**: [第1章：Supabaseアーキテクチャ理解]({{ '/chapters/chapter01/' | relative_url }})  
 **💬 質問・相談**: [GitHub Discussions](https://github.com/itdojp/supabase-architecture-patterns-book/discussions)  
 **📧 フィードバック**: [お問い合わせ](mailto:knowledge@itdo.jp)
