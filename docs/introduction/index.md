@@ -281,6 +281,8 @@ src/examples/
     └── monitoring.py
 ```
 
+> 注: 本書ではコマンドは Compose v2 の `docker compose` を前提とします。`docker-compose.yml` は慣例的なファイル名として記載しています（`docker-compose` コマンドを意味しません）。
+
 ### 🧪 **動作検証**
 
 各サンプルは以下で動作確認済み：
