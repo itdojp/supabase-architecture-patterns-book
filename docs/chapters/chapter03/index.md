@@ -19,9 +19,9 @@ title: "第3章：パターン1 - クライアントサイド実装"
 - 推奨用途: 小規模/試作/シンプルCRUD
 - 非推奨用途: 複雑な業務ロジックや監査要件があるケース
 
-## 🔄 **前章の復習**（Chapter 2からの継続）
+## 🔄 **前章の復習**（第2章からの継続）
 
-Chapter 2で学んだ**認証・認可の基本概念**を振り返りましょう：
+第2章で学んだ**認証・認可の基本概念**を振り返りましょう：
 - ✅ **認証（Authentication）**: 「あなたは誰ですか？」の確認
 - ✅ **認可（Authorization）**: 「何をしていいですか？」の制御  
 - ✅ **RLS（Row Level Security）**: データベースレベルでの自動アクセス制御
@@ -29,7 +29,7 @@ Chapter 2で学んだ**認証・認可の基本概念**を振り返りましょ�
 
 これらのセキュリティ基盤を使って、今度は**実際に動くアプリケーション**を作成します。
 
-> 💡 **Chapter 2の理解度確認**: 認証と認可の違い、RLSの役割を説明できますか？不安な場合は[Chapter 2]({{ '/chapters/chapter02/' | relative_url }})を復習してください。
+> 💡 **第2章の理解度確認**: 認証と認可の違い、RLSの役割を説明できますか？不安な場合は[第2章]({{ '/chapters/chapter02/' | relative_url }})を復習してください。
 
 ## 🎯 この章で学ぶこと（初心者向け）
 
@@ -165,7 +165,7 @@ flowchart TD
 
 #!/usr/bin/env python3
 """
-Chapter 3: タスク管理システム - メインアプリケーション
+第3章：タスク管理システム - メインアプリケーション
 Fletを使用したクライアントサイド実装パターンのデモ
 """
 
@@ -673,7 +673,7 @@ pip install flet==0.21.2
 
 ### 📖 次の章への準備
 
-**Chapter 4 に進む前に確認すべきこと**：
+**第4章 に進む前に確認すべきこと**：
 
 | 確認項目 | チェック |
 |:---------|:--------:|
@@ -682,7 +682,7 @@ pip install flet==0.21.2
 | RLSの仕組みを理解している | □ |
 | 基本的なエラーは自力で解決できる | □ |
 
-**Chapter 4 の予習ポイント**：
+**第4章 の予習ポイント**：
 - 🌐 **Edge Functions**: サーバーレス関数の概念
 - 🏃 **Deno**: Node.js とは異なるランタイム
 - 📦 **TypeScript**: 型安全なJavaScript
@@ -2183,9 +2183,9 @@ def main(page: ft.Page):
 
 ### 復習推奨ポイント
 理解が不十分な場合は以下を復習してください：
-- **認証実装**: [Chapter 2: 認証・認可設計]({{ '/chapters/chapter02/' | relative_url }})を確認
+- **認証実装**: [第2章：認証・認可設計]({{ '/chapters/chapter02/' | relative_url }})を確認
 - **RLS設計**: [セキュリティ強化]({{ '/chapters/chapter07/' | relative_url }})で詳細学習
-- **パフォーマンス**: [Chapter 6: パフォーマンス最適化]({{ '/chapters/chapter06/' | relative_url }})で深掘り
+- **パフォーマンス**: [第6章：パフォーマンス最適化]({{ '/chapters/chapter06/' | relative_url }})で深掘り
 
 ### 関連リソース
 - [Flet公式ドキュメント](https://flet.dev/docs/)
@@ -2198,25 +2198,25 @@ def main(page: ft.Page):
 
 | 前の章 | 現在の章 | 次の章 |
 |---------|----------|--------|
-| [Chapter 2: 認証・認可設計]({{ '/chapters/chapter02/' | relative_url }}) | **Chapter 3: クライアントサイド実装** | [Chapter 4: Edge Functions実装]({{ '/chapters/chapter04/' | relative_url }}) |
+| [第2章：認証・認可設計]({{ '/chapters/chapter02/' | relative_url }}) | **第3章：パターン1 - クライアントサイド実装** | [第4章：パターン2 - Edge Functions活用]({{ '/chapters/chapter04/' | relative_url }}) |
 
 ### 学習パス確認
 
 ```mermaid
 flowchart LR
-    A[Chapter 2] --> B[Chapter 3 📍]
-    B --> C[Chapter 4]
-    B --> D[Chapter 5]
+    A[第2章] --> B[第3章 📍]
+    B --> C[第4章]
+    B --> D[第5-1章]
     
     style B fill:#e1f5fe
 ```
 
 ### 関連章への参照
-- **前提となる章**: [Chapter 2]({{ '/chapters/chapter02/' | relative_url }}) - 認証・認可基礎
-- **並行学習可能**: [Chapter 4]({{ '/chapters/chapter04/' | relative_url }}) - Edge Functions
-- **後続の発展**: [Chapter 6]({{ '/chapters/chapter06/' | relative_url }}) - パフォーマンス最適化
+- **前提となる章**: [第2章]({{ '/chapters/chapter02/' | relative_url }}) - 認証・認可基礎
+- **並行学習可能**: [第4章]({{ '/chapters/chapter04/' | relative_url }}) - Edge Functions
+- **後続の発展**: [第6章]({{ '/chapters/chapter06/' | relative_url }}) - パフォーマンス最適化
 
-## 📝 Chapter 3 学習まとめ
+## 📝 第3章 学習まとめ
 
 ### 📊 **学習進捗トラッキング**
 この章の学習進捗を以下のチェックリストで確認してください：
@@ -2269,7 +2269,7 @@ flowchart LR
 ├── 👍 柔軟性・自動スケール・外部連携
 └── 👎 TypeScript学習・複雑性増加
 
-🏦 API Server ← Chapter 5で学習  
+🏦 API Server ← 第5-1章で学習  
 ├── 👍 完全制御・大規模対応・エンタープライズ
 └── 👎 開発時間・運用コスト・複雑性
 ```
@@ -2284,14 +2284,14 @@ flowchart LR
 
 ---
 
-## 🚀 次章予告：Edge Functionsパターン
+## 🚀 次章予告：パターン2 - Edge Functions活用
 
 ### 📋 **次章に向けた準備課題**
 
-Chapter 4のEdge Functions実装をスムーズに進めるために、以下を確認・準備してください：
+第4章のEdge Functions実装をスムーズに進めるために、以下を確認・準備してください：
 
 #### **必須準備**
-- [ ] Chapter 3のタスク管理システムを実際に動かしてみた
+- [ ] 第3章のタスク管理システムを実際に動かしてみた
 - [ ] サーバーサイド処理が必要な場面の理解（決済・メール送信など）
 - [ ] JavaScript/TypeScriptの基本文法（変数・関数・Promise）
 
@@ -2308,9 +2308,9 @@ Chapter 4のEdge Functions実装をスムーズに進めるために、以下を
 #### **準備が不安な場合**
 - 🔍 [Deno公式ガイド](https://deno.land/manual) でDeno環境を確認
 - 📚 JavaScript/TypeScript復習：[MDN Web Docs](https://developer.mozilla.org/ja/docs/Web/JavaScript)
-- 💡 Chapter 3で不明な点があれば先に解決してから次章へ
+- 💡 第3章で不明な点があれば先に解決してから次章へ
 
-Chapter 4では、「病院薬剤管理システム」を例に、**プレハブ工法（Edge Functions）**を学習します：
+第4章では、「病院薬剤管理システム」を例に、**プレハブ工法（Edge Functions）**を学習します：
 
 ### 🏢 **Edge Functionsの特徴**
 - 🔧 **外部システム連携**: 薬局・医師・保険システムとの連携
@@ -2324,15 +2324,15 @@ Chapter 4では、「病院薬剤管理システム」を例に、**プレハブ
 - ⚠️ 薬剤相互作用・アレルギーチェック
 - 📱 患者向け服薬指導システム
 
-**🔄 学習の進化**: 木造住宅（Chapter 3）→ プレハブ工法（Chapter 4）→ 鉄筋コンクリート（Chapter 5）
+**🔄 学習の進化**: 木造住宅（第3章）→ プレハブ工法（第4章）→ 鉄筋コンクリート（第5-1章）
 
 ---
 
 **📍 ナビゲーション**
-- **📚 目次**: [📖 学習ガイド]({{ '/introduction/' | relative_url }})
-- **⬅️ 前の章**: [Chapter 2: 認証システム]({{ '/chapters/chapter02/' | relative_url }})
-- **➡️ 次の章**: [Chapter 4: Edge Functions活用]({{ '/chapters/chapter04/' | relative_url }})
-- **🏠 同レベル**: [Chapter 5: API Server実装]({{ '/chapters/chapter05-1/' | relative_url }})
+- **📚 目次**: [はじめに]({{ '/introduction/' | relative_url }})
+- **⬅️ 前の章**: [第2章：認証・認可設計]({{ '/chapters/chapter02/' | relative_url }})
+- **➡️ 次の章**: [第4章：パターン2 - Edge Functions活用]({{ '/chapters/chapter04/' | relative_url }})
+- **🏠 同レベル**: [第5-1章：パターン3 - 独立APIサーバー]({{ '/chapters/chapter05-1/' | relative_url }})
 - **🔧 実践**: [サンプルコード]({{ site.repository }}/tree/main/src/examples/pattern1/) | [動作検証]({{ '/guides/code-verification/' | relative_url }})
 
 ### 📚 **関連リソース**

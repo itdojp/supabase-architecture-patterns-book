@@ -198,5 +198,5 @@ AIアプリは **再現性・説明責任** が重要です。
 ---
 
 **📍 ナビゲーション**
-- **📚 目次**: [📖 学習ガイド]({{ '/introduction/' | relative_url }})
-- **➡️ 次の章**: [Chapter 6: パフォーマンス最適化]({{ '/chapters/chapter06/' | relative_url }})
+- **📚 目次**: [はじめに]({{ '/introduction/' | relative_url }})
+- **➡️ 次の章**: [第6章：パフォーマンス最適化]({{ '/chapters/chapter06/' | relative_url }})

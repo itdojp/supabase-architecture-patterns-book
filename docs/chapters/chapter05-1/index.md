@@ -2227,7 +2227,7 @@ class AuthService:
 
 ## まとめ
 
-Chapter 5-1では、FastAPI + Supabaseの基本構成を構築しました。
+第5-1章では、FastAPI + Supabaseの基本構成を構築しました。
 
 **実装したコンポーネント**:
 - プロジェクト構造とモジュール設計
@@ -2235,7 +2235,7 @@ Chapter 5-1では、FastAPI + Supabaseの基本構成を構築しました。
 - JWT認証システム
 - ロールベースアクセス制御の基盤
 
-## 📝 Chapter 5-1 学習まとめ
+## 📝 第5-1章 学習まとめ
 
 ### ✅ **習得できたスキル**
 - ✅ FastAPI + SQLAlchemy による独立APIサーバー開発
@@ -2244,7 +2244,7 @@ Chapter 5-1では、FastAPI + Supabaseの基本構成を構築しました。
 - ✅ 本格的なプロジェクト構造とモジュール設計
 
 ### 🎯 **3つのアーキテクチャパターン最終比較**
-| 観点 | Chapter 3 (クライアント) | Chapter 4 (Edge Functions) | Chapter 5 (独立API) |
+| 観点 | 第3章 (クライアント) | 第4章 (Edge Functions) | 第5-1章 (独立API) |
 |:-----|:----------------------|:--------------------------|:------------------|
 | **実装方式** | 🖥️ クライアント中心 | ⚡ サーバーレス関数 | 🏗️ 独立APIサーバー |
 | **複雑度** | 🌱 シンプル | 🚀 中程度 | 💪 高機能・高制御 |
@@ -2254,7 +2254,7 @@ Chapter 5-1では、FastAPI + Supabaseの基本構成を構築しました。
 | **運用・保守** | 🌱 簡単 | 🚀 中程度 | 💪 高度（要専門知識） |
 
 ### 🔄 **次の学習ステップ**
-Chapter 5-2以降で学ぶ発展的機能：
+第5-2章以降で学ぶ発展的機能：
 - ✅ マルチテナント機能の完成（組織管理・データ分離）
 - ✅ 高度なビジネスロジック（プロジェクト管理・分析）
 - ✅ パフォーマンス最適化（Redis・キャッシュ戦略）
@@ -2262,9 +2262,9 @@ Chapter 5-2以降で学ぶ発展的機能：
 
 ---
 
-## 🚀 次章予告：マルチテナント機能実装
+## 🚀 次章予告：マルチテナンシーと複雑ビジネスロジック
 
-**Chapter 5-2**では、「病院チェーンの基幹システム」として、以下の高度な機能を実装します：
+**第5-2章**では、「病院チェーンの基幹システム」として、以下の高度な機能を実装します：
 - 🏢 **完全テナント分離**: 病院Aと病院Bのカルテ・スタッフデータの完全分離
 - 🔐 **階層権限管理**: 院長・医師・看護師・事務の細かい権限制御
 - 📊 **統合分析**: 全病院の統計レポートと個別病院の詳細分析
@@ -2275,8 +2275,8 @@ Chapter 5-2以降で学ぶ発展的機能：
 ---
 
 **📍 ナビゲーション**
-- **📚 目次**: [📖 学習ガイド]({{ '/introduction/' | relative_url }})
-- **⬅️ 前の章**: [Chapter 4: Edge Functions活用]({{ '/chapters/chapter04/' | relative_url }})  
-- **➡️ 続き**: [Chapter 5-2: マルチテナント実装]({{ '/chapters/chapter05-2/' | relative_url }})
-- **🏠 関連章**: [Chapter 1: Supabase基礎]({{ '/chapters/chapter01/' | relative_url }}) | [Chapter 6: パフォーマンス]({{ '/chapters/chapter06/' | relative_url }})
+- **📚 目次**: [はじめに]({{ '/introduction/' | relative_url }})
+- **⬅️ 前の章**: [第4章：パターン2 - Edge Functions活用]({{ '/chapters/chapter04/' | relative_url }})  
+- **➡️ 続き**: [第5-2章：マルチテナンシーと複雑ビジネスロジック]({{ '/chapters/chapter05-2/' | relative_url }})
+- **🏠 関連章**: [第1章：Supabaseアーキテクチャ理解]({{ '/chapters/chapter01/' | relative_url }}) | [第6章：パフォーマンス最適化]({{ '/chapters/chapter06/' | relative_url }})
 - **🔧 リソース**: [動作検証]({{ '/guides/code-verification/' | relative_url }}) | [トラブルシューティング]({{ '/guides/troubleshooting/' | relative_url }})
