@@ -271,6 +271,7 @@ src/examples/
 │   └── independent_api/
 │       └── main.py
 ├── docker/                     # Docker構成（例: pattern3）
+│   ├── .env.example
 │   ├── docker-compose.yml
 │   └── pattern3/
 │       ├── Dockerfile
