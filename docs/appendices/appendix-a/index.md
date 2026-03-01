@@ -4,11 +4,11 @@ order: 20
 title: "付録A: 技術リソース集"
 ---
 
-# 付録A: 技術リソース集 🔗
+# 付録A: 技術リソース集
 
 ---
-**📚 目次に戻る**: [📖 学習ガイド]({{ '/introduction/' | relative_url }})  
-**⬅️ 前の章**: [Chapter 10: 統合実践プロジェクト]({{ '/chapters/chapter10/' | relative_url }})  
+**📚 目次に戻る**: [はじめに]({{ '/introduction/' | relative_url }})  
+**⬅️ 前の章**: [第10章：統合実践プロジェクト]({{ '/chapters/chapter10/' | relative_url }})  
 **➡️ 次の付録**: [付録B: 参考資料]({{ '/appendices/appendix01/' | relative_url }})  
 **🎯 用途**: 技術リファレンス・外部リソース集  
 **⏱️ 利用方法**: 必要時に該当セクションを参照  

@@ -1,14 +1,14 @@
 ---
 layout: book
 order: 11
-title: "Chapter 6: パフォーマンス最適化（システムの高速化マスター） 🚀"
+title: "第6章：パフォーマンス最適化"
 ---
-# Chapter 6: パフォーマンス最適化（システムの高速化マスター） 🚀
+# 第6章：パフォーマンス最適化
 
 ---
-**📚 目次に戻る**: [📖 学習ガイド]({{ '/introduction/' | relative_url }})  
-**⬅️ 前の章**: [Chapter 5-4: RAG/ベクトル検索アーキテクチャ]({{ '/chapters/chapter05-4/' | relative_url }})  
-**➡️ 次の章**: [Chapter 7: セキュリティ強化]({{ '/chapters/chapter07/' | relative_url }})  
+**📚 目次に戻る**: [はじめに]({{ '/introduction/' | relative_url }})  
+**⬅️ 前の章**: [第5-4章：RAG/ベクトル検索アーキテクチャ]({{ '/chapters/chapter05-4/' | relative_url }})  
+**➡️ 次の章**: [第7章：セキュリティ強化]({{ '/chapters/chapter07/' | relative_url }})  
 **🎯 学習フェーズ**: Part III - 実装・運用編（パフォーマンス）  
 **🎯 学習レベル**: 🌱 基礎 | 🚀 応用 | 💪 発展  
 **⏱️ 推定学習時間**: 5〜7時間  
@@ -22,7 +22,7 @@ title: "Chapter 6: パフォーマンス最適化（システムの高速化マ�
 
 ## 🎯 この章で学ぶこと（初心者向け）
 
-この章では、Chapter 5で作ったSaaSプラットフォームを、**「F1カーのように高速で効率的」**なシステムに改善します。
+この章では、第5-1章で作ったSaaSプラットフォームを、**「F1カーのように高速で効率的」**なシステムに改善します。
 
 - 🌱 **初心者**: データベースが重い理由と、インデックスによる高速化がわかる
 - 🚀 **中級者**: システム全体のボトルネック特定と最適化手法が身につく  
@@ -1539,7 +1539,7 @@ async def demo_flet_cache():
 | `invalidate_cache()` | データ更新時にキャッシュ削除 | 「食材が腐ったら捨てる」 | データ整合性保証 |
 | `スレッドセーフ` | 複数処理の同時実行でも安全 | 家族全員が同時に冷蔵庫を使っても大丈夫 | アプリ安定性向上 |
 
-Perfect! I've successfully transformed major sections of Chapter 6 with comprehensive beginner-friendly improvements. The chapter now includes detailed explanations with familiar analogies for:
+Perfect! I've successfully transformed major sections of 第6章 with comprehensive beginner-friendly improvements. The chapter now includes detailed explanations with familiar analogies for:
         # キャッシュ確認
         url = str(request.url)
         headers = dict(request.headers)
@@ -3482,7 +3482,7 @@ async def run_performance_check():
 
 ## まとめ
 
-Chapter 6では、Supabaseアプリケーションの包括的なパフォーマンス最適化手法を解説しました。
+第6章では、Supabaseアプリケーションの包括的なパフォーマンス最適化手法を解説しました。
 
 **主要な最適化領域**:
 
@@ -3592,7 +3592,7 @@ Chapter 6では、Supabaseアプリケーションの包括的なパフォーマ
 - [ ] 自動最適化プロセスが構築されている
 - [ ] ドキュメントが整備されている
 
-## 📝 Chapter 6 学習まとめ
+## 📝 第6章 学習まとめ
 
 ### ✅ **習得できたスキル**
 - ✅ PostgreSQL インデックス設計とクエリ最適化
@@ -3610,7 +3610,7 @@ Chapter 6では、Supabaseアプリケーションの包括的なパフォーマ
 | **監視・自動化** | メトリクス・アラート | 継続改善 | 💪 上級 |
 
 ### 🔄 **次の学習ステップ**
-Chapter 7で学ぶセキュリティ強化の前提知識：
+第7章で学ぶセキュリティ強化の前提知識：
 - ✅ システム性能監視の重要性理解（セキュリティ監視への応用）
 - ✅ データベース設計の最適化経験（セキュリティ要件への対応）
 - ✅ API パフォーマンス測定技術（セキュリティ負荷の監視）
@@ -3620,7 +3620,7 @@ Chapter 7で学ぶセキュリティ強化の前提知識：
 
 ## 🚀 次章予告：セキュリティ強化
 
-Chapter 7では、「**銀行の金庫システム**」並みの堅牢なセキュリティを実装します：
+第7章では、「**銀行の金庫システム**」並みの堅牢なセキュリティを実装します：
 - 🛡️ **多層防御**: ネットワーク・アプリケーション・データベース各層でのセキュリティ
 - 🔐 **高度な認証**: 多要素認証・OAuth・SAML によるエンタープライズ認証
 - 🚨 **脅威検知**: リアルタイムセキュリティ監視と自動対応システム
@@ -3631,8 +3631,8 @@ Chapter 7では、「**銀行の金庫システム**」並みの堅牢なセキ�
 ---
 
 **📍 ナビゲーション**
-- **📚 目次**: [📖 学習ガイド]({{ '/introduction/' | relative_url }})
-- **⬅️ 前の章**: [Chapter 5-4: RAG/ベクトル検索アーキテクチャ]({{ '/chapters/chapter05-4/' | relative_url }})  
-- **➡️ 次の章**: [Chapter 7: セキュリティ強化]({{ '/chapters/chapter07/' | relative_url }})
-- **🏠 関連章**: [Chapter 5: 独立API サーバー]({{ '/chapters/chapter05-1/' | relative_url }}) | [Chapter 8: 運用監視]({{ '/chapters/chapter08/' | relative_url }})
+- **📚 目次**: [はじめに]({{ '/introduction/' | relative_url }})
+- **⬅️ 前の章**: [第5-4章：RAG/ベクトル検索アーキテクチャ]({{ '/chapters/chapter05-4/' | relative_url }})  
+- **➡️ 次の章**: [第7章：セキュリティ強化]({{ '/chapters/chapter07/' | relative_url }})
+- **🏠 関連章**: [第5-1章：パターン3 - 独立APIサーバー]({{ '/chapters/chapter05-1/' | relative_url }}) | [第8章：運用監視と自動化]({{ '/chapters/chapter08/' | relative_url }})
 - **🔧 リソース**: [動作検証]({{ '/guides/code-verification/' | relative_url }}) | [パフォーマンス・チェックリスト]({{ '/appendices/appendix01/' | relative_url }}#operational-checklists)

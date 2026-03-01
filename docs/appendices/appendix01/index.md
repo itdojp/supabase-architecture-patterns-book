@@ -3,10 +3,10 @@ layout: book
 order: 21
 title: "付録B: 参考資料"
 ---
-# 付録: 実践的リファレンス集 📚
+# 付録B: 参考資料
 
 ---
-**📚 目次に戻る**: [📖 学習ガイド]({{ '/introduction/' | relative_url }})  
+**📚 目次に戻る**: [はじめに]({{ '/introduction/' | relative_url }})  
 **🔗 関連章**: [全章]({{ '/introduction/' | relative_url }}) で参照されるリファレンス資料集  
 **🎯 用途**: 開発中の即座な参照・トラブルシューティング・実装支援  
 **⏱️ 利用方法**: 必要時に該当セクションを参照  
@@ -27,10 +27,10 @@ title: "付録B: 参考資料"
 
 | 章 | 主な参照セクション | 用途 |
 |:---|:-----------------|:-----|
-| **Chapter 1-2** | A. 環境構築、G. トラブルシューティング | 基礎環境準備・初期設定 |
-| **Chapter 3-5** | B. 設定テンプレート、C. コードスニペット | 実装サポート・設定例 |
-| **Chapter 6-8** | D. パフォーマンス、E. セキュリティ | 最適化・運用設定 |
-| **Chapter 9-10** | F. デプロイメント、H. ベストプラクティス | 実践・統合支援 |
+| **第1章〜第2章** | A. 環境構築、G. トラブルシューティング | 基礎環境準備・初期設定 |
+| **第3章〜第5-4章** | B. 設定テンプレート、C. コードスニペット | 実装サポート・設定例 |
+| **第6章〜第8章** | D. パフォーマンス、E. セキュリティ | 最適化・運用設定 |
+| **第9章〜第10章** | F. デプロイメント、H. ベストプラクティス | 実践・統合支援 |
 
 ---
 
@@ -1526,7 +1526,7 @@ LIMIT 20;
 ---
 
 **📍 最終ナビゲーション**
-- **📚 目次**: [📖 学習ガイド]({{ '/introduction/' | relative_url }})
-- **🏠 全章**: [Chapter 1-10]({{ '/introduction/' | relative_url }}) での実装時に参照
+- **📚 目次**: [はじめに]({{ '/introduction/' | relative_url }})
+- **🏠 全章**: [第1章〜第10章]({{ '/introduction/' | relative_url }}) での実装時に参照
 - **🔧 関連リソース**: [動作検証]({{ '/guides/code-verification/' | relative_url }}) | [チェックリスト]({{ '/appendices/appendix01/' | relative_url }}#operational-checklists) | [トラブルシューティング]({{ '/guides/troubleshooting/' | relative_url }})
 - **🌐 コミュニティ**: [Supabase公式](https://supabase.com) | [GitHub](https://github.com/supabase/supabase)

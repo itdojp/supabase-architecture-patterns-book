@@ -1,8 +1,8 @@
-# 付録A: 技術リソース集 🔗
+# 付録A: 技術リソース集
 
 ---
-**📚 目次に戻る**: [📖 学習ガイド](../../introduction/)  
-**⬅️ 前の章**: [Chapter 10: 統合実践プロジェクト](../../chapters/chapter10/)  
+**📚 目次に戻る**: [はじめに](../../introduction/)  
+**⬅️ 前の章**: [第10章：統合実践プロジェクト](../../chapters/chapter10/)  
 **➡️ 次の付録**: [付録B: 参考資料](../appendix01/)  
 **🎯 用途**: 技術リファレンス・外部リソース集  
 **⏱️ 利用方法**: 必要時に該当セクションを参照  
@@ -49,4 +49,3 @@
 
 - Flet: https://flet.dev/
 - GitHub（flet-dev/flet）: https://github.com/flet-dev/flet
-
