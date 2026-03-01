@@ -258,25 +258,31 @@ Week 4: 実プロジェクトへの適用・改良
 ### 🛠️ **実装済みサンプル**
 
 ```text
-src/
-├── chapter03-task-manager/     # 🏠 病院患者管理（Python Flet）
-│   ├── requirements.txt
-│   ├── src/patient_management.py
-│   └── tests/
-├── chapter04-pharmacy/         # 🏢 薬剤管理（Deno Edge Functions）
-│   ├── deno.json
-│   ├── functions/
-│   └── tests/
-├── chapter05-saas-platform/    # 🏦 病院総合管理（FastAPI）
-│   ├── backend/app/
-│   ├── requirements.txt
-│   └── docker-compose.yml
-└── chapter10-integrated/       # 🏗️ 教育プラットフォーム統合
-    ├── frontend/
-    ├── edge-functions/
-    ├── backend/
-    └── infrastructure/
+src/examples/
+├── pattern1/                   # 🏠 パターン1: クライアントサイド
+│   └── client_app.py
+├── pattern2/                   # 🏢 パターン2: Edge Functions
+│   └── edge_functions/
+│       ├── _shared/
+│       │   └── cors.ts
+│       └── blog-api/
+│           └── index.ts
+├── pattern3/                   # 🏦 パターン3: 独立APIサーバー
+│   └── independent_api/
+│       └── main.py
+├── docker/                     # Docker構成（例: pattern3）
+│   ├── .env.example
+│   ├── docker-compose.yml
+│   └── pattern3/
+│       ├── Dockerfile
+│       └── requirements.txt
+├── tests/
+│   └── test_pattern1.py
+└── performance/
+    └── monitoring.py
 ```
+
+> 注: 本書ではコマンドは Compose v2 の `docker compose` を前提とします。`docker-compose.yml` は慣例的なファイル名として記載しています（`docker-compose` コマンドを意味しません）。
 
 ### 🧪 **動作検証**
 
