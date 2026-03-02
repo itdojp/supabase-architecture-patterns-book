@@ -4,15 +4,15 @@ This file documents the images that should be created for the README.md GitHub c
 
 ## Required Images
 
-### 1. ✅ book-publishing-template-use-this.png (Available)
-**Description:** Screenshot of GitHub repository page showing the "Use this template" button
+### 1. [OK] book-publishing-template-use-this.png (Available)
+**Description:**Screenshot of GitHub repository page showing the "Use this template" button
 **Content:**
 - Repository header with "Use this template" button highlighted with red circle
 - Shows the green "Use this template" button clearly
 - Actual size: Optimized for web display
 
-### 2. ✅ book-publishing-template-repository-name.png (Available)
-**Description:** Screenshot of the "Create a new repository" form
+### 2. [OK] book-publishing-template-repository-name.png (Available)
+**Description:**Screenshot of the "Create a new repository" form
 **Content:**
 - Repository template selection showing "itdojp/book-publishing-template"
 - Repository name field highlighted with red circle
@@ -22,7 +22,7 @@ This file documents the images that should be created for the README.md GitHub c
 - Actual size: Optimized for web display
 
 ### 3. github-pages-settings.png
-**Description:** Screenshot of GitHub Pages settings in repository settings
+**Description:**Screenshot of GitHub Pages settings in repository settings
 **Content:**
 - Settings tab navigation
 - Pages section in left sidebar
@@ -32,7 +32,7 @@ This file documents the images that should be created for the README.md GitHub c
 - Recommended size: 1000x700px
 
 ### 4. github-actions-setup.png
-**Description:** Screenshot of GitHub Actions workflow tab
+**Description:**Screenshot of GitHub Actions workflow tab
 **Content:**
 - Actions tab in repository navigation
 - Example workflow run showing successful deployment
@@ -63,10 +63,10 @@ This file documents the images that should be created for the README.md GitHub c
 ## Taking Screenshots
 
 ### Recommended Tools
-- **macOS:** Shift+Cmd+4 for selection screenshots
-- **Windows:** Snipping Tool or Snip & Sketch
-- **Linux:** GNOME Screenshot or Spectacle
-- **Cross-platform:** LightShot, Greenshot
+- **macOS:**Shift+Cmd+4 for selection screenshots
+- **Windows:**Snipping Tool or Snip & Sketch
+- **Linux:**GNOME Screenshot or Spectacle
+- **Cross-platform:**LightShot, Greenshot
 
 ### Browser Setup
 1. Use a clean browser profile

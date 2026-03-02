@@ -6,45 +6,45 @@ title: "第9章：アーキテクチャ選択演習"
 # 第9章：アーキテクチャ選択演習
 
 ---
-**📚 目次に戻る**: [はじめに]({{ '/introduction/' | relative_url }})  
-**⬅️ 前の章**: [第8章：運用監視と自動化]({{ '/chapters/chapter08/' | relative_url }})  
-**➡️ 次の章**: [第10章：統合実践プロジェクト]({{ '/chapters/chapter10/' | relative_url }})  
-**🎯 学習フェーズ**: Part IV - 実践・応用編（演習）  
-**🎯 学習レベル**: 🌱 基礎 | 🚀 応用 | 💪 発展  
-**⏱️ 推定学習時間**: 4〜6時間  
-**📝 難易度**: 中級（全章の理解が前提）
+**目次に戻る**: [はじめに]({{ '/introduction/' | relative_url }})  
+**前の章**: [第8章：運用監視と自動化]({{ '/chapters/chapter08/' | relative_url }})  
+**次の章**: [第10章：統合実践プロジェクト]({{ '/chapters/chapter10/' | relative_url }})  
+**学習フェーズ**: Part IV - 実践・応用編（演習）  
+**学習レベル**:  基礎 |  応用 |  発展  
+**推定学習時間**: 4〜6時間  
+**難易度**: 中級（全章の理解が前提）
 ---
 
 ```text
-🏗️ 建築設計のプロセス
-├── 📋 要件ヒアリング：「どんな建物が欲しいですか？」
-├── 🎯 設計選択：一戸建て vs マンション vs 商業ビル  
-├── 📐 詳細設計：間取り・構造・設備の決定
-└── 🔄 段階的施工：基礎→骨組み→内装→完成
+ 建築設計のプロセス
+├──  要件ヒアリング：「どんな建物が欲しいですか？」
+├──  設計選択：一戸建て vs マンション vs 商業ビル  
+├──  詳細設計：間取り・構造・設備の決定
+└──  段階的施工：基礎→骨組み→内装→完成
 
-💾 Supabaseアーキテクチャ選択
-├── 📋 プロジェクト要件：ユーザー数・機能・予算・期間
-├── 🎯 パターン選択：Client-side vs Edge vs API Server
-├── 📐 詳細設計：データベース構造・セキュリティ・UI設計
-└── 🔄 段階的実装：MVP→機能追加→スケーリング→運用最適化
+ Supabaseアーキテクチャ選択
+├──  プロジェクト要件：ユーザー数・機能・予算・期間
+├──  パターン選択：Client-side vs Edge vs API Server
+├──  詳細設計：データベース構造・セキュリティ・UI設計
+└──  段階的実装：MVP→機能追加→スケーリング→運用最適化
 ```
 
-## 🎯 この章で学ぶこと
+## この章で学ぶこと
 
 建築家が「平屋の家を建てたいのか、30階建てのオフィスビルを建てたいのか」によって全く異なる設計をするように、**Supabaseアプリケーションも、要件に応じて最適なアーキテクチャパターンを選択**する必要があります。
 
-### 🌱 初心者が陥りがちな問題
+### 初心者が陥りがちな問題
 ```python
-# ❌ よくある初心者の思考パターン
+# [NG] よくある初心者の思考パターン
 「とりあえずクライアントサイドで作り始めよう」
 「後で必要になったら考えればいいでしょ」
 「複雑そうだから一番安全そうなAPIサーバーにしよう」
 # → 結果：過剰設計 or 後戻りコスト大
 ```
 
-### ✅ この章で身につく選択力
+### [OK] この章で身につく選択力
 ```python
-# ✅ 要件ベースの体系的判断
+# [OK] 要件ベースの体系的判断
 user_count = 1000         # ユーザー数から規模を判断
 complexity = "medium"     # 機能複雑度を評価
 team_size = 3            # チーム規模を考慮
@@ -53,17 +53,17 @@ timeline = 8             # 開発期間を検討
 # → 結果：「この条件ならEdge Functionsが最適」
 ```
 
-### 📚 学習進度別ガイド
+### 学習進度別ガイド
 
 | レベル | 対象者 | 学習内容 | 所要時間 |
 |:------|:-------|:---------|----------:|
-| 🌱 **基礎** | パターンの違いが分からない方 | 要件分析・パターン比較・基本選択手法 | 4〜6時間 |
-| 🚀 **応用** | 各パターンは知っている方 | 移行戦略・ハイブリッド構成・実践演習 | 6〜10時間 |
-| 💪 **発展** | 本格的な設計をしたい方 | 企業級要件対応・マイクロサービス・自動化 | 10〜15時間 |
+|  **基礎**| パターンの違いが分からない方 | 要件分析・パターン比較・基本選択手法 | 4〜6時間 |
+|  **応用**| 各パターンは知っている方 | 移行戦略・ハイブリッド構成・実践演習 | 6〜10時間 |
+|  **発展**| 本格的な設計をしたい方 | 企業級要件対応・マイクロサービス・自動化 | 10〜15時間 |
 
 ---
 
-### 🧭 この章で扱う構成
+### この章で扱う構成
 - 構成: アーキテクチャ選択/演習
 - 推奨用途: 構成選定に迷うチームや設計レビュー
 - 非推奨用途: 既に構成が確定し演習が不要なケース
@@ -72,36 +72,36 @@ timeline = 8             # 開発期間を検討
 
 レストランを開業するとき、「お客さんは何人くらい？」「どんな料理？」「予算は？」「いつオープン？」を聞いて店舗設計を決めるように、**Supabaseアプリケーションも要件を聞いて最適なアーキテクチャパターンを決定**します。
 
-### 🎯 Step 1: 基本的な要件分析システム
+### Step 1: 基本的な要件分析システム
 
 まず、「この建物にはどんな機能が必要ですか？」を整理するシステムを作りましょう：
 
-### 🔰 初心者向け解説：要件分析とは？
+### 初心者向け解説：要件分析とは？
 
 実際のビジネスと技術選択の関係を理解してみましょう：
 
 | ビジネス例 | 要件の例 | 適切な選択 | 不適切な選択 |
 |:---------|:--------|:----------|:------------|
-| 🍕 **個人のピザ屋** | 「近所の50人向け、注文管理」 | 小さなタブレット1台 | 大型POSシステム（過剰） |
-| 🏪 **コンビニチェーン** | 「全国1000店舗、在庫管理」 | 本部システム＋各店端末 | 手書き帳簿（力不足） |
-| 🏦 **銀行システム** | 「数百万顧客、24時間運用」 | 冗長化された大規模システム | 個人PC（危険） |
+|  **個人のピザ屋**| 「近所の50人向け、注文管理」 | 小さなタブレット1台 | 大型POSシステム（過剰） |
+|  **コンビニチェーン**| 「全国1000店舗、在庫管理」 | 本部システム＋各店端末 | 手書き帳簿（力不足） |
+|  **銀行システム**| 「数百万顧客、24時間運用」 | 冗長化された大規模システム | 個人PC（危険） |
 
 これと同じように、Supabaseでも**要件に応じて適切なアーキテクチャパターンを選択**する必要があります。
 
-### 📋 要件分析システムの実装
+### 要件分析システムの実装
 
 レストランで「何名様ですか？」「お食事の内容は？」「予算は？」を聞くように、アプリケーションの要件を体系的に分析するシステムを作ります：
 
 ### アーキテクチャ決定フレームワーク
 
 ```python
-# 📋 アーキテクチャ要件分析システム（レストラン設計コンサルタント）
+#  アーキテクチャ要件分析システム（レストラン設計コンサルタント）
 from typing import Dict, Any, List, Optional, Tuple
 from dataclasses import dataclass
 from enum import Enum
 import json
 
-# 🏗️ プロジェクト規模分類（建物の種類）
+#  プロジェクト規模分類（建物の種類）
 class ProjectScale(Enum):
     PROTOTYPE = "prototype"   # 模型・試作品（個人的な実験）
     SMALL = "small"          # 個人商店レベル（< 1K users）
@@ -109,27 +109,27 @@ class ProjectScale(Enum):
     LARGE = "large"          # 本社ビルレベル（10K-100K users）
     ENTERPRISE = "enterprise" # 超高層ビルレベル（> 100K users）
 
-# 🧩 機能複雑度レベル（レストランのメニューの複雑さ）
+#  機能複雑度レベル（レストランのメニューの複雑さ）
 class ComplexityLevel(Enum):
     LOW = "low"              # ファーストフード（基本CRUD）
     MEDIUM = "medium"        # 一般レストラン（ビジネスロジック有）
     HIGH = "high"            # 高級レストラン（複雑なワークフロー）
     VERY_HIGH = "very_high"  # ミシュラン星付き（企業レベル統合）
 
-# ⏱️ 開発期間制約（工期）
+#  開発期間制約（工期）
 class TimeConstraint(Enum):
     URGENT = "urgent"        # 急ぎ（< 4週間）- 仮設店舗レベル
     NORMAL = "normal"        # 通常（4〜12週間）- 一般的な建設期間
     RELAXED = "relaxed"      # 余裕（> 12週間）- じっくり建設
 
-# 👥 チーム規模（施工チームの人数）
+#  チーム規模（施工チームの人数）
 class TeamSize(Enum):
     SOLO = "solo"            # 1名（個人事業主）
     SMALL = "small"          # 2-3名（小規模工務店）
     MEDIUM = "medium"        # 4-8名（中規模建設会社）
     LARGE = "large"          # 9名以上（大手建設会社）
 
-# 🏗️ アーキテクチャパターン（建築工法）
+#  アーキテクチャパターン（建築工法）
 class ArchitecturePattern(Enum):
     CLIENT_SIDE = "client_side"        # 木造住宅（シンプル・安価）
     EDGE_FUNCTIONS = "edge_functions"  # プレハブ工法（柔軟・中コスト）
@@ -137,20 +137,20 @@ class ArchitecturePattern(Enum):
     HYBRID = "hybrid"                  # 混構造（適材適所）
     MICROSERVICES = "microservices"    # 高層ビル工法（最高性能・最高コスト）
 
-# 📋 プロジェクト要件書（レストラン開業計画書）
+#  プロジェクト要件書（レストラン開業計画書）
 @dataclass
 class ProjectRequirements:
-    # 🏪 基本情報（店舗の基本データ）
+    #  基本情報（店舗の基本データ）
     project_name: str           # プロジェクト名（店舗名）
     description: str            # 説明（どんなお店？）
     
-    # 📊 スケール要件（お客さんの規模）
+    #  スケール要件（お客さんの規模）
     expected_users: int         # 想定ユーザー数（1日何人のお客さん？）
     concurrent_users: int       # 同時利用者数（一度に何人？）
     data_volume_gb: float       # データ容量（メニューの種類、顧客情報など）
     requests_per_second: int    # 秒間リクエスト数（忙しい時の注文頻度）
     
-    # 🎯 機能要件（お店で提供するサービス）
+    #  機能要件（お店で提供するサービス）
     real_time_features: bool         # リアルタイム機能（注文のライブ表示など）
     offline_support: bool            # オフライン対応（ネット切れても使える？）
     mobile_app: bool                 # モバイルアプリ（スマホ注文対応）
@@ -160,25 +160,25 @@ class ProjectRequirements:
     notifications: bool              # 通知機能（注文完了のお知らせ）
     analytics_reporting: bool        # 分析レポート（売上分析など）
     
-    # 🛡️ 非機能要件（お店の品質基準）
+    #  非機能要件（お店の品質基準）
     availability_requirement: float      # 稼働率要件（99.9% = ほぼ休まず営業）
     response_time_requirement_ms: int     # 応答時間要件（注文から何秒で応答？）
     security_level: str                  # セキュリティレベル（basic/standard/high/enterprise）
     compliance_requirements: List[str]    # 法的要件（GDPR, 食品衛生法など）
     
-    # 👥 組織・プロジェクト制約（建設チーム・予算の制約）
+    #  組織・プロジェクト制約（建設チーム・予算の制約）
     team_size: TeamSize                  # チーム規模（何人で開発？）
     development_timeline_weeks: int      # 開発期間（何週間で完成？）
     budget_constraint: str               # 予算制約（low/medium/high/unlimited）
     existing_infrastructure: List[str]   # 既存インフラ（すでに持っている設備）
     preferred_technologies: List[str]    # 希望技術（Python、React など）
     
-    # 📈 成長予測（将来の拡張計画）
+    #  成長予測（将来の拡張計画）
     user_growth_rate_monthly: float     # 月間ユーザー増加率（月何%ずつ成長？）
     feature_expansion_planned: bool      # 機能拡張予定（将来メニュー追加？）
     international_expansion: bool        # 海外展開（海外支店の予定？）
 
-# 📊 アーキテクチャ推奨結果（建築設計提案書）
+#  アーキテクチャ推奨結果（建築設計提案書）
 @dataclass
 class ArchitectureRecommendation:
     primary_pattern: ArchitecturePattern     # 推奨パターン（木造/鉄筋など）
@@ -192,48 +192,48 @@ class ArchitectureRecommendation:
     estimated_maintenance_effort: str       # 推定保守工数（メンテナンス負担）
 
 class ArchitectureDecisionEngine:
-    """🏗️ アーキテクチャ決定エンジン（建築設計コンサルタントAI）"""
+    """ アーキテクチャ決定エンジン（建築設計コンサルタントAI）"""
     
     def __init__(self):
-        # 💡 設計ルール読み込み（建築基準・設計指針）
+        #  設計ルール読み込み（建築基準・設計指針）
         self.decision_rules = self._load_decision_rules()
-        # ⚖️ 重み係数読み込み（何を重視するか）
+        #  重み係数読み込み（何を重視するか）
         self.weight_factors = self._load_weight_factors()
     
     def analyze_requirements(self, requirements: ProjectRequirements) -> ArchitectureRecommendation:
-        """📋 要件分析とアーキテクチャ推奨（設計コンサルティング）"""
+        """ 要件分析とアーキテクチャ推奨（設計コンサルティング）"""
         
-        print("🏗️ アーキテクチャ分析を開始します...")
-        print(f"📋 プロジェクト: {requirements.project_name}")
-        print(f"👥 想定ユーザー数: {requirements.expected_users:,}人")
-        print(f"⏱️ 開発期間: {requirements.development_timeline_weeks}週間")
+        print(" アーキテクチャ分析を開始します...")
+        print(f" プロジェクト: {requirements.project_name}")
+        print(f" 想定ユーザー数: {requirements.expected_users:,}人")
+        print(f" 開発期間: {requirements.development_timeline_weeks}週間")
         
-        # 🎯 各パターンのスコア計算（各工法の適合度採点）
+        #  各パターンのスコア計算（各工法の適合度採点）
         pattern_scores = {}
-        print("\n📊 各パターンの適合度を計算中...")
+        print("\n 各パターンの適合度を計算中...")
         
         for pattern in ArchitecturePattern:
-            print(f"  🔍 {pattern.value} パターンを評価中...")
+            print(f"   {pattern.value} パターンを評価中...")
             score = self._calculate_pattern_score(requirements, pattern)
             pattern_scores[pattern] = score
-            print(f"    📈 総合スコア: {score['total_score']:.1f}/100")
+            print(f"     総合スコア: {score['total_score']:.1f}/100")
         
-        # 🏆 最適パターン選択（最高点の工法を選択）
+        #  最適パターン選択（最高点の工法を選択）
         best_pattern = max(pattern_scores.keys(), key=lambda p: pattern_scores[p]["total_score"])
         best_score = pattern_scores[best_pattern]
         
-        print(f"\n🎯 推奨パターン: {best_pattern.value}")
-        print(f"✨ 信頼度スコア: {best_score['total_score']:.1f}/100")
+        print(f"\n 推奨パターン: {best_pattern.value}")
+        print(f" 信頼度スコア: {best_score['total_score']:.1f}/100")
         
-        # 📋 推奨内容生成（提案書作成）
+        #  推奨内容生成（提案書作成）
         recommendation = self._generate_recommendation(requirements, best_pattern, best_score, pattern_scores)
         
         return recommendation
     
     def _calculate_pattern_score(self, req: ProjectRequirements, pattern: ArchitecturePattern) -> Dict[str, Any]:
-        """🎯 パターン別スコア計算（建築工法の適合度評価）"""
+        """ パターン別スコア計算（建築工法の適合度評価）"""
         
-        # 📊 評価項目（建築工法の評価基準）
+        #  評価項目（建築工法の評価基準）
         scores = {
             "scalability": 0,        # 拡張性（増築のしやすさ）
             "development_speed": 0,  # 開発速度（建設の早さ）
@@ -247,9 +247,9 @@ class ArchitectureDecisionEngine:
         penalties = []  # 減点要因（この工法の問題点）
         bonuses = []    # 加点要因（この工法の利点）
         
-        print(f"    🔍 {pattern.value} の詳細評価:")
+        print(f"     {pattern.value} の詳細評価:")
         
-        # 📋 パターン別評価実行（工法ごとの詳細チェック）
+        #  パターン別評価実行（工法ごとの詳細チェック）
         if pattern == ArchitecturePattern.CLIENT_SIDE:
             scores.update(self._score_client_side_pattern(req, penalties, bonuses))
         elif pattern == ArchitecturePattern.EDGE_FUNCTIONS:
@@ -261,7 +261,7 @@ class ArchitectureDecisionEngine:
         elif pattern == ArchitecturePattern.MICROSERVICES:
             scores.update(self._score_microservices_pattern(req, penalties, bonuses))
         
-        # ⚖️ 重み付き総合スコア計算（項目の重要度を考慮）
+        #  重み付き総合スコア計算（項目の重要度を考慮）
         # プロジェクトの性質に応じて重み付けを調整
         weight_factors = self._get_weight_factors(req)
         
@@ -270,14 +270,14 @@ class ArchitectureDecisionEngine:
             for criterion in scores
         )
         
-        # 📊 評価結果の詳細表示
+        #  評価結果の詳細表示
         for criterion, score in scores.items():
-            print(f"      📈 {criterion}: {score}/100")
+            print(f"       {criterion}: {score}/100")
         
         if bonuses:
-            print(f"      ✅ 加点要因: {len(bonuses)}個")
+            print(f"      [OK] 加点要因: {len(bonuses)}個")
         if penalties:
-            print(f"      ❌ 減点要因: {len(penalties)}個")
+            print(f"      [NG] 減点要因: {len(penalties)}個")
         
         return {
             "scores": scores,
@@ -287,9 +287,9 @@ class ArchitectureDecisionEngine:
         }
     
     def _get_weight_factors(self, req: ProjectRequirements) -> Dict[str, float]:
-        """⚖️ 重み係数の動的計算（プロジェクトの性質に応じた重要度調整）"""
+        """ 重み係数の動的計算（プロジェクトの性質に応じた重要度調整）"""
         
-        # 🎯 基本重み（すべて均等）
+        #  基本重み（すべて均等）
         weights = {
             "scalability": 0.14,      # 拡張性
             "development_speed": 0.14, # 開発速度
@@ -300,7 +300,7 @@ class ArchitectureDecisionEngine:
             "technology_match": 0.16   # 技術マッチ度
         }
         
-        # 📊 プロジェクトの特性に応じて重みを調整
+        #  プロジェクトの特性に応じて重みを調整
         
         # 大規模プロジェクトは拡張性重視
         if req.expected_users > 10000:
@@ -329,216 +329,216 @@ class ArchitectureDecisionEngine:
         return weights
     
     def _score_client_side_pattern(self, req: ProjectRequirements, penalties: List, bonuses: List) -> Dict[str, int]:
-        """🏠 クライアントサイドパターン評価（木造住宅工法）"""
+        """ クライアントサイドパターン評価（木造住宅工法）"""
         scores = {}
         
-        print("      🏠 木造住宅工法として評価中...")
+        print("       木造住宅工法として評価中...")
         
-        # 🏗️ スケーラビリティ（増築のしやすさ）
+        #  スケーラビリティ（増築のしやすさ）
         if req.expected_users < 1000:
             scores["scalability"] = 90
             bonuses.append("個人住宅規模に最適（1000人未満）")
-            print("        ✅ 小規模利用に適している")
+            print("        [OK] 小規模利用に適している")
         elif req.expected_users < 5000:
             scores["scalability"] = 70
-            print("        ⚠️ 中規模では制約あり")
+            print("        [WARN] 中規模では制約あり")
         else:
             scores["scalability"] = 30
             penalties.append("大規模ユーザーには構造的に不適切（マンション建設が必要）")
-            print("        ❌ 大規模には向かない")
+            print("        [NG] 大規模には向かない")
         
-        # ⚡ 開発速度（建設の早さ）
+        #  開発速度（建設の早さ）
         scores["development_speed"] = 95
         bonuses.append("プレハブ工法のように迅速な開発が可能")
-        print("        ✅ 最速で建設可能")
+        print("        [OK] 最速で建設可能")
         
-        # 🔧 メンテナンス性（保守の楽さ）
+        #  メンテナンス性（保守の楽さ）
         if req.complexity_level == ComplexityLevel.LOW:
             scores["maintenance_ease"] = 85
             bonuses.append("シンプルな構造で修理しやすい")
-            print("        ✅ シンプルで修理しやすい")
+            print("        [OK] シンプルで修理しやすい")
         elif req.complexity_level == ComplexityLevel.MEDIUM:
             scores["maintenance_ease"] = 65
-            print("        ⚠️ 複雑になると修理が大変")
+            print("        [WARN] 複雑になると修理が大変")
         else:
             scores["maintenance_ease"] = 40
             penalties.append("複雑なロジックのメンテナンスが困難（配線・配管が複雑）")
-            print("        ❌ 複雑な構造は木造では限界")
+            print("        [NG] 複雑な構造は木造では限界")
         
-        # 🛡️ セキュリティ（防犯性）
+        #  セキュリティ（防犯性）
         if req.security_level in ["basic", "standard"]:
             scores["security"] = 70
-            print("        ✅ 一般的なセキュリティは確保")
+            print("        [OK] 一般的なセキュリティは確保")
         else:
             scores["security"] = 45
             penalties.append("高度なセキュリティ要件に制限（銀行レベルは困難）")
-            print("        ❌ 高セキュリティは構造的に困難")
+            print("        [NG] 高セキュリティは構造的に困難")
         
-        # 💰 コスト効率（建設・運用費用）
+        #  コスト効率（建設・運用費用）
         scores["cost_efficiency"] = 95
         bonuses.append("運用コストがほぼゼロ（電気・ガス代不要）")
-        print("        ✅ 運用コストが最安")
+        print("        [OK] 運用コストが最安")
         
-        # 👥 チーム適合性（施工チームとの相性）
+        #  チーム適合性（施工チームとの相性）
         if req.team_size in [TeamSize.SOLO, TeamSize.SMALL]:
             scores["team_fit"] = 90
             bonuses.append("1-2人の大工さんでも建設可能")
-            print("        ✅ 小規模チームに最適")
+            print("        [OK] 小規模チームに最適")
         else:
             scores["team_fit"] = 70
-            print("        ⚠️ 大きなチームには物足りない")
+            print("        [WARN] 大きなチームには物足りない")
         
-        # 🔧 技術マッチ度（希望技術との適合）
+        #  技術マッチ度（希望技術との適合）
         if "python" in [tech.lower() for tech in req.preferred_technologies]:
             scores["technology_match"] = 85
             bonuses.append("Python Fletとの相性抜群")
-            print("        ✅ Python技術を活用可能")
+            print("        [OK] Python技術を活用可能")
         else:
             scores["technology_match"] = 75
-            print("        ✅ 一般的な技術で対応可能")
+            print("        [OK] 一般的な技術で対応可能")
         
         return scores
     
     def _score_edge_functions_pattern(self, req: ProjectRequirements, penalties: List, bonuses: List) -> Dict[str, int]:
-        """🏢 Edge Functionsパターン評価（プレハブ工法）"""
+        """ Edge Functionsパターン評価（プレハブ工法）"""
         scores = {}
         
-        print("      🏢 プレハブ工法として評価中...")
+        print("       プレハブ工法として評価中...")
         
-        # 🏗️ スケーラビリティ（増築のしやすさ）
+        #  スケーラビリティ（増築のしやすさ）
         if req.expected_users < 50000:
             scores["scalability"] = 85
             bonuses.append("自動スケーリング対応（必要に応じて増設可能）")
-            print("        ✅ 中規模まで柔軟に対応")
+            print("        [OK] 中規模まで柔軟に対応")
         else:
             scores["scalability"] = 70
-            print("        ⚠️ 超大規模では制約あり")
+            print("        [WARN] 超大規模では制約あり")
         
-        # ⚡ 開発速度（建設の早さ）
+        #  開発速度（建設の早さ）
         if req.third_party_integrations > 2:
             scores["development_speed"] = 80
             bonuses.append("外部連携部品の組み込み得意（電気・水道・ガス工事）")
-            print("        ✅ 外部システム連携が得意")
+            print("        [OK] 外部システム連携が得意")
         else:
             scores["development_speed"] = 70
-            print("        ✅ 標準的な建設速度")
+            print("        [OK] 標準的な建設速度")
         
-        # 🔧 メンテナンス性（保守の楽さ）
+        #  メンテナンス性（保守の楽さ）
         scores["maintenance_ease"] = 75
         bonuses.append("モジュール化された構造で部分修理が容易")
-        print("        ✅ 部分的な修理・交換が容易")
+        print("        [OK] 部分的な修理・交換が容易")
         
-        # 🛡️ セキュリティ（防犯性）
+        #  セキュリティ（防犯性）
         scores["security"] = 85
         bonuses.append("Supabase認証統合（セキュリティシステム標準装備）")
-        print("        ✅ 高品質なセキュリティ標準搭載")
+        print("        [OK] 高品質なセキュリティ標準搭載")
         
-        # 💰 コスト効率（建設・運用費用）
+        #  コスト効率（建設・運用費用）
         scores["cost_efficiency"] = 80
         bonuses.append("使用量に応じた従量課金（電気代は使った分だけ）")
-        print("        ✅ 使った分だけの課金")
+        print("        [OK] 使った分だけの課金")
         
-        # 👥 チーム適合性（施工チームとの相性）
+        #  チーム適合性（施工チームとの相性）
         if "typescript" in [tech.lower() for tech in req.preferred_technologies]:
             scores["team_fit"] = 85
             bonuses.append("TypeScript職人チームに最適")
-            print("        ✅ TypeScript技術者に最適")
+            print("        [OK] TypeScript技術者に最適")
         else:
             scores["team_fit"] = 65
             penalties.append("TypeScript/Deno学習コスト（新しい工法の習得必要）")
-            print("        ⚠️ TypeScript学習が必要")
+            print("        [WARN] TypeScript学習が必要")
         
-        # 🔧 技術マッチ度（希望技術との適合）
+        #  技術マッチ度（希望技術との適合）
         if req.real_time_features:
             scores["technology_match"] = 90
             bonuses.append("リアルタイム機能統合（最新の配線・通信システム）")
-            print("        ✅ リアルタイム機能が強み")
+            print("        [OK] リアルタイム機能が強み")
         else:
             scores["technology_match"] = 75
-            print("        ✅ 一般的な機能は十分対応")
+            print("        [OK] 一般的な機能は十分対応")
         
         return scores
     
     def _score_api_server_pattern(self, req: ProjectRequirements, penalties: List, bonuses: List) -> Dict[str, int]:
-        """🏬 APIサーバーパターン評価（鉄筋コンクリート工法）"""
+        """ APIサーバーパターン評価（鉄筋コンクリート工法）"""
         scores = {}
         
-        print("      🏬 鉄筋コンクリート工法として評価中...")
+        print("       鉄筋コンクリート工法として評価中...")
         
-        # 🏗️ スケーラビリティ（増築のしやすさ）
+        #  スケーラビリティ（増築のしやすさ）
         if req.expected_users > 10000:
             scores["scalability"] = 95
             bonuses.append("大規模システムに最適（高層ビル建設可能）")
-            print("        ✅ 大規模・高層建築に最適")
+            print("        [OK] 大規模・高層建築に最適")
         else:
             scores["scalability"] = 70
-            print("        ⚠️ 小規模には過剰設計")
+            print("        [WARN] 小規模には過剰設計")
         
-        # ⚡ 開発速度（建設の早さ）
+        #  開発速度（建設の早さ）
         if req.development_timeline_weeks > 12:
             scores["development_speed"] = 75
-            print("        ✅ 十分な工期があれば高品質")
+            print("        [OK] 十分な工期があれば高品質")
         else:
             scores["development_speed"] = 50
             penalties.append("初期開発時間が長い（基礎工事に時間が必要）")
-            print("        ❌ 急ぎ工事は不向き")
+            print("        [NG] 急ぎ工事は不向き")
         
-        # 🔧 メンテナンス性（保守の楽さ）
+        #  メンテナンス性（保守の楽さ）
         if req.team_size in [TeamSize.MEDIUM, TeamSize.LARGE]:
             scores["maintenance_ease"] = 90
             bonuses.append("大規模開発チームに適している（専門職種分業）")
-            print("        ✅ 大規模チームで真価発揮")
+            print("        [OK] 大規模チームで真価発揮")
         else:
             scores["maintenance_ease"] = 60
             penalties.append("小規模チームには複雑すぎる")
-            print("        ❌ 小規模チームには複雑")
+            print("        [NG] 小規模チームには複雑")
         
-        # 🛡️ セキュリティ（防犯性）
+        #  セキュリティ（防犯性）
         if req.security_level in ["high", "enterprise"]:
             scores["security"] = 95
             bonuses.append("エンタープライズセキュリティ対応（銀行並みの堅牢性）")
-            print("        ✅ 最高レベルのセキュリティ")
+            print("        [OK] 最高レベルのセキュリティ")
         else:
             scores["security"] = 80
-            print("        ✅ 高いセキュリティを標準装備")
+            print("        [OK] 高いセキュリティを標準装備")
         
-        # 💰 コスト効率（建設・運用費用）
+        #  コスト効率（建設・運用費用）
         if req.budget_constraint in ["medium", "high", "unlimited"]:
             scores["cost_efficiency"] = 70
-            print("        ✅ 予算に余裕があれば適切")
+            print("        [OK] 予算に余裕があれば適切")
         else:
             scores["cost_efficiency"] = 40
             penalties.append("運用コストが高い（維持費・光熱費が高額）")
-            print("        ❌ 運用コストが高額")
+            print("        [NG] 運用コストが高額")
         
-        # 👥 チーム適合性（施工チームとの相性）
+        #  チーム適合性（施工チームとの相性）
         if req.team_size == TeamSize.LARGE:
             scores["team_fit"] = 90
             bonuses.append("大規模チームの専門技術を活用可能")
-            print("        ✅ 大規模チームが必要")
+            print("        [OK] 大規模チームが必要")
         else:
             scores["team_fit"] = 60
             penalties.append("小規模チームには負担が大きい")
-            print("        ❌ 小規模チームには負担")
+            print("        [NG] 小規模チームには負担")
         
-        # 🔧 技術マッチ度（希望技術との適合）
+        #  技術マッチ度（希望技術との適合）
         if len(req.compliance_requirements) > 0:
             scores["technology_match"] = 95
             bonuses.append("コンプライアンス要件に対応（各種法規制対応）")
-            print("        ✅ 法規制・コンプライアンス対応")
+            print("        [OK] 法規制・コンプライアンス対応")
         else:
             scores["technology_match"] = 80
-            print("        ✅ 汎用的な技術要件に対応")
+            print("        [OK] 汎用的な技術要件に対応")
         
         return scores
     
     def _score_hybrid_pattern(self, req: ProjectRequirements, penalties: List, bonuses: List) -> Dict[str, int]:
-        """🏘️ ハイブリッドパターン評価（混構造工法）"""
+        """ ハイブリッドパターン評価（混構造工法）"""
         scores = {}
         
-        print("      🏘️ 混構造工法として評価中...")
+        print("       混構造工法として評価中...")
         
-        # 🧩 複雑性が高い場合に推奨（適材適所の建設）
+        #  複雑性が高い場合に推奨（適材適所の建設）
         if req.complexity_level in [ComplexityLevel.HIGH, ComplexityLevel.VERY_HIGH]:
             scores["scalability"] = 85
             scores["development_speed"] = 70
@@ -548,7 +548,7 @@ class ArchitectureDecisionEngine:
             scores["team_fit"] = 65
             scores["technology_match"] = 80
             bonuses.append("複雑な要件に柔軟対応（適材適所の工法選択）")
-            print("        ✅ 複雑な要件に最適な工法")
+            print("        [OK] 複雑な要件に最適な工法")
         else:
             # 複雑性が低い場合は過剰（過剰設計）
             scores = {
@@ -561,17 +561,17 @@ class ArchitectureDecisionEngine:
                 "technology_match": 50
             }
             penalties.append("要件に対して過剰な複雑性（簡単な家に高級建材は不要）")
-            print("        ❌ シンプルな要件には過剰")
+            print("        [NG] シンプルな要件には過剰")
         
         return scores
     
     def _score_microservices_pattern(self, req: ProjectRequirements, penalties: List, bonuses: List) -> Dict[str, int]:
-        """🏙️ マイクロサービスパターン評価（超高層ビル工法）"""
+        """ マイクロサービスパターン評価（超高層ビル工法）"""
         scores = {}
         
-        print("      🏙️ 超高層ビル工法として評価中...")
+        print("       超高層ビル工法として評価中...")
         
-        # 🏢 大規模・高複雑性のみ推奨（超高層ビルが必要な場合のみ）
+        #  大規模・高複雑性のみ推奨（超高層ビルが必要な場合のみ）
         if (req.expected_users > 50000 and 
             req.complexity_level == ComplexityLevel.VERY_HIGH and
             req.team_size == TeamSize.LARGE):
@@ -584,7 +584,7 @@ class ArchitectureDecisionEngine:
             scores["team_fit"] = 70
             scores["technology_match"] = 75
             bonuses.append("超大規模システムに最適（摩天楼建設）")
-            print("        ✅ 超大規模・超複雑案件に最適")
+            print("        [OK] 超大規模・超複雑案件に最適")
         else:
             scores = {
                 "scalability": 30,
@@ -596,46 +596,46 @@ class ArchitectureDecisionEngine:
                 "technology_match": 30
             }
             penalties.append("要件に対して過度に複雑（戸建てに超高層ビル工法は不要）")
-            print("        ❌ 要件に対して過剰すぎる")
+            print("        [NG] 要件に対して過剰すぎる")
         
         return scores
 ```
 
-**🔰 初心者向け解説**：
+**初心者向け解説**：
 
 このアーキテクチャ決定エンジンは、建築設計コンサルタントのように動作します：
 
 | 評価プロセス | 建築設計の例 | システム設計の例 |
 |:------------|:-------------|:----------------|
-| **Step 1** | 「何人家族ですか？」 | 「何人のユーザーですか？」 |
-| **Step 2** | 「予算はいくらですか？」 | 「開発・運用予算は？」 |
-| **Step 3** | 「どんな生活スタイル？」 | 「どんな機能が必要？」 |
-| **Step 4** | 「いつまでに完成？」 | 「開発期間はどれくらい？」 |
-| **Step 5** | 「工法の提案と見積もり」 | 「アーキテクチャパターンの推奨」 |
+| **Step 1**| 「何人家族ですか？」 | 「何人のユーザーですか？」 |
+| **Step 2**| 「予算はいくらですか？」 | 「開発・運用予算は？」 |
+| **Step 3**| 「どんな生活スタイル？」 | 「どんな機能が必要？」 |
+| **Step 4**| 「いつまでに完成？」 | 「開発期間はどれくらい？」 |
+| **Step 5**| 「工法の提案と見積もり」 | 「アーキテクチャパターンの推奨」 |
 
-### 🎯 Step 2: 実用的な選択例（3つの典型的なプロジェクト）
+### Step 2: 実用的な選択例（3つの典型的なプロジェクト）
 
 実際のプロジェクト例で、どのように選択が変わるかを見てみましょう：
 
-### 📊 プロジェクト比較表
+### プロジェクト比較表
 
-| 項目 | 🏠 個人ブログ | 🏢 社内システム | 🏦 金融アプリ |
+| 項目 |  個人ブログ |  社内システム |  金融アプリ |
 |:-----|:------------|:-------------|:------------|
-| **ユーザー数** | 50人 | 500人 | 50,000人 |
-| **複雑度** | 低（記事投稿） | 中（承認フロー） | 高（取引・決済） |
-| **チーム規模** | 1人 | 3-5人 | 10人以上 |
-| **開発期間** | 4週間 | 12週間 | 24週間 |
-| **セキュリティ** | 基本 | 標準 | 最高 |
-| **予算** | 低 | 中 | 高 |
-| **推奨パターン** | 🏠 Client-side | 🏢 Edge Functions | 🏦 API Server |
-| **信頼度** | 95% | 88% | 92% |
+| **ユーザー数**| 50人 | 500人 | 50,000人 |
+| **複雑度**| 低（記事投稿） | 中（承認フロー） | 高（取引・決済） |
+| **チーム規模**| 1人 | 3-5人 | 10人以上 |
+| **開発期間**| 4週間 | 12週間 | 24週間 |
+| **セキュリティ**| 基本 | 標準 | 最高 |
+| **予算**| 低 | 中 | 高 |
+| **推奨パターン**|  Client-side |  Edge Functions |  API Server |
+| **信頼度**| 95% | 88% | 92% |
 
-### 💡 実際の分析実行例
+### 実際の分析実行例
 
 レストラン注文システムを作る場合の分析を見てみましょう：
 
 ```python
-# 🍕 レストラン注文システムの要件定義
+#  レストラン注文システムの要件定義
 restaurant_requirements = ProjectRequirements(
     project_name="カフェ注文システム",
     description="小さなカフェの注文・決済システム",
@@ -665,53 +665,53 @@ restaurant_requirements = ProjectRequirements(
     international_expansion=False     # 海外展開なし
 )
 
-# 🔍 分析実行
+#  分析実行
 engine = ArchitectureDecisionEngine()
 recommendation = engine.analyze_requirements(restaurant_requirements)
 
-print(f"📋 推奨アーキテクチャ: {recommendation.primary_pattern.value}")
-print(f"✨ 信頼度: {recommendation.confidence_score:.1f}%")
-print(f"⏱️ 開発期間: {recommendation.estimated_development_time_weeks}週間")
+print(f" 推奨アーキテクチャ: {recommendation.primary_pattern.value}")
+print(f" 信頼度: {recommendation.confidence_score:.1f}%")
+print(f" 開発期間: {recommendation.estimated_development_time_weeks}週間")
 ```
 
 **実行結果例**:
 ```text
-🏗️ アーキテクチャ分析を開始します...
-📋 プロジェクト: カフェ注文システム
-👥 想定ユーザー数: 200人
-⏱️ 開発期間: 8週間
+ アーキテクチャ分析を開始します...
+ プロジェクト: カフェ注文システム
+ 想定ユーザー数: 200人
+ 開発期間: 8週間
 
-📊 各パターンの適合度を計算中...
-  🔍 client_side パターンを評価中...
-    🏠 木造住宅工法として評価中...
-      📈 scalability: 90/100
-      📈 development_speed: 95/100
-      📈 maintenance_ease: 85/100
-      ✅ 加点要因: 3個
+ 各パターンの適合度を計算中...
+   client_side パターンを評価中...
+     木造住宅工法として評価中...
+       scalability: 90/100
+       development_speed: 95/100
+       maintenance_ease: 85/100
+      [OK] 加点要因: 3個
 
-🎯 推奨パターン: client_side
-✨ 信頼度スコア: 87.3/100
+ 推奨パターン: client_side
+ 信頼度スコア: 87.3/100
 
-📋 推奨アーキテクチャ: client_side
-✨ 信頼度: 87.3%
-⏱️ 開発期間: 6週間
+ 推奨アーキテクチャ: client_side
+ 信頼度: 87.3%
+ 開発期間: 6週間
 ```
 
-**🔰 初心者向け解説**：
+**初心者向け解説**：
 
 この例では、小さなカフェという「個人住宅レベル」の要件だったため、**Client-side（木造住宅工法）**が推奨されました。
 
 選択理由：
-- ✅ 200人という小規模ユーザー → 木造住宅で十分
-- ✅ 8週間という短期間 → 迅速建設が可能
-- ✅ 予算制約 → 低コストで実現
-- ✅ Python希望 → Flet使用で技術マッチ
+- [OK] 200人という小規模ユーザー → 木造住宅で十分
+- [OK] 8週間という短期間 → 迅速建設が可能
+- [OK] 予算制約 → 低コストで実現
+- [OK] Python希望 → Flet使用で技術マッチ
 
 ---
 
 ## 9.2 実践的な選択演習（建築設計コンサルティング実習）
 
-### 🎯 Step 1: あなたのプロジェクト要件を入力してみよう
+### Step 1: あなたのプロジェクト要件を入力してみよう
 
 以下の質問に答えて、あなたのプロジェクトに最適なアーキテクチャパターンを見つけましょう：
 
@@ -1093,7 +1093,7 @@ def run_architecture_analysis():
         if recommendation.risks:
             print("\nリスク:")
             for risk in recommendation.risks:
-                print(f"  ⚠ {risk}")
+                print(f"  [WARN] {risk}")
         
         if recommendation.migration_path:
             print("\n移行パス:")
@@ -2921,45 +2921,45 @@ class TechnicalDebtMonitor:
 - **要件駆動**: 技術選択より要件を優先
 - **段階的移行**: 現行システムからのスムーズな移行
 
-## 📝 第9章 学習まとめ
+## 第9章 学習まとめ
 
-### ✅ **習得できたスキル**
-- ✅ 要件分析からのアーキテクチャパターン選択手法
-- ✅ 定量的評価によるパターン比較・決定フレームワーク
-- ✅ 実際のケーススタディによる実践的判断力
-- ✅ 段階的移行・ハイブリッド構成の設計手法
+### [OK] **習得できたスキル**
+- [OK] 要件分析からのアーキテクチャパターン選択手法
+- [OK] 定量的評価によるパターン比較・決定フレームワーク
+- [OK] 実際のケーススタディによる実践的判断力
+- [OK] 段階的移行・ハイブリッド構成の設計手法
 
-### 🎯 **アーキテクチャ決定の全体像**
+### **アーキテクチャ決定の全体像**
 | 決定要素 | 重要度 | 判断基準 | 対応パターン |
 |:---------|:-------|:---------|:-------------|
-| **ユーザー規模** | ⭐⭐⭐ | 〜100人 / 〜10,000人 / 10,000人〜 | Client / Edge / API |
-| **機能複雑度** | ⭐⭐⭐ | CRUD / 処理 / エンタープライズ | Client / Edge / API |
-| **チーム経験** | ⭐⭐ | 初心者 / 中級 / 上級 | 段階的選択 |
-| **予算・期間** | ⭐⭐ | 制約大 / 中程度 / 十分 | 最適化レベル選択 |
+| **ユーザー規模**|  | 〜100人 / 〜10,000人 / 10,000人〜 | Client / Edge / API |
+| **機能複雑度**|  | CRUD / 処理 / エンタープライズ | Client / Edge / API |
+| **チーム経験**|  | 初心者 / 中級 / 上級 | 段階的選択 |
+| **予算・期間**|  | 制約大 / 中程度 / 十分 | 最適化レベル選択 |
 
-### 🔄 **実践での応用**
-- ✅ 新規プロジェクトでの要件分析・アーキテクチャ選択
-- ✅ 既存システムの移行計画・段階的実装
-- ✅ プロジェクト途中でのアーキテクチャ変更判断
-- ✅ チーム内でのアーキテクチャ議論・合意形成
+### **実践での応用**
+- [OK] 新規プロジェクトでの要件分析・アーキテクチャ選択
+- [OK] 既存システムの移行計画・段階的実装
+- [OK] プロジェクト途中でのアーキテクチャ変更判断
+- [OK] チーム内でのアーキテクチャ議論・合意形成
 
 ---
 
-## 🚀 最終章予告：統合実践プロジェクト
+## 最終章予告：統合実践プロジェクト
 
 第10章では、「**緊急救命室の医師**」レベルの問題解決力を身に着けます：
-- 🚨 **迅速な問題診断**: 症状から根本原因の特定手法
-- 🔧 **即座の応急処置**: システム停止を最小限に抑える緊急対応
-- 💊 **根本治療**: 同じ問題を二度と起こさない恒久対策
-- 📚 **知識の体系化**: 過去事例のナレッジベース構築
+- [CRITICAL] **迅速な問題診断**: 症状から根本原因の特定手法
+- **即座の応急処置**: システム停止を最小限に抑える緊急対応
+- **根本治療**: 同じ問題を二度と起こさない恒久対策
+- **知識の体系化**: 過去事例のナレッジベース構築
 
-**💡 実習目標**: 「深夜2時のシステム障害でも、冷静に問題を解決できるエンジニア」
+**実習目標**: 「深夜2時のシステム障害でも、冷静に問題を解決できるエンジニア」
 
 ---
 
-**📍 ナビゲーション**
-- **📚 目次**: [はじめに]({{ '/introduction/' | relative_url }})
-- **⬅️ 前の章**: [第8章：運用監視と自動化]({{ '/chapters/chapter08/' | relative_url }})  
-- **➡️ 最終章**: [第10章：統合実践プロジェクト]({{ '/chapters/chapter10/' | relative_url }})
-- **🏠 関連章**: [第3章〜第5-4章：アーキテクチャパターン]({{ '/chapters/chapter03/' | relative_url }}) | [選択ガイド]({{ '/guides/pattern-selection/' | relative_url }})
-- **🔧 リソース**: [アーキテクチャ決定ツール]({{ site.repository }}/tree/main/src/chapters/chapter09/) | [移行チェックリスト]({{ '/appendices/appendix01/' | relative_url }}#operational-checklists)
+**ナビゲーション**
+- **目次**: [はじめに]({{ '/introduction/' | relative_url }})
+- **前の章**: [第8章：運用監視と自動化]({{ '/chapters/chapter08/' | relative_url }})  
+- **最終章**: [第10章：統合実践プロジェクト]({{ '/chapters/chapter10/' | relative_url }})
+- **関連章**: [第3章〜第5-4章：アーキテクチャパターン]({{ '/chapters/chapter03/' | relative_url }}) | [選択ガイド]({{ '/guides/pattern-selection/' | relative_url }})
+- **リソース**: [アーキテクチャ決定ツール]({{ site.repository }}/tree/main/src/chapters/chapter09/) | [移行チェックリスト]({{ '/appendices/appendix01/' | relative_url }}#operational-checklists)

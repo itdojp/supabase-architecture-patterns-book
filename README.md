@@ -21,7 +21,7 @@ Supabase を題材に、UI クライアント / API サーバー / BaaS（Supaba
 
 ## ライセンス
 
-- `LICENSE.md`（Creative Commons BY-NC-SA 4.0 / シリーズ統一ライセンス準拠）
+- `LICENSE.md`（CC BY-NC-SA 4.0（商用は別契約） / シリーズ統一ライセンス準拠）
 
 ## 執筆・ビルド（開発者向け）
 

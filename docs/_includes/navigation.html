@@ -51,19 +51,16 @@
     
     {% if prev_item %}
       <a href="{{ site.baseurl }}{{ prev_item.path }}" class="nav-prev">
-        <span class="arrow">←</span>
         <span class="label">前へ</span>
         <span class="title">{{ prev_item.title }}</span>
       </a>
     {% else %}
       <span class="nav-disabled nav-prev">
-        <span class="arrow">←</span>
         <span class="label">前へ</span>
       </span>
     {% endif %}
     
     <a href="{{ site.baseurl }}/" class="nav-home">
-      <span class="icon">📚</span>
       <span class="label">目次へ</span>
     </a>
     
@@ -71,12 +68,10 @@
       <a href="{{ site.baseurl }}{{ next_item.path }}" class="nav-next">
         <span class="label">次へ</span>
         <span class="title">{{ next_item.title }}</span>
-        <span class="arrow">→</span>
       </a>
     {% else %}
       <span class="nav-disabled nav-next">
         <span class="label">次へ</span>
-        <span class="arrow">→</span>
       </span>
     {% endif %}
   </div>

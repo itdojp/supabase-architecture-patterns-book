@@ -6,97 +6,97 @@ title: "第5-3章：拡張性設計とパフォーマンス最適化"
 # 第5-3章：拡張性設計とパフォーマンス最適化
 
 ---
-**📚 目次に戻る**: [はじめに]({{ '/introduction/' | relative_url }})  
-**⬅️ 前の章**: [第5-2章：マルチテナンシーと複雑ビジネスロジック]({{ '/chapters/chapter05-2/' | relative_url }})  
-**➡️ 次の章**: [第5-4章：RAG/ベクトル検索アーキテクチャ]({{ '/chapters/chapter05-4/' | relative_url }})  
-**🏗️ アーキテクチャ**: 独立APIサーバー（FastAPI + スケーリング・最適化）  
-**🎯 学習レベル**: 🌱 基礎 | 🚀 応用 | 💪 発展  
-**⏱️ 推定学習時間**: 5〜7時間  
-**📝 難易度**: 上級（5-1,5-2完了・インフラ・運用知識必要）
+**目次に戻る**: [はじめに]({{ '/introduction/' | relative_url }})  
+**前の章**: [第5-2章：マルチテナンシーと複雑ビジネスロジック]({{ '/chapters/chapter05-2/' | relative_url }})  
+**次の章**: [第5-4章：RAG/ベクトル検索アーキテクチャ]({{ '/chapters/chapter05-4/' | relative_url }})  
+**アーキテクチャ**: 独立APIサーバー（FastAPI + スケーリング・最適化）  
+**学習レベル**:  基礎 |  応用 |  発展  
+**推定学習時間**: 5〜7時間  
+**難易度**: 上級（5-1,5-2完了・インフラ・運用知識必要）
 ---
 
-## 🧭 この章で扱う構成
+## この章で扱う構成
 - 構成: 独立APIサーバー + 運用/拡張
 - 推奨用途: 成長期の性能・拡張要件への対応
 - 非推奨用途: 初期段階で運用要件が小さいケース
 
-## 🎯 この章で学ぶこと（初心者向け）
+## この章で学ぶこと（初心者向け）
 
 この章では、第5-1章, 5-2で構築したSaaSプラットフォームを、**「全国チェーン展開」**レベルまで成長させる技術を学びます。
 
-- 🌱 **初心者**: システムが重くならない仕組み（キャッシュ・最適化）がわかる
-- 🚀 **中級者**: 大量アクセスに耐えるスケーリング戦略がわかる  
-- 💪 **上級者**: エンタープライズ級の監視・運用システムが構築できる
+- **初心者**: システムが重くならない仕組み（キャッシュ・最適化）がわかる
+- **中級者**: 大量アクセスに耐えるスケーリング戦略がわかる  
+- **上級者**: エンタープライズ級の監視・運用システムが構築できる
 
-## 💡 まずは身近な例から：「全国チェーン展開する人気ラーメン店」
+## まずは身近な例から：「全国チェーン展開する人気ラーメン店」
 
 想像してみてください。あなたの**小さなラーメン店**が大人気になって、全国チェーン展開することになりました：
 
 ```text
-🍜 人気ラーメンチェーン「麺屋サプリ」の成長ストーリー
+ 人気ラーメンチェーン「麺屋サプリ」の成長ストーリー
 
-📍 Phase 1: 個人店（現在のシステム）
-├── 👨🍳 店長1人：注文から配膳まで全て対応
-├── 🪑 座席10席：お客さん10人まで
-└── 📝 手書き注文：メモ帳で管理
+ Phase 1: 個人店（現在のシステム）
+├──  店長1人：注文から配膳まで全て対応
+├──  座席10席：お客さん10人まで
+└──  手書き注文：メモ帳で管理
 
-📍 Phase 2: 地域チェーン（スケールアップ）
-├── 👥 スタッフ5人：役割分担で効率化
-├── 🪑 座席30席：より多くのお客さんに対応
-└── 📱 デジタル注文：タブレットで管理
+ Phase 2: 地域チェーン（スケールアップ）
+├──  スタッフ5人：役割分担で効率化
+├──  座席30席：より多くのお客さんに対応
+└──  デジタル注文：タブレットで管理
 
-📍 Phase 3: 全国チェーン（スケールアウト）
-├── 🏢 50店舗：各地に支店を展開
-├── 🏭 セントラルキッチン：効率的な仕込み
-├── 📊 本部システム：全店舗の一元管理
-└── 🤖 自動化：注文・在庫・売上の自動化
+ Phase 3: 全国チェーン（スケールアウト）
+├──  50店舗：各地に支店を展開
+├──  セントラルキッチン：効率的な仕込み
+├──  本部システム：全店舗の一元管理
+└──  自動化：注文・在庫・売上の自動化
 ```
 
-### 🤔 なぜスケーリングが必要？
+### なぜスケーリングが必要？
 
 小さなシステムと大規模システムでは、まったく違うアプローチが必要です：
 
 | 課題 | 個人店レベル | 地域チェーンレベル | 全国チェーンレベル | 解決方法 |
 |:-----|:------------|:-----------------|:----------------|:---------|
-| 🐌 **処理速度** | 手作業でも十分 | タブレット導入 | 高速システム必須 | キャッシュ・データベース最適化 |
-| 👥 **利用者数** | 常連10人 | 地域住民100人 | 全国10万人 | ロードバランシング・サーバー増設 |
-| 📊 **データ量** | 手書きメモ | 1日100件の注文 | 1日10万件の注文 | データベース分散・アーカイブ |
-| 🚨 **障害対応** | 店長が対応 | マネージャーが対応 | 24時間監視体制 | 自動監視・アラートシステム |
-| 🔧 **メンテナンス** | 閉店時に対応 | 深夜に対応 | 無停止更新 | CI/CD・ブルーグリーンデプロイ |
+|  **処理速度**| 手作業でも十分 | タブレット導入 | 高速システム必須 | キャッシュ・データベース最適化 |
+|  **利用者数**| 常連10人 | 地域住民100人 | 全国10万人 | ロードバランシング・サーバー増設 |
+|  **データ量**| 手書きメモ | 1日100件の注文 | 1日10万件の注文 | データベース分散・アーカイブ |
+| [CRITICAL] **障害対応**| 店長が対応 | マネージャーが対応 | 24時間監視体制 | 自動監視・アラートシステム |
+|  **メンテナンス**| 閉店時に対応 | 深夜に対応 | 無停止更新 | CI/CD・ブルーグリーンデプロイ |
 
-### 🎉 最適化されたシステムなら...
+### 最適化されたシステムなら...
 
 ```mermaid
 flowchart TD
-    A[🌍 全国のお客さん] --> B[🌐 ロードバランサー<br/>注文を適切に振り分け]
-    B --> C[🖥️ サーバー1<br/>東日本担当]
-    B --> D[🖥️ サーバー2<br/>西日本担当]
-    B --> E[🖥️ サーバー3<br/>予備サーバー]
+    A[ 全国のお客さん] --> B[ ロードバランサー<br/>注文を適切に振り分け]
+    B --> C[ サーバー1<br/>東日本担当]
+    B --> D[ サーバー2<br/>西日本担当]
+    B --> E[ サーバー3<br/>予備サーバー]
     
-    C --> F[⚡ Redis キャッシュ<br/>よく注文される商品を高速表示]
+    C --> F[ Redis キャッシュ<br/>よく注文される商品を高速表示]
     D --> F
     E --> F
     
-    F --> G[🗄️ メインデータベース<br/>全ての注文・顧客データ]
-    F --> H[📊 分析データベース<br/>売上・統計データ]
+    F --> G[ メインデータベース<br/>全ての注文・顧客データ]
+    F --> H[ 分析データベース<br/>売上・統計データ]
     
-    I[🤖 監視システム] --> C
+    I[ 監視システム] --> C
     I --> D
     I --> E
-    I --> J[📧 障害時に自動メール通知]
+    I --> J[ 障害時に自動メール通知]
 ```
 
 **メリット**：
-- ⚡ **高速処理**: キャッシュでよく使うデータを瞬時に表示
-- 🏔️ **高可用性**: サーバーが落ちても他のサーバーで継続
-- 📈 **自動スケール**: アクセス増加時に自動でサーバー追加
-- 🔍 **全自動監視**: 問題発生時に即座に通知・対応
+- **高速処理**: キャッシュでよく使うデータを瞬時に表示
+- **高可用性**: サーバーが落ちても他のサーバーで継続
+- **自動スケール**: アクセス増加時に自動でサーバー追加
+- **全自動監視**: 問題発生時に即座に通知・対応
 
 ---
 
-## 🔍 実際のコードを見てみよう！
+## 実際のコードを見てみよう！
 
-### 📄 Step 1: 高速化の仕組み（Redis キャッシュ）
+### Step 1: 高速化の仕組み（Redis キャッシュ）
 
 まず、「よく注文される商品を瞬時に表示する」仕組みを見てみましょう：
 
@@ -220,7 +220,7 @@ def get_user_dashboard_data(user_id: int):
     }
 ```
 
-**🔰 初心者向け解説**：
+**初心者向け解説**：
 
 | 概念 | 何をしているか | 身近な例 |
 |:-----|:-------------|:---------| 
@@ -232,7 +232,7 @@ def get_user_dashboard_data(user_id: int):
 
 ---
 
-### 📄 Step 2: データベース最適化（大量データを賢く管理）
+### Step 2: データベース最適化（大量データを賢く管理）
 
 大量のお客さんが来ても、データベースが重くならない仕組みを見てみましょう：
 
@@ -267,7 +267,7 @@ class DatabaseOptimizer:
             # 1秒以上かかったクエリを警告（お客さんを待たせるレベル）
             if total > 1.0:
                 logging.warning(
-                    f"🐌 遅いクエリ発見！実行時間: {total:.2f}秒\n"
+                    f" 遅いクエリ発見！実行時間: {total:.2f}秒\n"
                     f"SQL: {statement}\n"
                     f"パラメータ: {parameters}"
                 )
@@ -333,7 +333,7 @@ class DatabaseOptimizer:
             conn.commit()
 ```
 
-**🔰 初心者向け解説**：
+**初心者向け解説**：
 
 | 概念 | 何をしているか | 身近な例 |
 |:-----|:-------------|:---------| 
@@ -345,7 +345,7 @@ class DatabaseOptimizer:
 
 ---
 
-### 📄 Step 3: ロードバランサー実装（お客さんの案内係）
+### Step 3: ロードバランサー実装（お客さんの案内係）
 
 複数のサーバーに上手にお客さんを振り分ける仕組みを見てみましょう：
 
@@ -391,7 +391,7 @@ class LoadBalancer:
     def add_server(self, server: ServerNode):
         """サーバーを追加（新店舗オープン）"""
         self.servers.append(server)
-        print(f"🏪 新店舗追加: {server.host}:{server.port} (重み: {server.weight})")
+        print(f" 新店舗追加: {server.host}:{server.port} (重み: {server.weight})")
     
     def get_next_server(self) -> Optional[ServerNode]:
         """次のサーバーを選択（お客さんをどの店舗に案内するか）"""
@@ -400,7 +400,7 @@ class LoadBalancer:
         healthy_servers = [s for s in self.servers if s.is_healthy]
         
         if not healthy_servers:
-            print("⚠️ 利用可能な店舗がありません！")
+            print("[WARN] 利用可能な店舗がありません！")
             return None
         
         if self.strategy == LoadBalancingStrategy.ROUND_ROBIN:
@@ -421,7 +421,7 @@ class LoadBalancer:
         server = servers[self.current_index % len(servers)]
         self.current_index += 1
         
-        print(f"🎯 Round Robin: {server.host}:{server.port} を選択")
+        print(f" Round Robin: {server.host}:{server.port} を選択")
         return server
     
     def _weighted_round_robin_select(self, servers: List[ServerNode]) -> ServerNode:
@@ -437,7 +437,7 @@ class LoadBalancer:
         for server in servers:
             current_weight += server.weight
             if random_value <= current_weight:
-                print(f"🎯 重み付き選択: {server.host}:{server.port} (重み: {server.weight})")
+                print(f" 重み付き選択: {server.host}:{server.port} (重み: {server.weight})")
                 return server
         
         # フォールバック
@@ -449,7 +449,7 @@ class LoadBalancer:
         # 接続数が最小のサーバーを選択
         least_busy_server = min(servers, key=lambda s: s.current_connections)
         
-        print(f"🎯 最小接続: {least_busy_server.host}:{least_busy_server.port} "
+        print(f" 最小接続: {least_busy_server.host}:{least_busy_server.port} "
               f"(接続数: {least_busy_server.current_connections})")
         
         return least_busy_server
@@ -458,7 +458,7 @@ class LoadBalancer:
         """定期健康診断（各店舗の状況チェック）"""
         
         while True:
-            print("🏥 サーバー健康診断を開始...")
+            print(" サーバー健康診断を開始...")
             
             # 各サーバーの健康状態をチェック
             for server in self.servers:
@@ -467,14 +467,14 @@ class LoadBalancer:
                 if server.is_healthy != is_healthy:
                     # 状態が変わった場合の通知
                     status = "回復" if is_healthy else "ダウン"
-                    print(f"📢 {server.host}:{server.port} が{status}しました")
+                    print(f" {server.host}:{server.port} が{status}しました")
                 
                 server.is_healthy = is_healthy
                 server.last_health_check = time.time()
             
             # 健康な店舗数をレポート
             healthy_count = sum(1 for s in self.servers if s.is_healthy)
-            print(f"📊 健康な店舗: {healthy_count}/{len(self.servers)}")
+            print(f" 健康な店舗: {healthy_count}/{len(self.servers)}")
             
             # 次の健康診断まで待機
             await asyncio.sleep(self.health_check_interval)
@@ -499,17 +499,17 @@ class LoadBalancer:
                     is_healthy = 200 <= response.status < 300
                     
                     if is_healthy:
-                        print(f"✅ {server.host}:{server.port} は健康です (応答時間: {server.response_time:.2f}秒)")
+                        print(f"[OK] {server.host}:{server.port} は健康です (応答時間: {server.response_time:.2f}秒)")
                     else:
-                        print(f"❌ {server.host}:{server.port} エラー応答: {response.status}")
+                        print(f"[NG] {server.host}:{server.port} エラー応答: {response.status}")
                     
                     return is_healthy
                     
         except asyncio.TimeoutError:
-            print(f"⏰ {server.host}:{server.port} タイムアウト")
+            print(f" {server.host}:{server.port} タイムアウト")
             return False
         except Exception as e:
-            print(f"💥 {server.host}:{server.port} 接続エラー: {e}")
+            print(f" {server.host}:{server.port} 接続エラー: {e}")
             return False
     
     def get_load_balancer_stats(self) -> Dict[str, Any]:
@@ -557,7 +557,7 @@ async def setup_load_balancer():
     return lb, health_task
 ```
 
-**🔰 初心者向け解説**：
+**初心者向け解説**：
 
 | 概念 | 何をしているか | 身近な例 |
 |:-----|:-------------|:---------| 
@@ -569,9 +569,9 @@ async def setup_load_balancer():
 
 ---
 
-## 🔍 監視・運用システム（24時間見守るシステム）
+## 監視・運用システム（24時間見守るシステム）
 
-### 📄 Step 4: システム監視とメトリクス収集
+### Step 4: システム監視とメトリクス収集
 
 全国チェーンになったら、各店舗の状況をリアルタイムで監視する「本部の監視センター」が必要になります：
 
@@ -607,7 +607,7 @@ class MetricsCollector:
         
     async def start_collection(self):
         """メトリクス収集開始（定期的な店舗巡回）"""
-        print("📊 システム監視を開始します...")
+        print(" システム監視を開始します...")
         
         while True:
             try:
@@ -627,7 +627,7 @@ class MetricsCollector:
                 await asyncio.sleep(self.collection_interval)
                 
             except Exception as e:
-                print(f"❌ メトリクス収集エラー: {e}")
+                print(f"[NG] メトリクス収集エラー: {e}")
                 await asyncio.sleep(5)  # エラー時は少し待つ
     
     def _collect_current_metrics(self) -> SystemMetrics:
@@ -670,7 +670,7 @@ class MetricsCollector:
         )
         
         # 収集した情報をログ出力
-        print(f"📈 {metrics.timestamp.strftime('%H:%M:%S')}: "
+        print(f" {metrics.timestamp.strftime('%H:%M:%S')}: "
               f"CPU:{cpu_percent:.1f}% "
               f"MEM:{memory_percent:.1f}% "
               f"接続:{active_connections}件")
@@ -690,19 +690,19 @@ class MetricsCollector:
         
         # CPU使用率が80%超過（コックさんが疲れ気味）
         if metrics.cpu_percent > 80:
-            warnings.append(f"⚠️ CPU使用率が高いです: {metrics.cpu_percent:.1f}%")
+            warnings.append(f"[WARN] CPU使用率が高いです: {metrics.cpu_percent:.1f}%")
         
         # メモリ使用率が85%超過（冷蔵庫がほぼ満杯）
         if metrics.memory_percent > 85:
-            warnings.append(f"⚠️ メモリ使用率が高いです: {metrics.memory_percent:.1f}%")
+            warnings.append(f"[WARN] メモリ使用率が高いです: {metrics.memory_percent:.1f}%")
         
         # ディスク使用率が90%超過（倉庫がほぼ満杯）
         if metrics.disk_percent > 90:
-            warnings.append(f"⚠️ ディスク使用率が高いです: {metrics.disk_percent:.1f}%")
+            warnings.append(f"[WARN] ディスク使用率が高いです: {metrics.disk_percent:.1f}%")
         
         # 応答時間が1秒超過（お客さんを待たせすぎ）
         if metrics.response_time > 1.0:
-            warnings.append(f"⚠️ 応答時間が遅いです: {metrics.response_time:.2f}秒")
+            warnings.append(f"[WARN] 応答時間が遅いです: {metrics.response_time:.2f}秒")
         
         # 警告がある場合はアラート送信
         if warnings:
@@ -711,7 +711,7 @@ class MetricsCollector:
     async def _send_alert(self, warnings: List[str]):
         """アラート送信（緊急事態の通知）"""
         
-        alert_message = "🚨 システム警告:\n" + "\n".join(warnings)
+        alert_message = "[CRITICAL] システム警告:\n" + "\n".join(warnings)
         print(alert_message)
         
         # 実際の実装では以下のような通知を送信:
@@ -819,11 +819,11 @@ class AlertManager:
         
         # 重要度に応じた処理
         if alert["severity"] == "critical":
-            print(f"🚨 【緊急】{alert['message']}")
+            print(f"[CRITICAL] 【緊急】{alert['message']}")
             # 即座に管理者に通知
             await self._send_critical_notification(alert)
         else:
-            print(f"⚠️ 【警告】{alert['message']}")
+            print(f"[WARN] 【警告】{alert['message']}")
             # 通常の警告通知
             await self._send_warning_notification(alert)
     
@@ -850,7 +850,7 @@ async def setup_monitoring():
     return collector, alert_manager, monitor_task
 ```
 
-**🔰 初心者向け解説**：
+**初心者向け解説**：
 
 | 概念 | 何をしているか | 身近な例 |
 |:-----|:-------------|:---------| 
@@ -862,7 +862,7 @@ async def setup_monitoring():
 
 ---
 
-### 📄 Step 5: アラートシステムとログ管理
+### Step 5: アラートシステムとログ管理
 
 問題が起きた時に、すぐに管理者に通知する仕組みを作りましょう：
 
@@ -914,10 +914,10 @@ class NotificationChannel:
         
         # 重要度に応じて絵文字を変更
         emoji_map = {
-            AlertSeverity.INFO: "ℹ️",
-            AlertSeverity.WARNING: "⚠️", 
-            AlertSeverity.CRITICAL: "🚨",
-            AlertSeverity.FATAL: "💀"
+            AlertSeverity.INFO: "",
+            AlertSeverity.WARNING: "[WARN]", 
+            AlertSeverity.CRITICAL: "[CRITICAL]",
+            AlertSeverity.FATAL: ""
         }
         
         payload = {
@@ -953,12 +953,12 @@ class NotificationChannel:
             async with aiohttp.ClientSession() as session:
                 async with session.post(webhook_url, json=payload) as response:
                     if response.status == 200:
-                        print(f"✅ Slack通知送信成功: {alert.title}")
+                        print(f"[OK] Slack通知送信成功: {alert.title}")
                     else:
-                        print(f"❌ Slack通知送信失敗: {response.status}")
+                        print(f"[NG] Slack通知送信失敗: {response.status}")
                         
         except Exception as e:
-            print(f"💥 Slack通知エラー: {e}")
+            print(f" Slack通知エラー: {e}")
     
     async def send_email_notification(self, alert: Alert, email_config: Dict[str, str]):
         """メール通知（メール通知）"""
@@ -1015,10 +1015,10 @@ class NotificationChannel:
             server.send_message(msg)
             server.quit()
             
-            print(f"✅ メール通知送信成功: {alert.title}")
+            print(f"[OK] メール通知送信成功: {alert.title}")
             
         except Exception as e:
-            print(f"💥 メール通知エラー: {e}")
+            print(f" メール通知エラー: {e}")
 
 class LogManager:
     """ログ管理システム（お店の日報管理）"""
@@ -1219,7 +1219,7 @@ async def setup_alerting():
     return alerting
 ```
 
-**🔰 初心者向け解説**：
+**初心者向け解説**：
 
 | 概念 | 何をしているか | 身近な例 |
 |:-----|:-------------|:---------| 
@@ -1231,7 +1231,7 @@ async def setup_alerting():
 
 ---
 
-### 📄 Step 6: CI/CD パイプライン（自動デプロイシステム）
+### Step 6: CI/CD パイプライン（自動デプロイシステム）
 
 コードを更新したら自動でテスト・デプロイする仕組みを作りましょう：
 
@@ -1253,7 +1253,7 @@ env:
   IMAGE_NAME: saas-platform
 
 jobs:
-  # 🧪 Step 1: テスト実行（品質チェック）
+  #  Step 1: テスト実行（品質チェック）
   test:
     runs-on: ubuntu-latest
     
@@ -1282,22 +1282,22 @@ jobs:
           - 6379:6379
     
     steps:
-    - name: 📥 コードチェックアウト
+    - name:  コードチェックアウト
       uses: actions/checkout@v4
     
-    - name: 🐍 Python環境セットアップ
+    - name:  Python環境セットアップ
       uses: actions/setup-python@v6
       with:
         python-version: ${{ env.PYTHON_VERSION }}
         cache: 'pip'
     
-    - name: 📦 依存関係インストール
+    - name:  依存関係インストール
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
         pip install -r requirements-dev.txt
     
-    - name: 🔍 コード品質チェック（リンター）
+    - name:  コード品質チェック（リンター）
       run: |
         # フォーマットチェック
         black --check .
@@ -1311,21 +1311,21 @@ jobs:
         # 型チェック
         mypy .
     
-    - name: 🧪 単体テスト実行
+    - name:  単体テスト実行
       env:
         DATABASE_URL: postgresql://postgres:postgres@localhost:5432/test_db
         REDIS_URL: redis://localhost:6379/0
       run: |
         pytest tests/unit/ -v --cov=app --cov-report=xml
     
-    - name: 🔧 統合テスト実行
+    - name:  統合テスト実行
       env:
         DATABASE_URL: postgresql://postgres:postgres@localhost:5432/test_db
         REDIS_URL: redis://localhost:6379/0
       run: |
         pytest tests/integration/ -v
     
-    - name: 🏃♂️ API テスト実行
+    - name:  API テスト実行
       env:
         DATABASE_URL: postgresql://postgres:postgres@localhost:5432/test_db
         REDIS_URL: redis://localhost:6379/0
@@ -1337,13 +1337,13 @@ jobs:
         # API テスト実行
         pytest tests/api/ -v
     
-    - name: 📊 テストカバレッジアップロード
+    - name:  テストカバレッジアップロード
       uses: codecov/codecov-action@v5
       with:
         file: ./coverage.xml
         fail_ci_if_error: true
 
-  # 🔨 Step 2: Docker イメージビルド
+  #  Step 2: Docker イメージビルド
   build:
     needs: test
     runs-on: ubuntu-latest
@@ -1354,20 +1354,20 @@ jobs:
       image-digest: ${{ steps.build.outputs.digest }}
     
     steps:
-    - name: 📥 コードチェックアウト
+    - name:  コードチェックアウト
       uses: actions/checkout@v4
     
-    - name: 🔧 Docker Buildx セットアップ
+    - name:  Docker Buildx セットアップ
       uses: docker/setup-buildx-action@v3
     
-    - name: 🔐 Container Registry ログイン
+    - name:  Container Registry ログイン
       uses: docker/login-action@v3
       with:
         registry: ${{ env.REGISTRY }}
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
     
-    - name: 🏷️ メタデータ生成
+    - name:  メタデータ生成
       id: meta
       uses: docker/metadata-action@v4
       with:
@@ -1378,7 +1378,7 @@ jobs:
           type=sha,prefix={{branch}}-
           type=raw,value=latest,enable={{is_default_branch}}
     
-    - name: 🔨 Docker イメージビルド・プッシュ
+    - name:  Docker イメージビルド・プッシュ
       id: build
       uses: docker/build-push-action@v6
       with:
@@ -1390,7 +1390,7 @@ jobs:
         cache-from: type=gha
         cache-to: type=gha,mode=max
 
-  # 🚀 Step 3: 開発環境デプロイ
+  #  Step 3: 開発環境デプロイ
   deploy-dev:
     needs: [test, build]
     runs-on: ubuntu-latest
@@ -1398,9 +1398,9 @@ jobs:
     environment: development
     
     steps:
-    - name: 🚀 開発環境デプロイ
+    - name:  開発環境デプロイ
       run: |
-        echo "🌱 開発環境にデプロイ中..."
+        echo " 開発環境にデプロイ中..."
         
         # Kubernetesにデプロイ（例）
         # kubectl set image deployment/saas-platform \
@@ -1410,9 +1410,9 @@ jobs:
         # ヘルスチェック
         # kubectl rollout status deployment/saas-platform --namespace=development
         
-        echo "✅ 開発環境デプロイ完了！"
+        echo "[OK] 開発環境デプロイ完了！"
 
-  # 🌍 Step 4: 本番環境デプロイ
+  #  Step 4: 本番環境デプロイ
   deploy-prod:
     needs: [test, build]
     runs-on: ubuntu-latest
@@ -1420,9 +1420,9 @@ jobs:
     environment: production
     
     steps:
-    - name: 🔍 本番前チェック
+    - name:  本番前チェック
       run: |
-        echo "🔍 本番環境デプロイ前チェック..."
+        echo " 本番環境デプロイ前チェック..."
         
         # データベースマイグレーションのドライラン
         # alembic upgrade head --sql
@@ -1430,11 +1430,11 @@ jobs:
         # 設定ファイルの妥当性チェック
         # python -c "from app.core.config import settings; print('設定OK')"
         
-        echo "✅ 事前チェック完了"
+        echo "[OK] 事前チェック完了"
     
-    - name: 🚀 本番環境デプロイ
+    - name:  本番環境デプロイ
       run: |
-        echo "🌍 本番環境にデプロイ中..."
+        echo " 本番環境にデプロイ中..."
         
         # ブルーグリーンデプロイ（例）
         # kubectl apply -f k8s/production/
@@ -1445,11 +1445,11 @@ jobs:
         # ローリングアップデート完了待機
         # kubectl rollout status deployment/saas-platform --namespace=production
         
-        echo "✅ 本番環境デプロイ完了！"
+        echo "[OK] 本番環境デプロイ完了！"
     
-    - name: 🧪 本番環境ヘルスチェック
+    - name:  本番環境ヘルスチェック
       run: |
-        echo "🏥 本番環境ヘルスチェック..."
+        echo " 本番環境ヘルスチェック..."
         
         # API ヘルスチェック
         # curl -f https://api.yourapp.com/health || exit 1
@@ -1457,19 +1457,19 @@ jobs:
         # データベース接続チェック
         # python scripts/health_check.py
         
-        echo "✅ 本番環境正常動作確認"
+        echo "[OK] 本番環境正常動作確認"
     
-    - name: 📢 デプロイ通知
+    - name:  デプロイ通知
       if: always()
       run: |
         # Slack通知（実際の実装では）
         # curl -X POST -H 'Content-type: application/json' \
-        #   --data '{"text":"🚀 本番環境デプロイ完了"}' \
+        #   --data '{"text":" 本番環境デプロイ完了"}' \
         #   ${{ secrets.SLACK_WEBHOOK_URL }}
         
-        echo "📢 関係者に通知送信完了"
+        echo " 関係者に通知送信完了"
 
-  # 🔄 Step 5: データベースマイグレーション
+  #  Step 5: データベースマイグレーション
   migrate:
     needs: deploy-prod
     runs-on: ubuntu-latest
@@ -1477,31 +1477,31 @@ jobs:
     environment: production
     
     steps:
-    - name: 📥 コードチェックアウト
+    - name:  コードチェックアウト
       uses: actions/checkout@v4
     
-    - name: 🐍 Python環境セットアップ
+    - name:  Python環境セットアップ
       uses: actions/setup-python@v6
       with:
         python-version: ${{ env.PYTHON_VERSION }}
     
-    - name: 📦 依存関係インストール
+    - name:  依存関係インストール
       run: |
         pip install alembic psycopg2-binary
     
-    - name: 🗄️ データベースマイグレーション実行
+    - name:  データベースマイグレーション実行
       env:
         DATABASE_URL: ${{ secrets.PROD_DATABASE_URL }}
       run: |
-        echo "🗄️ データベースマイグレーション実行..."
+        echo " データベースマイグレーション実行..."
         
         # マイグレーション実行
         alembic upgrade head
         
-        echo "✅ マイグレーション完了"
+        echo "[OK] マイグレーション完了"
 ```
 
-**🔰 初心者向け解説**：
+**初心者向け解説**：
 
 | 概念 | 何をしているか | 身近な例 |
 |:-----|:-------------|:---------| 
@@ -1634,15 +1634,15 @@ print(f"データベース接続: {pool_status['status']}")
 # 重いテーブルを確認
 heavy_tables = optimizer.analyze_table_sizes()
 for table in heavy_tables[:3]:  # 上位3つを表示
-    print(f"📊 {table['table_name']}: {table['readable_size']}")
+    print(f" {table['table_name']}: {table['readable_size']}")
 
 # 無駄なインデックスを確認
 unused = optimizer.find_unused_indexes()
 if unused:
-    print(f"🗑️ 使われていないインデックス: {len(unused)}個")
+    print(f" 使われていないインデックス: {len(unused)}個")
 ```
 
-**🔰 初心者向け解説**：
+**初心者向け解説**：
 
 | 概念 | 何をしているか | 身近な例 |
 |:-----|:-------------|:---------| 
@@ -1652,7 +1652,7 @@ if unused:
 | `パーティション` | 大きなテーブルを月別に分割 | 家計簿を月別ファイルに分けて管理 |
 | `未使用インデックス` | 使われていない索引を削除して節約 | 使わない電話帳を捨ててスペース確保 |
 
-### 📄 Step 3: ロードバランサー（お客さんを上手に案内する仕組み）
+### Step 3: ロードバランサー（お客さんを上手に案内する仕組み）
 
 大量のアクセスを複数のサーバーに振り分ける「案内係」の仕組みを見てみましょう：
 
@@ -1695,12 +1695,12 @@ class LoadBalancer:
     def add_server(self, server: ServerInstance):
         """新しい店舗を追加"""
         self.servers.append(server)
-        print(f"🏪 新店舗追加: {server.id} ({server.host}:{server.port})")
+        print(f" 新店舗追加: {server.id} ({server.host}:{server.port})")
     
     def get_healthy_servers(self) -> List[ServerInstance]:
         """営業中の店舗一覧を取得"""
         healthy = [s for s in self.servers if s.status == HealthStatus.HEALTHY]
-        print(f"🟢 営業中店舗: {len(healthy)}店舗")
+        print(f"[OK] 営業中店舗: {len(healthy)}店舗")
         return healthy
     
     def select_server(self) -> ServerInstance:
@@ -1708,7 +1708,7 @@ class LoadBalancer:
         healthy_servers = self.get_healthy_servers()
         
         if not healthy_servers:
-            raise Exception("❌ 営業中の店舗がありません！")
+            raise Exception("[NG] 営業中の店舗がありません！")
         
         # 案内方法による選択
         if self.algorithm == "round_robin":
@@ -1725,7 +1725,7 @@ class LoadBalancer:
         """順番に案内（公平に回す）"""
         server = servers[self.current_index % len(servers)]
         self.current_index += 1
-        print(f"📍 順番案内: {server.id} へご案内")
+        print(f" 順番案内: {server.id} へご案内")
         return server
     
     def _weighted_round_robin_selection(self, servers: List[ServerInstance]) -> ServerInstance:
@@ -1737,7 +1737,7 @@ class LoadBalancer:
         for server in servers:
             current_weight += server.weight
             if rand_weight <= current_weight:
-                print(f"⚖️ 重み付き案内: {server.id} へご案内 (weight: {server.weight})")
+                print(f" 重み付き案内: {server.id} へご案内 (weight: {server.weight})")
                 return server
         
         return servers[0]  # フォールバック
@@ -1745,12 +1745,12 @@ class LoadBalancer:
     def _least_connections_selection(self, servers: List[ServerInstance]) -> ServerInstance:
         """一番空いている店舗に案内"""
         least_busy = min(servers, key=lambda s: s.current_connections)
-        print(f"🎯 空いている店舗に案内: {least_busy.id} (お客さん{least_busy.current_connections}人)")
+        print(f" 空いている店舗に案内: {least_busy.id} (お客さん{least_busy.current_connections}人)")
         return least_busy
     
     async def health_check(self):
         """全店舗の健康状態をチェック（巡回点検）"""
-        print("🔍 全店舗の健康チェック開始...")
+        print(" 全店舗の健康チェック開始...")
         
         for server in self.servers:
             try:
@@ -1765,17 +1765,17 @@ class LoadBalancer:
                 if is_healthy:
                     if response_time > 5.0:  # 5秒以上は少し疲れ気味
                         server.status = HealthStatus.DEGRADED
-                        print(f"😅 {server.id}: 少し疲れ気味 ({response_time:.1f}秒)")
+                        print(f" {server.id}: 少し疲れ気味 ({response_time:.1f}秒)")
                     else:
                         server.status = HealthStatus.HEALTHY
-                        print(f"😊 {server.id}: 元気です ({response_time:.1f}秒)")
+                        print(f" {server.id}: 元気です ({response_time:.1f}秒)")
                 else:
                     server.status = HealthStatus.UNHEALTHY
-                    print(f"😷 {server.id}: 体調不良で休業中")
+                    print(f" {server.id}: 体調不良で休業中")
                     
             except Exception as e:
                 server.status = HealthStatus.UNHEALTHY
-                print(f"💥 {server.id}: 連絡がつきません - {str(e)}")
+                print(f" {server.id}: 連絡がつきません - {str(e)}")
     
     async def _check_server_health(self, server: ServerInstance) -> bool:
         """個別店舗の健康チェック"""
@@ -1800,12 +1800,12 @@ load_balancer.add_server(ServerInstance("backup-1", "10.0.1.102", 8000, weight=1
 # お客さんが来たら適切な店舗に案内
 try:
     selected_server = load_balancer.select_server()
-    print(f"🎉 {selected_server.id} にお客様をご案内しました！")
+    print(f" {selected_server.id} にお客様をご案内しました！")
 except Exception as e:
-    print(f"😵 申し訳ございません: {e}")
+    print(f" 申し訳ございません: {e}")
 ```
 
-**🔰 初心者向け解説**：
+**初心者向け解説**：
 
 | 概念 | 何をしているか | 身近な例 |
 |:-----|:-------------|:---------| 
@@ -2070,9 +2070,9 @@ load_balancer = LoadBalancer()
 
 ---
 
-## 🔍 監視・運用システム（24時間見守るシステム）
+## 監視・運用システム（24時間見守るシステム）
 
-### 📄 Step 4: システム監視とメトリクス収集
+### Step 4: システム監視とメトリクス収集
 
 全国チェーンになったら、各店舗の状況をリアルタイムで監視する「本部の監視センター」が必要になります：
 
@@ -3158,14 +3158,14 @@ diagnostics.validate_models_vs_database()
 
 set -e
 
-echo "🔍 Starting safe migration process..."
+echo " Starting safe migration process..."
 
 # 1. バックアップ作成
-echo "📦 Creating database backup..."
+echo " Creating database backup..."
 pg_dump $DATABASE_URL > backup_$(date +%Y%m%d_%H%M%S).sql
 
 # 2. マイグレーション状態確認
-echo "📋 Checking migration status..."
+echo " Checking migration status..."
 python -c "
 from scripts.migration_diagnostics import MigrationDiagnostics
 diag = MigrationDiagnostics()
@@ -3174,24 +3174,24 @@ diag.validate_models_vs_database()
 "
 
 # 3. ドライラン実行
-echo "🧪 Performing dry run..."
+echo " Performing dry run..."
 alembic upgrade head --sql > migration_preview.sql
 echo "Migration preview saved to migration_preview.sql"
 
 # 4. 確認プロンプト
-read -p "🤔 Continue with migration? (y/N): " -n 1 -r
+read -p " Continue with migration? (y/N): " -n 1 -r
 echo
 if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-    echo "❌ Migration cancelled"
+    echo "[NG] Migration cancelled"
     exit 1
 fi
 
 # 5. 実際のマイグレーション実行
-echo "🚀 Running migration..."
+echo " Running migration..."
 alembic upgrade head
 
 # 6. 検証
-echo "✅ Verifying migration..."
+echo "[OK] Verifying migration..."
 python -c "
 from scripts.migration_diagnostics import MigrationDiagnostics
 diag = MigrationDiagnostics()
@@ -3199,7 +3199,7 @@ success = diag.validate_models_vs_database()
 exit(0 if success else 1)
 "
 
-echo "🎉 Migration completed successfully!"
+echo " Migration completed successfully!"
 ```
 
 #### 問題3: マルチテナント分離の問題
@@ -3325,7 +3325,7 @@ class TenantIsolationDiagnostics:
                 logger.error("SECURITY VIOLATION: User2 can see org1's data!")
                 return False
             
-            logger.info("✅ Tenant isolation test passed")
+            logger.info("[OK] Tenant isolation test passed")
             return True
             
         except Exception as e:
@@ -3878,11 +3878,11 @@ def create_project(project_data: dict):
 
 | 項目 | クライアント実装 | Edge Functions | 独立APIサーバー |
 |------|-----------------|----------------|----------------|
-| 開発速度 | ★★★ | ★★ | ★ |
-| 拡張性 | ★ | ★★ | ★★★ |
-| セキュリティ | ★★ | ★★★ | ★★★ |
-|運用負荷 | ★★★ | ★★ | ★ |
-| コスト効率 | ★★★ | ★★ | ★ |
+| 開発速度 |  |  |  |
+| 拡張性 |  |  |  |
+| セキュリティ |  |  |  |
+|運用負荷 |  |  |  |
+| コスト効率 |  |  |  |
 
 これで独立APIサーバーパターンの実装が完了しました。要件に応じて最適なアーキテクチャを選択し、段階的に移行する戦略が重要です。
 
@@ -3912,20 +3912,20 @@ def create_project(project_data: dict):
 
 **技術理解**
 
-- [ ] Redis を使用したキャッシュ実装ができる
-- [ ] データベースパーティショニング戦略を説明できる
-- [ ] ロードバランシングアルゴリズムの違いを理解している
-- [ ] メトリクス収集とアラート設計ができる
-- [ ] CI/CDパイプラインを構築できる
-- [ ] コンテナー化のベストプラクティスを理解している
+- [] Redis を使用したキャッシュ実装ができる
+- [] データベースパーティショニング戦略を説明できる
+- [] ロードバランシングアルゴリズムの違いを理解している
+- [] メトリクス収集とアラート設計ができる
+- [] CI/CDパイプラインを構築できる
+- [] コンテナー化のベストプラクティスを理解している
 
 **実装能力**
 
-- [ ] パフォーマンス最適化コードを書ける
-- [ ] 監視システムを構築できる
-- [ ] 自動化スクリプトを作成できる
-- [ ] セキュリティを考慮した設定ができる
-- [ ] スケーラブルなアーキテクチャを設計できる
+- [] パフォーマンス最適化コードを書ける
+- [] 監視システムを構築できる
+- [] 自動化スクリプトを作成できる
+- [] セキュリティを考慮した設定ができる
+- [] スケーラブルなアーキテクチャを設計できる
 
 ### 推奨学習時間
 
@@ -3935,45 +3935,45 @@ def create_project(project_data: dict):
 
 **合計: 22〜30時間**
 
-## 📝 第5-3章 学習まとめ
+## 第5-3章 学習まとめ
 
-### ✅ **習得できたスキル**
-- ✅ エンタープライズ級スケーリング戦略・アーキテクチャ設計
-- ✅ 高性能システムのパフォーマンス最適化・キャッシュ戦略
-- ✅ 本番運用レベルの監視・アラート・自動化システム
-- ✅ CI/CD・コンテナ化・DevOps による効率的運用体制
+### [OK] **習得できたスキル**
+- [OK] エンタープライズ級スケーリング戦略・アーキテクチャ設計
+- [OK] 高性能システムのパフォーマンス最適化・キャッシュ戦略
+- [OK] 本番運用レベルの監視・アラート・自動化システム
+- [OK] CI/CD・コンテナ化・DevOps による効率的運用体制
 
-### 🎯 **第5-1章〜第5-4章（パターン3）達成状況**
+### **第5-1章〜第5-4章（パターン3）達成状況**
 | 章 | 主要テーマ | 技術習得レベル | 実用適用範囲 |
 |:--------|:----------|:-------------|:-------------|
-| **5-1** | APIサーバー基礎 | 🌱 FastAPI + SQLAlchemy | 小規模サービス・MVP |
-| **5-2** | マルチテナント | 🚀 企業分離・複雑権限 | 中規模SaaS・B2Bサービス |
-| **5-3** | スケーリング・運用 | 💪 エンタープライズ級 | 大規模サービス・国際展開 |
-| **5-4** | RAG/ベクトル検索 | 💪 pgvector + 監査ログ | AI検索・FAQ・ナレッジ活用 |
+| **5-1**| APIサーバー基礎 |  FastAPI + SQLAlchemy | 小規模サービス・MVP |
+| **5-2**| マルチテナント |  企業分離・複雑権限 | 中規模SaaS・B2Bサービス |
+| **5-3**| スケーリング・運用 |  エンタープライズ級 | 大規模サービス・国際展開 |
+| **5-4**| RAG/ベクトル検索 |  pgvector + 監査ログ | AI検索・FAQ・ナレッジ活用 |
 
-### 🔄 **Part II（アーキテクチャパターン）完了**
+### **Part II（アーキテクチャパターン）完了**
 3つのアーキテクチャパターンの習得完了：
-- ✅ **第3章**: クライアントサイド（個人・小規模チーム向け）
-- ✅ **第4章**: Edge Functions（スタートアップ・中規模向け）  
-- ✅ **第5-1章**: 独立APIサーバー（エンタープライズ・大規模向け）
+- [OK] **第3章**: クライアントサイド（個人・小規模チーム向け）
+- [OK] **第4章**: Edge Functions（スタートアップ・中規模向け）  
+- [OK] **第5-1章**: 独立APIサーバー（エンタープライズ・大規模向け）
 
 ---
 
-## 🚀 次章予告：パフォーマンス最適化
+## 次章予告：パフォーマンス最適化
 
 第6章では、「**F1マシンのチューニング・エンジニア**」レベルの最適化技術を学習します：
-- ⚡ **データベース最適化**: インデックス・パーティション・クエリチューニング
-- 🚀 **API高速化**: PostgREST設定・キャッシュ戦略・レスポンス最適化
-- 📊 **監視・測定**: パフォーマンス計測・ボトルネック特定・継続改善
-- 🔧 **自動最適化**: AI駆動の性能改善・プロアクティブなチューニング
+- **データベース最適化**: インデックス・パーティション・クエリチューニング
+- **API高速化**: PostgREST設定・キャッシュ戦略・レスポンス最適化
+- **監視・測定**: パフォーマンス計測・ボトルネック特定・継続改善
+- **自動最適化**: AI駆動の性能改善・プロアクティブなチューニング
 
-**💡 実装目標**: 「ユーザーが体感する待ち時間を1秒未満に最適化する高速システム」
+**実装目標**: 「ユーザーが体感する待ち時間を1秒未満に最適化する高速システム」
 
 ---
 
-**📍 ナビゲーション**
-- **📚 目次**: [はじめに]({{ '/introduction/' | relative_url }})
-- **⬅️ 前の章**: [第5-2章：マルチテナンシーと複雑ビジネスロジック]({{ '/chapters/chapter05-2/' | relative_url }})  
-- **➡️ 次の章**: [第6章：パフォーマンス最適化]({{ '/chapters/chapter06/' | relative_url }})
-- **🏠 関連章**: [第5-1章：パターン3 - 独立APIサーバー]({{ '/chapters/chapter05-1/' | relative_url }}) | [第8章：運用監視と自動化]({{ '/chapters/chapter08/' | relative_url }})
-- **🔧 リソース**: [スケーリング設計]({{ site.repository }}/tree/main/src/examples/performance/) | [運用チェックリスト]({{ '/appendices/appendix01/' | relative_url }}#operational-checklists)
+**ナビゲーション**
+- **目次**: [はじめに]({{ '/introduction/' | relative_url }})
+- **前の章**: [第5-2章：マルチテナンシーと複雑ビジネスロジック]({{ '/chapters/chapter05-2/' | relative_url }})  
+- **次の章**: [第6章：パフォーマンス最適化]({{ '/chapters/chapter06/' | relative_url }})
+- **関連章**: [第5-1章：パターン3 - 独立APIサーバー]({{ '/chapters/chapter05-1/' | relative_url }}) | [第8章：運用監視と自動化]({{ '/chapters/chapter08/' | relative_url }})
+- **リソース**: [スケーリング設計]({{ site.repository }}/tree/main/src/examples/performance/) | [運用チェックリスト]({{ '/appendices/appendix01/' | relative_url }}#operational-checklists)
