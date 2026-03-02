@@ -6,75 +6,75 @@ title: "第6章：パフォーマンス最適化"
 # 第6章：パフォーマンス最適化
 
 ---
-**📚 目次に戻る**: [はじめに]({{ '/introduction/' | relative_url }})  
-**⬅️ 前の章**: [第5-4章：RAG/ベクトル検索アーキテクチャ]({{ '/chapters/chapter05-4/' | relative_url }})  
-**➡️ 次の章**: [第7章：セキュリティ強化]({{ '/chapters/chapter07/' | relative_url }})  
-**🎯 学習フェーズ**: Part III - 実装・運用編（パフォーマンス）  
-**🎯 学習レベル**: 🌱 基礎 | 🚀 応用 | 💪 発展  
-**⏱️ 推定学習時間**: 5〜7時間  
-**📝 難易度**: 中上級（SQL最適化・システム監視知識推奨）
+**目次に戻る**: [はじめに]({{ '/introduction/' | relative_url }})  
+**前の章**: [第5-4章：RAG/ベクトル検索アーキテクチャ]({{ '/chapters/chapter05-4/' | relative_url }})  
+**次の章**: [第7章：セキュリティ強化]({{ '/chapters/chapter07/' | relative_url }})  
+**学習フェーズ**: Part III - 実装・運用編（パフォーマンス）  
+**学習レベル**:  基礎 |  応用 |  発展  
+**推定学習時間**: 5〜7時間  
+**難易度**: 中上級（SQL最適化・システム監視知識推奨）
 ---
 
-## 🧭 この章で扱う構成
+## この章で扱う構成
 - 構成: 共通（パフォーマンス最適化）
 - 推奨用途: レスポンス改善・コスト最適化が必要な段階
 - 非推奨用途: PoC段階で速度要件が低いケース
 
-## 🎯 この章で学ぶこと（初心者向け）
+## この章で学ぶこと（初心者向け）
 
 この章では、第5-1章で作ったSaaSプラットフォームを、**「F1カーのように高速で効率的」**なシステムに改善します。
 
-- 🌱 **初心者**: データベースが重い理由と、インデックスによる高速化がわかる
-- 🚀 **中級者**: システム全体のボトルネック特定と最適化手法が身につく  
-- 💪 **上級者**: 自動監視・自動最適化システムの構築ができるようになる
+- **初心者**: データベースが重い理由と、インデックスによる高速化がわかる
+- **中級者**: システム全体のボトルネック特定と最適化手法が身につく  
+- **上級者**: 自動監視・自動最適化システムの構築ができるようになる
 
-## 💡 まずは身近な例から：「超繁盛レストランの効率化作戦」
+## まずは身近な例から：「超繁盛レストランの効率化作戦」
 
 想像してみてください。あなたのレストランが大成功して、毎日長蛇の列ができるようになりました：
 
 ```text
-🏪 繁盛レストラン「Supabase亭」の1日
-├── 🕐 朝：お客さん少ない → サクサク対応（1秒で注文完了）
-├── 🕓 昼：大行列発生 → 注文に5分かかる（お客さん怒る）
-├── 🕕 夕方：更にパンク → 10分待ち（お客さん帰る）
-└── 😱 結果：売上激減、スタッフ疲弊、評判悪化
+ 繁盛レストラン「Supabase亭」の1日
+├──  朝：お客さん少ない → サクサク対応（1秒で注文完了）
+├──  昼：大行列発生 → 注文に5分かかる（お客さん怒る）
+├──  夕方：更にパンク → 10分待ち（お客さん帰る）
+└──  結果：売上激減、スタッフ疲弊、評判悪化
 ```
 
-### 🤔 なぜ遅くなるのか？
+### なぜ遅くなるのか？
 
 | 問題 | 具体例 | 技術的な対応 |
 |:-----|:-------|:-------------|
-| 🔍 **メニュー探しが遅い** | 200品目から「ハンバーグ」を探すのに時間がかかる | データベースインデックス不足 |
-| 👨🍳 **コックが1人だけ** | 注文が増えても調理人が足りない | データベース接続数不足 |
-| 📦 **食材倉庫が遠い** | 毎回倉庫まで取りに行く | キャッシュ未使用 |
-| 📊 **何が遅いか不明** | どの工程がボトルネックか分からない | 監視システム不足 |
+|  **メニュー探しが遅い**| 200品目から「ハンバーグ」を探すのに時間がかかる | データベースインデックス不足 |
+|  **コックが1人だけ**| 注文が増えても調理人が足りない | データベース接続数不足 |
+|  **食材倉庫が遠い**| 毎回倉庫まで取りに行く | キャッシュ未使用 |
+|  **何が遅いか不明**| どの工程がボトルネックか分からない | 監視システム不足 |
 
-### 🎉 パフォーマンス最適化で解決！
+### パフォーマンス最適化で解決！
 
 ```mermaid
 flowchart TD
-    A[😰 遅いシステム] --> B[🔍 問題調査]
-    B --> C[📚 インデックス追加]
-    B --> D[⚡ キャッシュ導入] 
-    B --> E[👥 接続数増加]
-    B --> F[📊 監視システム]
+    A[ 遅いシステム] --> B[ 問題調査]
+    B --> C[ インデックス追加]
+    B --> D[ キャッシュ導入] 
+    B --> E[ 接続数増加]
+    B --> F[ 監視システム]
     
-    C --> G[🚀 高速システム]
+    C --> G[ 高速システム]
     D --> G
     E --> G
     F --> G
     
-    G --> H[😊 お客さん満足]
-    G --> I[💰 売上向上]
-    G --> J[😌 運用楽々]
+    G --> H[ お客さん満足]
+    G --> I[ 売上向上]
+    G --> J[ 運用楽々]
 ```
 
 **この章で実装する最適化**：
-- 🔍 **データベース高速化**: インデックス・パーティション（メニューの整理整頓）
-- ⚡ **キャッシュシステム**: よく注文される料理を事前準備
-- 👥 **PostgREST最適化**: API を効率化（注文受付の改善）
-- 📊 **監視システム**: リアルタイムでボトルネック発見
-- 🤖 **自動最適化**: 問題を自動で解決する仕組み
+- **データベース高速化**: インデックス・パーティション（メニューの整理整頓）
+- **キャッシュシステム**: よく注文される料理を事前準備
+- **PostgREST最適化**: API を効率化（注文受付の改善）
+- **監視システム**: リアルタイムでボトルネック発見
+- **自動最適化**: 問題を自動で解決する仕組み
 
 ## 学習目標
 
@@ -85,29 +85,29 @@ flowchart TD
 
 ---
 
-## 🔍 Step 1: PostgreSQL調整（データベースの高速化）
+## Step 1: PostgreSQL調整（データベースの高速化）
 
-### 📚 インデックス設計戦略（図書館の目次システム）
+### インデックス設計戦略（図書館の目次システム）
 
 データベースのインデックスは、**図書館の目次や索引**のようなものです。目次なしで本を探すのは大変ですが、目次があれば一瞬で見つかります：
 
 ```text
-📚 図書館での本探し比較
-├── ❌ 目次なし：全部の本を1冊ずつ確認（1時間かかる）
-└── ✅ 目次あり：目次で番号確認→直接取得（30秒で完了）
+ 図書館での本探し比較
+├── [NG] 目次なし：全部の本を1冊ずつ確認（1時間かかる）
+└── [OK] 目次あり：目次で番号確認→直接取得（30秒で完了）
 
-💾 データベースでのデータ検索比較  
-├── ❌ インデックスなし：全レコードをスキャン（10秒かかる）
-└── ✅ インデックスあり：インデックスで場所特定（0.01秒で完了）
+ データベースでのデータ検索比較  
+├── [NG] インデックスなし：全レコードをスキャン（10秒かかる）
+└── [OK] インデックスあり：インデックスで場所特定（0.01秒で完了）
 ```
 
-### 📄 実際のインデックス効果を確認してみよう
+### 実際のインデックス効果を確認してみよう
 
 まず、現在のデータベースでどのインデックスが使われているかを調べる「健康診断」をしてみましょう：
 
 ```sql
 -- インデックス効果分析クエリ（図書館の目次使用統計）
--- 🔍 このクエリは「どの目次がよく使われているか」を調べる健康診断です
+--  このクエリは「どの目次がよく使われているか」を調べる健康診断です
 
 WITH index_usage AS (
     SELECT 
@@ -137,10 +137,10 @@ SELECT
     i.indexname,
     i.idx_scan as index_scans,                -- インデックス使用回数
     CASE 
-        WHEN i.idx_scan = 0 THEN 'UNUSED'           -- 🚨 未使用（作ったけど誰も使わない目次）
-        WHEN i.idx_scan < t.total_writes * 0.01 THEN 'RARELY_USED'  -- ⚠️  ほとんど使われない
-        WHEN i.idx_scan > t.seq_scan THEN 'EFFICIENT'               -- ✅ 効率的（よく使われる）
-        ELSE 'MODERATE'                              -- 📊 普通
+        WHEN i.idx_scan = 0 THEN 'UNUSED'           -- [CRITICAL] 未使用（作ったけど誰も使わない目次）
+        WHEN i.idx_scan < t.total_writes * 0.01 THEN 'RARELY_USED'  -- [WARN]  ほとんど使われない
+        WHEN i.idx_scan > t.seq_scan THEN 'EFFICIENT'               -- [OK] 効率的（よく使われる）
+        ELSE 'MODERATE'                              --  普通
     END as efficiency,
     i.index_size,                             -- インデックスのサイズ
     t.table_size,                             -- テーブルのサイズ
@@ -151,7 +151,7 @@ ORDER BY i.index_size_bytes DESC;            -- サイズの大きい順（容�
 
 ```
 
-**🔰 初心者向け解説**：
+**初心者向け解説**：
 
 | 項目 | 何をしているか | 身近な例 |
 |:-----|:-------------|:---------| 
@@ -163,73 +163,73 @@ ORDER BY i.index_size_bytes DESC;            -- サイズの大きい順（容�
 
 ---
 
-### 🛠️ 高度なインデックス設計戦略
+### 高度なインデックス設計戦略
 
 レストランのメニュー作りのように、お客さんがよく注文する料理を考えてインデックスを作りましょう：
 
 ```sql
--- 📊 Step 1: 複合インデックス（よく一緒に検索される項目をまとめた目次）
+--  Step 1: 複合インデックス（よく一緒に検索される項目をまとめた目次）
 -- 「ステータスが未完了で、優先度が高くて、期限が近いタスク」をよく検索する場合
 
 CREATE INDEX CONCURRENTLY idx_tasks_status_priority_due 
 ON tasks (status, priority, due_date)           -- 3つの条件を組み合わせた目次
 WHERE status IN ('todo', 'in_progress');        -- 未完了のタスクだけに限定（部分インデックス）
 
--- 💡 なぜこの順番？
+--  なぜこの順番？
 -- 1. status: 一番絞り込み効果が高い（完了/未完了で大きく分かれる）
 -- 2. priority: 次に絞り込み効果が高い（高/中/低で分かれる）  
 -- 3. due_date: 範囲検索でよく使われる（○月○日以降など）
 
--- 📧 Step 2: 部分インデックス（条件付きの目次）
+--  Step 2: 部分インデックス（条件付きの目次）
 -- 「アクティブで認証済みユーザーのメール検索」だけに特化した目次
 
 CREATE INDEX CONCURRENTLY idx_users_active_email 
 ON users (email) 
 WHERE is_active = true AND is_verified = true;  -- この条件のユーザーだけインデックス化
 
--- 💡 メリット: 全ユーザーではなく、実際に使われるユーザーだけなのでサイズ小、速度UP
+--  メリット: 全ユーザーではなく、実際に使われるユーザーだけなのでサイズ小、速度UP
 
--- 🔤 Step 3: 関数インデックス（計算結果の目次）
+--  Step 3: 関数インデックス（計算結果の目次）
 -- メールアドレスの大文字小文字を無視した検索用
 
 CREATE INDEX CONCURRENTLY idx_users_email_lower 
 ON users (LOWER(email));                        -- 小文字に変換した結果でインデックス
 
--- 💡 使用例: WHERE LOWER(email) = LOWER('USER@EXAMPLE.COM') が高速化
+--  使用例: WHERE LOWER(email) = LOWER('USER@EXAMPLE.COM') が高速化
 
--- 🏷️ Step 4: GINインデックス（配列・JSON検索用の特殊目次）
+--  Step 4: GINインデックス（配列・JSON検索用の特殊目次）
 -- タスクのタグ配列から特定のタグを高速検索
 
 CREATE INDEX CONCURRENTLY idx_tasks_tags_gin 
 ON tasks USING gin(tags);                       -- 配列の中身を検索するための特殊インデックス
 
--- 💡 使用例: WHERE tags @> ARRAY['urgent', 'bug'] （urgentとbugタグの両方があるタスク）
+--  使用例: WHERE tags @> ARRAY['urgent', 'bug'] （urgentとbugタグの両方があるタスク）
 
--- ⚙️ プロジェクト設定のJSON内検索用
+--  プロジェクト設定のJSON内検索用
 CREATE INDEX CONCURRENTLY idx_projects_settings_gin 
 ON projects USING gin(settings);                -- JSON内のキーと値を検索するための特殊インデックス
 
--- 💡 使用例: WHERE settings @> '{"notification": true}' （通知がONのプロジェクト）
+--  使用例: WHERE settings @> '{"notification": true}' （通知がONのプロジェクト）
 
--- 📅 Step 5: 範囲検索最適化用インデックス（時系列データ用）
+--  Step 5: 範囲検索最適化用インデックス（時系列データ用）
 -- 監査ログの日付範囲検索を高速化（BRIN = Block Range Index）
 
 CREATE INDEX CONCURRENTLY idx_audit_logs_created_at_brin 
 ON audit_logs USING brin(created_at);           -- 時系列データに特化した軽量インデックス
 
--- 💡 特徴: 一般的なインデックスより100倍小さいが、範囲検索では十分高速
+--  特徴: 一般的なインデックスより100倍小さいが、範囲検索では十分高速
 
--- 📦 Step 6: カバリングインデックス（必要なデータも一緒に保存）
+--  Step 6: カバリングインデックス（必要なデータも一緒に保存）
 -- 組織IDとステータスで検索して、名前や日付も一緒に取得する場合
 
 CREATE INDEX CONCURRENTLY idx_projects_org_status_include 
 ON projects (organization_id, status)           -- 検索キー
 INCLUDE (name, created_at, updated_at);         -- 一緒に保存するデータ
 
--- 💡 メリット: テーブル本体を見に行かずに、インデックスだけで全データ取得可能
+--  メリット: テーブル本体を見に行かずに、インデックスだけで全データ取得可能
 ```
 
-**🔰 初心者向け解説**：
+**初心者向け解説**：
 
 | インデックス種類 | 何をしているか | 身近な例 | いつ使う？ |
 |:---------------|:-------------|:---------|---------:|
@@ -242,41 +242,41 @@ INCLUDE (name, created_at, updated_at);         -- 一緒に保存するデー�
 
 ---
 
-### 📂 パーティショニング実装（大きな本棚の整理整頓）
+### パーティショニング実装（大きな本棚の整理整頓）
 
 パーティショニングは、**「大きすぎる本棚を年代別に分ける」**ようなものです。1つの巨大な本棚より、年代別に分けた方が目的の本を早く見つけられます：
 
 ```text
-📚 図書館の本棚整理
-├── ❌ 1つの巨大本棚：全部で10万冊 → 探すのに30分
-└── ✅ 年代別本棚：2020年代、2010年代... → 探すのに3分
+ 図書館の本棚整理
+├── [NG] 1つの巨大本棚：全部で10万冊 → 探すのに30分
+└── [OK] 年代別本棚：2020年代、2010年代... → 探すのに3分
 
-💾 データベーステーブルの整理
-├── ❌ 1つの巨大テーブル：全部で1000万レコード → クエリに10秒
-└── ✅ 月別テーブル：2024年1月、2024年2月... → クエリに1秒
+ データベーステーブルの整理
+├── [NG] 1つの巨大テーブル：全部で1000万レコード → クエリに10秒
+└── [OK] 月別テーブル：2024年1月、2024年2月... → クエリに1秒
 ```
 
-### 📄 実際のパーティション実装を見てみよう
+### 実際のパーティション実装を見てみよう
 
 監査ログのような**日付データが重要なテーブル**を月別に分割してみましょう：
 
 ```sql
--- 🗄️ 時系列データのパーティショニング（月別の帳簿作成）
+--  時系列データのパーティショニング（月別の帳簿作成）
 -- Step 1: 既存テーブルをパーティションテーブルに変換
 
 BEGIN;  -- トランザクション開始（作業中にエラーが起きても安全）
 
--- 🏗️ 新しいパーティションテーブル作成（月別に分ける本棚の設計図）
+--  新しいパーティションテーブル作成（月別に分ける本棚の設計図）
 CREATE TABLE audit_logs_partitioned (
     LIKE audit_logs INCLUDING ALL               -- 元のテーブルと同じ構造をコピー
 ) PARTITION BY RANGE (created_at);              -- created_at（作成日時）で範囲分割
 
--- 📚 既存データ移行用の一時的なパーティション（古いデータ用の本棚）
+--  既存データ移行用の一時的なパーティション（古いデータ用の本棚）
 CREATE TABLE audit_logs_legacy 
 PARTITION OF audit_logs_partitioned             -- audit_logs_partitioned の一部として作成
 FOR VALUES FROM (MINVALUE) TO ('2024-01-01');  -- 2024年1月1日より前の全データ用
 
--- 🔧 月次パーティション作成関数（自動で月別本棚を作る機能）
+--  月次パーティション作成関数（自動で月別本棚を作る機能）
 CREATE OR REPLACE FUNCTION create_monthly_partition(
     table_name text,    -- パーティション対象テーブル名
     start_date date     -- パーティション開始日
@@ -285,14 +285,14 @@ DECLARE
     partition_name text;  -- 作成するパーティション名
     end_date date;        -- パーティション終了日
 BEGIN
-    -- 📝 パーティション名を生成（例: audit_logs_partitioned_y2024_m03）
+    --  パーティション名を生成（例: audit_logs_partitioned_y2024_m03）
     partition_name := table_name || '_y' || EXTRACT(year FROM start_date) || 
                      '_m' || LPAD(EXTRACT(month FROM start_date)::text, 2, '0');
     
-    -- 📅 終了日を計算（翌月の1日）
+    --  終了日を計算（翌月の1日）
     end_date := start_date + INTERVAL '1 month';
     
-    -- 🏗️ パーティションテーブルを作成
+    --  パーティションテーブルを作成
     EXECUTE format('
         CREATE TABLE IF NOT EXISTS %I 
         PARTITION OF %I 
@@ -300,7 +300,7 @@ BEGIN
         partition_name, table_name, start_date, end_date
     );
     
-    -- 📚 パーティション固有のインデックス作成（各月の本棚用の目次）
+    --  パーティション固有のインデックス作成（各月の本棚用の目次）
     
     -- ユーザーIDとアクション種別での検索用インデックス
     EXECUTE format('
@@ -316,12 +316,12 @@ BEGIN
         partition_name || '_org_time_idx', partition_name
     );
     
-    -- 📢 作成完了をログ出力
+    --  作成完了をログ出力
     RAISE NOTICE 'Created partition: % for range % to %', partition_name, start_date, end_date;
 END;
 $$ LANGUAGE plpgsql;
 
--- 📅 過去6ヶ月〜未来12ヶ月のパーティション一括作成（18個の月別本棚を作成）
+--  過去6ヶ月〜未来12ヶ月のパーティション一括作成（18個の月別本棚を作成）
 SELECT create_monthly_partition(
     'audit_logs_partitioned', 
     date_trunc('month', CURRENT_DATE - INTERVAL '6 months' + INTERVAL '1 month' * generate_series(0, 18))
@@ -329,7 +329,7 @@ SELECT create_monthly_partition(
 
 COMMIT;  -- トランザクション確定（すべての作業を保存）
 
--- 🤖 パーティション自動メンテナンス機能（本棚の自動管理システム）
+--  パーティション自動メンテナンス機能（本棚の自動管理システム）
 CREATE OR REPLACE FUNCTION maintain_partitions()
 RETURNS void AS $$
 DECLARE
@@ -338,17 +338,17 @@ DECLARE
     table_name text;
     old_table_name text;
 BEGIN
-    -- 📅 2ヶ月先のパーティションを作成（事前準備）
+    --  2ヶ月先のパーティションを作成（事前準備）
     next_month := date_trunc('month', CURRENT_DATE + INTERVAL '2 months');
     
-    -- 🔄 各テーブルに対してパーティション作成
+    --  各テーブルに対してパーティション作成
     FOREACH table_name IN ARRAY tables_to_partition
     LOOP
         PERFORM create_monthly_partition(table_name, next_month);
         RAISE NOTICE '次月パーティション作成: % for %', table_name, next_month;
     END LOOP;
     
-    -- 🗑️ 古いパーティション削除（12ヶ月より古い本棚を処分）
+    --  古いパーティション削除（12ヶ月より古い本棚を処分）
     FOR old_table_name IN 
         SELECT tablename 
         FROM pg_tables 
@@ -361,17 +361,17 @@ BEGIN
         RAISE NOTICE '古いパーティション削除: %', old_table_name;
     END LOOP;
     
-    -- 📊 現在のパーティション状況をレポート
+    --  現在のパーティション状況をレポート
     RAISE NOTICE 'パーティションメンテナンス完了 at %', CURRENT_TIMESTAMP;
 END;
 $$ LANGUAGE plpgsql;
 
--- ⏰ 定期実行スケジュール設定（毎月1日午前2時に自動実行）
+--  定期実行スケジュール設定（毎月1日午前2時に自動実行）
 -- ※ pg_cron 拡張機能が必要
 -- SELECT cron.schedule('partition-maintenance', '0 2 1 * *', 'SELECT maintain_partitions();');
 ```
 
-**🔰 初心者向け解説**：
+**初心者向け解説**：
 
 | 概念 | 何をしているか | 身近な例 |
 |:-----|:-------------|:---------| 
@@ -381,14 +381,14 @@ $$ LANGUAGE plpgsql;
 | `maintain_partitions()` | 定期的にパーティションを管理 | 「新しい本棚作成・古い本棚処分」を自動化 |
 | `pg_cron` | 定期実行スケジューラー | 「毎月決まった日に自動でお掃除」システム |
 
-### 🎯 パーティション作成後の効果測定
+### パーティション作成後の効果測定
 
 パーティションを作った後は、本当に速くなったかを確認しましょう：
 
 ```sql
--- 📊 パーティション効果の確認クエリ
+--  パーティション効果の確認クエリ
 
--- 1️⃣ 特定期間のデータ検索（1ヶ月分のみアクセス）
+-- 1 特定期間のデータ検索（1ヶ月分のみアクセス）
 EXPLAIN (ANALYZE, BUFFERS) 
 SELECT user_id, action, created_at 
 FROM audit_logs_partitioned 
@@ -397,9 +397,9 @@ WHERE created_at >= '2024-03-01'
 
 -- 結果例：
 -- Seq Scan on audit_logs_partitioned_y2024_m03  (cost=0.00..1000.00 rows=5000 width=50) (actual time=0.123..5.678 rows=4856 loops=1)
--- 💡 1つのパーティションだけアクセス → 高速！
+--  1つのパーティションだけアクセス → 高速！
 
--- 2️⃣ パーティション除外の効果確認（Partition Pruning）
+-- 2 パーティション除外の効果確認（Partition Pruning）
 EXPLAIN (ANALYZE, BUFFERS)
 SELECT COUNT(*) 
 FROM audit_logs_partitioned 
@@ -410,9 +410,9 @@ WHERE created_at >= '2024-03-15';
 --   ->  Append  (cost=0.00..1800.00 rows=8000 width=0) (actual time=0.456..8.901 rows=7823 loops=1)
 --         ->  Seq Scan on audit_logs_partitioned_y2024_m03  [...]
 --         ->  Seq Scan on audit_logs_partitioned_y2024_m04  [...]
--- 💡 2024年3月15日以降なので、3月・4月のパーティションのみアクセス！
+--  2024年3月15日以降なので、3月・4月のパーティションのみアクセス！
 
--- 3️⃣ パーティション情報の確認
+-- 3 パーティション情報の確認
 SELECT 
     schemaname,
     tablename,
@@ -427,32 +427,32 @@ ORDER BY pg_total_relation_size(schemaname||'.'||tablename) DESC;
 --  public     | audit_logs_partitioned_y2024_m03 | 156 MB
 --  public     | audit_logs_partitioned_y2024_m02 | 142 MB
 --  public     | audit_logs_partitioned_y2024_m01 | 138 MB
--- 💡 各月のデータサイズが確認できる
+--  各月のデータサイズが確認できる
 ```
 
-### 🧠 クエリプラン最適化（データベースの頭脳を賢くする）
+### クエリプラン最適化（データベースの頭脳を賢くする）
 
 データベースの「頭脳」であるクエリプランナーを賢くして、最適な検索ルートを選ばせる方法を学びましょう：
 
 ```text
-🗺️ 道案内システムの比較
-├── ❌ 古い地図：渋滞情報なし → 遠回りルート選択（30分かかる）
-└── ✅ 最新地図：リアルタイム交通情報 → 最短ルート選択（15分で到着）
+ 道案内システムの比較
+├── [NG] 古い地図：渋滞情報なし → 遠回りルート選択（30分かかる）
+└── [OK] 最新地図：リアルタイム交通情報 → 最短ルート選択（15分で到着）
 
-🧠 データベースプランナーの比較
-├── ❌ 古い統計情報：データ分布不明 → 遅いプラン選択（10秒かかる）
-└── ✅ 最新統計情報：正確なデータ分布 → 最速プラン選択（0.1秒で完了）
+ データベースプランナーの比較
+├── [NG] 古い統計情報：データ分布不明 → 遅いプラン選択（10秒かかる）
+└── [OK] 最新統計情報：正確なデータ分布 → 最速プラン選択（0.1秒で完了）
 ```
 
-### 📊 統計情報の更新と最適化
+### 統計情報の更新と最適化
 
 データベースに「最新の地図情報」を教えてあげましょう：
 
 ```sql
--- 📈 全テーブルの統計情報更新（全体の交通情報更新）
+--  全テーブルの統計情報更新（全体の交通情報更新）
 ANALYZE;  -- 全テーブルのデータ分布を再調査
 
--- 🔍 個別テーブルの詳細統計情報更新（特定路線の詳細調査）
+--  個別テーブルの詳細統計情報更新（特定路線の詳細調査）
 ANALYZE VERBOSE users;      -- ユーザーテーブルを詳細分析（進捗表示あり）
 ANALYZE VERBOSE tasks;      -- タスクテーブルを詳細分析
 ANALYZE VERBOSE projects;   -- プロジェクトテーブルを詳細分析
@@ -460,17 +460,17 @@ ANALYZE VERBOSE projects;   -- プロジェクトテーブルを詳細分析
 -- 実行結果例：
 -- INFO:  analyzing "public.users"
 -- INFO:  "users": scanned 1000 of 1000 pages, containing 25000 live rows and 0 dead rows
--- 💡 25,000行のユーザーデータを分析完了
+--  25,000行のユーザーデータを分析完了
 
--- 🎯 複雑なカラムの統計情報強化（より詳細な地図作成）
+--  複雑なカラムの統計情報強化（より詳細な地図作成）
 -- JSON配列やテキスト配列など、複雑なデータ型の統計精度を向上
 
 ALTER TABLE tasks ALTER COLUMN tags SET STATISTICS 1000;       -- タグ配列の統計サンプル数を1000に増加
 ALTER TABLE projects ALTER COLUMN settings SET STATISTICS 1000; -- 設定JSONの統計サンプル数を1000に増加
 
--- 💡 デフォルトは100サンプル、1000にすることで10倍詳細な統計情報を取得
+--  デフォルトは100サンプル、1000にすることで10倍詳細な統計情報を取得
 
--- 📊 統計情報の確認
+--  統計情報の確認
 SELECT 
     tablename,
     attname as column_name,
@@ -487,25 +487,25 @@ AND attname IN ('status', 'priority', 'tags');
 -- ----------+-------------+------------+-------------+---------------------+------------------
 -- tasks     | status      |         4  |       0.1   | {todo,in_progress}  | {0.4,0.35}
 -- tasks     | priority    |         3  |      -0.05  | {high,medium,low}   | {0.3,0.5,0.2}
--- 💡 ステータスは4種類、todoが40%、in_progressが35%など詳細分布が分かる
+--  ステータスは4種類、todoが40%、in_progressが35%など詳細分布が分かる
 
--- 🔄 実行計画キャッシュのリセット（古い計画情報をクリア）
+--  実行計画キャッシュのリセット（古い計画情報をクリア）
 SELECT pg_stat_reset_shared('bgwriter');  -- 共有統計情報リセット
 SELECT pg_stat_reset();                   -- ユーザー統計情報リセット
 
--- 💡 新しい統計情報で実行計画を再作成させるため
+--  新しい統計情報で実行計画を再作成させるため
 
--- 🐌 遅いクエリの監視設定（問題のあるクエリを自動検出）
+--  遅いクエリの監視設定（問題のあるクエリを自動検出）
 ALTER SYSTEM SET log_min_duration_statement = 1000; -- 1秒以上かかるクエリをログ記録
 ALTER SYSTEM SET log_statement = 'mod';             -- 修更系クエリ（INSERT/UPDATE/DELETE）をログ記録
 ALTER SYSTEM SET log_lock_waits = on;             -- ロック待ちをログ記録
 ALTER SYSTEM SET log_checkpoints = on;           -- チェックポイント処理をログ記録
 SELECT pg_reload_conf();                         -- 設定を即座に反映
 
--- 💡 これで遅いクエリを自動で発見できる！ログファイルをチェックしよう
+--  これで遅いクエリを自動で発見できる！ログファイルをチェックしよう
 ```
 
-**🔰 初心者向け解説**：
+**初心者向け解説**：
 
 | 概念 | 何をしているか | 身近な例 |
 |:-----|:-------------|:---------| 
@@ -517,35 +517,35 @@ SELECT pg_reload_conf();                         -- 設定を即座に反映
 
 ---
 
-### 🧹 バキュームとメンテナンス戦略（データベースのお掃除システム）
+### バキュームとメンテナンス戦略（データベースのお掃除システム）
 
 データベースは使っているうちに「ゴミ」がたまります。定期的にお掃除して、常に快適な状態を保ちましょう：
 
 ```text
-🏠 部屋の掃除と同じ
-├── 📦 不要な物が増える → 部屋が狭くなる → 物を探すのに時間がかかる
-├── 🧹 定期的に掃除 → スペース確保 → 物をすぐ見つけられる
-└── 🔄 片付けルール作成 → 自動で整理整頓
+ 部屋の掃除と同じ
+├──  不要な物が増える → 部屋が狭くなる → 物を探すのに時間がかかる
+├──  定期的に掃除 → スペース確保 → 物をすぐ見つけられる
+└──  片付けルール作成 → 自動で整理整頓
 
-💾 データベースのメンテナンス
-├── 🗑️ 削除データの残骸 → テーブルが肥大化 → クエリが遅くなる
-├── 🧹 VACUUM実行 → 不要領域回収 → クエリが高速化
-└── 🤖 自動バキューム → 定期的に自動お掃除
+ データベースのメンテナンス
+├──  削除データの残骸 → テーブルが肥大化 → クエリが遅くなる
+├──  VACUUM実行 → 不要領域回収 → クエリが高速化
+└──  自動バキューム → 定期的に自動お掃除
 ```
 
-### 📄 スマートバキューム実装
+### スマートバキューム実装
 
 必要な時に必要な分だけお掃除する「効率的なお掃除システム」を作りましょう：
 
 ```sql
--- 🧠 カスタムバキューム戦略（賢いお掃除ロボット）
+--  カスタムバキューム戦略（賢いお掃除ロボット）
 CREATE OR REPLACE FUNCTION smart_vacuum_analyze()
 RETURNS void AS $$
 DECLARE
     r record;
     vacuum_cmd text;
 BEGIN
-    -- 🔍 お掃除が必要なテーブルを特定（汚れが目立つ部屋を探す）
+    --  お掃除が必要なテーブルを特定（汚れが目立つ部屋を探す）
     FOR r IN 
         SELECT 
             schemaname, 
@@ -560,44 +560,44 @@ BEGIN
             AND n_dead_tup > 100)                                -- かつゴミが100個以上
         ORDER BY n_dead_tup DESC                                -- ゴミの多い順
     LOOP
-        -- 🏠 部屋の大きさに応じて掃除方法を変更
+        --  部屋の大きさに応じて掃除方法を変更
         IF r.table_size > 1024*1024*1024 THEN                   -- 1GB以上の大きなテーブル
             -- 並行バキューム（複数人で一緒にお掃除）
             vacuum_cmd := format('VACUUM (PARALLEL 4) %I.%I', r.schemaname, r.tablename);
-            RAISE NOTICE '🏢 大きなテーブル並行バキューム: % (サイズ: %)', 
+            RAISE NOTICE ' 大きなテーブル並行バキューム: % (サイズ: %)', 
                         r.tablename, pg_size_pretty(r.table_size);
         ELSE
             -- 通常バキューム + 統計更新（一人でお掃除 + 整理整頓）
             vacuum_cmd := format('VACUUM ANALYZE %I.%I', r.schemaname, r.tablename);
-            RAISE NOTICE '🏠 通常バキューム + 統計更新: % (ゴミ: %, 全体: %)', 
+            RAISE NOTICE ' 通常バキューム + 統計更新: % (ゴミ: %, 全体: %)', 
                         r.tablename, r.n_dead_tup, r.n_live_tup + r.n_dead_tup;
         END IF;
         
-        -- 📢 実行コマンドを表示
+        --  実行コマンドを表示
         RAISE NOTICE '実行中: %', vacuum_cmd;
         
-        -- ⏰ 実行時間測定
+        --  実行時間測定
         DECLARE
             start_time timestamp := clock_timestamp();
             end_time timestamp;
         BEGIN
             EXECUTE vacuum_cmd;
             end_time := clock_timestamp();
-            RAISE NOTICE '✅ 完了: % (所要時間: %)', 
+            RAISE NOTICE '[OK] 完了: % (所要時間: %)', 
                         r.tablename, end_time - start_time;
         END;
     END LOOP;
     
-    -- 📊 全体的なお掃除結果レポート
-    RAISE NOTICE '🧹 スマートバキューム完了 at %', clock_timestamp();
+    --  全体的なお掃除結果レポート
+    RAISE NOTICE ' スマートバキューム完了 at %', clock_timestamp();
 END;
 $$ LANGUAGE plpgsql;
 
--- ⏰ 定期実行設定（毎日午前2時に自動お掃除）
+--  定期実行設定（毎日午前2時に自動お掃除）
 -- ※ pg_cron 拡張機能が必要
 -- SELECT cron.schedule('smart-vacuum', '0 2 * * *', 'SELECT smart_vacuum_analyze();');
 
--- 🔍 バキューム効果の確認クエリ
+--  バキューム効果の確認クエリ
 CREATE OR REPLACE FUNCTION vacuum_report()
 RETURNS TABLE(
     table_name text,
@@ -631,7 +631,7 @@ $$ LANGUAGE plpgsql;
 SELECT * FROM vacuum_report() WHERE dead_tuples > 100;
 ```
 
-**🔰 初心者向け解説**：
+**初心者向け解説**：
 
 | 概念 | 何をしているか | 身近な例 |
 |:-----|:-------------|:---------| 
@@ -643,34 +643,34 @@ SELECT * FROM vacuum_report() WHERE dead_tuples > 100;
 
 ---
 
-## ⚡ Step 2: PostgREST設定最適化（APIの高速化）
+## Step 2: PostgREST設定最適化（APIの高速化）
 
-### 🚀 PostgREST設定チューニング（レストランの注文システム最適化）
+### PostgREST設定チューニング（レストランの注文システム最適化）
 
 PostgRESTは、**「レストランの注文受付システム」**のようなものです。お客さんからの注文を効率よく処理できるように設定を最適化しましょう：
 
 ```text
-🍽️ レストランの注文システム
-├── 📋 メニュー：何が注文できるか（APIエンドポイント）
-├── 👨💼 ウェイター：注文を受ける人（PostgREST）
-├── 👨🍳 コック：料理を作る人（PostgreSQL）
-└── 📦 配膳：出来た料理を届ける（レスポンス）
+ レストランの注文システム
+├──  メニュー：何が注文できるか（APIエンドポイント）
+├──  ウェイター：注文を受ける人（PostgREST）
+├──  コック：料理を作る人（PostgreSQL）
+└──  配膳：出来た料理を届ける（レスポンス）
 
-⚡ 最適化で実現すること
-├── 📋 メニューの読み込み高速化
-├── 👨💼 ウェイターの人数最適化（接続プール）
-├── 🔄 よく注文される料理の事前準備（キャッシュ）
-└── 📊 大量注文時の効率的な処理
+ 最適化で実現すること
+├──  メニューの読み込み高速化
+├──  ウェイターの人数最適化（接続プール）
+├──  よく注文される料理の事前準備（キャッシュ）
+└──  大量注文時の効率的な処理
 ```
 
-### 📄 実際の設定ファイル最適化
+### 実際の設定ファイル最適化
 
 レストランの効率を最大化する設定を見てみましょう：
 
 ```toml
 # postgrest.conf（レストラン運営設定書）
 
-# 🏪 データベース接続設定（厨房との連携設定）
+#  データベース接続設定（厨房との連携設定）
 db-uri = "postgresql://authenticator:password@localhost:5432/app_db"  # 厨房への接続情報
 db-schemas = "api"                    # 公開するメニュー範囲（apiスキーマのみ）
 db-anon-role = "web_anon"            # 匿名ユーザーの基本権限（一見さんの権限）
@@ -678,33 +678,33 @@ db-pool = 20                         # 厨房への同時接続数（コック�
 db-pool-timeout = 10                 # 接続待ち時間（コックが忙しい時の最大待ち時間：10秒）
 db-use-legacy-gucs = false           # 新機能を有効化（最新の効率化機能を使用）
 
-# ⚡ パフォーマンス設定（注文処理の効率化）
+#  パフォーマンス設定（注文処理の効率化）
 max-rows = 1000                      # 1回の注文で返す最大データ数（大盛りの上限）
 db-plan-enabled = true               # クエリ実行計画の表示（料理手順の可視化）
 db-prepared-statements = true        # プリペアドステートメント使用（よく使うレシピの事前準備）
 
-# 🔄 キャッシュ設定（メニューの事前準備）
+#  キャッシュ設定（メニューの事前準備）
 db-config = true                     # データベース設定のキャッシュ（レストラン設定の記憶）
 db-root-spec = true                  # APIスキーマ情報のキャッシュ（メニュー表の記憶）
 
-# 🔐 セキュリティ設定（お客さん認証）
+#  セキュリティ設定（お客さん認証）
 jwt-secret = "@JWT_SECRET@"          # JWT署名用秘密鍵（お客さん確認用の印鑑）
 jwt-aud = "your-audience"            # JWTオーディエンス（このレストランの来店者であることを確認）
 
-# 📝 ログ設定（注文記録レベル）
+#  ログ設定（注文記録レベル）
 log-level = "info"                   # 情報レベルのログ（注文状況を記録）
 
-# 🚀 追加の高速化設定
+#  追加の高速化設定
 db-tx-end = "commit"                 # トランザクション終了方法（注文確定方法）
 db-tx-rollback-all = false           # エラー時の巻き戻し範囲
 server-host = "0.0.0.0"              # 受付IP（どこからでも注文可能）
 server-port = 3000                   # 受付ポート（注文受付窓口番号）
 
-# ⏱️ タイムアウト設定
+#  タイムアウト設定
 db-channel-enabled = false           # リアルタイム通知（厨房からの料理完成お知らせ）
 ```
 
-**🔰 初心者向け解説**：
+**初心者向け解説**：
 
 | 設定項目 | 何をしているか | 身近な例 | 推奨値 |
 |:---------|:-------------|:---------|---------:|
@@ -716,7 +716,7 @@ db-channel-enabled = false           # リアルタイム通知（厨房から�
 
 ---
 
-### 🛠️ 高速化クエリパターン（効率的な注文方法）
+### 高速化クエリパターン（効率的な注文方法）
 
 PostgRESTでの効率的な「注文の仕方」を学びましょう。適切な注文方法で、レストランの処理速度を大幅に向上させることができます：
 
@@ -750,53 +750,53 @@ class PostgRESTQueryOptimizer:
     ) -> str:
         """最適化されたPostgRESTクエリURL生成（効率的な注文書作成）"""
         
-        # 🎯 基本URL構築
+        #  基本URL構築
         base_url = f"/{table}"
         query_params = []
         
-        # 📋 Step 1: 必要なフィールドのみ選択（欲しい部分だけ注文）
+        #  Step 1: 必要なフィールドのみ選択（欲しい部分だけ注文）
         if select_fields:
-            # 👍 良い例: select=id,name,email（必要な部分だけ）
-            # 👎 悪い例: select=*（全部盛り = 重い）
+            #  良い例: select=id,name,email（必要な部分だけ）
+            #  悪い例: select=*（全部盛り = 重い）
             select_str = ",".join(select_fields)
             query_params.append(f"select={select_str}")
-            print(f"✅ 効率的: 必要フィールドのみ選択 ({len(select_fields)}個)")
+            print(f"[OK] 効率的: 必要フィールドのみ選択 ({len(select_fields)}個)")
         else:
-            print("⚠️ 注意: 全フィールド取得（*）は重くなる可能性があります")
+            print("[WARN] 注意: 全フィールド取得（*）は重くなる可能性があります")
         
-        # 🔍 Step 2: フィルター条件の最適化
+        #  Step 2: フィルター条件の最適化
         if filters:
             for field, value in filters.items():
                 if isinstance(value, list):
                     # 配列での絞り込み（複数の料理IDから選択）
                     values_str = ",".join(map(str, value))
                     query_params.append(f"{field}=in.({values_str})")
-                    print(f"📊 リスト検索: {field} in ({len(value)}件)")
+                    print(f" リスト検索: {field} in ({len(value)}件)")
                 elif isinstance(value, dict):
                     # 範囲検索や複雑な条件
                     for operator, op_value in value.items():
                         query_params.append(f"{field}={operator}.{op_value}")
-                        print(f"🔍 条件検索: {field} {operator} {op_value}")
+                        print(f" 条件検索: {field} {operator} {op_value}")
                 else:
                     # 単純な等価検索
                     query_params.append(f"{field}=eq.{value}")
-                    print(f"🎯 等価検索: {field} = {value}")
+                    print(f" 等価検索: {field} = {value}")
         
-        # 📈 Step 3: ソート最適化（インデックスを活用）
+        #  Step 3: ソート最適化（インデックスを活用）
         if order_by:
             # インデックスのある列での並び替えを推奨
             order_str = ",".join(order_by)
             query_params.append(f"order={order_str}")
-            print(f"🔄 ソート: {order_str}")
+            print(f" ソート: {order_str}")
         
-        # 📄 Step 4: ページネーション（大量データの分割取得）
+        #  Step 4: ページネーション（大量データの分割取得）
         if limit:
             query_params.append(f"limit={limit}")
             if offset:
                 query_params.append(f"offset={offset}")
-            print(f"📄 ページング: {limit}件ずつ（{offset or 0}番目から）")
+            print(f" ページング: {limit}件ずつ（{offset or 0}番目から）")
         
-        # 🔗 Step 5: 関連データの効率的取得（JOINクエリの最適化）
+        #  Step 5: 関連データの効率的取得（JOINクエリの最適化）
         if embedded_resources:
             for resource, config in embedded_resources.items():
                 embed_select = config.get('select', '*')
@@ -813,21 +813,21 @@ class PostgRESTQueryOptimizer:
                     query_params[0] += f",{embed_query}"
                 else:
                     query_params.insert(0, f"select=*,{embed_query}")
-                print(f"🔗 関連データ取得: {resource}")
+                print(f" 関連データ取得: {resource}")
         
-        # 📊 Step 6: 件数取得の最適化
+        #  Step 6: 件数取得の最適化
         if use_count:
             query_params.append("count=exact")
-            print("🔢 件数取得: ON（少し重くなります）")
+            print(" 件数取得: ON（少し重くなります）")
         
-        # 🎯 最終URL生成
+        #  最終URL生成
         if query_params:
             query_string = "&".join(query_params)
             final_url = f"{base_url}?{query_string}"
         else:
             final_url = base_url
         
-        print(f"📞 生成されたクエリURL: {final_url}")
+        print(f" 生成されたクエリURL: {final_url}")
         return final_url
     
     @staticmethod
@@ -839,7 +839,7 @@ class PostgRESTQueryOptimizer:
     ) -> List[str]:
         """一括操作の最適化（大量注文の効率化）"""
         
-        print(f"🚚 一括{operation}操作: {len(data)}件を{batch_size}件ずつ処理")
+        print(f" 一括{operation}操作: {len(data)}件を{batch_size}件ずつ処理")
         
         urls = []
         
@@ -850,17 +850,17 @@ class PostgRESTQueryOptimizer:
             if operation == "insert":
                 # 一括挿入
                 urls.append(f"/{table}")
-                print(f"📝 バッチ{i//batch_size + 1}: {len(batch)}件挿入")
+                print(f" バッチ{i//batch_size + 1}: {len(batch)}件挿入")
             
             elif operation == "update":
                 # 一括更新（可能な場合）
                 urls.append(f"/{table}")
-                print(f"✏️ バッチ{i//batch_size + 1}: {len(batch)}件更新")
+                print(f" バッチ{i//batch_size + 1}: {len(batch)}件更新")
             
             elif operation == "upsert":
                 # 一括UPSERT（あれば更新、なければ挿入）
                 urls.append(f"/{table}")
-                print(f"🔄 バッチ{i//batch_size + 1}: {len(batch)}件UPSERT")
+                print(f" バッチ{i//batch_size + 1}: {len(batch)}件UPSERT")
         
         return urls
     
@@ -868,17 +868,17 @@ class PostgRESTQueryOptimizer:
     def analyze_query_performance(url: str, response_time: float, data_size: int) -> QueryPerformanceMetrics:
         """クエリパフォーマンス分析（注文効率の測定）"""
         
-        # 🎯 パフォーマンス評価
+        #  パフォーマンス評価
         if response_time < 0.1:
-            performance = "🚀 超高速"
+            performance = " 超高速"
         elif response_time < 0.5:
-            performance = "✅ 高速"
+            performance = "[OK] 高速"
         elif response_time < 2.0:
-            performance = "📊 普通"
+            performance = " 普通"
         else:
-            performance = "🐌 要改善"
+            performance = " 要改善"
         
-        # 📊 データサイズ評価
+        #  データサイズ評価
         if data_size < 1024:  # 1KB未満
             size_rating = "軽量"
         elif data_size < 1024 * 100:  # 100KB未満
@@ -886,8 +886,8 @@ class PostgRESTQueryOptimizer:
         else:
             size_rating = "重い"
         
-        print(f"⏱️ 応答時間: {response_time:.3f}秒 ({performance})")
-        print(f"📦 データサイズ: {data_size:,}バイト ({size_rating})")
+        print(f" 応答時間: {response_time:.3f}秒 ({performance})")
+        print(f" データサイズ: {data_size:,}バイト ({size_rating})")
         
         return QueryPerformanceMetrics(
             execution_time=response_time,
@@ -896,13 +896,13 @@ class PostgRESTQueryOptimizer:
             cache_hit=response_time < 0.1
         )
 
-# 🎯 実際の使用例
+#  実際の使用例
 def demo_optimized_queries():
     """最適化クエリのデモ（効率的注文の実例）"""
     
     optimizer = PostgRESTQueryOptimizer()
     
-    # 📋 例1: 基本的な最適化クエリ
+    #  例1: 基本的な最適化クエリ
     print("=== 例1: 基本的なユーザー検索 ===")
     url1 = optimizer.build_optimized_query(
         table="users",
@@ -948,7 +948,7 @@ if __name__ == "__main__":
     demo_optimized_queries()
 ```
 
-**🔰 初心者向け解説**：
+**初心者向け解説**：
 
 | 最適化パターン | 何をしているか | 身近な例 | 効果 |
 |:-------------|:-------------|:---------|---------:|
@@ -958,25 +958,25 @@ if __name__ == "__main__":
 | `order=created_at.desc` | インデックス利用ソート | 「新しい順で並べて」 | ソート速度10倍向上 |
 | `tasks(id,title,status)` | 関連データ同時取得 | 「サイドメニューも一緒に」 | リクエスト数50%削減 |
 
-### 🔄 PostgRESTキャッシュ戦略（人気料理の事前準備システム）
+### PostgRESTキャッシュ戦略（人気料理の事前準備システム）
 
 レストランでよく注文される料理を事前に準備しておくように、PostgRESTでもよくアクセスされるデータをキャッシュしておきましょう：
 
 ```text
-🍽️ レストランの事前準備システム
-├── 📊 人気メニュー分析：「ハンバーガーがよく注文される」
-├── 🔄 事前準備：人気料理を作り置き
-├── ⚡ 高速提供：作り置きからすぐ提供（10秒→1秒）
-└── 🧹 定期更新：古い作り置きは廃棄
+ レストランの事前準備システム
+├──  人気メニュー分析：「ハンバーガーがよく注文される」
+├──  事前準備：人気料理を作り置き
+├──  高速提供：作り置きからすぐ提供（10秒→1秒）
+└──  定期更新：古い作り置きは廃棄
 
-💾 PostgRESTキャッシュシステム
-├── 📊 アクセス分析：「ユーザー一覧がよく読まれる」
-├── 🔄 データキャッシュ：よく読まれるデータを保存
-├── ⚡ 高速レスポンス：キャッシュから瞬時に返す
-└── 🧹 定期更新：古いキャッシュは自動削除
+ PostgRESTキャッシュシステム
+├──  アクセス分析：「ユーザー一覧がよく読まれる」
+├──  データキャッシュ：よく読まれるデータを保存
+├──  高速レスポンス：キャッシュから瞬時に返す
+└──  定期更新：古いキャッシュは自動削除
 ```
 
-### 📄 スマートキャッシュシステムの実装
+### スマートキャッシュシステムの実装
 
 レストランの「作り置きシステム」を参考に、賢いキャッシュを作ってみましょう：
 
@@ -1024,14 +1024,14 @@ class PostgRESTCache:
         cache_key = self._generate_cache_key(url, headers)
         start_time = time.time()
         
-        # 📦 キャッシュから取得を試行
+        #  キャッシュから取得を試行
         cached_data = cache.get(cache_key)
         
         if cached_data is not None:
-            # 🎯 キャッシュヒット！（作り置きが見つかった）
+            #  キャッシュヒット！（作り置きが見つかった）
             self.stats.hit_count += 1
             response_time = time.time() - start_time
-            print(f"⚡ キャッシュヒット: {cache_key} (応答時間: {response_time:.3f}秒)")
+            print(f" キャッシュヒット: {cache_key} (応答時間: {response_time:.3f}秒)")
             
             # 人気データの統計を更新
             table_name = self._extract_table_name(url)
@@ -1041,9 +1041,9 @@ class PostgRESTCache:
             return cached_data
         
         else:
-            # 📭 キャッシュミス（作り置きなし、新たに作る必要あり）
+            #  キャッシュミス（作り置きなし、新たに作る必要あり）
             self.stats.miss_count += 1
-            print(f"📭 キャッシュミス: {cache_key}")
+            print(f" キャッシュミス: {cache_key}")
             return None
         
         finally:
@@ -1061,23 +1061,23 @@ class PostgRESTCache:
         cache_key = self._generate_cache_key(url, headers)
         cache_ttl = ttl or self.default_ttl
         
-        # 📊 データの特性に応じてTTL調整（料理に応じて保存期間を変更）
+        #  データの特性に応じてTTL調整（料理に応じて保存期間を変更）
         table_name = self._extract_table_name(url)
         
-        # 🔄 よく変更されるデータは短めの保存時間
+        #  よく変更されるデータは短めの保存時間
         if 'content-range' in (headers or {}):
             cache_ttl = min(cache_ttl, 60)      # ページネーションデータは1分
-            print(f"📄 ページネーションデータ: TTL={cache_ttl}秒")
+            print(f" ページネーションデータ: TTL={cache_ttl}秒")
         
         elif table_name in ["audit_logs", "notifications"]:
             cache_ttl = min(cache_ttl, 30)      # ログ・通知は30秒
-            print(f"📝 ログデータ: TTL={cache_ttl}秒")
+            print(f" ログデータ: TTL={cache_ttl}秒")
         
         elif table_name in ["users", "organizations"]:
             cache_ttl = max(cache_ttl, 600)     # ユーザー・組織情報は10分
-            print(f"👥 ユーザーデータ: TTL={cache_ttl}秒")
+            print(f" ユーザーデータ: TTL={cache_ttl}秒")
         
-        # 💾 キャッシュ保存実行
+        #  キャッシュ保存実行
         cache_metadata = {
             "data": response_data,
             "cached_at": datetime.utcnow().isoformat(),
@@ -1087,12 +1087,12 @@ class PostgRESTCache:
         }
         
         cache.set(cache_key, cache_metadata, cache_ttl)
-        print(f"💾 キャッシュ保存: {cache_key} (TTL: {cache_ttl}秒)")
+        print(f" キャッシュ保存: {cache_key} (TTL: {cache_ttl}秒)")
     
     def invalidate_table_cache(self, table_name: str):
         """テーブル関連キャッシュ無効化（特定料理の作り置きを全て廃棄）"""
         
-        print(f"🗑️ テーブルキャッシュ無効化開始: {table_name}")
+        print(f" テーブルキャッシュ無効化開始: {table_name}")
         
         # パターンマッチでテーブル関連のキャッシュを検索
         pattern = f"{self.cache_key_prefix}:*/{table_name}*"
@@ -1108,12 +1108,12 @@ class PostgRESTCache:
             cache.delete(key)
             invalidated_count += 1
         
-        print(f"✅ {invalidated_count}個のキャッシュを無効化: {table_name}")
+        print(f"[OK] {invalidated_count}個のキャッシュを無効化: {table_name}")
     
     def invalidate_related_caches(self, table_name: str, operation: str):
         """関連キャッシュの連鎖無効化（関連料理の作り置きも廃棄）"""
         
-        # 📊 テーブル間の依存関係マップ
+        #  テーブル間の依存関係マップ
         table_relationships = {
             "users": ["projects", "tasks", "organizations"],      # ユーザー変更で関連データも無効化
             "projects": ["tasks", "project_members"],             # プロジェクト変更でタスクも無効化
@@ -1121,16 +1121,16 @@ class PostgRESTCache:
             "tasks": []                                           # タスクは他に影響しない
         }
         
-        # 🎯 直接テーブルのキャッシュ無効化
+        #  直接テーブルのキャッシュ無効化
         self.invalidate_table_cache(table_name)
         
-        # 🔗 関連テーブルのキャッシュも無効化
+        #  関連テーブルのキャッシュも無効化
         related_tables = table_relationships.get(table_name, [])
         for related_table in related_tables:
-            print(f"🔗 関連テーブル無効化: {related_table} (起因: {table_name})")
+            print(f" 関連テーブル無効化: {related_table} (起因: {table_name})")
             self.invalidate_table_cache(related_table)
         
-        print(f"♻️ 連鎖無効化完了: {table_name} → {len(related_tables)}個の関連テーブル")
+        print(f" 連鎖無効化完了: {table_name} → {len(related_tables)}個の関連テーブル")
     
     def get_cache_statistics(self) -> Dict[str, Any]:
         """キャッシュ統計情報取得（作り置きシステムの効果測定）"""
@@ -1180,9 +1180,9 @@ class PostgRESTCache:
     def _update_popularity_stats(self, table_name: str):
         """人気テーブル統計更新"""
         # 実際の実装では Redis の ZINCRBY などを使用
-        print(f"📊 人気度更新: {table_name}")
+        print(f" 人気度更新: {table_name}")
 
-# 🎯 キャッシュミドルウェアの実装例
+#  キャッシュミドルウェアの実装例
 class PostgRESTCacheMiddleware:
     """PostgRESTキャッシュミドルウェア（自動作り置きシステム）"""
     
@@ -1192,24 +1192,24 @@ class PostgRESTCacheMiddleware:
     async def __call__(self, request, call_next):
         """リクエスト処理でキャッシュを自動適用"""
         
-        # 🔍 GET リクエストのみキャッシュ対象
+        #  GET リクエストのみキャッシュ対象
         if request.method != "GET":
             return await call_next(request)
         
-        # 📦 キャッシュ確認
+        #  キャッシュ確認
         cached_response = self.cache_manager.get_cached_response(
             url=str(request.url),
             headers=dict(request.headers)
         )
         
         if cached_response:
-            # ✅ キャッシュヒット：即座に返却
+            # [OK] キャッシュヒット：即座に返却
             return create_response_from_cache(cached_response)
         
-        # 📭 キャッシュミス：通常処理 + キャッシュ保存
+        #  キャッシュミス：通常処理 + キャッシュ保存
         response = await call_next(request)
         
-        # 📄 レスポンスをキャッシュに保存
+        #  レスポンスをキャッシュに保存
         if response.status_code == 200:
             self.cache_manager.cache_response(
                 url=str(request.url),
@@ -1225,7 +1225,7 @@ def create_response_from_cache(cached_data):
     pass
 ```
 
-**🔰 初心者向け解説**：
+**初心者向け解説**：
 
 | キャッシュ概念 | 何をしているか | 身近な例 | 効果 |
 |:-------------|:-------------|:---------|---------:|
@@ -1235,25 +1235,25 @@ def create_response_from_cache(cached_data):
 | `連鎖無効化` | 関連データのキャッシュも削除 | 「肉が古くなったらハンバーガーも廃棄」 | データ整合性保証 |
 | `ヒット率` | キャッシュが使われた割合 | 作り置きの活用率 | 80%以上が理想 |
 
-## 📱 Step 3: クライアントサイドキャッシュ戦略（お客さんの手元キャッシュ）
+## Step 3: クライアントサイドキャッシュ戦略（お客さんの手元キャッシュ）
 
 クライアントサイド（お客さんのスマホやパソコン）でもキャッシュを活用して、更に高速なアプリを作りましょう：
 
 ```text
-📱 スマホアプリの賢いキャッシュ
-├── 🏪 お店（サーバー）に毎回注文 → 遅い（ネット通信必要）
-├── 📦 手元に常備品保存 → 速い（即座に表示）
-├── 🔄 たまに新しいデータを取得 → 最新情報を確保
-└── 💾 よく使うデータを優先保存 → 容量効率化
+ スマホアプリの賢いキャッシュ
+├──  お店（サーバー）に毎回注文 → 遅い（ネット通信必要）
+├──  手元に常備品保存 → 速い（即座に表示）
+├──  たまに新しいデータを取得 → 最新情報を確保
+└──  よく使うデータを優先保存 → 容量効率化
 
-⚡ 実現する効果
-├── 🚀 画面表示の高速化（2秒→0.1秒）
-├── 📶 オフライン対応（ネットなしでも動作）
-├── 💰 通信量削減（データ通信費節約）
-└── 🔋 バッテリー節約（通信処理減で省電力）
+ 実現する効果
+├──  画面表示の高速化（2秒→0.1秒）
+├──  オフライン対応（ネットなしでも動作）
+├──  通信量削減（データ通信費節約）
+└──  バッテリー節約（通信処理減で省電力）
 ```
 
-### 📄 Fletアプリケーション最適化（スマホアプリの高速化）
+### Fletアプリケーション最適化（スマホアプリの高速化）
 
 Flet（Flutter）アプリで使える「手元キャッシュシステム」を作ってみましょう：
 
@@ -1285,7 +1285,7 @@ class FletCacheManager:
         self.default_ttl = default_ttl            # デフォルト保存時間（5分）
         self._lock = RLock()                      # スレッドセーフティ（同時アクセス防止）
         
-        # 📊 統計情報（冷蔵庫の使用状況）
+        #  統計情報（冷蔵庫の使用状況）
         self.hits = 0                             # ヒット数（冷蔵庫から取り出せた回数）
         self.misses = 0                           # ミス数（冷蔵庫になくて作った回数）
         self.evictions = 0                        # 追い出し数（古い物を捨てた回数）
@@ -1294,27 +1294,27 @@ class FletCacheManager:
         """キャッシュ取得（冷蔵庫から食材を取り出し）"""
         with self._lock:
             if key not in self.cache:
-                # 📭 キャッシュにない（冷蔵庫にない）
+                #  キャッシュにない（冷蔵庫にない）
                 self.misses += 1
                 return default
             
             entry = self.cache[key]
             current_time = time.time()
             
-            # ⏰ 消費期限チェック
+            #  消費期限チェック
             if current_time - entry.timestamp > entry.ttl:
-                # 🗑️ 期限切れなので削除
+                #  期限切れなので削除
                 del self.cache[key]
                 self.misses += 1
-                print(f"⏰ 期限切れキャッシュ削除: {key}")
+                print(f" 期限切れキャッシュ削除: {key}")
                 return default
             
-            # 📊 アクセス統計更新
+            #  アクセス統計更新
             entry.access_count += 1
             entry.last_access = current_time
             
             self.hits += 1
-            print(f"✅ キャッシュヒット: {key} (使用回数: {entry.access_count})")
+            print(f"[OK] キャッシュヒット: {key} (使用回数: {entry.access_count})")
             return entry.data
     
     def set(self, key: str, value: Any, ttl: Optional[int] = None) -> None:
@@ -1323,7 +1323,7 @@ class FletCacheManager:
             cache_ttl = ttl or self.default_ttl
             current_time = time.time()
             
-            # 🏠 容量チェック（冷蔵庫が満杯なら古い物を捨てる）
+            #  容量チェック（冷蔵庫が満杯なら古い物を捨てる）
             if len(self.cache) >= self.max_size and key not in self.cache:
                 self._evict_lru()
             
@@ -1333,14 +1333,14 @@ class FletCacheManager:
                 ttl=cache_ttl,
                 last_access=current_time
             )
-            print(f"💾 キャッシュ保存: {key} (TTL: {cache_ttl}秒)")
+            print(f" キャッシュ保存: {key} (TTL: {cache_ttl}秒)")
     
     def delete(self, key: str) -> bool:
         """キャッシュ削除（特定の食材を捨てる）"""
         with self._lock:
             if key in self.cache:
                 del self.cache[key]
-                print(f"🗑️ キャッシュ削除: {key}")
+                print(f" キャッシュ削除: {key}")
                 return True
             return False
     
@@ -1351,7 +1351,7 @@ class FletCacheManager:
             self.hits = 0
             self.misses = 0
             self.evictions = 0
-            print("🧹 全キャッシュクリア完了")
+            print(" 全キャッシュクリア完了")
     
     def get_or_fetch(
         self, 
@@ -1361,16 +1361,16 @@ class FletCacheManager:
     ) -> Any:
         """キャッシュ取得または新規取得（冷蔵庫確認→なければ作って保存）"""
         
-        # 🔍 まずキャッシュを確認
+        #  まずキャッシュを確認
         cached_value = self.get(key)
         if cached_value is not None:
             return cached_value
         
-        # 📭 キャッシュにないので新規取得
-        print(f"🔄 新規データ取得: {key}")
+        #  キャッシュにないので新規取得
+        print(f" 新規データ取得: {key}")
         fresh_value = fetch_func()
         
-        # 💾 取得したデータをキャッシュに保存
+        #  取得したデータをキャッシュに保存
         self.set(key, fresh_value, ttl)
         return fresh_value
     
@@ -1379,7 +1379,7 @@ class FletCacheManager:
         if not self.cache:
             return
         
-        # 📊 最後のアクセス時刻が最も古いものを見つける
+        #  最後のアクセス時刻が最も古いものを見つける
         oldest_key = min(
             self.cache.keys(),
             key=lambda k: self.cache[k].last_access or 0
@@ -1387,7 +1387,7 @@ class FletCacheManager:
         
         del self.cache[oldest_key]
         self.evictions += 1
-        print(f"🗑️ LRU削除: {oldest_key} (容量確保のため)")
+        print(f" LRU削除: {oldest_key} (容量確保のため)")
     
     def get_statistics(self) -> Dict[str, Any]:
         """キャッシュ統計情報取得（冷蔵庫の使用状況レポート）"""
@@ -1419,10 +1419,10 @@ class FletCacheManager:
             for key in expired_keys:
                 del self.cache[key]
         
-        print(f"🧹 期限切れ削除: {len(expired_keys)}個")
+        print(f" 期限切れ削除: {len(expired_keys)}個")
         return len(expired_keys)
 
-# 🎯 Fletアプリでの実際の使用例
+#  Fletアプリでの実際の使用例
 class OptimizedSupabaseClient:
     """最適化されたSupabaseクライアント（高速通信システム）"""
     
@@ -1436,19 +1436,19 @@ class OptimizedSupabaseClient:
         cache_key = f"user_projects:{user_id}"
         
         if use_cache:
-            # 🔄 キャッシュから取得を試行
+            #  キャッシュから取得を試行
             return self.cache.get_or_fetch(
                 key=cache_key,
                 fetch_func=lambda: self._fetch_user_projects(user_id),
                 ttl=300  # 5分間キャッシュ
             )
         else:
-            # 🌐 直接APIから取得
+            #  直接APIから取得
             return self._fetch_user_projects(user_id)
     
     def _fetch_user_projects(self, user_id: str) -> list:
         """実際のAPI呼び出し（サーバーから新鮮なデータ取得）"""
-        print(f"🌐 API呼び出し: ユーザー{user_id}のプロジェクト取得")
+        print(f" API呼び出し: ユーザー{user_id}のプロジェクト取得")
         
         response = self.client.table("projects")\
             .select("id, name, status, created_at")\
@@ -1474,7 +1474,7 @@ class OptimizedSupabaseClient:
     
     def _fetch_project_tasks(self, project_id: str) -> list:
         """実際のタスクAPI呼び出し"""
-        print(f"🌐 API呼び出し: プロジェクト{project_id}のタスク取得")
+        print(f" API呼び出し: プロジェクト{project_id}のタスク取得")
         
         response = self.client.table("tasks")\
             .select("id, title, status, priority, due_date")\
@@ -1494,14 +1494,14 @@ class OptimizedSupabaseClient:
         for pattern in patterns:
             self.cache.delete(pattern)
         
-        print(f"♻️ ユーザーキャッシュ無効化: {user_id}")
+        print(f" ユーザーキャッシュ無効化: {user_id}")
     
     def get_cache_report(self) -> str:
         """キャッシュレポート生成"""
         stats = self.cache.get_statistics()
         
         return f"""
-📊 キャッシュレポート
+ キャッシュレポート
 ・ヒット率: {stats['hit_rate']}% ({stats['efficiency']})
 ・ヒット数: {stats['hits']} / ミス数: {stats['misses']}
 ・現在の保存数: {stats['current_size']}/{stats['max_size']}
@@ -1515,21 +1515,21 @@ async def demo_flet_cache():
     # クライアント初期化
     client = OptimizedSupabaseClient(supabase_client)
     
-    # 📋 最初のアクセス（APIから取得）
+    #  最初のアクセス（APIから取得）
     print("=== 初回アクセス ===")
     projects = await client.get_user_projects("user123")
     print(f"取得結果: {len(projects)}件のプロジェクト")
     
-    # 📋 2回目のアクセス（キャッシュから取得）
+    #  2回目のアクセス（キャッシュから取得）
     print("\n=== 2回目アクセス ===")
     projects = await client.get_user_projects("user123")
     print(f"取得結果: {len(projects)}件のプロジェクト（キャッシュから）")
     
-    # 📊 統計レポート表示
+    #  統計レポート表示
     print(client.get_cache_report())
 ```
 
-**🔰 初心者向け解説**：
+**初心者向け解説**：
 
 | クライアントキャッシュ概念 | 何をしているか | 身近な例 | 効果 |
 |:----------------------|:-------------|:---------|---------:|
@@ -3530,31 +3530,31 @@ async def run_performance_check():
 
 **データベース最適化**
 
-- [ ] PostgreSQLのEXPLAIN ANALYZEが読める
-- [ ] インデックス設計の基本原則を理解している
-- [ ] パーティショニングの適用場面を判断できる
-- [ ] VACUUMとANALYZEの重要性を理解している
-- [ ] JSONBインデックス（GIN）の使い方を知っている
+- [] PostgreSQLのEXPLAIN ANALYZEが読める
+- [] インデックス設計の基本原則を理解している
+- [] パーティショニングの適用場面を判断できる
+- [] VACUUMとANALYZEの重要性を理解している
+- [] JSONBインデックス（GIN）の使い方を知っている
 
 **PostgREST最適化**
 
-- [ ] PostgRESTの設定パラメータを理解している
-- [ ] 効率的なクエリパターンを知っている
-- [ ] embedded resourcesの最適化ができる
-- [ ] キャッシュ戦略を実装できる
+- [] PostgRESTの設定パラメータを理解している
+- [] 効率的なクエリパターンを知っている
+- [] embedded resourcesの最適化ができる
+- [] キャッシュ戦略を実装できる
 
 **クライアント最適化**
 
-- [ ] クライアントサイドキャッシュを実装できる
-- [ ] リアルタイム更新の最適化手法を知っている
-- [ ] バッチ処理とUI更新の最適化ができる
+- [] クライアントサイドキャッシュを実装できる
+- [] リアルタイム更新の最適化手法を知っている
+- [] バッチ処理とUI更新の最適化ができる
 
 **監視・測定**
 
-- [ ] システムメトリクスを収集できる
-- [ ] パフォーマンストラッキングを実装できる
-- [ ] 自動最適化アドバイザーを活用できる
-- [ ] 継続的改善プロセスを構築できる
+- [] システムメトリクスを収集できる
+- [] パフォーマンストラッキングを実装できる
+- [] 自動最適化アドバイザーを活用できる
+- [] 継続的改善プロセスを構築できる
 
 ### 実践課題
 
@@ -3584,55 +3584,55 @@ async def run_performance_check():
 
 実装完了時に以下を確認してください：
 
-- [ ] データベースインデックスが適切に設計されている
-- [ ] パーティショニング戦略が実装されている  
-- [ ] PostgRESTが最適化されている
-- [ ] クライアントキャッシュが実装されている
-- [ ] パフォーマンス監視が動作している
-- [ ] 自動最適化プロセスが構築されている
-- [ ] ドキュメントが整備されている
+- [] データベースインデックスが適切に設計されている
+- [] パーティショニング戦略が実装されている  
+- [] PostgRESTが最適化されている
+- [] クライアントキャッシュが実装されている
+- [] パフォーマンス監視が動作している
+- [] 自動最適化プロセスが構築されている
+- [] ドキュメントが整備されている
 
-## 📝 第6章 学習まとめ
+## 第6章 学習まとめ
 
-### ✅ **習得できたスキル**
-- ✅ PostgreSQL インデックス設計とクエリ最適化
-- ✅ テーブルパーティショニングによる大規模データ処理
-- ✅ PostgREST API パフォーマンス・チューニング
-- ✅ 多層キャッシュ戦略とクライアント最適化
-- ✅ システム監視・自動最適化システム構築
+### [OK] **習得できたスキル**
+- [OK] PostgreSQL インデックス設計とクエリ最適化
+- [OK] テーブルパーティショニングによる大規模データ処理
+- [OK] PostgREST API パフォーマンス・チューニング
+- [OK] 多層キャッシュ戦略とクライアント最適化
+- [OK] システム監視・自動最適化システム構築
 
-### 🎯 **パフォーマンス最適化の全体像**
+### **パフォーマンス最適化の全体像**
 | 最適化レイヤー | 主要技術 | パフォーマンス向上率 | 実装難易度 |
 |:-------------|:-------|:------------------|:---------|
-| **データベース** | インデックス・パーティション | 10〜100倍 | 🚀 中級 |
-| **API** | PostgREST設定・キャッシュ | 2〜10倍 | 🌱 基礎 |
-| **クライアント** | ローカルキャッシュ・バッチ | 2〜5倍 | 🌱 基礎 |
-| **監視・自動化** | メトリクス・アラート | 継続改善 | 💪 上級 |
+| **データベース**| インデックス・パーティション | 10〜100倍 |  中級 |
+| **API**| PostgREST設定・キャッシュ | 2〜10倍 |  基礎 |
+| **クライアント**| ローカルキャッシュ・バッチ | 2〜5倍 |  基礎 |
+| **監視・自動化**| メトリクス・アラート | 継続改善 |  上級 |
 
-### 🔄 **次の学習ステップ**
+### **次の学習ステップ**
 第7章で学ぶセキュリティ強化の前提知識：
-- ✅ システム性能監視の重要性理解（セキュリティ監視への応用）
-- ✅ データベース設計の最適化経験（セキュリティ要件への対応）
-- ✅ API パフォーマンス測定技術（セキュリティ負荷の監視）
-- ✅ 自動化プロセス構築経験（セキュリティ自動対応への応用）
+- [OK] システム性能監視の重要性理解（セキュリティ監視への応用）
+- [OK] データベース設計の最適化経験（セキュリティ要件への対応）
+- [OK] API パフォーマンス測定技術（セキュリティ負荷の監視）
+- [OK] 自動化プロセス構築経験（セキュリティ自動対応への応用）
 
 ---
 
-## 🚀 次章予告：セキュリティ強化
+## 次章予告：セキュリティ強化
 
 第7章では、「**銀行の金庫システム**」並みの堅牢なセキュリティを実装します：
-- 🛡️ **多層防御**: ネットワーク・アプリケーション・データベース各層でのセキュリティ
-- 🔐 **高度な認証**: 多要素認証・OAuth・SAML によるエンタープライズ認証
-- 🚨 **脅威検知**: リアルタイムセキュリティ監視と自動対応システム
-- 📋 **コンプライアンス**: GDPR・SOC2・ISO27001 対応のセキュリティ実装
+- **多層防御**: ネットワーク・アプリケーション・データベース各層でのセキュリティ
+- **高度な認証**: 多要素認証・OAuth・SAML によるエンタープライズ認証
+- [CRITICAL] **脅威検知**: リアルタイムセキュリティ監視と自動対応システム
+- **コンプライアンス**: GDPR・SOC2・ISO27001 対応のセキュリティ実装
 
-**💡 実装目標**: 「金融機関レベルのセキュリティ要件をクリアするSaaS プラットフォーム」
+**実装目標**: 「金融機関レベルのセキュリティ要件をクリアするSaaS プラットフォーム」
 
 ---
 
-**📍 ナビゲーション**
-- **📚 目次**: [はじめに]({{ '/introduction/' | relative_url }})
-- **⬅️ 前の章**: [第5-4章：RAG/ベクトル検索アーキテクチャ]({{ '/chapters/chapter05-4/' | relative_url }})  
-- **➡️ 次の章**: [第7章：セキュリティ強化]({{ '/chapters/chapter07/' | relative_url }})
-- **🏠 関連章**: [第5-1章：パターン3 - 独立APIサーバー]({{ '/chapters/chapter05-1/' | relative_url }}) | [第8章：運用監視と自動化]({{ '/chapters/chapter08/' | relative_url }})
-- **🔧 リソース**: [動作検証]({{ '/guides/code-verification/' | relative_url }}) | [パフォーマンス・チェックリスト]({{ '/appendices/appendix01/' | relative_url }}#operational-checklists)
+**ナビゲーション**
+- **目次**: [はじめに]({{ '/introduction/' | relative_url }})
+- **前の章**: [第5-4章：RAG/ベクトル検索アーキテクチャ]({{ '/chapters/chapter05-4/' | relative_url }})  
+- **次の章**: [第7章：セキュリティ強化]({{ '/chapters/chapter07/' | relative_url }})
+- **関連章**: [第5-1章：パターン3 - 独立APIサーバー]({{ '/chapters/chapter05-1/' | relative_url }}) | [第8章：運用監視と自動化]({{ '/chapters/chapter08/' | relative_url }})
+- **リソース**: [動作検証]({{ '/guides/code-verification/' | relative_url }}) | [パフォーマンス・チェックリスト]({{ '/appendices/appendix01/' | relative_url }}#operational-checklists)

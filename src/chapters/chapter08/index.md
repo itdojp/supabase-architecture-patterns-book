@@ -1,28 +1,28 @@
 # 第8章：運用監視と自動化
 
 ```text
-🏥 システム運用を病院の管理システムで考えてみよう
-├── 👩⚕️ 健康診断（パフォーマンス監視）：定期的な状態チェック
-├── 📊 バイタルサイン（メトリクス監視）：心拍数・血圧・体温の常時測定
-├── 🚨 緊急警報（アラートシステム）：異常値検知時の即座通知
-├── 💊 自動治療（自動修復）：問題発見時の自動対処
-└── 📋 カルテ管理（ログ分析）：過去の症状と治療記録の保管
+ システム運用を病院の管理システムで考えてみよう
+├──  健康診断（パフォーマンス監視）：定期的な状態チェック
+├──  バイタルサイン（メトリクス監視）：心拍数・血圧・体温の常時測定
+├── [CRITICAL] 緊急警報（アラートシステム）：異常値検知時の即座通知
+├──  自動治療（自動修復）：問題発見時の自動対処
+└──  カルテ管理（ログ分析）：過去の症状と治療記録の保管
 
-💾 システム運用管理
-├── 👩⚕️ パフォーマンス監視：CPU・メモリ・ディスク使用率の監視
-├── 📊 メトリクス監視：レスポンス時間・エラー率・スループットの測定
-├── 🚨 アラートシステム：異常検知時の管理者への自動通知
-├── 💊 自動復旧：負荷分散・スケーリング・再起動の自動実行
-└── 📋 ログ分析：エラーログ・アクセスログ・監査ログの分析
+ システム運用管理
+├──  パフォーマンス監視：CPU・メモリ・ディスク使用率の監視
+├──  メトリクス監視：レスポンス時間・エラー率・スループットの測定
+├── [CRITICAL] アラートシステム：異常検知時の管理者への自動通知
+├──  自動復旧：負荷分散・スケーリング・再起動の自動実行
+└──  ログ分析：エラーログ・アクセスログ・監査ログの分析
 ```
 
-## 🎯 この章で学ぶこと
+## この章で学ぶこと
 
 「アプリが動いているから大丈夫」と思って放置していると、ある日突然「サイトが重い」「エラーが多発している」「データが消えている」といった**運用トラブル**に見舞われます。しかし、**適切な監視と自動化**があれば、問題を事前に発見し、迅速に対処できます。
 
-### 🌱 初心者が陥りがちな問題
+### 初心者が陥りがちな問題
 ```python
-# ❌ よくある初心者の運用方法
+# [NG] よくある初心者の運用方法
 def check_system_health():
     # 手動で管理画面を見に行く
     # エラーが起きてからユーザーからの報告で気づく
@@ -30,9 +30,9 @@ def check_system_health():
     pass
 ```
 
-### ✅ この章で作る自動運用システム
+### [OK] この章で作る自動運用システム
 ```python
-# ✅ 自動監視・自動対処システム
+# [OK] 自動監視・自動対処システム
 @monitor_performance(threshold_ms=2000)
 @auto_scale(cpu_threshold=80, memory_threshold=85)
 @alert_on_error(error_rate_threshold=1.0)
@@ -43,17 +43,17 @@ def api_endpoint():
     return handle_request()
 ```
 
-### 📚 学習進度別ガイド
+### 学習進度別ガイド
 
 | レベル | 対象者 | 学習内容 | 所要時間 |
 |:------|:-------|:---------|----------:|
-| 🌱 **基礎** | 手動運用しかしたことがない方 | 監視の基本・メトリクス理解・簡単なアラート | 6〜8時間 |
-| 🚀 **応用** | 基本的な監視ができる方 | 自動スケーリング・ログ分析・障害対応 | 8〜12時間 |
-| 💪 **発展** | 本格運用を目指す方 | CI/CD・インフラ自動化・予防保守 | 12〜16時間 |
+|  **基礎**| 手動運用しかしたことがない方 | 監視の基本・メトリクス理解・簡単なアラート | 6〜8時間 |
+|  **応用**| 基本的な監視ができる方 | 自動スケーリング・ログ分析・障害対応 | 8〜12時間 |
+|  **発展**| 本格運用を目指す方 | CI/CD・インフラ自動化・予防保守 | 12〜16時間 |
 
 ---
 
-### 🧭 この章で扱う構成
+### この章で扱う構成
 - 構成: 共通（運用監視・自動化）
 - 推奨用途: チーム運用/商用運用
 - 非推奨用途: 個人PoCで運用を最小化したいケース
@@ -63,22 +63,22 @@ def api_endpoint():
 病院で患者の心拍数や血圧を常時監視するように、**システムの健康状態を24時間365日監視**することで、問題を早期発見し、迅速に対処できます。
 
 ```text
-🏥 患者の健康監視システム
-├── 💓 心拍数モニター：1分間の心拍数を測定
-├── 🩸 血圧計：最高血圧・最低血圧を定期測定
-├── 🌡️ 体温計：体温の変化を追跡
-├── 📊 ベッドサイドモニター：すべての数値を一画面で表示
-└── 🚨 ナースコール：異常値検知時に看護師に即座通知
+ 患者の健康監視システム
+├──  心拍数モニター：1分間の心拍数を測定
+├──  血圧計：最高血圧・最低血圧を定期測定
+├──  体温計：体温の変化を追跡
+├──  ベッドサイドモニター：すべての数値を一画面で表示
+└── [CRITICAL] ナースコール：異常値検知時に看護師に即座通知
 
-💾 システム健康監視システム
-├── 💓 CPU使用率：プロセッサーの負荷状況を監視
-├── 🩸 メモリ使用率：RAMの使用状況を追跡
-├── 🌡️ レスポンス時間：API応答時間の測定
-├── 📊 ダッシュボード：すべてのメトリクスを一画面で表示
-└── 🚨 アラート：異常値検知時に管理者に即座通知
+ システム健康監視システム
+├──  CPU使用率：プロセッサーの負荷状況を監視
+├──  メモリ使用率：RAMの使用状況を追跡
+├──  レスポンス時間：API応答時間の測定
+├──  ダッシュボード：すべてのメトリクスを一画面で表示
+└── [CRITICAL] アラート：異常値検知時に管理者に即座通知
 ```
 
-### 🎯 Step 1: 基本的なパフォーマンス監視システム
+### Step 1: 基本的なパフォーマンス監視システム
 
 まず、システムの「バイタルサイン」を監視する基本的なシステムを構築しましょう：
 
@@ -117,7 +117,7 @@ class SystemHealthMonitor:
         self.supabase_url = "https://your-project.supabase.co"
         self.supabase_key = "sb_publishable_XXXXXXXXXXXXXXXX"
         
-        # 🎯 健康しきい値設定（病院の正常値範囲）
+        #  健康しきい値設定（病院の正常値範囲）
         self.thresholds = {
             'cpu_usage': {'warning': 70.0, 'critical': 85.0},           # CPU使用率
             'memory_usage': {'warning': 75.0, 'critical': 90.0},        # メモリ使用率
@@ -132,27 +132,27 @@ class SystemHealthMonitor:
         
         health_metrics = {}
         
-        # 💓 CPU使用率チェック（心拍数のような基本バイタル）
+        #  CPU使用率チェック（心拍数のような基本バイタル）
         cpu_metric = self._check_cpu_usage()
         health_metrics['cpu'] = cpu_metric
         
-        # 🧠 メモリ使用率チェック（血圧のような重要指標）
+        #  メモリ使用率チェック（血圧のような重要指標）
         memory_metric = self._check_memory_usage()
         health_metrics['memory'] = memory_metric
         
-        # 💾 ディスク使用率チェック（体重のような容量指標）
+        #  ディスク使用率チェック（体重のような容量指標）
         disk_metric = self._check_disk_usage()
         health_metrics['disk'] = disk_metric
         
-        # 🌐 ネットワーク応答時間チェック（反射神経のような反応速度）
+        #  ネットワーク応答時間チェック（反射神経のような反応速度）
         response_metric = self._check_response_time()
         health_metrics['response_time'] = response_metric
         
-        # 🔗 データベース接続チェック（血液循環のような重要機能）
+        #  データベース接続チェック（血液循環のような重要機能）
         db_metric = self._check_database_health()
         health_metrics['database'] = db_metric
         
-        # 📊 Supabase API健康チェック（生命維持装置のような外部依存）
+        #  Supabase API健康チェック（生命維持装置のような外部依存）
         supabase_metric = self._check_supabase_health()
         health_metrics['supabase'] = supabase_metric
         
@@ -161,20 +161,20 @@ class SystemHealthMonitor:
     def _check_cpu_usage(self) -> HealthMetric:
         """CPU使用率チェック（心拍数測定）"""
         
-        # 📊 5秒間の平均CPU使用率を測定
+        #  5秒間の平均CPU使用率を測定
         cpu_percent = psutil.cpu_percent(interval=5)
         
-        # 🎯 健康状態判定
+        #  健康状態判定
         thresholds = self.thresholds['cpu_usage']
         if cpu_percent >= thresholds['critical']:
             status = HealthStatus.CRITICAL
-            message = f"⚠️ CPU使用率が危険レベル！サーバー増強が必要です"
+            message = f"[WARN] CPU使用率が危険レベル！サーバー増強が必要です"
         elif cpu_percent >= thresholds['warning']:
             status = HealthStatus.WARNING  
-            message = f"⚡ CPU使用率が高めです。最適化を検討してください"
+            message = f" CPU使用率が高めです。最適化を検討してください"
         else:
             status = HealthStatus.HEALTHY
-            message = f"✅ CPU使用率は正常範囲内です"
+            message = f"[OK] CPU使用率は正常範囲内です"
         
         return HealthMetric(
             name="CPU使用率",
@@ -190,25 +190,25 @@ class SystemHealthMonitor:
     def _check_memory_usage(self) -> HealthMetric:
         """メモリ使用率チェック（血圧測定）"""
         
-        # 🧠 メモリ使用状況を取得
+        #  メモリ使用状況を取得
         memory = psutil.virtual_memory()
         memory_percent = memory.percent
         
-        # 💾 使用量を分かりやすい単位に変換
+        #  使用量を分かりやすい単位に変換
         used_gb = memory.used / (1024**3)  # ギガバイト
         total_gb = memory.total / (1024**3)
         
-        # 🎯 健康状態判定
+        #  健康状態判定
         thresholds = self.thresholds['memory_usage']
         if memory_percent >= thresholds['critical']:
             status = HealthStatus.CRITICAL
-            message = f"🔴 メモリ不足が深刻！{used_gb:.1f}GB/{total_gb:.1f}GB使用中"
+            message = f"[CRITICAL] メモリ不足が深刻！{used_gb:.1f}GB/{total_gb:.1f}GB使用中"
         elif memory_percent >= thresholds['warning']:
             status = HealthStatus.WARNING
-            message = f"🟡 メモリ使用量が多めです {used_gb:.1f}GB/{total_gb:.1f}GB"
+            message = f"[WARN] メモリ使用量が多めです {used_gb:.1f}GB/{total_gb:.1f}GB"
         else:
             status = HealthStatus.HEALTHY
-            message = f"🟢 メモリ使用量は正常 {used_gb:.1f}GB/{total_gb:.1f}GB"
+            message = f"[OK] メモリ使用量は正常 {used_gb:.1f}GB/{total_gb:.1f}GB"
         
         return HealthMetric(
             name="メモリ使用率",
@@ -224,26 +224,26 @@ class SystemHealthMonitor:
     def _check_disk_usage(self) -> HealthMetric:
         """ディスク使用率チェック（体重測定）"""
         
-        # 💾 ディスク使用状況を取得
+        #  ディスク使用状況を取得
         disk = psutil.disk_usage('/')
         disk_percent = (disk.used / disk.total) * 100
         
-        # 📊 使用量を分かりやすい単位に変換
+        #  使用量を分かりやすい単位に変換
         used_gb = disk.used / (1024**3)
         total_gb = disk.total / (1024**3)
         free_gb = disk.free / (1024**3)
         
-        # 🎯 健康状態判定
+        #  健康状態判定
         thresholds = self.thresholds['disk_usage']
         if disk_percent >= thresholds['critical']:
             status = HealthStatus.CRITICAL
-            message = f"💥 ディスク容量が危険！残り{free_gb:.1f}GB"
+            message = f" ディスク容量が危険！残り{free_gb:.1f}GB"
         elif disk_percent >= thresholds['warning']:
             status = HealthStatus.WARNING
-            message = f"⚠️ ディスク容量に注意 残り{free_gb:.1f}GB"
+            message = f"[WARN] ディスク容量に注意 残り{free_gb:.1f}GB"
         else:
             status = HealthStatus.HEALTHY
-            message = f"✅ ディスク容量に余裕あり 残り{free_gb:.1f}GB"
+            message = f"[OK] ディスク容量に余裕あり 残り{free_gb:.1f}GB"
         
         return HealthMetric(
             name="ディスク使用率",
@@ -260,7 +260,7 @@ class SystemHealthMonitor:
         """API応答時間チェック（反射神経テスト）"""
         
         try:
-            # ⏱️ 自分のAPIエンドポイントに対するレスポンス時間を測定
+            #  自分のAPIエンドポイントに対するレスポンス時間を測定
             start_time = time.time()
             response = requests.get(f"{self.supabase_url}/rest/v1/", 
                                   headers={"apikey": self.supabase_key},
@@ -269,17 +269,17 @@ class SystemHealthMonitor:
             
             response_time_ms = (end_time - start_time) * 1000  # ミリ秒
             
-            # 🎯 健康状態判定
+            #  健康状態判定
             thresholds = self.thresholds['response_time']
             if response_time_ms >= thresholds['critical']:
                 status = HealthStatus.CRITICAL
-                message = f"🐌 APIレスポンスが非常に遅い！{response_time_ms:.0f}ms"
+                message = f" APIレスポンスが非常に遅い！{response_time_ms:.0f}ms"
             elif response_time_ms >= thresholds['warning']:
                 status = HealthStatus.WARNING
-                message = f"⏰ APIレスポンスが遅めです {response_time_ms:.0f}ms"
+                message = f" APIレスポンスが遅めです {response_time_ms:.0f}ms"
             else:
                 status = HealthStatus.HEALTHY
-                message = f"⚡ APIレスポンスは高速 {response_time_ms:.0f}ms"
+                message = f" APIレスポンスは高速 {response_time_ms:.0f}ms"
             
             return HealthMetric(
                 name="API応答時間",
@@ -293,7 +293,7 @@ class SystemHealthMonitor:
             )
             
         except Exception as e:
-            # ❌ 接続できない場合
+            # [NG] 接続できない場合
             return HealthMetric(
                 name="API応答時間",
                 value=999999,  # 非常に大きな値
@@ -302,14 +302,14 @@ class SystemHealthMonitor:
                 threshold_warning=self.thresholds['response_time']['warning'],
                 threshold_critical=self.thresholds['response_time']['critical'],
                 timestamp=datetime.now(),
-                message=f"🔥 API接続エラー: {str(e)}"
+                message=f" API接続エラー: {str(e)}"
             )
     
     def _check_database_health(self) -> HealthMetric:
         """データベース健康チェック（血液検査）"""
         
         try:
-            # 🔗 Supabaseへの簡単なクエリでDB接続をテスト
+            #  Supabaseへの簡単なクエリでDB接続をテスト
             start_time = time.time()
             response = requests.get(
                 f"{self.supabase_url}/rest/v1/health?select=status",
@@ -324,20 +324,20 @@ class SystemHealthMonitor:
             query_time_ms = (end_time - start_time) * 1000
             
             if response.status_code == 200:
-                # ✅ 接続成功
+                # [OK] 接続成功
                 if query_time_ms < 500:
                     status = HealthStatus.HEALTHY
-                    message = f"✅ データベース接続良好 {query_time_ms:.0f}ms"
+                    message = f"[OK] データベース接続良好 {query_time_ms:.0f}ms"
                 elif query_time_ms < 2000:
                     status = HealthStatus.WARNING
-                    message = f"⚠️ データベース応答が遅め {query_time_ms:.0f}ms"
+                    message = f"[WARN] データベース応答が遅め {query_time_ms:.0f}ms"
                 else:
                     status = HealthStatus.CRITICAL
-                    message = f"🐌 データベース応答が非常に遅い {query_time_ms:.0f}ms"
+                    message = f" データベース応答が非常に遅い {query_time_ms:.0f}ms"
             else:
-                # ❌ エラーレスポンス
+                # [NG] エラーレスポンス
                 status = HealthStatus.CRITICAL
-                message = f"🔥 データベースエラー: HTTP {response.status_code}"
+                message = f" データベースエラー: HTTP {response.status_code}"
             
             return HealthMetric(
                 name="データベース接続",
@@ -351,7 +351,7 @@ class SystemHealthMonitor:
             )
             
         except Exception as e:
-            # ❌ 接続例外
+            # [NG] 接続例外
             return HealthMetric(
                 name="データベース接続",
                 value=999999,
@@ -360,14 +360,14 @@ class SystemHealthMonitor:
                 threshold_warning=500,
                 threshold_critical=2000,
                 timestamp=datetime.now(),
-                message=f"💥 データベース接続不可: {str(e)}"
+                message=f" データベース接続不可: {str(e)}"
             )
     
     def _check_supabase_health(self) -> HealthMetric:
         """Supabase サービス健康チェック（外部機器チェック）"""
         
         try:
-            # 🌐 Supabaseの各サービスをチェック
+            #  Supabaseの各サービスをチェック
             services_status = []
             
             # Auth service check
@@ -385,20 +385,20 @@ class SystemHealthMonitor:
             except:
                 services_status.append(("ストレージ", False))
             
-            # 📊 全体の健康状態を判定
+            #  全体の健康状態を判定
             healthy_services = sum(1 for _, healthy in services_status if healthy)
             total_services = len(services_status)
             health_percentage = (healthy_services / total_services) * 100
             
             if health_percentage == 100:
                 status = HealthStatus.HEALTHY
-                message = f"✅ Supabaseサービス全て正常 ({healthy_services}/{total_services})"
+                message = f"[OK] Supabaseサービス全て正常 ({healthy_services}/{total_services})"
             elif health_percentage >= 50:
                 status = HealthStatus.WARNING
-                message = f"⚠️ 一部サービスに問題 ({healthy_services}/{total_services})"
+                message = f"[WARN] 一部サービスに問題 ({healthy_services}/{total_services})"
             else:
                 status = HealthStatus.CRITICAL
-                message = f"🔥 Supabaseサービスに深刻な問題 ({healthy_services}/{total_services})"
+                message = f" Supabaseサービスに深刻な問題 ({healthy_services}/{total_services})"
             
             return HealthMetric(
                 name="Supabaseサービス",
@@ -420,46 +420,46 @@ class SystemHealthMonitor:
                 threshold_warning=80,
                 threshold_critical=50,
                 timestamp=datetime.now(),
-                message=f"💥 Supabaseサービスチェック失敗: {str(e)}"
+                message=f" Supabaseサービスチェック失敗: {str(e)}"
             )
     
     def get_overall_health_status(self, metrics: Dict[str, HealthMetric]) -> HealthStatus:
         """総合健康状態判定（総合診断）"""
         
-        # 🔴 一つでもCRITICALがあれば全体もCRITICAL
+        # [CRITICAL] 一つでもCRITICALがあれば全体もCRITICAL
         if any(metric.status == HealthStatus.CRITICAL for metric in metrics.values()):
             return HealthStatus.CRITICAL
         
-        # 🟡 一つでもWARNINGがあれば全体もWARNING  
+        # [WARN] 一つでもWARNINGがあれば全体もWARNING  
         if any(metric.status == HealthStatus.WARNING for metric in metrics.values()):
             return HealthStatus.WARNING
         
-        # 🟢 全てHEALTHYなら全体もHEALTHY
+        # [OK] 全てHEALTHYなら全体もHEALTHY
         return HealthStatus.HEALTHY
 
-# 🎯 使用例：ヘルスチェック実行デモ
+#  使用例：ヘルスチェック実行デモ
 def demo_health_monitoring():
     """ヘルスモニタリングのデモ実行"""
     
-    print("🏥 システム健康診断を開始します...")
+    print(" システム健康診断を開始します...")
     print("=" * 50)
     
     monitor = SystemHealthMonitor()
     
-    # 📊 全体の健康チェック実行
+    #  全体の健康チェック実行
     health_metrics = monitor.check_system_health()
     overall_status = monitor.get_overall_health_status(health_metrics)
     
-    # 📋 結果表示
-    print(f"🎯 総合健康状態: {overall_status.value.upper()}")
+    #  結果表示
+    print(f" 総合健康状態: {overall_status.value.upper()}")
     print("-" * 50)
     
     for metric_name, metric in health_metrics.items():
         status_emoji = {
-            HealthStatus.HEALTHY: "🟢",
-            HealthStatus.WARNING: "🟡", 
-            HealthStatus.CRITICAL: "🔴",
-            HealthStatus.UNKNOWN: "⚪"
+            HealthStatus.HEALTHY: "[OK]",
+            HealthStatus.WARNING: "[WARN]", 
+            HealthStatus.CRITICAL: "[CRITICAL]",
+            HealthStatus.UNKNOWN: "UNKNOWN"
         }
         
         print(f"{status_emoji[metric.status]} {metric.name}: {metric.value:.1f}{metric.unit}")
@@ -473,16 +473,16 @@ if __name__ == "__main__":
     demo_health_monitoring()
 ```
 
-**🔰 初心者向け解説**：
+**初心者向け解説**：
 
 このシステム監視の活用例：
 
 | 監視項目 | 正常値 | 警告値 | 危険値 | 対処法 |
 |:---------|:-------|:-------|:-------|:-------|
-| **CPU使用率** | 0〜70% | 70〜85% | 85%以上 | プロセス最適化・サーバー増強 |
-| **メモリ使用率** | 0〜75% | 75〜90% | 90%以上 | メモリリーク調査・メモリ増設 |
-| **ディスク使用率** | 0〜80% | 80〜95% | 95%以上 | ファイル削除・ストレージ拡張 |
-| **API応答時間** | 0〜2秒 | 2〜5秒 | 5秒以上 | クエリ最適化・CDN導入 |
+| **CPU使用率**| 0〜70% | 70〜85% | 85%以上 | プロセス最適化・サーバー増強 |
+| **メモリ使用率**| 0〜75% | 75〜90% | 90%以上 | メモリリーク調査・メモリ増設 |
+| **ディスク使用率**| 0〜80% | 80〜95% | 95%以上 | ファイル削除・ストレージ拡張 |
+| **API応答時間**| 0〜2秒 | 2〜5秒 | 5秒以上 | クエリ最適化・CDN導入 |
 
 ### AI運用メトリクス（RAG/埋め込み/推論の監視）
 
@@ -491,11 +491,11 @@ AIを組み込む場合は、通常のインフラ指標に加えて **AI特有�
 
 | 指標 | 目的 | 例 |
 |:-----|:-----|:---|
-| **token / cost** | 予算超過の防止 | 1日あたりの推定コスト |
-| **latency** | 体感品質の維持 | P95 応答時間 |
-| **error rate** | 推論失敗の検知 | 5xx / timeout率 |
-| **embedding backlog** | バッチ遅延の検知 | キュー滞留数 |
-| **retrieval hit rate** | 検索品質の把握 | top-k の命中率 |
+| **token / cost**| 予算超過の防止 | 1日あたりの推定コスト |
+| **latency**| 体感品質の維持 | P95 応答時間 |
+| **error rate**| 推論失敗の検知 | 5xx / timeout率 |
+| **embedding backlog**| バッチ遅延の検知 | キュー滞留数 |
+| **retrieval hit rate**| 検索品質の把握 | top-k の命中率 |
 
 > 注意: 指標の定義や取得方法は採用するモデル/プラットフォームにより変わるため、最新仕様を確認してください。
 
@@ -508,7 +508,7 @@ SupabaseのAdvisor系機能は便利ですが、**誤検知や環境依存**が�
 - **Performance Advisor**: 影響範囲を測定してから適用（ステージングで検証）
 - **Index Advisor**: 追加前に `EXPLAIN` を確認し、不要なら採用しない
 
-### 🎯 Step 2: ダッシュボードシステム（ナースステーションの監視画面）
+### Step 2: ダッシュボードシステム（ナースステーションの監視画面）
 
 病院のナースステーションに設置された大型モニターのように、**システムの健康状態を一目で把握できるダッシュボード**を作成します：
 
@@ -538,11 +538,11 @@ class HealthDashboard:
         
         while self.is_monitoring:
             try:
-                # 📊 健康状態チェック実行
+                #  健康状態チェック実行
                 health_metrics = self.monitor.check_system_health()
                 overall_status = self.monitor.get_overall_health_status(health_metrics)
                 
-                # 📱 接続中のクライアントに結果を送信
+                #  接続中のクライアントに結果を送信
                 dashboard_data = {
                     "timestamp": datetime.now().isoformat(),
                     "overall_status": overall_status.value,
@@ -560,17 +560,17 @@ class HealthDashboard:
                     }
                 }
                 
-                # 📡 WebSocketで全クライアントに送信
+                #  WebSocketで全クライアントに送信
                 await self._broadcast_to_clients(dashboard_data)
                 
-                # 🚨 クリティカルな状態の場合は即座に再チェック
+                # [CRITICAL] クリティカルな状態の場合は即座に再チェック
                 if overall_status == HealthStatus.CRITICAL:
                     await asyncio.sleep(10)  # 10秒後に再チェック
                 else:
                     await asyncio.sleep(60)  # 通常は1分間隔
                     
             except Exception as e:
-                print(f"❌ 監視エラー: {e}")
+                print(f"[NG] 監視エラー: {e}")
                 await asyncio.sleep(30)  # エラー時は30秒待機
     
     async def _broadcast_to_clients(self, data: Dict[str, Any]):
@@ -585,13 +585,13 @@ class HealthDashboard:
             try:
                 await client.send_text(json.dumps(data))
             except WebSocketDisconnect:
-                # 📱 切断されたクライアントを記録
+                #  切断されたクライアントを記録
                 disconnected_clients.append(client)
             except Exception as e:
-                print(f"⚠️ クライアント送信エラー: {e}")
+                print(f"[WARN] クライアント送信エラー: {e}")
                 disconnected_clients.append(client)
         
-        # 🧹 切断されたクライアントを削除
+        #  切断されたクライアントを削除
         for client in disconnected_clients:
             self.connected_clients.remove(client)
     
@@ -600,9 +600,9 @@ class HealthDashboard:
         
         await websocket.accept()
         self.connected_clients.append(websocket)
-        print(f"📱 新しいクライアント接続: 現在{len(self.connected_clients)}台")
+        print(f" 新しいクライアント接続: 現在{len(self.connected_clients)}台")
         
-        # 🎯 初回データ送信
+        #  初回データ送信
         health_metrics = self.monitor.check_system_health()
         overall_status = self.monitor.get_overall_health_status(health_metrics)
         
@@ -630,9 +630,9 @@ class HealthDashboard:
         
         if websocket in self.connected_clients:
             self.connected_clients.remove(websocket)
-            print(f"📱 クライアント切断: 現在{len(self.connected_clients)}台")
+            print(f" クライアント切断: 現在{len(self.connected_clients)}台")
 
-# 📊 FastAPI ダッシュボードアプリケーション
+#  FastAPI ダッシュボードアプリケーション
 app = FastAPI(title="System Health Dashboard", description="システム健康監視ダッシュボード")
 dashboard = HealthDashboard()
 
@@ -648,14 +648,14 @@ async def startup_event():
 async def get_dashboard():
     """ダッシュボードページ表示"""
     
-    # 📱 シンプルなダッシュボードHTML
+    #  シンプルなダッシュボードHTML
     html_content = """
     <!DOCTYPE html>
     <html lang="ja">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>🏥 システム健康監視ダッシュボード</title>
+        <title> システム健康監視ダッシュボード</title>
         <style>
             body {
                 font-family: 'Segoe UI', sans-serif;
@@ -721,12 +721,12 @@ async def get_dashboard():
     <body>
         <div class="dashboard">
             <div class="header">
-                <h1>🏥 システム健康監視ダッシュボード</h1>
+                <h1> システム健康監視ダッシュボード</h1>
                 <p>リアルタイム監視システム - 24時間365日稼働</p>
             </div>
             
             <div class="overall-status" id="overall-status">
-                🔄 監視システム起動中...
+                 監視システム起動中...
             </div>
             
             <div class="metrics-grid" id="metrics-grid">
@@ -739,7 +739,7 @@ async def get_dashboard():
         </div>
 
         <script>
-            // 🌐 WebSocket接続
+            //  WebSocket接続
             const ws = new WebSocket(`ws://${window.location.host}/ws`);
             
             ws.onmessage = function(event) {
@@ -748,26 +748,26 @@ async def get_dashboard():
             };
             
             ws.onopen = function() {
-                console.log('✅ ダッシュボード接続成功');
+                console.log('[OK] ダッシュボード接続成功');
             };
             
             ws.onerror = function(error) {
-                console.error('❌ WebSocket エラー:', error);
+                console.error('[NG] WebSocket エラー:', error);
             };
             
             ws.onclose = function() {
-                console.log('📱 ダッシュボード接続終了');
+                console.log(' ダッシュボード接続終了');
                 setTimeout(() => location.reload(), 5000); // 5秒後に再接続
             };
             
             function updateDashboard(data) {
-                // 📊 総合ステータス更新
+                //  総合ステータス更新
                 const overallStatus = document.getElementById('overall-status');
                 const statusEmoji = {
-                    'healthy': '🟢',
-                    'warning': '🟡', 
-                    'critical': '🔴',
-                    'unknown': '⚪'
+                    'healthy': '[OK]',
+                    'warning': '[WARN]', 
+                    'critical': '[CRITICAL]',
+                    'unknown': 'UNKNOWN'
                 };
                 
                 overallStatus.innerHTML = `
@@ -776,7 +776,7 @@ async def get_dashboard():
                 `;
                 overallStatus.className = `overall-status status-${data.overall_status}`;
                 
-                // 📈 メトリクス更新
+                //  メトリクス更新
                 const metricsGrid = document.getElementById('metrics-grid');
                 metricsGrid.innerHTML = '';
                 
@@ -797,7 +797,7 @@ async def get_dashboard():
                     metricsGrid.appendChild(card);
                 });
                 
-                // ⏰ タイムスタンプ更新
+                //  タイムスタンプ更新
                 const timestamp = document.getElementById('timestamp');
                 const updateTime = new Date(data.timestamp).toLocaleString('ja-JP');
                 timestamp.textContent = `最終更新: ${updateTime}`;
@@ -844,38 +844,38 @@ async def get_health_status():
     }
 ```
 
-**🔰 初心者向け解説**：
+**初心者向け解説**：
 
 このダッシュボードシステムの特徴：
 
 | 機能 | 病院の例 | システムダッシュボード | 利点 |
 |:-----|:--------|:---------------------|:-----|
-| **リアルタイム表示** | ベッドサイドモニター | WebSocketでライブ更新 | 即座に状況把握 |
-| **色分け表示** | 緑・黄・赤のランプ | ステータス色でわかりやすく | 直感的な理解 |
-| **複数画面対応** | 複数のナースステーション | 複数ブラウザで同時監視 | チーム全体で共有 |
-| **履歴記録** | 患者カルテ | メトリクス履歴保存 | 傾向分析が可能 |
+| **リアルタイム表示**| ベッドサイドモニター | WebSocketでライブ更新 | 即座に状況把握 |
+| **色分け表示**| 緑・黄・赤のランプ | ステータス色でわかりやすく | 直感的な理解 |
+| **複数画面対応**| 複数のナースステーション | 複数ブラウザで同時監視 | チーム全体で共有 |
+| **履歴記録**| 患者カルテ | メトリクス履歴保存 | 傾向分析が可能 |
 
 ## 8.2 アラートシステム（緊急通報システム）
 
 病院で患者の容体が急変したときに看護師や医師に緊急通報するように、**システムに異常が発生したときに管理者に即座に通知**するシステムを構築します。
 
 ```text
-🏥 病院の緊急通報システム
-├── 🚨 ナースコール：ベッドサイドから緊急時に看護師呼び出し
-├── 📱 PHS・スマホ通知：担当医に即座にメッセージ送信
-├── 📢 院内放送：緊急事態時の全体への周知
-├── 📧 家族への連絡：重篤な場合の家族への緊急連絡
-└── 📋 記録システム：いつ・誰に・何を通知したかの詳細記録
+ 病院の緊急通報システム
+├── [CRITICAL] ナースコール：ベッドサイドから緊急時に看護師呼び出し
+├──  PHS・スマホ通知：担当医に即座にメッセージ送信
+├──  院内放送：緊急事態時の全体への周知
+├──  家族への連絡：重篤な場合の家族への緊急連絡
+└──  記録システム：いつ・誰に・何を通知したかの詳細記録
 
-💾 システム緊急通報システム
-├── 🚨 即座アラート：異常検知後30秒以内の通知
-├── 📱 複数チャネル：Slack・メール・SMS・Discord
-├── 📢 エスカレーション：レベルに応じた通知先の拡大
-├── 📧 ステークホルダー通知：重大障害時の経営層への報告
-└── 📋 通知履歴：アラート履歴と対応状況の追跡
+ システム緊急通報システム
+├── [CRITICAL] 即座アラート：異常検知後30秒以内の通知
+├──  複数チャネル：Slack・メール・SMS・Discord
+├──  エスカレーション：レベルに応じた通知先の拡大
+├──  ステークホルダー通知：重大障害時の経営層への報告
+└──  通知履歴：アラート履歴と対応状況の追跡
 ```
 
-### 🎯 Step 1: 多チャネル通知システム
+### Step 1: 多チャネル通知システム
 
 ```python
 # app/monitoring/alerts.py（緊急通知システム）
@@ -917,7 +917,7 @@ class AlertManager:
     """アラート管理システム（病院の緊急通報指令センター）"""
     
     def __init__(self):
-        # 📧 メール設定
+        #  メール設定
         self.smtp_config = {
             'host': 'smtp.gmail.com',
             'port': 587,
@@ -926,24 +926,24 @@ class AlertManager:
             'from_email': 'system-monitor@yourcompany.com'
         }
         
-        # 💬 Slack設定
+        #  Slack設定
         self.slack_webhook_url = "https://hooks.slack.com/services/YOUR/SLACK/WEBHOOK"
         
-        # 📱 SMS設定（Twilio例）
+        #  SMS設定（Twilio例）
         self.sms_config = {
             'account_sid': 'your-twilio-account-sid',
             'auth_token': 'your-twilio-auth-token',
             'from_number': '+1234567890'
         }
         
-        # 🎮 Discord設定
+        #  Discord設定
         self.discord_webhook_url = "https://discord.com/api/webhooks/YOUR/DISCORD/WEBHOOK"
         
-        # 📊 アラート履歴管理
+        #  アラート履歴管理
         self.active_alerts: Dict[str, Dict] = {}  # 現在のアクティブアラート
         self.alert_history: List[Dict] = []       # アラート履歴
         
-        # ⚙️ アラートルール設定
+        #  アラートルール設定
         self.alert_rules = [
             AlertRule(
                 name="高CPU使用率",
@@ -995,23 +995,23 @@ class AlertManager:
     async def process_health_metrics(self, health_metrics: Dict[str, Any], overall_status: str):
         """健康メトリクスを評価してアラート発動判定"""
         
-        print(f"🔍 アラート評価開始: 総合ステータス = {overall_status}")
+        print(f" アラート評価開始: 総合ステータス = {overall_status}")
         
-        # 📊 各アラートルールを評価
+        #  各アラートルールを評価
         for rule in self.alert_rules:
             should_alert = self._evaluate_alert_condition(rule, health_metrics, overall_status)
             
             if should_alert:
                 await self._trigger_alert(rule, health_metrics, overall_status)
             else:
-                # ✅ 条件が解消された場合の自動解決
+                # [OK] 条件が解消された場合の自動解決
                 await self._check_auto_resolve(rule, health_metrics)
     
     def _evaluate_alert_condition(self, rule: AlertRule, metrics: Dict[str, Any], overall_status: str) -> bool:
         """アラート条件評価（症状の重篤度判定）"""
         
         try:
-            # 🔍 条件文字列をPython式として評価
+            #  条件文字列をPython式として評価
             # 安全性のため、限定された変数のみ使用
             
             evaluation_context = {
@@ -1023,16 +1023,16 @@ class AlertManager:
                 'database_connection': metrics.get('database', {}).get('status') == 'healthy'
             }
             
-            # 📝 条件を安全に評価
+            #  条件を安全に評価
             result = eval(rule.condition, {"__builtins__": {}}, evaluation_context)
             
             if result:
-                print(f"🚨 アラート条件成立: {rule.name} - {rule.condition}")
+                print(f"[CRITICAL] アラート条件成立: {rule.name} - {rule.condition}")
             
             return result
             
         except Exception as e:
-            print(f"❌ アラート条件評価エラー: {rule.name} - {e}")
+            print(f"[NG] アラート条件評価エラー: {rule.name} - {e}")
             return False
     
     async def _trigger_alert(self, rule: AlertRule, metrics: Dict[str, Any], overall_status: str):
@@ -1040,14 +1040,14 @@ class AlertManager:
         
         alert_id = f"{rule.name}_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
         
-        # 🔄 クールダウンチェック（連続通知防止）
+        #  クールダウンチェック（連続通知防止）
         if self._is_in_cooldown(rule):
-            print(f"⏸️ クールダウン中のためスキップ: {rule.name}")
+            print(f" クールダウン中のためスキップ: {rule.name}")
             return
         
-        print(f"🚨 アラート発動: {rule.name} (レベル: {rule.level.value})")
+        print(f"[CRITICAL] アラート発動: {rule.name} (レベル: {rule.level.value})")
         
-        # 📊 アラート詳細情報作成
+        #  アラート詳細情報作成
         alert_data = {
             'id': alert_id,
             'rule_name': rule.name,
@@ -1059,46 +1059,46 @@ class AlertManager:
             'message': self._generate_alert_message(rule, metrics, overall_status)
         }
         
-        # 📋 アクティブアラートに追加
+        #  アクティブアラートに追加
         self.active_alerts[alert_id] = alert_data
         self.alert_history.append(alert_data)
         
-        # 📢 各チャネルに通知送信
+        #  各チャネルに通知送信
         notification_tasks = []
         for channel in rule.channels:
             if channel in rule.recipients:
                 task = self._send_notification(channel, rule, alert_data)
                 notification_tasks.append(task)
         
-        # 🚀 並行実行で高速通知
+        #  並行実行で高速通知
         if notification_tasks:
             await asyncio.gather(*notification_tasks, return_exceptions=True)
     
     def _generate_alert_message(self, rule: AlertRule, metrics: Dict[str, Any], overall_status: str) -> str:
         """アラートメッセージ生成（症状説明書作成）"""
         
-        # 🎨 レベル別の絵文字
+        #  レベル別の絵文字
         level_emoji = {
-            AlertLevel.INFO: "ℹ️",
-            AlertLevel.WARNING: "⚠️", 
-            AlertLevel.CRITICAL: "🔴",
-            AlertLevel.EMERGENCY: "🚨"
+            AlertLevel.INFO: "",
+            AlertLevel.WARNING: "[WARN]", 
+            AlertLevel.CRITICAL: "[CRITICAL]",
+            AlertLevel.EMERGENCY: "[CRITICAL]"
         }
         
-        # 📝 基本メッセージ
+        #  基本メッセージ
         message = f"{level_emoji[rule.level]} **{rule.name}**\n"
         message += f"**レベル**: {rule.level.value.upper()}\n"
         message += f"**発生時刻**: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n"
         message += f"**総合ステータス**: {overall_status}\n\n"
         
-        # 📊 主要メトリクス情報
+        #  主要メトリクス情報
         message += "**現在の状況**:\n"
         for name, metric in metrics.items():
             if isinstance(metric, dict) and 'value' in metric:
-                status_emoji = {"healthy": "🟢", "warning": "🟡", "critical": "🔴"}.get(metric.get('status', 'unknown'), "⚪")
+                status_emoji = {"healthy": "[OK]", "warning": "[WARN]", "critical": "[CRITICAL]"}.get(metric.get('status', 'unknown'), "UNKNOWN")
                 message += f"• {metric.get('name', name)}: {metric['value']:.1f}{metric.get('unit', '')} {status_emoji}\n"
         
-        # 🎯 対処推奨事項
+        #  対処推奨事項
         message += f"\n**推奨対処**: {self._get_recommended_action(rule, metrics)}\n"
         
         return message
@@ -1106,7 +1106,7 @@ class AlertManager:
     def _get_recommended_action(self, rule: AlertRule, metrics: Dict[str, Any]) -> str:
         """推奨対処法提案（治療方針決定）"""
         
-        # 📋 ルール別の対処法ガイド
+        #  ルール別の対処法ガイド
         action_guide = {
             "高CPU使用率": "プロセス使用率確認、不要プロセス停止、サーバースケールアップ検討",
             "メモリ不足": "メモリリーク調査、プロセス再起動、メモリ増設検討", 
@@ -1131,10 +1131,10 @@ class AlertManager:
             elif channel == NotificationChannel.DISCORD:
                 await self._send_discord_alert(recipients, alert_data)
                 
-            print(f"✅ {channel.value} 通知送信完了: {len(recipients)}件")
+            print(f"[OK] {channel.value} 通知送信完了: {len(recipients)}件")
             
         except Exception as e:
-            print(f"❌ {channel.value} 通知送信失敗: {e}")
+            print(f"[NG] {channel.value} 通知送信失敗: {e}")
     
     async def _send_email_alert(self, recipients: List[str], alert_data: Dict[str, Any]):
         """メール通知送信（電子メール緊急連絡）"""
@@ -1143,17 +1143,17 @@ class AlertManager:
             return
             
         try:
-            # 📧 メール内容構築
+            #  メール内容構築
             msg = MIMEMultipart()
             msg['From'] = self.smtp_config['from_email']
             msg['To'] = ', '.join(recipients)
-            msg['Subject'] = f"🚨 システムアラート: {alert_data['rule_name']} ({alert_data['level'].upper()})"
+            msg['Subject'] = f"[CRITICAL] システムアラート: {alert_data['rule_name']} ({alert_data['level'].upper()})"
             
-            # 📝 HTML形式のメール本文
+            #  HTML形式のメール本文
             html_body = f"""
             <html>
             <body style="font-family: Arial, sans-serif;">
-                <h2 style="color: #d32f2f;">🚨 システムアラート通知</h2>
+                <h2 style="color: #d32f2f;">[CRITICAL] システムアラート通知</h2>
                 <table style="border-collapse: collapse; width: 100%;">
                     <tr><td style="padding: 8px; font-weight: bold;">アラート名:</td><td style="padding: 8px;">{alert_data['rule_name']}</td></tr>
                     <tr><td style="padding: 8px; font-weight: bold;">レベル:</td><td style="padding: 8px; color: #d32f2f;">{alert_data['level'].upper()}</td></tr>
@@ -1172,14 +1172,14 @@ class AlertManager:
             
             msg.attach(MIMEText(html_body, 'html', 'utf-8'))
             
-            # 📤 SMTP送信
+            #  SMTP送信
             with smtplib.SMTP(self.smtp_config['host'], self.smtp_config['port']) as server:
                 server.starttls()
                 server.login(self.smtp_config['username'], self.smtp_config['password'])
                 server.send_message(msg)
                 
         except Exception as e:
-            print(f"❌ メール送信エラー: {e}")
+            print(f"[NG] メール送信エラー: {e}")
     
     async def _send_slack_alert(self, channels: List[str], alert_data: Dict[str, Any]):
         """Slack通知送信（チャット緊急連絡）"""
@@ -1188,7 +1188,7 @@ class AlertManager:
             return
             
         try:
-            # 🎨 レベル別の色設定
+            #  レベル別の色設定
             color_map = {
                 "info": "#36a64f",      # 緑
                 "warning": "#ff9800",   # オレンジ  
@@ -1196,9 +1196,9 @@ class AlertManager:
                 "emergency": "#9c27b0"  # 紫
             }
             
-            # 📱 Slack メッセージ構築
+            #  Slack メッセージ構築
             slack_payload = {
-                "text": f"🚨 システムアラート: {alert_data['rule_name']}",
+                "text": f"[CRITICAL] システムアラート: {alert_data['rule_name']}",
                 "attachments": [
                     {
                         "color": color_map.get(alert_data['level'], "#9e9e9e"),
@@ -1215,16 +1215,16 @@ class AlertManager:
                 ]
             }
             
-            # 📤 Webhook送信
+            #  Webhook送信
             async with aiohttp.ClientSession() as session:
                 async with session.post(self.slack_webhook_url, json=slack_payload) as response:
                     if response.status == 200:
-                        print(f"✅ Slack通知送信成功")
+                        print(f"[OK] Slack通知送信成功")
                     else:
-                        print(f"❌ Slack通知送信失敗: {response.status}")
+                        print(f"[NG] Slack通知送信失敗: {response.status}")
                         
         except Exception as e:
-            print(f"❌ Slack通知エラー: {e}")
+            print(f"[NG] Slack通知エラー: {e}")
     
     def _is_in_cooldown(self, rule: AlertRule) -> bool:
         """クールダウン期間チェック（連続通知防止）"""
@@ -1232,7 +1232,7 @@ class AlertManager:
         if rule.cooldown_minutes == 0:
             return False  # 緊急時はクールダウンなし
             
-        # 📊 同じルールの最近のアラートをチェック
+        #  同じルールの最近のアラートをチェック
         cutoff_time = datetime.now() - timedelta(minutes=rule.cooldown_minutes)
         
         for alert in reversed(self.alert_history):  # 新しい順でチェック
@@ -1248,36 +1248,36 @@ class AlertManager:
     async def _check_auto_resolve(self, rule: AlertRule, metrics: Dict[str, Any]):
         """自動解決チェック（症状改善確認）"""
         
-        # 🔍 該当するアクティブアラートがあるかチェック
+        #  該当するアクティブアラートがあるかチェック
         alerts_to_resolve = []
         
         for alert_id, alert_data in self.active_alerts.items():
             if alert_data['rule_name'] == rule.name:
-                # ⏰ 自動解決時間経過チェック
+                #  自動解決時間経過チェック
                 alert_time = datetime.fromisoformat(alert_data['timestamp'])
                 if datetime.now() - alert_time > timedelta(minutes=rule.auto_resolve_minutes):
                     alerts_to_resolve.append(alert_id)
         
-        # ✅ 解決済みアラートを削除
+        # [OK] 解決済みアラートを削除
         for alert_id in alerts_to_resolve:
             resolved_alert = self.active_alerts.pop(alert_id)
-            print(f"✅ アラート自動解決: {resolved_alert['rule_name']}")
+            print(f"[OK] アラート自動解決: {resolved_alert['rule_name']}")
             
-            # 📢 解決通知送信（オプション）
+            #  解決通知送信（オプション）
             await self._send_resolution_notification(resolved_alert)
     
     async def _send_resolution_notification(self, alert_data: Dict[str, Any]):
         """解決通知送信（回復報告）"""
         
-        resolution_message = f"✅ **アラート解決**: {alert_data['rule_name']}\n"
+        resolution_message = f"[OK] **アラート解決**: {alert_data['rule_name']}\n"
         resolution_message += f"**解決時刻**: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n"
         resolution_message += f"**発生からの経過時間**: 約{rule.auto_resolve_minutes}分\n"
         resolution_message += "システムは正常な状態に戻りました。"
         
-        # 🎯 簡易Slack通知（解決報告）
+        #  簡易Slack通知（解決報告）
         if self.slack_webhook_url:
             payload = {
-                "text": f"✅ アラート解決: {alert_data['rule_name']}",
+                "text": f"[OK] アラート解決: {alert_data['rule_name']}",
                 "attachments": [
                     {
                         "color": "#4caf50",  # 緑色
@@ -1290,19 +1290,19 @@ class AlertManager:
                 async with aiohttp.ClientSession() as session:
                     await session.post(self.slack_webhook_url, json=payload)
             except Exception as e:
-                print(f"❌ 解決通知エラー: {e}")
+                print(f"[NG] 解決通知エラー: {e}")
 ```
 
-**🔰 初心者向け解説**：
+**初心者向け解説**：
 
 アラートシステムの通知チャネル比較：
 
 | 通知方法 | 到達速度 | 緊急度 | 使用場面 | 利点 |
 |:---------|:--------|:-------|:---------|:-----|
-| **Slack** | 即座 | 中-高 | 開発チーム内の連携 | リアルタイム・履歴確認が容易 |
-| **メール** | 1〜5分 | 中 | 公式な通知・記録用 | 詳細情報・添付ファイル可能 |
-| **SMS** | 即座 | 最高 | 真の緊急事態 | 確実な到達・どこでも受信 |
-| **Discord** | 即座 | 中 | カジュアルなチーム連携 | コミュニティ感・画像対応 |
+| **Slack**| 即座 | 中-高 | 開発チーム内の連携 | リアルタイム・履歴確認が容易 |
+| **メール**| 1〜5分 | 中 | 公式な通知・記録用 | 詳細情報・添付ファイル可能 |
+| **SMS**| 即座 | 最高 | 真の緊急事態 | 確実な到達・どこでも受信 |
+| **Discord**| 即座 | 中 | カジュアルなチーム連携 | コミュニティ感・画像対応 |
 
 ```yaml
   ## テスト実行
@@ -1664,14 +1664,14 @@ def sample_organization_data():
 
 ### 8.3.1 Branching/Preview環境の活用（安全な検証）
 
-Supabase Cloud の **Branching/Preview** を使うと、  
-ブランチごとに **独立環境 + 独立API資格情報** を用意して検証できます。
+Supabase Cloud の **Branching/Preview**を使うと、  
+ブランチごとに **独立環境 + 独立API資格情報**を用意して検証できます。
 
 **運用のポイント**:
 - **本番データは複製されない前提**で、seedデータで初期化する  
   （仕様は変更される可能性があるため、必ず公式ドキュメントで確認）
-- RAGの **回帰テスト用クエリセット** を用意する
-- RLSの **権限制御回帰** を自動化する
+- RAGの **回帰テスト用クエリセット**を用意する
+- RLSの **権限制御回帰**を自動化する
 - コスト閾値（token / cost）もテストで確認する
 
 **推奨フロー**:
@@ -2058,7 +2058,7 @@ Supabase Storage は **S3互換プロトコル**を前提に外部ツールと�
 **活用例**:
 - 既存のS3バックアップツールで **そのまま連携**
 - 別環境への **バケット移行**（staging → production）
-- 監査用の **長期保管** を外部ストレージに集約
+- 監査用の **長期保管**を外部ストレージに集約
 
 > 注意: 設定値やサポート状況は変更される可能性があるため、最新の公式ドキュメントを確認してください。
 
@@ -3112,27 +3112,27 @@ echo "--- 問題パターン分析 ---"
 LOGS=$(gh api repos/$REPO/actions/jobs/$FAILED_JOB_ID/logs)
 
 if echo "$LOGS" | grep -q "npm ERR!"; then
-    echo "🔍 Node.js/npm関連エラーを検出"
+    echo " Node.js/npm関連エラーを検出"
     echo "対処法: package-lock.jsonの更新、依存関係の確認"
 fi
 
 if echo "$LOGS" | grep -q "ENOSPC"; then
-    echo "🔍 ディスク容量不足を検出"
+    echo " ディスク容量不足を検出"
     echo "対処法: キャッシュクリア、不要ファイル削除"
 fi
 
 if echo "$LOGS" | grep -q "docker: Error"; then
-    echo "🔍 Docker関連エラーを検出"
+    echo " Docker関連エラーを検出"
     echo "対処法: Dockerfileの確認、イメージ更新"
 fi
 
 if echo "$LOGS" | grep -q "Permission denied"; then
-    echo "🔍 権限エラーを検出"
+    echo " 権限エラーを検出"
     echo "対処法: ファイル権限、GITHUB_TOKEN権限の確認"
 fi
 
 if echo "$LOGS" | grep -q "timeout"; then
-    echo "🔍 タイムアウトエラーを検出"
+    echo " タイムアウトエラーを検出"
     echo "対処法: タイムアウト時間の延長、処理の最適化"
 fi
 
@@ -3587,7 +3587,7 @@ async def emergency_migration_recovery(database_url: str, failed_version: str):
     
     print("\n=== 診断結果 ===")
     for issue in diagnosis['issues_found']:
-        print(f"❌ {issue['type']}: {issue['description']}")
+        print(f"[NG] {issue['type']}: {issue['description']}")
     
     print("\n=== 推奨アクション ===")
     for i, rec in enumerate(diagnosis['recommendations'], 1):
@@ -4002,7 +4002,7 @@ def backup_diagnosis_cli():
     if diagnosis['issues_found']:
         print("\n検出された問題:")
         for issue in diagnosis['issues_found']:
-            print(f"  ❌ {issue['description']}")
+            print(f"  [NG] {issue['description']}")
     
     if diagnosis['recommendations']:
         print("\n推奨アクション:")
@@ -4542,14 +4542,14 @@ async def run_monitoring_diagnosis():
         
         if component_info.get('issues'):
             for issue in component_info['issues']:
-                print(f"    ⚠ {issue}")
+                print(f"    [WARN] {issue}")
     
     if diagnosis['critical_issues']:
-        print("\n🚨 重要な問題:")
+        print("\n[CRITICAL] 重要な問題:")
         for issue in diagnosis['critical_issues']:
-            print(f"  ❌ {issue}")
+            print(f"  [NG] {issue}")
     
-    print("\n📋 推奨アクション:")
+    print("\n 推奨アクション:")
     for i, rec in enumerate(diagnosis['recommendations'], 1):
         print(f"  {i}. {rec}")
     
@@ -5283,12 +5283,12 @@ async def run_daily_checklist():
     print(f"成功: {summary['passed']}, 警告: {summary['warnings']}, 失敗: {summary['failed']}")
     
     if report['failed_checks']:
-        print("\n⚠ 失敗したチェック:")
+        print("\n[WARN] 失敗したチェック:")
         for check in report['failed_checks']:
-            print(f"  ❌ {check['name']}: {check['message']}")
+            print(f"  [NG] {check['name']}: {check['message']}")
     
     if report['remediation_required']:
-        print("\n📋 修復が必要な項目があります")
+        print("\n 修復が必要な項目があります")
         
         ## 修復計画生成
         remediation_plan = automator.generate_remediation_plan(report)
@@ -5299,7 +5299,7 @@ async def run_daily_checklist():
         
         print(f"修復計画を生成しました: {plan_filename}")
     else:
-        print("\n✅ すべてのチェックが正常に完了しました")
+        print("\n[OK] すべてのチェックが正常に完了しました")
 
 if __name__ == "__main__":
     asyncio.run(run_daily_checklist())

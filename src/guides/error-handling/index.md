@@ -1,6 +1,6 @@
 # エラーハンドリング詳細ガイド
 
-> **Supabase実践アーキテクチャパターン** 1.0版 | 株式会社アイティードゥ | 2025年6月2日
+> **Supabase実践アーキテクチャパターン**1.0版 | 株式会社アイティードゥ | 2025年6月2日
 
 ## 目次
 
@@ -1106,15 +1106,15 @@ export const ErrorDisplay: React.FC<ErrorDisplayProps> = ({
   const getSeverityIcon = (severity: ErrorSeverity) => {
     switch (severity) {
       case ErrorSeverity.LOW:
-        return "ℹ️"
+        return ""
       case ErrorSeverity.MEDIUM:
-        return "⚠️"
+        return "[WARN]"
       case ErrorSeverity.HIGH:
-        return "❌"
+        return "[NG]"
       case ErrorSeverity.CRITICAL:
-        return "🚨"
+        return "[CRITICAL]"
       default:
-        return "❓"
+        return ""
     }
   }
 

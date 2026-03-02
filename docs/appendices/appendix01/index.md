@@ -6,31 +6,31 @@ title: "付録B: 参考資料"
 # 付録B: 参考資料
 
 ---
-**📚 目次に戻る**: [はじめに]({{ '/introduction/' | relative_url }})  
-**🔗 関連章**: [全章]({{ '/introduction/' | relative_url }}) で参照されるリファレンス資料集  
-**🎯 用途**: 開発中の即座な参照・トラブルシューティング・実装支援  
-**⏱️ 利用方法**: 必要時に該当セクションを参照  
-**📝 レベル**: 全レベル対応（基礎〜上級）
+**目次に戻る**: [はじめに]({{ '/introduction/' | relative_url }})  
+**関連章**: [全章]({{ '/introduction/' | relative_url }}) で参照されるリファレンス資料集  
+**用途**: 開発中の即座な参照・トラブルシューティング・実装支援  
+**利用方法**: 必要時に該当セクションを参照  
+**レベル**: 全レベル対応（基礎〜上級）
 ---
 
-## 📖 付録の使い方
+## 付録の使い方
 
 この付録は各章での学習・実装を支援する**実践的リファレンス集**です：
 
-- 🔧 **環境構築**: 開発環境の自動セットアップスクリプト
-- 📋 **チェックリスト**: 実装・運用時の確認項目
-- 🚨 **トラブルシューティング**: よくある問題と解決方法
-- 💡 **ベストプラクティス**: 実用的な設計・実装パターン
-- 📊 **設定サンプル**: そのまま使える設定ファイル集
+- **環境構築**: 開発環境の自動セットアップスクリプト
+- **チェックリスト**: 実装・運用時の確認項目
+- [CRITICAL] **トラブルシューティング**: よくある問題と解決方法
+- **ベストプラクティス**: 実用的な設計・実装パターン
+- **設定サンプル**: そのまま使える設定ファイル集
 
-### 📍 各章からの参照
+### 各章からの参照
 
 | 章 | 主な参照セクション | 用途 |
 |:---|:-----------------|:-----|
-| **第1章〜第2章** | A. 環境構築、G. トラブルシューティング | 基礎環境準備・初期設定 |
-| **第3章〜第5-4章** | B. 設定テンプレート、C. コードスニペット | 実装サポート・設定例 |
-| **第6章〜第8章** | D. パフォーマンス、E. セキュリティ | 最適化・運用設定 |
-| **第9章〜第10章** | F. デプロイメント、H. ベストプラクティス | 実践・統合支援 |
+| **第1章〜第2章**| A. 環境構築、G. トラブルシューティング | 基礎環境準備・初期設定 |
+| **第3章〜第5-4章**| B. 設定テンプレート、C. コードスニペット | 実装サポート・設定例 |
+| **第6章〜第8章**| D. パフォーマンス、E. セキュリティ | 最適化・運用設定 |
+| **第9章〜第10章**| F. デプロイメント、H. ベストプラクティス | 実践・統合支援 |
 
 ---
 
@@ -50,7 +50,7 @@ PROJECT_NAME="${1:-supabase-app}"
 POSTGRES_PASSWORD="${2:-$(openssl rand -base64 32)}"
 JWT_SECRET="${3:-$(openssl rand -base64 64)}"
 
-echo "🚀 Supabase開発環境セットアップ開始"
+echo " Supabase開発環境セットアップ開始"
 echo "プロジェクト名: $PROJECT_NAME"
 
 # 必要なツールのチェック
@@ -58,24 +58,24 @@ check_dependencies() {
     local deps=("docker" "psql" "curl" "jq" "openssl")
     for dep in "${deps[@]}"; do
         if ! command -v "$dep" &> /dev/null; then
-            echo "❌ $dep がインストールされていません"
+            echo "[NG] $dep がインストールされていません"
             exit 1
         fi
     done
 
     # Compose v2（docker compose）前提。Compose v1（docker-compose）は前提にしない。
     if ! docker compose version &> /dev/null; then
-        echo "❌ Docker Compose（Compose v2）が利用できません（'docker compose version' が失敗しました）"
+        echo "[NG] Docker Compose（Compose v2）が利用できません（'docker compose version' が失敗しました）"
         exit 1
     fi
-    echo "✅ 依存関係チェック完了"
+    echo "[OK] 依存関係チェック完了"
 }
 
 # プロジェクトディレクトリ作成
 setup_project_structure() {
     mkdir -p "$PROJECT_NAME"/{supabase/{migrations,seed,functions,volumes/{db/{data,init},api}},apps/{flet-client,fastapi-server},scripts,docs}
     cd "$PROJECT_NAME"
-    echo "✅ プロジェクト構造作成完了"
+    echo "[OK] プロジェクト構造作成完了"
 }
 
 # 環境変数ファイル生成
@@ -130,7 +130,7 @@ SENDGRID_API_KEY=SG....
 SLACK_WEBHOOK_URL=https://hooks.slack.com/...
 EOF
 
-    echo "✅ 環境変数ファイル作成完了"
+    echo "[OK] 環境変数ファイル作成完了"
 }
 
 # Docker Compose設定生成
@@ -270,7 +270,7 @@ volumes:
   redis_data:
 EOF
 
-    echo "✅ Docker Compose設定作成完了"
+    echo "[OK] Docker Compose設定作成完了"
 }
 
 # Kong設定生成
@@ -355,7 +355,7 @@ services:
           hide_credentials: false
 EOF
 
-    echo "✅ Kong設定作成完了"
+    echo "[OK] Kong設定作成完了"
 }
 
 # 初期マイグレーション作成
@@ -520,7 +520,7 @@ CREATE TRIGGER on_auth_user_created
     FOR EACH ROW EXECUTE FUNCTION handle_new_user();
 EOF
 
-    echo "✅ 初期マイグレーション作成完了"
+    echo "[OK] 初期マイグレーション作成完了"
 }
 
 # 開発用スクリプト生成
@@ -530,39 +530,39 @@ create_dev_scripts() {
     # 起動スクリプト
     cat > scripts/start.sh << 'EOF'
 #!/bin/bash
-echo "🚀 Supabase開発環境起動中..."
+echo " Supabase開発環境起動中..."
 docker compose up -d
 
-echo "⏳ サービス起動待機中..."
+echo " サービス起動待機中..."
 sleep 10
 
 # ヘルスチェック
-echo "🏥 ヘルスチェック実行中..."
-curl -f http://localhost:54321/rest/v1/ > /dev/null 2>&1 && echo "✅ PostgREST: OK" || echo "❌ PostgREST: NG"
-curl -f http://localhost:54321/auth/v1/settings > /dev/null 2>&1 && echo "✅ Auth: OK" || echo "❌ Auth: NG"
-curl -f http://localhost:3000 > /dev/null 2>&1 && echo "✅ Studio: OK" || echo "❌ Studio: NG"
+echo " ヘルスチェック実行中..."
+curl -f http://localhost:54321/rest/v1/ > /dev/null 2>&1 && echo "[OK] PostgREST: OK" || echo "[NG] PostgREST: NG"
+curl -f http://localhost:54321/auth/v1/settings > /dev/null 2>&1 && echo "[OK] Auth: OK" || echo "[NG] Auth: NG"
+curl -f http://localhost:3000 > /dev/null 2>&1 && echo "[OK] Studio: OK" || echo "[NG] Studio: NG"
 
-echo "🌟 Supabase開発環境が利用可能です"
-echo "📊 Studio: http://localhost:3000"
-echo "🔗 API: http://localhost:54321"
-echo "💾 Database: localhost:54322"
+echo " Supabase開発環境が利用可能です"
+echo " Studio: http://localhost:3000"
+echo " API: http://localhost:54321"
+echo " Database: localhost:54322"
 EOF
 
     # 停止スクリプト
     cat > scripts/stop.sh << 'EOF'
 #!/bin/bash
-echo "🛑 Supabase開発環境停止中..."
+echo " Supabase開発環境停止中..."
 docker compose down
-echo "✅ 停止完了"
+echo "[OK] 停止完了"
 EOF
 
     # リセットスクリプト
     cat > scripts/reset.sh << 'EOF'
 #!/bin/bash
-echo "🔄 Supabase開発環境リセット中..."
+echo " Supabase開発環境リセット中..."
 docker compose down -v
 docker compose up -d
-echo "✅ リセット完了"
+echo "[OK] リセット完了"
 EOF
 
     # バックアップスクリプト
@@ -571,19 +571,19 @@ EOF
 BACKUP_DIR="backups/$(date +%Y%m%d_%H%M%S)"
 mkdir -p "$BACKUP_DIR"
 
-echo "💾 データベースバックアップ中..."
+echo " データベースバックアップ中..."
 docker compose exec -T supabase-db pg_dump -U postgres -d postgres > "$BACKUP_DIR/database.sql"
 
-echo "📁 設定ファイルバックアップ中..."
+echo " 設定ファイルバックアップ中..."
 cp -r supabase/migrations "$BACKUP_DIR/"
 cp docker-compose.yml "$BACKUP_DIR/"
 cp .env "$BACKUP_DIR/env.backup"
 
-echo "✅ バックアップ完了: $BACKUP_DIR"
+echo "[OK] バックアップ完了: $BACKUP_DIR"
 EOF
 
     chmod +x scripts/*.sh
-    echo "✅ 開発スクリプト作成完了"
+    echo "[OK] 開発スクリプト作成完了"
 }
 
 # メイン実行
@@ -597,7 +597,7 @@ main() {
     create_dev_scripts
 
     echo ""
-    echo "🎉 Supabase開発環境セットアップ完了！"
+    echo " Supabase開発環境セットアップ完了！"
     echo ""
     echo "次のステップ:"
     echo "1. cd $PROJECT_NAME"
@@ -623,30 +623,30 @@ set -euo pipefail
 ENVIRONMENT="${1:-staging}"
 VERSION="${2:-latest}"
 
-echo "🚀 $ENVIRONMENT 環境へのデプロイ開始 (version: $VERSION)"
+echo " $ENVIRONMENT 環境へのデプロイ開始 (version: $VERSION)"
 
 # 前提条件チェック
 check_prerequisites() {
     local required_tools=("kubectl" "helm" "docker" "jq")
     for tool in "${required_tools[@]}"; do
         if ! command -v "$tool" &> /dev/null; then
-            echo "❌ $tool が必要です"
+            echo "[NG] $tool が必要です"
             exit 1
         fi
     done
 
     # 環境変数チェック
     if [[ -z "${KUBECONFIG:-}" ]]; then
-        echo "❌ KUBECONFIG が設定されていません"
+        echo "[NG] KUBECONFIG が設定されていません"
         exit 1
     fi
 
-    echo "✅ 前提条件チェック完了"
+    echo "[OK] 前提条件チェック完了"
 }
 
 # イメージビルドとプッシュ
 build_and_push_images() {
-    echo "🔨 Docker イメージビルド中..."
+    echo " Docker イメージビルド中..."
     
     # FastAPI アプリケーション
     docker build -t "myapp/api:$VERSION" ./apps/fastapi-server/
@@ -658,12 +658,12 @@ build_and_push_images() {
         docker push "myapp/client:$VERSION"
     fi
     
-    echo "✅ イメージプッシュ完了"
+    echo "[OK] イメージプッシュ完了"
 }
 
 # データベースマイグレーション
 run_migrations() {
-    echo "📊 データベースマイグレーション実行中..."
+    echo " データベースマイグレーション実行中..."
     
     # Kubernetesジョブでマイグレーション実行
     kubectl apply -f - <<EOF
@@ -691,12 +691,12 @@ EOF
     # ジョブ完了待機
     kubectl wait --for=condition=complete job/migration-$VERSION -n $ENVIRONMENT --timeout=300s
     
-    echo "✅ マイグレーション完了"
+    echo "[OK] マイグレーション完了"
 }
 
 # アプリケーションデプロイ
 deploy_application() {
-    echo "🚢 アプリケーションデプロイ中..."
+    echo " アプリケーションデプロイ中..."
     
     # Helm チャートでデプロイ
     helm upgrade --install myapp ./helm/myapp \
@@ -706,12 +706,12 @@ deploy_application() {
         --values ./helm/values-$ENVIRONMENT.yaml \
         --wait
     
-    echo "✅ アプリケーションデプロイ完了"
+    echo "[OK] アプリケーションデプロイ完了"
 }
 
 # ヘルスチェック
 health_check() {
-    echo "🏥 ヘルスチェック実行中..."
+    echo " ヘルスチェック実行中..."
     
     local api_url
     if [[ "$ENVIRONMENT" == "production" ]]; then
@@ -725,29 +725,29 @@ health_check() {
     
     while [[ $attempt -le $max_attempts ]]; do
         if curl -f "$api_url/health" > /dev/null 2>&1; then
-            echo "✅ ヘルスチェック成功"
+            echo "[OK] ヘルスチェック成功"
             return 0
         fi
         
-        echo "⏳ ヘルスチェック失敗 ($attempt/$max_attempts)"
+        echo " ヘルスチェック失敗 ($attempt/$max_attempts)"
         sleep 10
         ((attempt++))
     done
     
-    echo "❌ ヘルスチェック失敗"
+    echo "[NG] ヘルスチェック失敗"
     return 1
 }
 
 # ロールバック関数
 rollback() {
-    echo "🔄 ロールバック実行中..."
+    echo " ロールバック実行中..."
     
     local previous_version
     previous_version=$(helm history myapp -n $ENVIRONMENT --max 2 -o json | jq -r '.[1].app_version')
     
     helm rollback myapp -n $ENVIRONMENT
     
-    echo "✅ ロールバック完了 (version: $previous_version)"
+    echo "[OK] ロールバック完了 (version: $previous_version)"
 }
 
 # メイン実行
@@ -755,7 +755,7 @@ main() {
     check_prerequisites
     
     # バックアップ作成
-    echo "💾 デプロイ前バックアップ作成中..."
+    echo " デプロイ前バックアップ作成中..."
     ./scripts/backup_production.sh
     
     build_and_push_images
@@ -763,13 +763,13 @@ main() {
     deploy_application
     
     if ! health_check; then
-        echo "❌ デプロイ失敗 - ロールバック実行"
+        echo "[NG] デプロイ失敗 - ロールバック実行"
         rollback
         exit 1
     fi
     
-    echo "🎉 デプロイ成功！"
-    echo "🌐 URL: https://$(kubectl get ingress myapp-ingress -n $ENVIRONMENT -o jsonpath='{.spec.rules[0].host}')"
+    echo " デプロイ成功！"
+    echo " URL: https://$(kubectl get ingress myapp-ingress -n $ENVIRONMENT -o jsonpath='{.spec.rules[0].host}')"
 }
 
 main "$@"
@@ -1069,86 +1069,86 @@ settings = Settings()
 
 #### 開発環境
 
-- [ ] 環境変数にシークレット情報が含まれていないか
-- [ ] デフォルトパスワードが変更されているか
-- [ ] 不要なポートが開放されていないか
-- [ ] RLSポリシーが適切に設定されているか
-- [ ] JWTトークンの有効期限が適切か
-- [ ] 入力値のバリデーションが実装されているか
-- [ ] SQLインジェクション対策が実装されているか
-- [ ] XSS対策が実装されているか
-- [ ] CSRF対策が実装されているか
+- [] 環境変数にシークレット情報が含まれていないか
+- [] デフォルトパスワードが変更されているか
+- [] 不要なポートが開放されていないか
+- [] RLSポリシーが適切に設定されているか
+- [] JWTトークンの有効期限が適切か
+- [] 入力値のバリデーションが実装されているか
+- [] SQLインジェクション対策が実装されているか
+- [] XSS対策が実装されているか
+- [] CSRF対策が実装されているか
 
 #### 本番環境
 
-- [ ] HTTPS通信が強制されているか
-- [ ] セキュリティヘッダーが設定されているか
-- [ ] IPホワイトリストが設定されているか
-- [ ] ファイアウォール設定が適切か
-- [ ] データベースの暗号化が有効か
-- [ ] バックアップの暗号化が有効か
-- [ ] 監査ログが有効になっているか
-- [ ] 脆弱性スキャンが定期実行されているか
-- [ ] セキュリティアップデートが適用されているか
-- [ ] アクセス権限の最小化が実装されているか
+- [] HTTPS通信が強制されているか
+- [] セキュリティヘッダーが設定されているか
+- [] IPホワイトリストが設定されているか
+- [] ファイアウォール設定が適切か
+- [] データベースの暗号化が有効か
+- [] バックアップの暗号化が有効か
+- [] 監査ログが有効になっているか
+- [] 脆弱性スキャンが定期実行されているか
+- [] セキュリティアップデートが適用されているか
+- [] アクセス権限の最小化が実装されているか
 
 ### C.2 パフォーマンスチェックリスト
 
 #### データベース
 
-- [ ] 適切なインデックスが作成されているか
-- [ ] スロークエリが最適化されているか
-- [ ] 接続プールが適切に設定されているか
-- [ ] VACUUM・ANALYZEが定期実行されているか
-- [ ] パーティショニングが検討されているか
-- [ ] 統計情報が最新か
-- [ ] デッドロックが発生していないか
+- [] 適切なインデックスが作成されているか
+- [] スロークエリが最適化されているか
+- [] 接続プールが適切に設定されているか
+- [] VACUUM・ANALYZEが定期実行されているか
+- [] パーティショニングが検討されているか
+- [] 統計情報が最新か
+- [] デッドロックが発生していないか
 
 #### アプリケーション
 
-- [ ] APIレスポンス時間が要件を満たしているか
-- [ ] キャッシュ戦略が実装されているか
-- [ ] 不要なN+1クエリが除去されているか
-- [ ] 非同期処理が適切に実装されているか
-- [ ] メモリリークがないか
-- [ ] エラー処理が適切に実装されているか
+- [] APIレスポンス時間が要件を満たしているか
+- [] キャッシュ戦略が実装されているか
+- [] 不要なN+1クエリが除去されているか
+- [] 非同期処理が適切に実装されているか
+- [] メモリリークがないか
+- [] エラー処理が適切に実装されているか
 
 #### インフラストラクチャ
 
-- [ ] 適切なリソース制限が設定されているか
-- [ ] オートスケーリングが設定されているか
-- [ ] ロードバランサーが適切に設定されているか
-- [ ] CDNが設定されているか
-- [ ] 監視・アラートが設定されているか
+- [] 適切なリソース制限が設定されているか
+- [] オートスケーリングが設定されているか
+- [] ロードバランサーが適切に設定されているか
+- [] CDNが設定されているか
+- [] 監視・アラートが設定されているか
 
 ### C.3 運用チェックリスト {#operational-checklists}
 
 #### デプロイ前
 
-- [ ] テストカバレッジが十分か
-- [ ] セキュリティスキャンが完了しているか
-- [ ] パフォーマンステストが完了しているか
-- [ ] ドキュメントが最新か
-- [ ] ロールバック手順が準備されているか
-- [ ] 関係者への通知が完了しているか
+- [] テストカバレッジが十分か
+- [] セキュリティスキャンが完了しているか
+- [] パフォーマンステストが完了しているか
+- [] ドキュメントが最新か
+- [] ロールバック手順が準備されているか
+- [] 関係者への通知が完了しているか
 
 #### デプロイ後
 
-- [ ] ヘルスチェックが成功しているか
-- [ ] エラー率が正常範囲内か
-- [ ] パフォーマンスメトリクスが正常か
-- [ ] ログに異常がないか
-- [ ] ユーザーからの問い合わせがないか
-- [ ] 外部サービス連携が正常か
+- [] ヘルスチェックが成功しているか
+- [] エラー率が正常範囲内か
+- [] パフォーマンスメトリクスが正常か
+- [] ログに異常がないか
+- [] ユーザーからの問い合わせがないか
+- [] 外部サービス連携が正常か
 
 #### 定期メンテナンス
 
-- [ ] バックアップが正常に取得されているか
-- [ ] ログローテーションが実行されているか
-- [ ] セキュリティパッチが適用されているか
-- [ ] リソース使用量の傾向分析が実施されているか
-- [ ] 容量計画の見直しが実施されているか
-- [ ] インシデント対応手順の見直しが実施されているか
+- [] バックアップが正常に取得されているか
+- [] ログローテーションが実行されているか
+- [] セキュリティパッチが適用されているか
+- [] リソース使用量の傾向分析が実施されているか
+- [] 容量計画の見直しが実施されているか
+- [] インシデント対応手順の見直しが実施されているか
 
 ---
 
@@ -1497,27 +1497,27 @@ LIMIT 20;
 
 最新の情報とサンプルコードは、GitHubリポジトリで公開・更新しています。
 
-## Happy Coding with Supabase! 🚀
+## Happy Coding with Supabase! 
 
 ---
 
-## 📝 付録活用まとめ
+## 付録活用まとめ
 
-### ✅ **この付録で得られるもの**
-- ✅ すぐに使える実践的な環境構築スクリプト・設定ファイル
-- ✅ 開発・運用時の体系的チェックリスト・ベストプラクティス
-- ✅ トラブル発生時の迅速な問題解決リファレンス
-- ✅ プロダクション対応の実装パターン・設定例
+### [OK] **この付録で得られるもの**
+- [OK] すぐに使える実践的な環境構築スクリプト・設定ファイル
+- [OK] 開発・運用時の体系的チェックリスト・ベストプラクティス
+- [OK] トラブル発生時の迅速な問題解決リファレンス
+- [OK] プロダクション対応の実装パターン・設定例
 
-### 🎯 **効果的な活用方法**
+### **効果的な活用方法**
 | 場面 | 活用セクション | 期待効果 |
 |:-----|:-------------|:---------|
-| **プロジェクト開始時** | A. 環境構築スクリプト | 迅速な開発環境準備 |
-| **実装中** | B. 設定テンプレート、C. コードスニペット | 効率的な実装・品質向上 |
-| **問題発生時** | G. トラブルシューティング | 素早い問題解決 |
-| **本番リリース前** | D. パフォーマンス、E. セキュリティ | 品質・安全性確保 |
+| **プロジェクト開始時**| A. 環境構築スクリプト | 迅速な開発環境準備 |
+| **実装中**| B. 設定テンプレート、C. コードスニペット | 効率的な実装・品質向上 |
+| **問題発生時**| G. トラブルシューティング | 素早い問題解決 |
+| **本番リリース前**| D. パフォーマンス、E. セキュリティ | 品質・安全性確保 |
 
-### 🔄 **継続的な改善**
+### **継続的な改善**
 この付録は学習・実装の経験を積むことで、さらに価値が高まります：
 - 実際の開発で遭遇した課題・解決策の追記
 - チーム固有のベストプラクティスの蓄積
@@ -1525,8 +1525,8 @@ LIMIT 20;
 
 ---
 
-**📍 最終ナビゲーション**
-- **📚 目次**: [はじめに]({{ '/introduction/' | relative_url }})
-- **🏠 全章**: [第1章〜第10章]({{ '/introduction/' | relative_url }}) での実装時に参照
-- **🔧 関連リソース**: [動作検証]({{ '/guides/code-verification/' | relative_url }}) | [チェックリスト]({{ '/appendices/appendix01/' | relative_url }}#operational-checklists) | [トラブルシューティング]({{ '/guides/troubleshooting/' | relative_url }})
-- **🌐 コミュニティ**: [Supabase公式](https://supabase.com) | [GitHub](https://github.com/supabase/supabase)
+**最終ナビゲーション**
+- **目次**: [はじめに]({{ '/introduction/' | relative_url }})
+- **全章**: [第1章〜第10章]({{ '/introduction/' | relative_url }}) での実装時に参照
+- **関連リソース**: [動作検証]({{ '/guides/code-verification/' | relative_url }}) | [チェックリスト]({{ '/appendices/appendix01/' | relative_url }}#operational-checklists) | [トラブルシューティング]({{ '/guides/troubleshooting/' | relative_url }})
+- **コミュニティ**: [Supabase公式](https://supabase.com) | [GitHub](https://github.com/supabase/supabase)

@@ -1,11 +1,11 @@
 # Terminology Guide - 用語統一ガイド
 
-## 📋 Purpose / 目的
+## Purpose / 目的
 
 This guide ensures consistent terminology usage throughout the Supabase Architecture Patterns book.
 本ガイドは、Supabaseアーキテクチャパターンブック全体での用語使用の一貫性を確保します。
 
-## 🔤 General Rules / 一般規則
+## General Rules / 一般規則
 
 ### 1. Language Priority / 言語優先順位
 - **Technical Terms**: Use English for all technical terms (API, Database, Authentication)
@@ -17,7 +17,7 @@ This guide ensures consistent terminology usage throughout the Supabase Architec
 - **Technical Terms**: Follow standard conventions (WebSocket, not websocket)
 - **Acronyms**: All caps (API, RLS, JWT)
 
-## 📚 Standard Terms / 標準用語
+## Standard Terms / 標準用語
 
 ### Core Components / コアコンポーネント
 
@@ -52,8 +52,8 @@ This guide ensures consistent terminology usage throughout the Supabase Architec
 | PostgREST | PostGREST, postgrest | Note the 'g' placement |
 | Supabase | supabase, SupaBase | Capital 'S' only |
 | WebSocket | Websocket, websocket | Capital 'W' and 'S' |
-| JavaScript | Javascript, JS | Full name preferred |
-| TypeScript | Typescript, TS | Full name preferred |
+| JavaScript | `Javascript`, `JS` | Full name preferred |
+| TypeScript | `Typescript`, `TS` | Full name preferred |
 | Row Level Security | row level security, RLS | Use full name first, then RLS |
 | Write-Ahead Log | write-ahead log | Use capitals or WAL |
 
@@ -66,7 +66,7 @@ This guide ensures consistent terminology usage throughout the Supabase Architec
 | Permission Error | 権限エラー | アクセス権限エラー |
 | Validation Error | 検証エラー | 入力検証エラー |
 
-## 🎯 Usage Guidelines / 使用ガイドライン
+## Usage Guidelines / 使用ガイドライン
 
 ### 1. First Mention / 初出時
 ```text
@@ -95,17 +95,17 @@ const supabase = createClient(url, key); // クライアント作成
 誤: Postgresデータベースにデータを保存します
 ```
 
-## 📝 Checklist / チェックリスト
+## Checklist / チェックリスト
 
 Before publishing, verify:
-- [ ] All product names are correctly capitalized
-- [ ] Technical terms follow standard conventions
-- [ ] Japanese is used for explanations
-- [ ] English is used for code and technical terms
-- [ ] Acronyms are consistently formatted
-- [ ] First mentions include full names
+- [] All product names are correctly capitalized
+- [] Technical terms follow standard conventions
+- [] Japanese is used for explanations
+- [] English is used for code and technical terms
+- [] Acronyms are consistently formatted
+- [] First mentions include full names
 
-## 🔄 Updates / 更新履歴
+## Updates / 更新履歴
 
 | Date | Change | Reason |
 |------|--------|--------|
