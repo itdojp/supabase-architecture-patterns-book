@@ -67,7 +67,7 @@ permalink: /
 ## 付録
 
 - [付録A: 技術リソース集]({{ site.baseurl }}/appendices/appendix-a/)
-- [付録B: 参考資料]({{ site.baseurl }}/appendices/appendix01/)
+- [付録B: 参考資料]({{ site.baseurl }}/appendices/appendix01/) — 環境構築、チェックリスト、トラブルシューティングを収録
 
 ## 著者について
 

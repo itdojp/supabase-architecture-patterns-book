@@ -45,14 +45,14 @@ title: "技術用語索引・用語集 "
 - **定義**: データベーストランザクションの4つの特性（Atomicity, Consistency, Isolation, Durability）
 - **Supabaseでの実装**: PostgreSQLがACID特性を完全サポート
 - **実用例**: 銀行の送金処理（途中で失敗しても中途半端な状態にならない）
-- **参照章**: [第1章：PostgreSQL詳細]({{ site.baseurl }}/chapters/chapter01/index.html#postgresql-データの倉庫を詳しく見てみよう)
+- **参照章**: [第1章：PostgreSQL詳細]({{ '/chapters/chapter01/' | relative_url }}#postgresql-データの倉庫を詳しく見てみよう)
 
 #### **API（Application Programming Interface）**
 `#api` `#communication`
 - **定義**: アプリケーション間でデータをやり取りする仕組み・約束事
 - **Supabaseでの実装**: PostgRESTによる自動API生成
 - **実用例**: フロントエンドからバックエンドへのデータ要求
-- **参照章**: [第1章：PostgREST]({{ site.baseurl }}/chapters/chapter01/index.html#postgrest-api自動生成の魔法)
+- **参照章**: [第1章：PostgREST]({{ '/chapters/chapter01/' | relative_url }}#postgrest-api自動生成の魔法)
 
 #### **Authentication（認証）**
 `#auth` `#security`
@@ -107,7 +107,7 @@ title: "技術用語索引・用語集 "
 - **定義**: アプリケーションをコンテナ化する技術
 - **Supabaseでの実装**: 開発環境・セルフホスト環境
 - **実用例**: 一貫した開発環境の構築
-- **参照章**: [第1章：開発環境構築]({{ site.baseurl }}/chapters/chapter01/index.html#14-開発環境構築docker-compose)
+- **参照章**: [第1章：開発環境構築]({{ '/chapters/chapter01/' | relative_url }}#14-開発環境構築docker-compose)
 
 ### E
 
@@ -168,14 +168,14 @@ title: "技術用語索引・用語集 "
 - **定義**: 高機能・高信頼性のオープンソースリレーショナルデータベース
 - **Supabaseでの位置づけ**: 中核データベースエンジン
 - **実用例**: 全てのデータ保存・管理
-- **参照章**: [第1章：PostgreSQL詳細]({{ site.baseurl }}/chapters/chapter01/index.html#postgresql-データの倉庫を詳しく見てみよう)
+- **参照章**: [第1章：PostgreSQL詳細]({{ '/chapters/chapter01/' | relative_url }}#postgresql-データの倉庫を詳しく見てみよう)
 
 #### **PostgREST**
 `#api` `#database`
 - **定義**: PostgreSQLからREST APIを自動生成するツール
 - **Supabaseでの実装**: API層の中核
 - **実用例**: データベーススキーマからAPI自動作成
-- **参照章**: [第1章：PostgREST詳細]({{ site.baseurl }}/chapters/chapter01/index.html#postgrest-api自動生成の魔法)
+- **参照章**: [第1章：PostgREST詳細]({{ '/chapters/chapter01/' | relative_url }}#postgrest-api自動生成の魔法)
 
 ### R
 
@@ -184,7 +184,7 @@ title: "技術用語索引・用語集 "
 - **定義**: データベース変更をリアルタイムで通知する仕組み
 - **Supabaseでの実装**: WALベースのリアルタイム配信
 - **実用例**: チャット・共同編集・ライブ更新
-- **参照章**: [第1章：Realtime詳細]({{ site.baseurl }}/chapters/chapter01/index.html#realtime-リアルタイム通信)
+- **参照章**: [第1章：Realtime詳細]({{ '/chapters/chapter01/' | relative_url }}#realtime-リアルタイム通信)
 
 #### **Redis**
 `#cache` `#performance`
@@ -223,14 +223,14 @@ title: "技術用語索引・用語集 "
 - **定義**: データベースの変更を事前にログ記録する仕組み
 - **Supabaseでの実装**: Realtime機能の基盤技術
 - **実用例**: データ変更のリアルタイム通知
-- **参照章**: [第1章：WAL機能]({{ site.baseurl }}/chapters/chapter01/index.html#realtime-リアルタイム通信)
+- **参照章**: [第1章：WAL機能]({{ '/chapters/chapter01/' | relative_url }}#realtime-リアルタイム通信)
 
 #### **WebSocket**
 `#realtime` `#communication`
 - **定義**: サーバーとクライアント間の双方向リアルタイム通信プロトコル
 - **Supabaseでの実装**: Realtime機能の通信基盤
 - **実用例**: チャット・ライブ更新・プッシュ通知
-- **参照章**: [第1章：WebSocket通信]({{ site.baseurl }}/chapters/chapter01/index.html#realtime-リアルタイム通信)
+- **参照章**: [第1章：WebSocket通信]({{ '/chapters/chapter01/' | relative_url }}#realtime-リアルタイム通信)
 
 ---
 
