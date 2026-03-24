@@ -1,6 +1,21 @@
 introduction:
 - title: はじめに
   path: /introduction/
+guides:
+- title: 図版索引
+  path: /guides/figure-index/
+- title: 設計パターン選定ガイド
+  path: /guides/pattern-selection/
+- title: エラーハンドリングガイド
+  path: /guides/error-handling/
+- title: トラブルシューティングガイド
+  path: /guides/troubleshooting/
+- title: コード検証ガイド
+  path: /guides/code-verification/
+- title: 用語集
+  path: /guides/glossary/
+- title: Terminology Guide - 用語統一ガイド
+  path: /guides/terminology/
 chapters:
 - title: 第1章：Supabaseアーキテクチャ理解
   path: /chapters/chapter01/

@@ -59,6 +59,7 @@ permalink: /
 
 ## ガイド
 
+- [図版索引]({{ site.baseurl }}/guides/figure-index/)
 - [設計パターン選定ガイド]({{ site.baseurl }}/guides/pattern-selection/)
 - [エラーハンドリングガイド]({{ site.baseurl }}/guides/error-handling/)
 - [トラブルシューティングガイド]({{ site.baseurl }}/guides/troubleshooting/)
