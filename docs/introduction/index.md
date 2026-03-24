@@ -297,6 +297,7 @@ src/examples/
 ## 関連ドキュメント・リソース
 
 ### **実践ガイド集**
+- [図版索引]({{ '/guides/figure-index/' | relative_url }}) - 主要図版の参照
 - [トラブルシューティングガイド]({{ '/guides/troubleshooting/' | relative_url }}) - 開発時の問題解決
 - [[WARN] エラーハンドリングガイド]({{ '/guides/error-handling/' | relative_url }}) - 高度なエラー処理
 - [パターン選択ガイド]({{ '/guides/pattern-selection/' | relative_url }}) - AI支援選択システム

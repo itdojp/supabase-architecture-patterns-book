@@ -55,6 +55,21 @@
             </div>
             {% endif %}
 
+            {% if navigation.guides %}
+            <div class="toc-section">
+                <h4 class="toc-section-title">ガイド</h4>
+                <ul class="toc-list">
+                    {% for item in navigation.guides %}
+                    <li class="toc-item">
+                        <a href="{{ item.path | relative_url }}" class="toc-link {% if page.url == item.path or page.url contains item.path %}active{% endif %}" {% if page.url == item.path or page.url contains item.path %}aria-current="page"{% endif %}>
+                            {{ item.title }}
+                        </a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+
             {% if navigation.additional %}
             <div class="toc-section">
                 <h4 class="toc-section-title">追加</h4>
@@ -135,4 +150,3 @@
         </div>
     </div>
 </div>
-
