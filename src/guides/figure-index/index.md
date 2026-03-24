@@ -1,8 +1,3 @@
----
-layout: book
-order: 13
-title: "図版索引"
----
 # 図版索引
 
 ## このページの使い方
@@ -30,7 +25,7 @@ title: "図版索引"
 
 ## 関連ガイド
 
-- [設計パターン選定ガイド]({{ '/guides/pattern-selection/' | relative_url }})
-- [エラーハンドリングガイド]({{ '/guides/error-handling/' | relative_url }})
-- [トラブルシューティングガイド]({{ '/guides/troubleshooting/' | relative_url }})
-- [コード検証ガイド]({{ '/guides/code-verification/' | relative_url }})
+- [設計パターン選定ガイド](../pattern-selection/)
+- [エラーハンドリングガイド](../error-handling/)
+- [トラブルシューティングガイド](../troubleshooting/)
+- [コード検証ガイド](../code-verification/)
