@@ -70,6 +70,19 @@ permalink: /
 - [付録A: 技術リソース集]({{ site.baseurl }}/appendices/appendix-a/)
 - [付録B: 参考資料]({{ site.baseurl }}/appendices/appendix01/) — 環境構築、チェックリスト、トラブルシューティングを収録
 
+## 安全に使うための注意
+
+- Supabase の `service_role` キーや管理者権限をクライアントへ埋め込まないでください。権限境界は第2章と第7章を前提に確認してください。
+- 認証、RLS、Storage、外部 API 連携は課金・データ保護・公開範囲に影響するため、本番適用前に対象プロジェクトの環境変数、ログ、監査方針を確認してください。
+- 本書の手順をそのまま商用環境へ適用する前に、利用している Supabase 版、機能提供状況、公式ドキュメントを確認してください。
+
+## 利用と更新情報
+
+- 公開ページ: [GitHub Pages](https://itdojp.github.io/supabase-architecture-patterns-book/)
+- リポジトリ: [GitHub](https://github.com/itdojp/supabase-architecture-patterns-book)
+- 更新確認先: [コミット履歴](https://github.com/itdojp/supabase-architecture-patterns-book/commits/main/)、[Pull Requests](https://github.com/itdojp/supabase-architecture-patterns-book/pulls)
+- 図版索引、設計パターン選定、トラブルシューティング、用語の再参照は上記ガイド節を起点にしてください。
+
 ## 著者について
 
 **株式会社アイティードゥ**

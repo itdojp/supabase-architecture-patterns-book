@@ -28,4 +28,4 @@
 - [設計パターン選定ガイド](../pattern-selection/)
 - [エラーハンドリングガイド](../error-handling/)
 - [トラブルシューティングガイド](../troubleshooting/)
-- [コード検証ガイド](../code-verification/)
+- [コード検証ガイド](../../../docs/guides/code-verification/index.md)

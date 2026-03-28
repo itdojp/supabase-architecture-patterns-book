@@ -14,13 +14,13 @@ title: "図版索引"
 
 | 図版 | 主な用途 | 関連章 | ファイル |
 |---|---|---|---|
-| Supabase 全体像 | 3 層構成の全体把握 | 第1章 | `docs/assets/images/diagrams/supabase-architecture.svg` |
-| 認証フローと RLS | 認証と行レベル権限の関係確認 | 第2章 | `docs/assets/images/diagrams/auth-flow-rls.svg` |
-| RLS セキュリティ | 行レベル権限の防御モデル確認 | 第2章 / 第7章 | `docs/assets/images/diagrams/rls-security.svg` |
-| クライアント・Edge・API 比較 | パターン選定の比較確認 | 第3章〜第5章 | `docs/assets/images/diagrams/architecture-comparison.svg` |
-| マルチテナンシーモデル | SaaS 向け分離設計の確認 | 第5-2章 | `docs/assets/images/diagrams/multi-tenancy-model.svg` |
-| キャッシュ戦略 | パフォーマンス最適化の整理 | 第5-3章 / 第6章 | `docs/assets/images/diagrams/caching-strategy.svg` |
-| Realtime アーキテクチャ | リアルタイム更新の流れ確認 | 第1章 / 第5-4章 | `docs/assets/images/diagrams/realtime-architecture.svg` |
+| Supabase 全体像 | 3 層構成の全体把握 | 第1章 | [supabase-architecture.svg]({{ '/assets/images/diagrams/supabase-architecture.svg' | relative_url }}) |
+| 認証フローと RLS | 認証と行レベル権限の関係確認 | 第2章 | [auth-flow-rls.svg]({{ '/assets/images/diagrams/auth-flow-rls.svg' | relative_url }}) |
+| RLS セキュリティ | 行レベル権限の防御モデル確認 | 第2章 / 第7章 | [rls-security.svg]({{ '/assets/images/diagrams/rls-security.svg' | relative_url }}) |
+| クライアント・Edge・API 比較 | パターン選定の比較確認 | 第3章〜第5章 | [architecture-comparison.svg]({{ '/assets/images/diagrams/architecture-comparison.svg' | relative_url }}) |
+| マルチテナンシーモデル | SaaS 向け分離設計の確認 | 第5-2章 | [multi-tenancy-model.svg]({{ '/assets/images/diagrams/multi-tenancy-model.svg' | relative_url }}) |
+| キャッシュ戦略 | パフォーマンス最適化の整理 | 第5-3章 / 第6章 | [caching-strategy.svg]({{ '/assets/images/diagrams/caching-strategy.svg' | relative_url }}) |
+| Realtime アーキテクチャ | リアルタイム更新の流れ確認 | 第1章 / 第5-4章 | [realtime-architecture.svg]({{ '/assets/images/diagrams/realtime-architecture.svg' | relative_url }}) |
 
 ## 参照のポイント
 
