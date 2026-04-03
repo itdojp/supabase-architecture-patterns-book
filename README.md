@@ -4,7 +4,7 @@
 
 ## オンライン版（推奨）
 
-- https://itdojp.github.io/supabase-architecture-patterns-book/
+- [Supabaseアーキテクチャパターン実践技術書](https://itdojp.github.io/supabase-architecture-patterns-book/)
 
 ## この本について
 
