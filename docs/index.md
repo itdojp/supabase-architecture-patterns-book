@@ -80,7 +80,7 @@ permalink: /
 
 - 公開ページ: [GitHub Pages](https://itdojp.github.io/supabase-architecture-patterns-book/)
 - リポジトリ: [GitHub](https://github.com/itdojp/supabase-architecture-patterns-book)
-- 更新確認先: [コミット履歴](https://github.com/itdojp/supabase-architecture-patterns-book/commits/main/)、[Pull Requests](https://github.com/itdojp/supabase-architecture-patterns-book/pulls)
+- 更新確認先: [コミット履歴](https://github.com/itdojp/supabase-architecture-patterns-book/commits/main/)、[PR 一覧](https://github.com/itdojp/supabase-architecture-patterns-book/pulls)
 - 図版索引、設計パターン選定、トラブルシューティング、用語の再参照は上記ガイド節を起点にしてください。
 
 ## 著者について
