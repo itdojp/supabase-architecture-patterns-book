@@ -12,18 +12,20 @@ title: "はじめに"
 
 **著者**: 株式会社アイティードゥ  
 **版**: 1.0版  
-**最終更新**: 2026年3月5日  
+**最終更新**: 2026年5月23日
 
 ---
 
 ## [OK] 検証日・対象範囲・互換性ポリシー
 
-**検証日**: 2026年1月24日  
+**検証日**: 2026年5月23日
+
 **対象範囲**: Supabase Cloud（主要機能）/ セルフホスト（Docker構成）  
 **互換性ポリシー**:
 - Supabaseは機能名・APIキー仕様・運用機能が頻繁に更新されるため、**最新仕様は公式ドキュメントで再確認**すること
 - 本書では、**Cloud向けのpublishable/secretキー**と**セルフホスト向けのlegacy JWTキー**を区別して説明する
 - Beta/Alpha機能は本文内で明記し、代替パターンも併記する
+- 2026年5月23日時点の再レビューでは、APIキー、RLS、Storage Access Control、Realtime Authorization、Edge Functions Secrets、CLI migration/testing を重点確認対象とする
 
 ## この技術書の革新的アプローチ
 
@@ -287,7 +289,7 @@ src/examples/
 ### **動作検証**
 
 各サンプルは以下で動作確認済み：
-- [OK] Supabase v2.39.0
+- [OK] Supabase Cloud 主要機能（公式 Docs 2026年5月23日確認）
 - [OK] Python 3.11+
 - [OK] Node.js 20+
 - [OK] Docker Compose v2.0+

@@ -12,6 +12,13 @@
 - [ ] Book QA（Unicode / textlint(PRH) / 内部リンク・アンカー / Jekyll build / built-site smoke）: PASS
   - 実行URL:
 
+## Review Completion Gate（必須）
+
+- [ ] GitHub Copilot review の本文・inline comment・suggestion を全件確認した
+- [ ] 対応が必要な指摘は修正・返信・resolve 済み
+- [ ] 未対応の指摘がある場合は、理由とリスクを PR で明記した
+- [ ] マージ前に未解決 review thread が 0 件であることを確認した
+
 ## Pages確認（原則必須）
 
 - 確認URL: https://itdojp.github.io/supabase-architecture-patterns-book/
