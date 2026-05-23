@@ -1950,7 +1950,7 @@ export async function healthCheck(): Promise<{ status: string; checks: any[] }> 
 Edge Functions は Deno 互換のサーバーサイド TypeScript 実行環境です。公開API化しやすい一方で、Secrets と JWT 検証の扱いを誤ると RLS 迂回やWebhookなりすましにつながります。
 
 - **Secrets分離**: ユーザー操作は publishable key + ユーザーJWTで RLS を通し、管理操作だけ secret key / legacy `service_role` を使います。ログにはAPIキー全文、JWT、Webhook署名、外部APIキーを出しません。
-- **デフォルトSecrets**: hosted Edge Functions では `SUPABASE_URL`、`SUPABASE_PUBLISHABLE_KEYS`、`SUPABASE_SECRET_KEYS`、`SUPABASE_JWKS` などを参照できます。旧 `SUPABASE_ANON_KEY` / `SUPABASE_SERVICE_ROLE_KEY` は互換用途として扱い、Cloud では新キーへの移行を優先します。
+- **環境変数の整合**: 本書のサンプルでは `SUPABASE_URL`、`SUPABASE_PUBLISHABLE_KEY`、`SUPABASE_SECRET_KEY` を標準名にします。legacy `SUPABASE_ANON_KEY` / `SUPABASE_SERVICE_ROLE_KEY` や hosted Edge Functions のデフォルトSecretsを使う場合は、章内の変数名とSecrets登録名の対応をPRに明記します。
 - **JWT検証**: 認証済みユーザー向け関数は Supabase のJWT検証を有効にしたままデプロイします。`--no-verify-jwt` は公開Webhook、独自APIキー検証、または publishable/secret key 互換制約により必要な関数だけに限定します。
 - **公開Webhook**: Stripe等のWebhookでは `--no-verify-jwt` を使う代わりに、関数内部で署名検証、リプレイ対策、冪等性キー、レート制限、監査ログを確認します。
 - **CI/CD**: `supabase functions serve`、`supabase db reset`、型生成、関数単体テスト、Secrets未混入チェックをPR単位で再実行可能にします。
