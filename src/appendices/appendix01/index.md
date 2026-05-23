@@ -1065,9 +1065,15 @@ settings = Settings()
 #### 開発環境
 
 - [] 環境変数にシークレット情報が含まれていないか
+- [] `sb_publishable_...`、`sb_secret_...`、legacy `anon` / `service_role` の用途が分離されているか
+- [] secret key / `service_role` がブラウザ、モバイル、公開リポジトリ、URL、未マスクログへ露出していないか
 - [] デフォルトパスワードが変更されているか
 - [] 不要なポートが開放されていないか
-- [] RLSポリシーが適切に設定されているか
+- [] ローカルSupabaseスタックが公開ネットワークへ露出していないか
+- [] 公開スキーマのRLSポリシーが適切に設定されているか
+- [] Storage の `storage.objects` ポリシーが操作別に設定されているか
+- [] Realtime private channel の `realtime.messages` ポリシーが設定されているか
+- [] Edge Functions の `--no-verify-jwt` 使用箇所に署名検証または独自認可が実装されているか
 - [] JWTトークンの有効期限が適切か
 - [] 入力値のバリデーションが実装されているか
 - [] SQLインジェクション対策が実装されているか

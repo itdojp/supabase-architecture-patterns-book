@@ -136,9 +136,9 @@ const { error } = await supabase.auth.signOut();
 
 **時間**: 数時間で完成！ 
 
-### セキュリティも自動で完璧
+### セキュリティを実装しやすくする
 
-Supabase Authが自動で処理してくれること：
+Supabase Authが標準機能として支援すること（RLS、APIキー管理、メールテンプレート、MFA設定などはプロジェクト側で追加確認が必要）：
 
 | セキュリティ機能 | 従来（手作業） | Supabase Auth |
 |:---------------:|:-------------:|:-------------:|
@@ -269,6 +269,17 @@ Supabase AuthはJWT RFC 7519準拠のトークンを生成し、PostgreSQL RLS�
   "session_id": "session-uuid"
 }
 ```
+
+### 実務レビューゲート: Auth・APIキー・RLS境界
+
+2026年5月時点の Supabase Cloud では、アプリケーションを識別する **APIキー** と、利用者を識別する **Supabase Auth のユーザーJWT** を分けて考えます。
+
+- **公開クライアント**: ブラウザ、モバイル、デスクトップ、配布済みCLIでは `sb_publishable_...` を使い、データ保護は RLS とユーザーJWTで担保します。
+- **バックエンド/管理処理**: `sb_secret_...` または legacy `service_role` は RLS を迂回し得るため、Edge Functions、サーバー、ジョブなどの管理された実行環境だけで使います。クライアント、URL、公開ログ、サンプルコードへ出しません。
+- **legacyキー**: `anon` は publishable key、`service_role` は secret key の legacy 相当です。JWT secret に紐づく長期キーであり、Cloud では新しい publishable/secret キーを優先します。
+- **RLSロール**: 未ログインは Postgres role `anon`、ログイン済みは `authenticated` として評価されます。Supabase Auth の anonymous user は `authenticated` role であり、`anon` key とは別概念です。
+- **ポリシー条件**: `auth.uid()` は未認証・期限切れセッションで `null` になるため、本人限定ポリシーでは `auth.uid() IS NOT NULL AND auth.uid() = user_id` のように意図を明示します。
+- **周辺サービス**: Storage は `storage.objects`、Realtime private channel は `realtime.messages` の RLS を含めてレビューします。テーブルRLSだけで Storage/Realtime の操作権限が完了したと見なさないでください。
 
 ### 認証フロー実装
 
@@ -649,6 +660,8 @@ SET row_security = off;
 EXPLAIN (ANALYZE, BUFFERS) SELECT * FROM documents WHERE title ILIKE '%budget%';
 SET row_security = on;
 ```
+
+> [WARN] `row_security = off` や `service_role` / secret key による確認は、RLSを迂回できる権限の診断専用です。通常のアプリケーション経路、公開クライアント、共有ログでは使わず、最小限の検証環境で実施してください。
 
 ---
 

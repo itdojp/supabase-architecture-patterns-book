@@ -21,9 +21,18 @@ title: "付録A: 技術リソース集"
 ## A.1 Supabase 公式情報
 
 - Supabase Docs: https://supabase.com/docs
+- API Keys: https://supabase.com/docs/guides/getting-started/api-keys
+- Local Development & CLI: https://supabase.com/docs/guides/local-development
+- Supabase CLI: https://supabase.com/docs/guides/local-development/cli/getting-started
+- Row Level Security: https://supabase.com/docs/guides/database/postgres/row-level-security
+- Storage Access Control: https://supabase.com/docs/guides/storage/security/access-control
+- Realtime Authorization: https://supabase.com/docs/guides/realtime/authorization
+- Edge Functions: https://supabase.com/docs/guides/functions
+- Edge Functions Secrets: https://supabase.com/docs/guides/functions/secrets
+- Testing Your Database: https://supabase.com/docs/guides/database/testing
 - Supabase GitHub: https://github.com/supabase/supabase
 - supabase-js（JavaScript/TypeScript SDK）: https://github.com/supabase/supabase-js
-- Supabase CLI: https://github.com/supabase/cli
+- Supabase CLI GitHub: https://github.com/supabase/cli
 
 ## A.2 PostgreSQL / SQL リファレンス
 

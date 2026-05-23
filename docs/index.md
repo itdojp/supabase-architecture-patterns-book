@@ -76,6 +76,17 @@ permalink: /
 - 認証、RLS、Storage、外部 API 連携は課金・データ保護・公開範囲に影響するため、本番適用前に対象プロジェクトの環境変数、ログ、監査方針を確認してください。
 - 本書の手順をそのまま商用環境へ適用する前に、利用している Supabase 版、機能提供状況、公式ドキュメントを確認してください。
 
+## Phase 5 実務レビューゲート（2026-05-23）
+
+本書を実プロジェクトへ適用する前に、以下を PR 単位で確認してください。
+
+- **APIキー境界**: Cloud では `sb_publishable_...` と `sb_secret_...`、セルフホスト/互換用途では legacy `anon` / `service_role` を区別する。`secret` / `service_role` は RLS を迂回し得るため、ブラウザ、モバイル、公開リポジトリ、URL、未マスクログへ出さない。
+- **RLS責任境界**: 公開スキーマのテーブルは RLS を有効化し、`anon` / `authenticated` ロールごとの `SELECT` / `INSERT` / `UPDATE` / `DELETE` 権限を明示する。`auth.uid()` が `null` になり得るケースを条件式で扱う。
+- **Storage / Realtime**: Storage は `storage.objects`、Realtime private channel は `realtime.messages` の RLS を前提に、アップロード、上書き、購読、Broadcast、Presence の操作別ポリシーを確認する。
+- **Edge Functions**: Deno 互換の Edge Runtime、Secrets、JWT 検証、`--no-verify-jwt` の使用理由を確認する。公開 Webhook や publishable/secret キーを使う関数では、関数内部で署名検証または `apikey` ヘッダー検証を実装する。
+- **CLI / CI/CD**: Supabase CLI、Docker 互換ランタイム、migration、seed、型生成、RLS/DBテストを CI で再実行可能にする。ローカル Supabase スタックを公開ネットワークへ露出させない。
+- **Review Completion Gate**: GitHub Copilot review の本文・inline comment・suggestion を全件確認し、未解決 review thread 0 件をマージ条件にする。
+
 ## 利用と更新情報
 
 - 公開ページ: [GitHub Pages](https://itdojp.github.io/supabase-architecture-patterns-book/)

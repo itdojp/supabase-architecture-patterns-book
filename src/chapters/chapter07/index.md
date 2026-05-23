@@ -72,6 +72,16 @@ def get_user(user_id):
 
 城に入るとき、「身分証を見せれば入れる」という単純なルールだけでは不十分ですよね。実際の城では「この人は昼間だけ入場可能」「この部屋にはVIPしか入れない」「家族なら一緒に入れる」といった複雑なルールがあります。Supabaseの**RLS（Row Level Security）**も同じように、**データベースの各行に対して細かい権限制御**を実現できます。
 
+### 実務レビューゲート: RLS / Storage / Realtime
+
+本番適用前に、次の境界を設計レビューとテストで確認します。
+
+- 公開スキーマに新規テーブルを作る場合は、migration内で `ALTER TABLE ... ENABLE ROW LEVEL SECURITY` と必要な `GRANT` を同時に定義する。
+- `service_role`、secret key、`bypassrls` ロールは管理経路だけに限定し、クライアント実装、サンプル `.env`、ログ、スクリーンショットへ出さない。
+- Storage bucket は公開/非公開の分類だけでなく、`storage.objects` の `SELECT` / `INSERT` / `UPDATE` / `DELETE` ポリシーを操作別に確認する。
+- Realtime private channel は `realtime.messages` のRLS、`realtime.topic()`、JWT claims、Broadcast/Presenceのread/write権限をテーブルRLSとは別に確認する。
+- RLSの期待動作は、Supabase CLI の database test / pgTAP、またはクライアント経由のE2Eテストで `anon` / `authenticated` / 管理経路を分けて検証する。
+
 ### Step 1: 基本的な動的権限チェック関数
 
 まず、「この人はこの操作をしても良いか？」を判断する基本的な関数を作りましょう：
@@ -1167,6 +1177,10 @@ WHERE created_at > '2024-01-01 02:00:00'::timestamp;
 実装完了時に以下を確認してください：
 
 - [] RLSポリシーが適切に設定されている
+- [] `service_role` / secret key を使う管理経路が棚卸しされ、クライアントやログへ露出していない
+- [] Storage の `storage.objects` ポリシーが、アップロード、上書き、閲覧、削除の操作別に検証されている
+- [] Realtime private channel の `realtime.messages` ポリシーが、Broadcast / Presence のread/write別に検証されている
+- [] Supabase CLI database test / pgTAP またはE2Eテストで RLS の許可・拒否ケースを確認している
 - [] 権限システムが正常に動作している
 - [] 監査ログが記録されている
 - [] 異常検知システムが稼働している
