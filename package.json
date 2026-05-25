@@ -14,12 +14,13 @@
     "preview": "npm run build && npx http-server _site -p 8080 --silent",
     "deploy": "gh-pages -d _site",
     "clean": "rm -rf _site .jekyll-cache",
-    "test": "npm run lint && npm run check-links",
+    "test": "npm run check:metadata && npm run lint && npm run check-links",
     "lint": "markdownlint 'src/**/*.md' --ignore node_modules",
     "lint:light": "markdownlint 'src/**/*.md' --ignore node_modules",
     "check-links": "markdown-link-check src/**/*.md",
     "check-conflicts": "echo 'No Jekyll conflicts to check'",
-    "help": "echo 'Available commands:\n  npm start - Start development server\n  npm run build - Build the book\n  npm run preview - Local preview\n  npm run deploy - Deploy to GitHub Pages'"
+    "help": "echo 'Available commands:\n  npm start - Start development server\n  npm run build - Build the book\n  npm run preview - Local preview\n  npm run deploy - Deploy to GitHub Pages'",
+    "check:metadata": "python3 scripts/check_metadata_consistency.py"
   },
   "dependencies": {},
   "devDependencies": {
@@ -32,7 +33,9 @@
     "book",
     "documentation",
     "japanese",
-    "supabase","architecture","patterns"
+    "supabase",
+    "architecture",
+    "patterns"
   ],
   "repository": {
     "type": "git",
@@ -41,5 +44,5 @@
   "bugs": {
     "url": "https://github.com/itdojp/supabase-architecture-patterns-book/issues"
   },
-  "homepage": "https://github.com/itdojp/supabase-architecture-patterns-book#readme"
+  "homepage": "https://itdojp.github.io/supabase-architecture-patterns-book/"
 }

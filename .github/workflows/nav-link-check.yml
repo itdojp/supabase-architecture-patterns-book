@@ -52,14 +52,14 @@ jobs:
                   return []
               data = yaml.safe_load(y.read_text(encoding='utf-8')) or {}
               paths = []
-              for key in ['introduction','chapters','additional','resources','appendices','afterword']:
+              for key in ['introduction','guides','chapters','additional','resources','appendices','afterword']:
                   for item in (data.get(key) or []):
                       p = item.get('path') or ''
                       if p: paths.append(p)
               return paths
           def discover():
               paths=[]
-              for seg in ['introduction','chapters','appendices','afterword']:
+              for seg in ['introduction','guides','chapters','appendices','afterword']:
                   d = Path('docs')/seg
                   if d.is_dir():
                       for child in sorted(d.iterdir()):

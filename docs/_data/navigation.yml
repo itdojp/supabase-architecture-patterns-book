@@ -48,3 +48,6 @@ appendices:
   path: /appendices/appendix-a/
 - title: '付録B: 参考資料'
   path: /appendices/appendix01/
+afterword:
+- title: あとがき
+  path: /afterword/

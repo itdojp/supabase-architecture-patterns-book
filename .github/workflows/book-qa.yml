@@ -48,6 +48,9 @@ jobs:
             echo "dir=." >> "$GITHUB_OUTPUT"
           fi
 
+      - name: Validate metadata and navigation consistency
+        run: python3 scripts/check_metadata_consistency.py
+
       - name: Unicode check (fail on warnings)
         run: node book-formatter/scripts/check-unicode.js "${{ steps.scan.outputs.dir }}" --allowlist .book-formatter/unicode-allowlist.json --fail-on warn
 
@@ -121,7 +124,7 @@ jobs:
               return []
             data = yaml.safe_load(nav.read_text(encoding="utf-8")) or {}
             paths = []
-            for key in ["introduction", "chapters", "additional", "resources", "appendices", "afterword"]:
+            for key in ["introduction", "guides", "chapters", "additional", "resources", "appendices", "afterword"]:
               for item in (data.get(key) or []):
                 if isinstance(item, dict) and isinstance(item.get("items"), list):
                   for sub in (item.get("items") or []):
@@ -140,7 +143,7 @@ jobs:
 
           def discover_paths():
             paths = []
-            for seg in ["introduction", "chapters", "additional", "resources", "appendices", "afterword"]:
+            for seg in ["introduction", "guides", "chapters", "additional", "resources", "appendices", "afterword"]:
               d = scan_dir / seg
               if d.is_dir():
                 for child in sorted(d.iterdir()):

@@ -12,11 +12,158 @@
     "branch": "main"
   },
   "structure": {
+    "introduction": [
+      {
+        "id": "introduction",
+        "title": "はじめに",
+        "description": "本書の目的、読み方、安全に使うための注意を整理する",
+        "path": "/introduction/"
+      }
+    ],
+    "guides": [
+      {
+        "id": "figure-index",
+        "title": "図版索引",
+        "description": "図版と設計要素の対応を一覧する",
+        "path": "/guides/figure-index/"
+      },
+      {
+        "id": "pattern-selection",
+        "title": "設計パターン選定ガイド",
+        "description": "要件に応じた Supabase アーキテクチャパターン選定を支援する",
+        "path": "/guides/pattern-selection/"
+      },
+      {
+        "id": "error-handling",
+        "title": "エラーハンドリングガイド",
+        "description": "Supabase 構成のエラー処理と復旧観点を整理する",
+        "path": "/guides/error-handling/"
+      },
+      {
+        "id": "troubleshooting",
+        "title": "トラブルシューティングガイド",
+        "description": "設計・実装・運用で発生しやすい問題の切り分けを支援する",
+        "path": "/guides/troubleshooting/"
+      },
+      {
+        "id": "code-verification",
+        "title": "コード検証ガイド",
+        "description": "サンプルコードと設定例の検証観点を整理する",
+        "path": "/guides/code-verification/"
+      },
+      {
+        "id": "glossary",
+        "title": "用語集",
+        "description": "本書で使う Supabase / アーキテクチャ用語を定義する",
+        "path": "/guides/glossary/"
+      },
+      {
+        "id": "terminology",
+        "title": "Terminology Guide - 用語統一ガイド",
+        "description": "日本語・英語表記と略語の揺れを抑える",
+        "path": "/guides/terminology/"
+      }
+    ],
     "chapters": [
       {
         "id": "chapter01",
-        "title": "第1章：基礎概念",
-        "description": "基本的な概念と原理"
+        "title": "第1章：Supabaseアーキテクチャ理解",
+        "description": "Supabase 全体像と基本構成を理解する",
+        "path": "/chapters/chapter01/"
+      },
+      {
+        "id": "chapter02",
+        "title": "第2章：認証・認可設計",
+        "description": "認証・認可と RLS 設計を整理する",
+        "path": "/chapters/chapter02/"
+      },
+      {
+        "id": "chapter03",
+        "title": "第3章：パターン1 - クライアントサイド実装",
+        "description": "クライアント直結パターンの設計判断を学ぶ",
+        "path": "/chapters/chapter03/"
+      },
+      {
+        "id": "chapter04",
+        "title": "第4章：パターン2 - Edge Functions活用",
+        "description": "Edge Functions を用いたサーバーレス構成を学ぶ",
+        "path": "/chapters/chapter04/"
+      },
+      {
+        "id": "chapter05-1",
+        "title": "第5-1章：パターン3 - 独立APIサーバー",
+        "description": "独立 API サーバー導入時の責務分割を学ぶ",
+        "path": "/chapters/chapter05-1/"
+      },
+      {
+        "id": "chapter05-2",
+        "title": "第5-2章：マルチテナンシーと複雑ビジネスロジック",
+        "description": "SaaS 向けのマルチテナント設計を整理する",
+        "path": "/chapters/chapter05-2/"
+      },
+      {
+        "id": "chapter05-3",
+        "title": "第5-3章：拡張性設計とパフォーマンス最適化",
+        "description": "スケーリングと性能最適化の設計観点を学ぶ",
+        "path": "/chapters/chapter05-3/"
+      },
+      {
+        "id": "chapter05-4",
+        "title": "第5-4章：RAG/ベクトル検索アーキテクチャ",
+        "description": "RAG とベクトル検索を Supabase 構成へ組み込む",
+        "path": "/chapters/chapter05-4/"
+      },
+      {
+        "id": "chapter06",
+        "title": "第6章：パフォーマンス最適化",
+        "description": "ボトルネック特定と最適化の実務手順を学ぶ",
+        "path": "/chapters/chapter06/"
+      },
+      {
+        "id": "chapter07",
+        "title": "第7章：セキュリティ強化",
+        "description": "Supabase システムのセキュリティ設計と運用を整理する",
+        "path": "/chapters/chapter07/"
+      },
+      {
+        "id": "chapter08",
+        "title": "第8章：運用監視と自動化",
+        "description": "監視、バックアップ、自動化の運用設計を学ぶ",
+        "path": "/chapters/chapter08/"
+      },
+      {
+        "id": "chapter09",
+        "title": "第9章：アーキテクチャ選択演習",
+        "description": "要件に応じたパターン選定を演習する",
+        "path": "/chapters/chapter09/"
+      },
+      {
+        "id": "chapter10",
+        "title": "第10章：統合実践プロジェクト",
+        "description": "統合プロジェクトで設計判断を実践する",
+        "path": "/chapters/chapter10/"
+      }
+    ],
+    "appendices": [
+      {
+        "id": "appendix-a",
+        "title": "付録A: 技術リソース集",
+        "description": "Supabase と関連技術の参照リソースを整理する",
+        "path": "/appendices/appendix-a/"
+      },
+      {
+        "id": "appendix01",
+        "title": "付録B: 参考資料",
+        "description": "環境構築、チェックリスト、トラブルシューティングを収録する",
+        "path": "/appendices/appendix01/"
+      }
+    ],
+    "afterword": [
+      {
+        "id": "afterword",
+        "title": "あとがき",
+        "description": "本書のまとめと継続的な学習の方向性を示す",
+        "path": "/afterword/"
       }
     ]
   },
@@ -43,5 +190,6 @@
   "shared": {
     "version": "3.2.2",
     "lastSync": "2026-02-04T23:01:39.914Z"
-  }
+  },
+  "homepage": "https://itdojp.github.io/supabase-architecture-patterns-book/"
 }
