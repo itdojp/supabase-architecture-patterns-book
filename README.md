@@ -23,6 +23,16 @@ Supabase を題材に、UI クライアント / API サーバー / BaaS（Supaba
 
 - `LICENSE.md`（CC BY-NC-SA 4.0（商用は別契約） / シリーズ統一ライセンス準拠）
 
+## 品質ゲート（開発者向け）
+
+ローカルで最小確認を行う場合は、次を実行します。
+
+- `npm run check:metadata`
+- `npm test`
+- `bundle exec jekyll build --source docs --config docs/_config.yml --destination _site`
+
+`check:metadata` は `book-config.json`、`package.json`、`docs/_config.yml`、`docs/index.md`、`docs/_data/navigation.yml`、公開ページ、必須アセットの整合性を検証します。
+
 ## 執筆・ビルド（開発者向け）
 
 - クイックスタート: `QUICK-START.md`

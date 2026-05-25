@@ -1,7 +1,10 @@
 # Jekyll Configuration for Supabase Architecture Patterns Book
 title: "Supabaseアーキテクチャパターン実践技術書"
 description: "スケーラブルな3層構成の設計と実装 - 初心者から上級者まで段階的に学べる、Supabase完全マスターガイド"
-author: "株式会社アイティードゥ"
+author: "ITDO Inc.（株式会社アイティードゥ）"
+version: "1.0.0"
+license: "CC-BY-NC-SA-4.0"
+homepage: "https://itdojp.github.io/supabase-architecture-patterns-book/"
 lang: "ja"
 url: "https://itdojp.github.io"
 baseurl: "/supabase-architecture-patterns-book"
