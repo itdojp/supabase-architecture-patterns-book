@@ -44,8 +44,8 @@ class Page:
 FRONT_MATTER_RE = re.compile(r"^---\r?\n(.*?)\r?\n---\r?\n", re.DOTALL)
 SCALAR_RE = re.compile(r"^(?P<key>[A-Za-z0-9_-]+):\s*(?P<value>.*?)\s*$")
 SECTION_RE = re.compile(r"^(?P<section>[A-Za-z0-9_-]+):\s*$")
-TITLE_RE = re.compile(r"^\s*-\s*title:\s*(?P<value>.+?)\s*$")
-PATH_RE = re.compile(r"^\s*path:\s*(?P<value>.+?)\s*$")
+TITLE_RE = re.compile(r"^\s*-\s*title:\s*(?P<value>.*?)\s*$")
+PATH_RE = re.compile(r"^\s*path:\s*(?P<value>.*?)\s*$")
 
 
 class CheckError(ValueError):
@@ -112,22 +112,31 @@ def parse_navigation(path: Path) -> dict[str, list[Entry]]:
     data: dict[str, list[Entry]] = {key: [] for key in SECTION_KEYS}
     current_section: str | None = None
     pending_title: str | None = None
+    pending_title_line: int | None = None
     for lineno, line in enumerate(path.read_text(encoding="utf-8").splitlines(), start=1):
         stripped = line.strip()
         if not stripped or stripped.startswith("#"):
             continue
         section_match = SECTION_RE.match(stripped)
         if section_match and not line[:1].isspace():
+            if pending_title is not None:
+                raise CheckError(f"{path}:{lineno}: title without path before section (title at line {pending_title_line})")
             current_section = section_match.group("section")
             if current_section not in data:
                 data[current_section] = []
             pending_title = None
+            pending_title_line = None
             continue
         if current_section is None:
             continue
         title_match = TITLE_RE.match(line)
         if title_match:
+            if pending_title is not None:
+                raise CheckError(f"{path}:{lineno}: title without path before line {lineno} (title at line {pending_title_line})")
             pending_title = str(unquote_scalar(title_match.group("value")))
+            if not pending_title:
+                raise CheckError(f"{path}:{lineno}: title must not be empty")
+            pending_title_line = lineno
             continue
         path_match = PATH_RE.match(line)
         if path_match:
@@ -141,8 +150,9 @@ def parse_navigation(path: Path) -> dict[str, list[Entry]]:
                 )
             )
             pending_title = None
+            pending_title_line = None
     if pending_title is not None:
-        raise CheckError(f"{path}: title without path at end of file")
+        raise CheckError(f"{path}: title without path at end of file (title at line {pending_title_line})")
     return data
 
 
@@ -279,6 +289,19 @@ def validate_metadata(book: dict[str, Any], package: dict[str, Any]) -> list[str
     pkg_bugs = package.get("bugs")
     if not isinstance(pkg_bugs, dict) or pkg_bugs.get("url") != f"{REPO_URL}/issues":
         errors.append("package.json: bugs.url must match canonical GitHub issues URL")
+    scripts = package.get("scripts")
+    if not isinstance(scripts, dict):
+        errors.append("package.json: scripts must be an object")
+    else:
+        if scripts.get("check:security") != "npm audit --omit=optional":
+            errors.append("package.json: scripts.check:security must run 'npm audit --omit=optional'")
+        test_script = scripts.get("test")
+        if not isinstance(test_script, str):
+            errors.append("package.json: scripts.test must be a string")
+        else:
+            for command in ("npm run check:metadata", "npm run check:security", "npm run lint", "npm run check-links"):
+                if command not in test_script:
+                    errors.append(f"package.json: scripts.test must include {command!r}")
 
     docs_cfg = parse_scalar_block(Path("docs/_config.yml").read_text(encoding="utf-8"))
     expected_docs = {
@@ -310,6 +333,11 @@ def validate_metadata(book: dict[str, Any], package: dict[str, Any]) -> list[str
         actual = index_fm.get(key)
         if actual != expected:
             errors.append(f"docs/index.md: front matter {key} must be {expected!r} (actual={actual!r})")
+
+    readme = Path("README.md").read_text(encoding="utf-8")
+    for command in ("npm run check:metadata", "npm run check:security", "npm test"):
+        if command not in readme:
+            errors.append(f"README.md: quality gate must document {command!r}")
     return errors
 
 

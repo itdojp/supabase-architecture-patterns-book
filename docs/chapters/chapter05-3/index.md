@@ -2653,6 +2653,7 @@ volumes:
 
 ### GitHub Actions CI/CD
 
+{% raw %}
 ```yaml
 # .github/workflows/ci-cd.yml
 name: CI/CD Pipeline
@@ -2798,6 +2799,7 @@ jobs:
         kubectl set image deployment/saas-platform-app \
           app=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
 ```
+{% endraw %}
 
 ---
 

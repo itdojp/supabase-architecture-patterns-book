@@ -14,20 +14,20 @@
     "preview": "npm run build && npx http-server _site -p 8080 --silent",
     "deploy": "gh-pages -d _site",
     "clean": "rm -rf _site .jekyll-cache",
-    "test": "npm run check:metadata && npm run lint && npm run check-links",
+    "test": "npm run check:metadata && npm run check:security && npm run lint && npm run check-links",
     "lint": "markdownlint 'src/**/*.md' --ignore node_modules",
     "lint:light": "markdownlint 'src/**/*.md' --ignore node_modules",
     "check-links": "markdown-link-check src/**/*.md",
     "check-conflicts": "echo 'No Jekyll conflicts to check'",
     "help": "echo 'Available commands:\n  npm start - Start development server\n  npm run build - Build the book\n  npm run preview - Local preview\n  npm run deploy - Deploy to GitHub Pages'",
-    "check:metadata": "python3 scripts/check_metadata_consistency.py"
+    "check:metadata": "python3 scripts/check_metadata_consistency.py",
+    "check:security": "npm audit --omit=optional"
   },
-  "dependencies": {},
   "devDependencies": {
-    "markdownlint-cli": "^0.37.0",
-    "markdown-link-check": "^3.11.2",
-    "gh-pages": "^6.0.0",
-    "http-server": "^14.1.1"
+    "gh-pages": "^6.3.0",
+    "http-server": "^14.1.1",
+    "markdown-link-check": "^3.14.2",
+    "markdownlint-cli": "^0.48.0"
   },
   "keywords": [
     "book",
