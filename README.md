@@ -28,10 +28,12 @@ Supabase を題材に、UI クライアント / API サーバー / BaaS（Supaba
 ローカルで最小確認を行う場合は、次を実行します。
 
 - `npm run check:metadata`
+- `npm run check:security`
 - `npm test`
 - `bundle exec jekyll build --source docs --config docs/_config.yml --destination _site`
 
 `check:metadata` は `book-config.json`、`package.json`、`docs/_config.yml`、`docs/index.md`、`docs/_data/navigation.yml`、公開ページ、必須アセットの整合性を検証します。
+`check:security` は任意依存を除いた npm 依存関係監査を実行し、既知脆弱性が残っていないことを検証します。
 
 ## 執筆・ビルド（開発者向け）
 

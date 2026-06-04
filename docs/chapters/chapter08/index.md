@@ -1309,6 +1309,7 @@ class AlertManager:
 | **SMS**| 即座 | 最高 | 真の緊急事態 | 確実な到達・どこでも受信 |
 | **Discord**| 即座 | 中 | カジュアルなチーム連携 | コミュニティ感・画像対応 |
 
+{% raw %}
 ```yaml
   # テスト実行
   test:
@@ -1589,6 +1590,7 @@ class AlertManager:
           channel: '#deployments'
           webhook_url: ${{ secrets.SLACK_WEBHOOK }}
 ```
+{% endraw %}
 
 ### 高度なテスト戦略
 
@@ -4573,6 +4575,7 @@ if __name__ == "__main__":
 
 #### プロアクティブ監視設定
 
+{% raw %}
 ```yaml
 # proactive_monitoring_rules.yml
 groups:
@@ -4733,6 +4736,7 @@ groups:
       summary: "未認証のAPIアクセスが増加しています"
       description: "未認証アクセスが {{ $value }} 回/分 発生しています"
 ```
+{% endraw %}
 
 #### 運用チェックリスト自動化
 
