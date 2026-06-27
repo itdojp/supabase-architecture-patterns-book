@@ -1,50 +1,50 @@
 # 第2章：認証・認可設計
 
 ---
-**目次に戻る**: [はじめに](../../introduction/)
-**前の章**: [第1章：Supabase アーキテクチャ理解](../chapter01/)
-**次の章**: [第3章：パターン1 - クライアントサイド実装](../chapter03/)
-**学習フェーズ**: Part I - 基礎編（認証・認可）
-**学習レベル**:  基礎 |  応用 |  発展
-**推定学習時間**: 3〜4時間
+**目次に戻る**: [はじめに](../../introduction/)  
+**前の章**: [第1章：Supabaseアーキテクチャ理解](../chapter01/)  
+**次の章**: [第3章：パターン1 - クライアントサイド実装](../chapter03/)  
+**学習フェーズ**: Part I - 基礎編（認証・認可）  
+**学習レベル**:  基礎 |  応用 |  発展  
+**推定学習時間**: 3〜4時間  
 **難易度**: 基礎（セキュリティ概念の理解が重要）
 ---
 
 ## この章で扱う構成
-- 構成: 認証・認可（RLS 中心のセキュリティ設計）
+- 構成: 認証・認可（RLS中心のセキュリティ設計）
 - 推奨用途: ユーザー管理やマルチテナントを扱うアプリ
 - 非推奨用途: 完全公開コンテンツのみで認証が不要なケース
 
 ## **前章の復習**（第1章からの継続）
 
-第1章で学んだ**Supabase の3つの基本コンポーネント**を振り返りましょう：
+第1章で学んだ**Supabaseの3つの基本コンポーネント**を振り返りましょう：
 - [OK] **PostgreSQL**: データを安全に保存する倉庫
-- [OK] **PostgREST**: データベースから自動で API を作成
+- [OK] **PostgREST**: データベースから自動でAPIを作成
 - [OK] **Realtime**: データ変更をリアルタイムで通知
 
 これらの基盤の上に、今度は**「誰がアクセスできるか」「何をしていいか」**を制御するセキュリティの仕組みを構築します。
 
-> **第1章の理解度確認**: PostgreSQL・PostgREST・Realtime の役割を説明できますか？不安な場合は[第1章](../chapter01/)を復習してください。
+> **第1章の理解度確認**: PostgreSQL・PostgREST・Realtimeの役割を説明できますか？不安な場合は[第1章](../chapter01/)を復習してください。
 
 ## この章で学ぶこと（初心者向け）
 
 この章では、**「誰がアプリを使えるのか」「何ができるのか」**を管理する仕組みを学びます。
 
 - **初心者**: ログイン・ログアウトの基本的な仕組みがわかる
-- **中級者**: セキュリティを保つための具体的な方法がわかる
+- **中級者**: セキュリティを保つための具体的な方法がわかる  
 - **上級者**: 企業レベルのセキュリティシステムが設計できる
 
 ## 身近な例から：「アパートの管理」に例えてみよう
 
-Web アプリのセキュリティを**アパートの管理**に例えると理解しやすいです：
+Webアプリのセキュリティを**アパートの管理**に例えると理解しやすいです：
 
 ```mermaid
 flowchart TD
-    A[ アパート = あなたのWeb アプリ] --> B[ 玄関 = ログイン画面]
+    A[ アパート = あなたのWebアプリ] --> B[ 玄関 = ログイン画面]
     B --> C{ 鍵チェック = 認証}
     C -->|正しい鍵| D[OK 入居者確認]
     C -->|間違った鍵| E[NG 入れません]
-
+    
     D --> F[ 各部屋 = 機能・データ]
     F --> G{ 部屋の権限 = 認可}
     G -->|自分の部屋| H[OK 自由に使える]
@@ -67,7 +67,7 @@ flowchart TD
 #### やることリスト（従来）
 ```bash
 1.  メールアドレス・パスワードの入力画面を作る
-2.  パスワードを暗号化する仕組みを作る
+2.  パスワードを暗号化する仕組みを作る  
 3.  ユーザー情報をデータベースに保存する
 4.  ログイン状態を管理する仕組みを作る
 5.  「ログインしているかどうか」を各画面で確認する
@@ -78,7 +78,7 @@ flowchart TD
 10.  本番環境で安全に動くか確認する
 ```
 
-**時間**: 数週間〜数ヶ月
+**時間**: 数週間〜数ヶ月 
 
 #### 実際のコード例（Express.js）
 
@@ -94,10 +94,10 @@ app.post('/signup', async (req, res) => {
   // メール認証、レスポンス作成...
 });
 
-// ログイン（40行以上のコード）
+// ログイン（40行以上のコード）  
 app.post('/login', async (req, res) => {
   // 認証情報確認、パスワード照合...
-  // JWT 生成、セッション管理...
+  // JWT生成、セッション管理...
 });
 
 // ログイン確認ミドルウェア（30行以上）
@@ -119,9 +119,9 @@ const { data, error } = await supabase.auth.signUp({
   password: 'secure_password'
 });
 
-// ログイン
+// ログイン  
 const { data, error } = await supabase.auth.signInWithPassword({
-  email: 'user@example.com',
+  email: 'user@example.com', 
   password: 'secure_password'
 });
 
@@ -129,11 +129,11 @@ const { data, error } = await supabase.auth.signInWithPassword({
 const { error } = await supabase.auth.signOut();
 ```
 
-**時間**: 数時間で完成！
+**時間**: 数時間で完成！ 
 
 ### セキュリティを実装しやすくする
 
-Supabase Authが標準機能として支援すること（RLS、API キー管理、メールテンプレート、MFA設定などはプロジェクト側で追加確認が必要）：
+Supabase Authが標準機能として支援すること（RLS、APIキー管理、メールテンプレート、MFA設定などはプロジェクト側で追加確認が必要）：
 
 | セキュリティ機能 | 従来（手作業） | Supabase Auth |
 |:---------------:|:-------------:|:-------------:|
@@ -173,7 +173,7 @@ await supabase.auth.signInWithOtp({
 | **セキュリティ**| [OK] 企業級 | [WARN] 実装依存 | [OK] 企業級 | [OK] 企業級 |
 | **カスタマイズ性**| [OK] 高い | [OK] 完全制御 | [WARN] 限定的 | [OK] 高い |
 | **コスト**| [OK] 低コスト | [NG] 開発・運用コスト | [WARN] 従量課金 | [NG] 高コスト |
-| **DB 統合**| [OK] 完全統合 | [WARN] 手動実装 | [NG] 別システム | [NG] 別システム |
+| **DB統合**| [OK] 完全統合 | [WARN] 手動実装 | [NG] 別システム | [NG] 別システム |
 
 **自前実装の課題解決例**:
 
@@ -189,29 +189,29 @@ app.post('/auth/signup', async (req, res) => {
     if (!email || !password) {
       return res.status(400).json({ error: 'Email and password required' });
     }
-
+    
     // 2. 重複チェック（手動実装が必要）
     const existingUser = await db.query('SELECT * FROM users WHERE email = ?', [email]);
     if (existingUser.length > 0) {
       return res.status(400).json({ error: 'User already exists' });
     }
-
+    
     // 3. パスワードハッシュ化（手動実装が必要）
     const saltRounds = 12;
     const hashedPassword = await bcrypt.hash(password, saltRounds);
-
+    
     // 4. ユーザー作成（手動実装が必要）
     const userId = uuid.v4();
-    await db.query('INSERT INTO users (id, email, password) VALUES (?, ?, ?)',
+    await db.query('INSERT INTO users (id, email, password) VALUES (?, ?, ?)', 
                    [userId, email, hashedPassword]);
-
+    
     // 5. メール認証（手動実装が必要）
     const confirmationToken = jwt.sign({ userId }, EMAIL_SECRET, { expiresIn: '24h' });
     await sendConfirmationEmail(email, confirmationToken);
-
+    
     // 6. レスポンス
     res.status(201).json({ message: 'Please check your email' });
-
+    
   } catch (error) {
     console.error('Signup error:', error);
     res.status(500).json({ error: 'Internal server error' });
@@ -232,16 +232,16 @@ const { data, error } = await supabase.auth.signUp({
 // → 実装コードが95%削減
 ```
 
-### JWT 構造と Supabase 固有クレーム
+### JWT構造とSupabase固有クレーム
 
-Supabase Authは JWT RFC 7519準拠のトークンを生成し、PostgreSQL RLS との統合を最適化した独自クレームを含みます。
+Supabase AuthはJWT RFC 7519準拠のトークンを生成し、PostgreSQL RLSとの統合を最適化した独自クレームを含みます。
 
 **標準クレーム**:
 ```json
 {
   "iss": "https://your-project.supabase.co/auth/v1",
   "sub": "user-uuid",
-  "aud": "authenticated",
+  "aud": "authenticated", 
   "exp": 1640995200,
   "iat": 1640908800,
   "email": "user@example.com",
@@ -249,7 +249,7 @@ Supabase Authは JWT RFC 7519準拠のトークンを生成し、PostgreSQL RLS 
 }
 ```
 
-**Supabase 固有クレーム**:
+**Supabase固有クレーム**:
 ```json
 {
   "app_metadata": {
@@ -265,16 +265,16 @@ Supabase Authは JWT RFC 7519準拠のトークンを生成し、PostgreSQL RLS 
 }
 ```
 
-### 実務レビューゲート: Auth・API キー・RLS 境界
+### 実務レビューゲート: Auth・APIキー・RLS境界
 
-2026年5月時点の Supabase Cloud では、アプリケーションを識別する **API キー** と、利用者を識別する **Supabase Auth のユーザーJWT** を分けて考えます。
+2026年5月時点の Supabase Cloud では、アプリケーションを識別する **APIキー** と、利用者を識別する **Supabase Auth のユーザーJWT** を分けて考えます。
 
-- **公開クライアント**: ブラウザ、モバイル、デスクトップ、配布済み CLI では `sb_publishable_...` を使い、データ保護は RLS とユーザーJWT で担保します。
+- **公開クライアント**: ブラウザ、モバイル、デスクトップ、配布済みCLIでは `sb_publishable_...` を使い、データ保護は RLS とユーザーJWTで担保します。
 - **バックエンド/管理処理**: `sb_secret_...` または legacy `service_role` は RLS を迂回し得るため、Edge Functions、サーバー、ジョブなどの管理された実行環境だけで使います。クライアント、URL、公開ログ、サンプルコードへ出しません。
 - **legacyキー**: `anon` は publishable key、`service_role` は secret key の legacy 相当です。JWT secret に紐づく長期キーであり、Cloud では新しい publishable/secret キーを優先します。
-- **RLS ロール**: 未ログインは Postgres role `anon`、ログイン済みは `authenticated` として評価されます。Supabase Auth の anonymous user は `authenticated` role であり、`anon` key とは別概念です。
+- **RLSロール**: 未ログインは Postgres role `anon`、ログイン済みは `authenticated` として評価されます。Supabase Auth の anonymous user は `authenticated` role であり、`anon` key とは別概念です。
 - **ポリシー条件**: `auth.uid()` は未認証・期限切れセッションで `null` になるため、本人限定ポリシーでは `auth.uid() IS NOT NULL AND auth.uid() = user_id` のように意図を明示します。
-- **周辺サービス**: Storage は `storage.objects`、Realtime private channel は `realtime.messages` の RLS を含めてレビューします。テーブル RLS だけで Storage/Realtime の操作権限が完了したと見なさないでください。
+- **周辺サービス**: Storage は `storage.objects`、Realtime private channel は `realtime.messages` の RLS を含めてレビューします。テーブルRLSだけで Storage/Realtime の操作権限が完了したと見なさないでください。
 
 ### 認証フロー実装
 
@@ -285,28 +285,28 @@ sequenceDiagram
     participant C as Client
     participant SA as Supabase Auth
     participant DB as PostgreSQL
-
+    
     C->>SA: POST /auth/v1/signup
     SA->>DB: INSERT INTO auth.users
     SA->>SA: 確認メール送信
     SA-->>C: 201 Created
-
+    
     C->>SA: GET /auth/v1/verify
     SA->>DB: UPDATE auth.users SET email_confirmed_at
-    SA->>SA: JWT 生成
+    SA->>SA: JWT生成
     SA-->>C: 302 Redirect + Set-Cookie
 ```
 
 **サインアップ実装**:
 ```sql
 -- auth.users テーブル構造
-SELECT column_name, data_type, is_nullable
-FROM information_schema.columns
+SELECT column_name, data_type, is_nullable 
+FROM information_schema.columns 
 WHERE table_schema = 'auth' AND table_name = 'users';
 
 -- パスワードハッシュ化（bcrypt）
 INSERT INTO auth.users (
-    id, email, encrypted_password,
+    id, email, encrypted_password, 
     email_confirmed_at, created_at, updated_at
 ) VALUES (
     uuid_generate_v4(),
@@ -316,7 +316,7 @@ INSERT INTO auth.users (
 );
 ```
 
-#### 2. OAuth 実装
+#### 2. OAuth実装
 
 ```typescript
 // GoTrue内部実装（概念的）
@@ -345,9 +345,9 @@ class GoogleProvider implements OAuthProvider {
 }
 ```
 
-### 匿名サインイン → 本登録の昇格パターン（AI アプリの試用導線）
+### 匿名サインイン → 本登録の昇格パターン（AIアプリの試用導線）
 
-AI アプリでは「まず試す→あとで登録」の導線が一般的です。
+AIアプリでは「まず試す→あとで登録」の導線が一般的です。  
 そのため **匿名ユーザーの作業データを維持したまま正式登録へ昇格**できる設計が必要です。
 
 **基本の流れ**:
@@ -357,12 +357,12 @@ AI アプリでは「まず試す→あとで登録」の導線が一般的で�
 
 **設計ポイント**:
 - 匿名ユーザー用データには **期限（TTL）**を設ける
-- RLS は **匿名ユーザーの読み書き許可範囲を最小化**
+- RLSは **匿名ユーザーの読み書き許可範囲を最小化**
 - 昇格時に **tenant_id / user_id の整合**をチェック
 
 **実装例（概念）**:
 ```typescript
-// 1) 匿名セッション作成（API 名はSDKバージョンで確認）
+// 1) 匿名セッション作成（API名はSDKバージョンで確認）
 const { data: anon, error: anonError } = await supabase.auth.signInAnonymously()
 if (anonError) throw anonError
 
@@ -388,12 +388,12 @@ await supabase.from('drafts')
   .eq('owner_id', anonUserId)
 ```
 
-> 補足: 匿名サインインの API 名・可否はSDKのバージョン/設定に依存します。
+> 補足: 匿名サインインのAPI名・可否はSDKのバージョン/設定に依存します。  
 > 利用中のSDKドキュメントで確認してください。
 
-### LLM生成 SQL/RLS のレビュー手順（安全策）
+### LLM生成SQL/RLSのレビュー手順（安全策）
 
-LLMが生成した SQL や RLS はそのまま適用しない方針にします。
+LLMが生成したSQLやRLSはそのまま適用しない方針にします。  
 **実運用での安全策**として以下をチェックします：
 
 - **deny-by-default**になっているか（無条件許可を避ける）
@@ -403,9 +403,9 @@ LLMが生成した SQL や RLS はそのまま適用しない方針にします�
 
 ---
 
-### AI 時代の RLS 設計（マルチテナント + 監査ログ）
+### AI時代のRLS設計（マルチテナント + 監査ログ）
 
-AI アプリでは **RAG/ログ/評価テーブル**にも RLS を適用し、
+AIアプリでは **RAG/ログ/評価テーブル**にもRLSを適用し、  
 「どのテナントのデータにアクセスしているか」を明示します。
 
 **典型スキーマ例**:
@@ -429,7 +429,7 @@ CREATE TABLE ai_retrieval_logs (
 );
 ```
 
-**RLS ポリシー例（tenant_id + user_id）**:
+**RLSポリシー例（tenant_id + user_id）**:
 
 ```sql
 ALTER TABLE ai_documents ENABLE ROW LEVEL SECURITY;
@@ -448,30 +448,30 @@ CREATE POLICY "tenant_user_log" ON ai_retrieval_logs
   );
 ```
 
-### Secretsは DB に置かない
+### SecretsはDBに置かない
 
-API キーや外部LLMの秘密情報は **DB に保存しない**方針にします。
-必要な場合は **Vault / Edge Function Secrets**に集約し、
+APIキーや外部LLMの秘密情報は **DBに保存しない**方針にします。  
+必要な場合は **Vault / Edge Function Secrets**に集約し、  
 **ログ・監査・ローテーション**の運用フローを定義します。
 
-### JWT 検証とミドルウェア
+### JWT検証とミドルウェア
 
-**PostgREST での JWT 検証**:
+**PostgRESTでのJWT検証**:
 ```haskell
--- PostgREST 内部実装（Haskell）
+-- PostgREST内部実装（Haskell）
 verifyJWT :: ByteString -> JWTSecret -> Either JWTError JWTClaims
 verifyJWT token secret = do
   jwt <- decodeCompact token
   verifyClaims defaultJWTValidationSettings (view claimsSet jwt)
-
-extractRole :: JWTClaims -> Maybe Role
-extractRole claims =
+  
+extractRole :: JWTClaims -> Maybe Role  
+extractRole claims = 
   claims ^? claimSub . _Just . to parseRole
 ```
 
-**カスタム JWT 検証関数**:
+**カスタムJWT検証関数**:
 ```sql
--- PostgreSQL 内カスタム関数
+-- PostgreSQL内カスタム関数
 CREATE OR REPLACE FUNCTION auth.jwt_role()
 RETURNS TEXT AS $$
   SELECT COALESCE(
@@ -491,7 +491,7 @@ $$ LANGUAGE sql STABLE;
 
 ---
 
-## 2.2 RLS ポリシー設計パターン
+## 2.2 RLSポリシー設計パターン
 
 ### 階層的アクセス制御
 
@@ -526,17 +526,17 @@ CREATE OR REPLACE FUNCTION user_accessible_orgs(user_uuid UUID)
 RETURNS TABLE(org_id BIGINT, effective_role org_role_type) AS $$
 WITH RECURSIVE org_hierarchy AS (
     -- 直接メンバーシップ
-    SELECT
+    SELECT 
         m.org_id,
         m.role,
         0 as depth
-    FROM user_org_memberships m
+    FROM user_org_memberships m 
     WHERE m.user_id = user_uuid
-
+    
     UNION ALL
-
+    
     -- 子組織への継承
-    SELECT
+    SELECT 
         o.id as org_id,
         h.role,
         h.depth + 1
@@ -544,8 +544,8 @@ WITH RECURSIVE org_hierarchy AS (
     JOIN org_hierarchy h ON o.parent_id = h.org_id
     WHERE h.depth < 10  -- 無限ループ防止
 )
-SELECT DISTINCT ON (org_id)
-    org_id,
+SELECT DISTINCT ON (org_id) 
+    org_id, 
     role as effective_role
 FROM org_hierarchy
 ORDER BY org_id, depth ASC;  -- より近い階層の権限を優先
@@ -555,7 +555,7 @@ $$ LANGUAGE sql STABLE;
 CREATE POLICY "Hierarchical access" ON documents
     FOR ALL USING (
         EXISTS (
-            SELECT 1 FROM user_accessible_orgs(auth.uid())
+            SELECT 1 FROM user_accessible_orgs(auth.uid()) 
             WHERE org_id = documents.org_id
         )
     );
@@ -570,7 +570,7 @@ CREATE TABLE temp_access_grants (
     user_id UUID REFERENCES auth.users(id),
     resource_id BIGINT,
     resource_type TEXT,
-    permissions TEXT[],
+    permissions TEXT[], 
     valid_from TIMESTAMPTZ DEFAULT NOW(),
     valid_until TIMESTAMPTZ NOT NULL,
     created_by UUID REFERENCES auth.users(id)
@@ -604,13 +604,13 @@ CREATE TABLE user_attributes (
 
 -- 動的ポリシー関数
 CREATE OR REPLACE FUNCTION check_user_attribute(
-    user_uuid UUID,
-    attr_name TEXT,
+    user_uuid UUID, 
+    attr_name TEXT, 
     required_value TEXT
 ) RETURNS BOOLEAN AS $$
     SELECT EXISTS (
-        SELECT 1 FROM user_attributes
-        WHERE user_id = user_uuid
+        SELECT 1 FROM user_attributes 
+        WHERE user_id = user_uuid 
         AND attribute_name = attr_name
         AND attribute_value = required_value
         AND (valid_until IS NULL OR valid_until > NOW())
@@ -629,34 +629,34 @@ CREATE POLICY "Department access" ON financial_reports
 
 **インデックス戦略**:
 ```sql
--- RLS クエリ最適化用複合インデックス
-CREATE INDEX idx_user_org_memberships_lookup
-ON user_org_memberships (user_id, org_id)
+-- RLSクエリ最適化用複合インデックス
+CREATE INDEX idx_user_org_memberships_lookup 
+ON user_org_memberships (user_id, org_id) 
 INCLUDE (role);
 
 -- 部分インデックス
-CREATE INDEX idx_active_temp_grants
-ON temp_access_grants (user_id, resource_id, resource_type)
+CREATE INDEX idx_active_temp_grants 
+ON temp_access_grants (user_id, resource_id, resource_type) 
 WHERE valid_until > NOW();
 
 -- GIN インデックス（配列検索用）
-CREATE INDEX idx_permissions_gin
+CREATE INDEX idx_permissions_gin 
 ON temp_access_grants USING gin(permissions);
 ```
 
 **パフォーマンス測定**:
 ```sql
 -- ポリシー実行時間測定
-EXPLAIN (ANALYZE, BUFFERS, FORMAT JSON)
+EXPLAIN (ANALYZE, BUFFERS, FORMAT JSON) 
 SELECT * FROM documents WHERE title ILIKE '%budget%';
 
--- RLS 無効化での比較
+-- RLS無効化での比較
 SET row_security = off;
 EXPLAIN (ANALYZE, BUFFERS) SELECT * FROM documents WHERE title ILIKE '%budget%';
 SET row_security = on;
 ```
 
-> [WARN] `row_security = off` や `service_role` / secret key による確認は、RLS を迂回できる権限の診断専用です。通常のアプリケーション経路、公開クライアント、共有ログでは使わず、最小限の検証環境で実施してください。
+> [WARN] `row_security = off` や `service_role` / secret key による確認は、RLSを迂回できる権限の診断専用です。通常のアプリケーション経路、公開クライアント、共有ログでは使わず、最小限の検証環境で実施してください。
 
 ---
 
@@ -698,7 +698,7 @@ DECLARE
 BEGIN
     -- スキーマ作成
     EXECUTE format('CREATE SCHEMA %I', schema_name);
-
+    
     -- テーブル作成
     EXECUTE format('
         CREATE TABLE %I.projects (
@@ -706,8 +706,8 @@ BEGIN
             name TEXT NOT NULL,
             created_at TIMESTAMPTZ DEFAULT NOW()
         )', schema_name);
-
-    -- RLS 有効化
+    
+    -- RLS有効化
     EXECUTE format('ALTER TABLE %I.projects ENABLE ROW LEVEL SECURITY', schema_name);
 END;
 $$ LANGUAGE plpgsql;
@@ -740,7 +740,7 @@ CREATE OR REPLACE FUNCTION user_has_permission(
 ) RETURNS BOOLEAN AS $$
 BEGIN
     RETURN EXISTS (
-        SELECT 1
+        SELECT 1 
         FROM user_role_assignments ura
         JOIN role_permissions rp ON ura.role_id = rp.role_id
         JOIN permissions p ON rp.permission_id = p.id
@@ -790,7 +790,7 @@ BEGIN
             '0.0.0.0'
         )::inet
     );
-
+    
     RETURN COALESCE(NEW, OLD);
 END;
 $$ LANGUAGE plpgsql;
@@ -870,25 +870,25 @@ BEGIN
     -- テナントコンテキスト取得
     user_tenant_id := COALESCE(
         tenant_context,
-        (SELECT tenant_id FROM authorization.user_tenants
+        (SELECT tenant_id FROM authorization.user_tenants 
          WHERE user_id = user_uuid LIMIT 1)
     );
-
+    
     -- ユーザーロール取得
     SELECT array_agg(role_id) INTO user_roles
-    FROM authorization.user_role_assignments
-    WHERE user_id = user_uuid
+    FROM authorization.user_role_assignments 
+    WHERE user_id = user_uuid 
     AND tenant_id = user_tenant_id
     AND NOW() BETWEEN valid_from AND COALESCE(valid_until, 'infinity');
-
+    
     -- 権限チェック実行
     required_permission := resource_type || ':' || action;
-
+    
     RETURN EXISTS (
         SELECT 1 FROM authorization.roles r
         WHERE r.id = ANY(user_roles)
         AND r.permissions ? required_permission
-        AND CASE
+        AND CASE 
             WHEN resource_id IS NOT NULL THEN
                 r.permissions->>required_permission @> '{"scope": "all"}' OR
                 r.permissions->>required_permission @> format('{"resources": [%s]}', resource_id)
@@ -903,11 +903,11 @@ $$ LANGUAGE plpgsql STABLE;
 
 ## まとめ
 
-認証・認可システムの設計では、セキュリティと実装効率のバランスが重要です。RLS による多層防御と、柔軟な権限モデルの組み合わせにより、エンタープライズレベルの要件に対応できます。
+認証・認可システムの設計では、セキュリティと実装効率のバランスが重要です。RLSによる多層防御と、柔軟な権限モデルの組み合わせにより、エンタープライズレベルの要件に対応できます。
 
 **設計原則**:
 - **最小権限の原則**: 必要最小限の権限のみ付与
-- **深層防御**: 複数レイヤーでのセキュリティチェック
+- **深層防御**: 複数レイヤーでのセキュリティチェック  
 - **監査可能性**: すべての操作の追跡可能性確保
 - **パフォーマンス考慮**: インデックス戦略による最適化
 
@@ -925,23 +925,23 @@ $$ LANGUAGE plpgsql STABLE;
 #### **応用理解（推奨）**
 - [] ロールベースアクセス制御（RBAC）の設計パターンを理解した
 - [] 組織・テナント単位での権限管理設計を理解した
-- [] RLS ポリシーの具体的な作成・適用方法を理解した
+- [] RLSポリシーの具体的な作成・適用方法を理解した
 - [] JWT Claimsとカスタムクレームの活用方法を理解した
 
 #### **発展理解（上級者向け）**
 - [] 複雑な組織階層・権限継承システムの設計ができる
 - [] セキュリティ脅威（SQL Injection・XSS・CSRF等）と対策を理解した
-- [] パフォーマンスを考慮した RLS ポリシー・インデックス設計ができる
+- [] パフォーマンスを考慮したRLSポリシー・インデックス設計ができる
 - [] OAuth・SAML等の外部認証プロバイダー連携を理解した
 
 #### **実践スキル（確認推奨）**
 - [] Supabase Authを使った基本的な認証フローを実装できる
-- [] テーブルに RLS を有効化し、基本的なポリシーを作成できる
+- [] テーブルにRLSを有効化し、基本的なポリシーを作成できる
 - [] JWT トークンの確認・デバッグができる
 - [] 認証エラーの基本的なトラブルシューティングができる
 
 ### [OK] **習得できたスキル**
-- [OK] JWT 認証・Supabase Auth による安全なユーザー管理
+- [OK] JWT認証・Supabase Auth による安全なユーザー管理
 - [OK] RLS（Row Level Security）による行レベルアクセス制御
 - [OK] ロールベース・組織ベース認可システム設計
 - [OK] セキュリティとパフォーマンスを両立する実装手法
@@ -952,20 +952,20 @@ $$ LANGUAGE plpgsql STABLE;
 | **認証 (Authentication)**| 「あなたは誰ですか？」の確認 | ログイン・パスワード確認 |
 | **認可 (Authorization)**| 「何をしていいですか？」の制御 | 管理者のみ削除可能など |
 | **RLS**| データベースレベルでの自動制御 | 作成者のみが自分のデータ操作可能 |
-| **JWT**| 安全なセッション管理 | ログイン状態の維持・API 認証 |
+| **JWT**| 安全なセッション管理 | ログイン状態の維持・API認証 |
 
 ### **次章への準備**
 第3章で学ぶクライアントサイド実装の前提知識：
 - [OK] ユーザー認証の流れ理解（サインアップ・ログイン・ログアウト）
-- [OK] RLS の基本概念理解（誰がどのデータにアクセス可能か）
-- [OK] JWT の役割理解（安全な API 呼び出しの仕組み）
+- [OK] RLSの基本概念理解（誰がどのデータにアクセス可能か）
+- [OK] JWT の役割理解（安全なAPI呼び出しの仕組み）
 
 ### **実践演習**
 
 #### **基礎演習（必須）**
 1. **概念確認**: 認証（Authentication）と認可（Authorization）の違いを具体例で説明してください
 
-2. **RLS 設計**: 以下のシナリオで RLS ポリシーを設計してください
+2. **RLS設計**: 以下のシナリオでRLSポリシーを設計してください
    - テーブル: `documents`（文書管理）
    - 要件: 作成者のみが自分の文書を表示・編集できる
 
@@ -975,7 +975,7 @@ $$ LANGUAGE plpgsql STABLE;
    - システム: 経費申請・承認システム
    - 要件: 階層的な承認フロー
 
-4. **セキュリティ分析**: パスワード認証の脆弱性と、それに対する Supabase の対策をまとめてください
+4. **セキュリティ分析**: パスワード認証の脆弱性と、それに対するSupabaseの対策をまとめてください
 
 #### **発展演習（上級者向け）**
 5. **複雑権限実装**: マルチテナント（複数企業）での複雑な権限システムを設計してください
@@ -984,7 +984,7 @@ $$ LANGUAGE plpgsql STABLE;
 
 6. **実装演習**: Supabase Studioで実際に以下を実装してください
    - ユーザーテーブル
-   - RLS ポリシー
+   - RLSポリシー
    - 基本的な認証フロー
 
 #### **演習の解答例・解説**
@@ -995,9 +995,9 @@ $$ LANGUAGE plpgsql STABLE;
 - **認証**: 「あなたは誰ですか？」の確認（例：ログイン・パスワード入力）
 - **認可**: 「何をする権限がありますか？」の制御（例：管理者のみ削除可能）
 
-**2. RLS 設計の解答例**
+**2. RLS設計の解答例**
 ```sql
--- RLS 有効化
+-- RLS有効化
 ALTER TABLE documents ENABLE ROW LEVEL SECURITY;
 
 -- 作成者のみアクセス可能
@@ -1024,13 +1024,13 @@ CREATE POLICY "Own documents only" ON documents
 第3章のクライアントサイド実装をスムーズに進めるために、以下を確認・準備してください：
 
 #### **必須準備**
-- [] Supabase プロジェクト作成済み（無料アカウントでOK）
-- [] 基本的な SQL 操作の理解（CREATE TABLE、INSERT、SELECT）
+- [] Supabaseプロジェクト作成済み（無料アカウントでOK）
+- [] 基本的なSQL操作の理解（CREATE TABLE、INSERT、SELECT）
 - [] JWT の概念理解（トークンベース認証の仕組み）
 
-#### **推奨準備**
+#### **推奨準備**  
 - [] Python基礎知識（変数・関数・クラスの基本）
-- [] 簡単な RLS ポリシーの作成経験
+- [] 簡単なRLSポリシーの作成経験
 - [] Supabase Studio の基本操作に慣れている
 
 #### **準備が不安な場合**
@@ -1042,7 +1042,7 @@ CREATE POLICY "Own documents only" ON documents
 
 **ナビゲーション**
 - **目次**: [はじめに](../../introduction/)
-- **前の章**: [第1章：Supabase アーキテクチャ理解](../chapter01/)
+- **前の章**: [第1章：Supabaseアーキテクチャ理解](../chapter01/)  
 - **次の章**: [第3章：パターン1 - クライアントサイド実装](../chapter03/)
 - **関連章**: [第7章：セキュリティ強化](../chapter07/) | [全体設計](../../guides/pattern-selection/)
 - **リソース**: [認証テンプレート](../../examples/) | [セキュリティ・ガイド](../../guides/troubleshooting/)

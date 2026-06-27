@@ -1,13 +1,13 @@
 # はじめに
 
-**初心者から上級者まで段階的に学べる、Supabase 完全マスターガイド**
+**初心者から上級者まで段階的に学べる、Supabase完全マスターガイド**
 
 ![License: CC BY-NC-SA 4.0](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-lightgrey.svg)
 ![Version: 1.0](https://img.shields.io/badge/Version-1.0-brightgreen.svg)
 ![Status: Active Development](https://img.shields.io/badge/Status-Active%20Development-green.svg)
 
-**著者**: 株式会社アイティードゥ
-**版**: 1.0版
+**著者**: 株式会社アイティードゥ  
+**版**: 1.0版  
 **最終更新**: 2026年5月23日
 
 ---
@@ -16,12 +16,12 @@
 
 **検証日**: 2026年5月23日
 
-**対象範囲**: Supabase Cloud（主要機能）/ セルフホスト（Docker 構成）
+**対象範囲**: Supabase Cloud（主要機能）/ セルフホスト（Docker構成）  
 **互換性ポリシー**:
-- Supabase は機能名・API キー仕様・運用機能が頻繁に更新されるため、**最新仕様は公式ドキュメントで再確認**すること
-- 本書では、**Cloud向けのpublishable/secretキー**と**セルフホスト向けのlegacy JWT キー**を区別して説明する
+- Supabaseは機能名・APIキー仕様・運用機能が頻繁に更新されるため、**最新仕様は公式ドキュメントで再確認**すること
+- 本書では、**Cloud向けのpublishable/secretキー**と**セルフホスト向けのlegacy JWTキー**を区別して説明する
 - Beta/Alpha機能は本文内で明記し、代替パターンも併記する
-- 2026年5月23日時点の再レビューでは、API キー、RLS、Storage Access Control、Realtime Authorization、Edge Functions Secrets、CLI migration/testing を重点確認対象とする
+- 2026年5月23日時点の再レビューでは、APIキー、RLS、Storage Access Control、Realtime Authorization、Edge Functions Secrets、CLI migration/testing を重点確認対象とする
 
 ## この技術書の革新的アプローチ
 
@@ -48,8 +48,8 @@
 
 | レベル | 対象読者 | 学習前のスキル | 学習後の成果 |
 |:-------|:---------|:-------------|:------------|
-|  **初心者**| Supabase 未経験・Web開発初心者 | HTML/CSS基礎のみ | 3パターンの基本アプリ実装 |
-|  **中級者**| バックエンド開発経験者 | API・DB 基礎あり | 要件に応じた最適設計判断 |
+|  **初心者**| Supabase未経験・Web開発初心者 | HTML/CSS基礎のみ | 3パターンの基本アプリ実装 |
+|  **中級者**| バックエンド開発経験者 | API・DB基礎あり | 要件に応じた最適設計判断 |
 |  **上級者**| アーキテクト・技術リーダー | システム設計経験あり | エンタープライズ級システム構築 |
 
 ---
@@ -60,16 +60,16 @@
 
 基礎から確実に積み上げる土台作りパート
 
-#### [第1章：Supabase アーキテクチャ理解](../chapters/chapter01/)
-**学習目標**: Supabase の全体像理解と開発環境整備
+#### [第1章：Supabaseアーキテクチャ理解](../chapters/chapter01/)
+**学習目標**: Supabaseの全体像理解と開発環境整備
 
 | セクション | 内容 | 学習時間 | レベル |
 |:----------|:-----|:---------|:-------|
-| 1.1 Supabase 概要 | PostgreSQL+PostgREST+Realtime の関係 | 1〜2時間 | 基礎 |
-| 1.2 環境構築 | Docker 環境・Supabase 設定 | 2〜3時間 | 基礎 |
-| 1.3 基本操作 | データベース操作・API 理解 | 2〜3時間 | 基礎 |
+| 1.1 Supabase概要 | PostgreSQL+PostgREST+Realtimeの関係 | 1〜2時間 | 基礎 |
+| 1.2 環境構築 | Docker環境・Supabase設定 | 2〜3時間 | 基礎 |
+| 1.3 基本操作 | データベース操作・API理解 | 2〜3時間 | 基礎 |
 
-**成果物**: 動作する Supabase 開発環境
+**成果物**: 動作するSupabase開発環境
 
 #### [第2章：認証・認可設計](../chapters/chapter02/)
 **学習目標**: セキュアな認証・認可システムの理解と実装
@@ -77,7 +77,7 @@
 | セクション | 内容 | 学習時間 | レベル |
 |:----------|:-----|:---------|:-------|
 | 2.1 認証基礎 | JWT・Supabase Auth構造 | 1〜2時間 | 基礎 |
-| 2.2 RLS 設計 | Row Level Security実装 | 2〜3時間 | 応用 |
+| 2.2 RLS設計 | Row Level Security実装 | 2〜3時間 | 応用 |
 | 2.3 ロール管理 | 組織・権限管理システム | 2〜3時間 | 応用 |
 
 **成果物**: 多層権限管理システム
@@ -86,44 +86,44 @@
 
 ### **Part II: 3つのアーキテクチャパターン**(推定学習時間: 24〜36時間)
 
-Supabase マスターの核心部分
+Supabaseマスターの核心部分
 
 #### [第3章：パターン1 - クライアントサイド実装](../chapters/chapter03/)
-**比喩**: 木造住宅（シンプル・高速・個人向け）
-**技術**: Python Flet + Supabase Client
+**比喩**: 木造住宅（シンプル・高速・個人向け）  
+**技術**: Python Flet + Supabase Client  
 **サンプル**: 病院患者管理システム
 
 | セクション | 内容 | 学習時間 | レベル |
 |:----------|:-----|:---------|:-------|
-| 3.1 基本構成 | Flet+Supabase 連携 | 2〜3時間 | 基礎 |
+| 3.1 基本構成 | Flet+Supabase連携 | 2〜3時間 | 基礎 |
 | 3.2 リアルタイム | 患者情報リアルタイム更新 | 3〜4時間 | 応用 |
 | 3.3 エラー処理 | オフライン対応・エラー処理 | 2〜3時間 | 応用 |
 | 3.4 適用判断 | パターン選択基準・制約理解 | 1〜2時間 | 発展 |
 
 **成果物**: デスクトップ患者管理アプリ
 
-#### [第4章：パターン2 - Edge Functions 活用](../chapters/chapter04/)
-**比喩**: プレハブ工法（柔軟・自動化・中規模向け）
-**技術**: Deno + TypeScript Edge Functions
+#### [第4章：パターン2 - Edge Functions活用](../chapters/chapter04/)
+**比喩**: プレハブ工法（柔軟・自動化・中規模向け）  
+**技術**: Deno + TypeScript Edge Functions  
 **サンプル**: 病院薬剤管理システム
 
 | セクション | 内容 | 学習時間 | レベル |
 |:----------|:-----|:---------|:-------|
 | 4.1 基本構成 | Deno Edge Functions設計 | 2〜3時間 | 基礎 |
 | 4.2 薬剤管理 | 在庫管理・処方システム | 4〜5時間 | 応用 |
-| 4.3 外部連携 | 薬局・医師連携 API | 3〜4時間 | 応用 |
+| 4.3 外部連携 | 薬局・医師連携API | 3〜4時間 | 応用 |
 | 4.4 運用監視 | ログ・モニタリング実装 | 2〜3時間 | 発展 |
 
 **成果物**: サーバーレス薬剤管理システム
 
-#### [第5-1章：パターン3 - 独立 API サーバー](../chapters/chapter05-1/)
-**比喩**: 鉄筋コンクリート（堅牢・高性能・企業向け）
-**技術**: FastAPI + SQLAlchemy + Supabase
+#### [第5-1章：パターン3 - 独立APIサーバー](../chapters/chapter05-1/)
+**比喩**: 鉄筋コンクリート（堅牢・高性能・企業向け）  
+**技術**: FastAPI + SQLAlchemy + Supabase  
 **サンプル**: 病院総合管理システム
 
 | セクション | ファイル | 内容 | 学習時間 | レベル |
 |:----------|:--------|:-----|:---------|:-------|
-| 5.1 基本設計 | [chapter05-1.md](../chapters/chapter05-1/) | FastAPI 基本構成・DB 設計 | 3〜4時間 | 基礎/応用 |
+| 5.1 基本設計 | [chapter05-1.md](../chapters/chapter05-1/) | FastAPI基本構成・DB設計 | 3〜4時間 | 基礎/応用 |
 | 5.2 高度実装 | [chapter05-2.md](../chapters/chapter05-2/) | マルチテナント・高度機能 | 4〜6時間 | 応用/発展 |
 | 5.3 運用・拡張 | [chapter05-3.md](../chapters/chapter05-3/) | スケーリング・運用最適化 | 3〜4時間 | 発展 |
 | 5.4 AI/RAG | [chapter05-4.md](../chapters/chapter05-4/) | RAG・埋め込み・監査ログ | 5〜7時間 | 発展 |
@@ -150,7 +150,7 @@ Supabase マスターの核心部分
 
 | セクション | 内容 | 学習時間 | レベル |
 |:----------|:-----|:---------|:-------|
-| 6.1 PostgreSQL 調整 | インデックス・パーティション最適化 | 3〜4時間 | 応用 |
+| 6.1 PostgreSQL調整 | インデックス・パーティション最適化 | 3〜4時間 | 応用 |
 | 6.2 クエリ最適化 | 実行計画分析・パフォーマンス改善 | 3〜4時間 | 応用 |
 | 6.3 キャッシュ戦略 | Redis・クライアントキャッシュ | 2〜3時間 | 発展 |
 | 6.4 監視・計測 | APM・メトリクス収集 | 2〜3時間 | 発展 |
@@ -160,7 +160,7 @@ Supabase マスターの核心部分
 
 | セクション | 内容 | 学習時間 | レベル |
 |:----------|:-----|:---------|:-------|
-| 7.1 高度 RLS | 動的権限・時間制限・IP 制限 | 3〜4時間 | 応用/発展 |
+| 7.1 高度RLS | 動的権限・時間制限・IP制限 | 3〜4時間 | 応用/発展 |
 | 7.2 監査システム | ログ収集・不正検知 | 2〜3時間 | 応用 |
 | 7.3 侵入検知 | 異常パターン検知・自動防御 | 3〜4時間 | 発展 |
 
@@ -185,7 +185,7 @@ Supabase マスターの核心部分
 | セクション | 内容 | 学習時間 | レベル |
 |:----------|:-----|:---------|:-------|
 | 9.1 要件分析 | プロジェクト要件からの判断フレームワーク | 2〜3時間 | 応用 |
-| 9.2 パターン選択 | AI 支援選択システム・決定エンジン | 3〜4時間 | 応用/発展 |
+| 9.2 パターン選択 | AI支援選択システム・決定エンジン | 3〜4時間 | 応用/発展 |
 | 9.3 移行戦略 | パターン間移行・リスク管理 | 2〜3時間 | 発展 |
 | 9.4 演習問題 | 実際のビジネス要件での選択演習 | 3〜4時間 | 発展 |
 
@@ -220,7 +220,7 @@ Supabase マスターの核心部分
 ```text
 Week 1-2: 第1章〜第2章（基礎固め）
 Week 3-4: 第3章（木造住宅パターン）
-Week 5-6: 第4章（プレハブパターン）
+Week 5-6: 第4章（プレハブパターン）  
 Week 7-8: 第5-1章（鉄筋基礎）
 Week 9-10: 第6章〜第7章（最適化基礎）
 Week 11-12: 第9章（選択基準理解）
@@ -265,10 +265,10 @@ src/examples/
 │       │   └── cors.ts
 │       └── blog-api/
 │           └── index.ts
-├── pattern3/                   #  パターン3: 独立 API サーバー
+├── pattern3/                   #  パターン3: 独立APIサーバー
 │   └── independent_api/
 │       └── main.py
-├── docker/                     # Docker 構成（例: pattern3）
+├── docker/                     # Docker構成（例: pattern3）
 │   ├── .env.example
 │   ├── docker-compose.yml
 │   └── pattern3/
@@ -297,7 +297,7 @@ src/examples/
 ### **実践ガイド集**
 - [トラブルシューティングガイド](../guides/troubleshooting/) - 開発時の問題解決
 - [[WARN] エラーハンドリングガイド](../guides/error-handling/) - 高度なエラー処理
-- [パターン選択ガイド](../guides/pattern-selection/) - AI 支援選択システム
+- [パターン選択ガイド](../guides/pattern-selection/) - AI支援選択システム
 - [移行戦略ガイド](../chapters/chapter09/#93-移行戦略パターン間の段階的移行) - パターン間移行戦略
 - [[OK] 運用チェックリスト](../appendices/appendix01/#c-チェックリスト集) - 本番運用対応
 
@@ -323,7 +323,7 @@ src/examples/
 - **技術発信**: ブログ・勉強会での実践知見共有
 
 ### **継続学習**
-- **コミュニティ参加**: Supabase・PostgreSQL コミュニティでの知見共有
+- **コミュニティ参加**: Supabase・PostgreSQLコミュニティでの知見共有
 - **OSS貢献**: 関連ライブラリへの貢献・新機能提案
 - **独自プロダクト**: 学習成果を活用した独自サービス開発
 
@@ -331,14 +331,14 @@ src/examples/
 
 ## ライセンス・サポート
 
-**ライセンス**: CC BY-NC-SA 4.0（商用は別契約）
-**著者**: 株式会社アイティードゥ
-**サポート**: [GitHub Issues](https://github.com/itdojp/supabase-architecture-patterns-book/issues) にて対応
+**ライセンス**: CC BY-NC-SA 4.0（商用は別契約）  
+**著者**: 株式会社アイティードゥ  
+**サポート**: [GitHub Issues](https://github.com/itdojp/supabase-architecture-patterns-book/issues) にて対応  
 
 ---
 
-**さあ、Supabase アーキテクチャマスターへの旅を始めましょう！**
+**さあ、Supabaseアーキテクチャマスターへの旅を始めましょう！**
 
-**今すぐ学習開始**: [第1章：Supabase アーキテクチャ理解](../chapters/chapter01/)
-**質問・相談**: [GitHub Issues](https://github.com/itdojp/supabase-architecture-patterns-book/issues)
+**今すぐ学習開始**: [第1章：Supabaseアーキテクチャ理解](../chapters/chapter01/)  
+**質問・相談**: [GitHub Issues](https://github.com/itdojp/supabase-architecture-patterns-book/issues)  
 **フィードバック**: [お問い合わせ](mailto:contact@itdo.jp)

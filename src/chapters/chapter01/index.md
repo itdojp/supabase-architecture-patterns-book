@@ -1,10 +1,10 @@
-# 第1章：Supabase アーキテクチャ理解
+# 第1章：Supabaseアーキテクチャ理解
 
 ---
-**目次に戻る**: [はじめに](../../introduction/)
-**前の章**: なし（最初の章）
-**次の章**: [第2章：認証・認可設計](../chapter02/)
-**学習レベル**:  基礎 |  応用 |  発展
+**目次に戻る**: [はじめに](../../introduction/)  
+**前の章**: なし（最初の章）  
+**次の章**: [第2章：認証・認可設計](../chapter02/)  
+**学習レベル**:  基礎 |  応用 |  発展  
 **推定学習時間**: 3〜5時間
 ---
 
@@ -15,10 +15,10 @@
 
 ## この章で学ぶこと（初心者向け）
 
-この章では、**「Web アプリを作るのに必要なもの」**から始めて、Supabase がどのようにそれらを解決してくれるかを学びます。
+この章では、**「Webアプリを作るのに必要なもの」**から始めて、Supabaseがどのようにそれらを解決してくれるかを学びます。
 
-- **初心者**: Web アプリに必要な基本要素がわかる
-- **中級者**: Supabase の各コンポーネントの役割がわかる
+- **初心者**: Webアプリに必要な基本要素がわかる
+- **中級者**: Supabaseの各コンポーネントの役割がわかる  
 - **上級者**: 内部の仕組みまで理解して設計に活かせる
 
 ## まずは身近な例から：「ブログアプリ」を作るとしたら？
@@ -42,7 +42,7 @@ flowchart TD
     B --> C[データベース<br/>MySQL/PostgreSQL]
     B --> D[認証システム<br/>自作or Auth0]
     B --> E[リアルタイム<br/>WebSocket サーバー]
-
+    
     F[開発者] --> G[5つのシステムを<br/>別々に設定・管理]
 ```
 
@@ -52,7 +52,7 @@ flowchart TD
 - 開発に時間がかかる
 - 運用コストが高い
 
-### Supabase なら...
+### Supabaseなら...
 
 ```mermaid
 flowchart TD
@@ -61,7 +61,7 @@ flowchart TD
     B --> D[認証システム<br/>自動実装]
     B --> E[リアルタイム<br/>自動配信]
     B --> F[API<br/>自動生成]
-
+    
     G[開発者] --> H[1つのサービスで<br/>すべて解決]
 ```
 
@@ -71,9 +71,9 @@ flowchart TD
 - [OK] 開発が早い（自動生成）
 - [OK] 運用コストが安い
 
-## Supabase の内部構造を理解する
+## Supabaseの内部構造を理解する
 
-### 実際の Supabase アーキテクチャ
+### 実際のSupabaseアーキテクチャ
 
 ```mermaid
 graph TB
@@ -82,40 +82,40 @@ graph TB
         B[Mobile App<br/>Flutter/RN]
         C[サーバーサイド<br/>Node.js/Python]
     end
-
+    
     subgraph "Supabase Edge"
         D[API Gateway<br/>Kong]
         E[認証システム<br/>GoTrue]
         F[リアルタイム<br/>Phoenix]
         G[エッジ関数<br/>Deno]
     end
-
+    
     subgraph "Database Layer"
         H[PostgreSQL<br/>主データベース]
-        I[PostgREST<br/>自動 API 生成]
+        I[PostgREST<br/>自動API生成]
         J[pgBouncer<br/>コネクションプール]
     end
-
+    
     subgraph "Storage & Services"
         K[オブジェクトストレージ<br/>S3互換]
         L[バックアップ<br/>WAL-E]
         M[監視・ログ<br/>Prometheus]
     end
-
+    
     A --> D
     B --> D
     C --> D
-
+    
     D --> E
     D --> F
     D --> G
     D --> I
-
+    
     E --> H
     F --> H
     G --> H
     I --> H
-
+    
     J --> H
     K --> H
     L --> H
@@ -126,7 +126,7 @@ graph TB
 
 #### 1. 認証システム (GoTrue)
 ```javascript
-// 実際の Supabase 認証の内部フロー
+// 実際のSupabase認証の内部フロー
 const authFlow = {
   signup: async (email, password) => {
     // 1. GoTrueサーバーにリクエスト
@@ -135,24 +135,24 @@ const authFlow = {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password })
     });
-
-    // 2. PostgreSQL のauth.usersテーブルに保存
+    
+    // 2. PostgreSQLのauth.usersテーブルに保存
     // 3. 確認メールの送信
-    // 4. JWT トークンの生成
-
+    // 4. JWTトークンの生成
+    
     return response.json();
   },
-
+  
   login: async (email, password) => {
     // 1. 資格情報の検証
-    // 2. JWT トークンの生成
+    // 2. JWTトークンの生成
     // 3. refresh_tokenの発行
     // 4. セッション管理
   }
 };
 ```
 
-#### 2. 自動 API 生成 (PostgREST)
+#### 2. 自動API生成 (PostgREST)
 ```sql
 -- データベーステーブル
 CREATE TABLE posts (
@@ -163,7 +163,7 @@ CREATE TABLE posts (
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
--- 自動的に以下の API エンドポイントが生成される：
+-- 自動的に以下のAPIエンドポイントが生成される：
 -- GET    /posts           - 一覧取得
 -- GET    /posts?id=eq.xxx - 特定の投稿
 -- POST   /posts           - 新規作成
@@ -173,7 +173,7 @@ CREATE TABLE posts (
 
 #### 3. リアルタイム機能 (Phoenix)
 ```javascript
-// WebSocket を使用したリアルタイム接続
+// WebSocketを使用したリアルタイム接続
 const realtimeClient = supabase
   .channel('posts')
   .on('postgres_changes', {
@@ -182,7 +182,7 @@ const realtimeClient = supabase
     table: 'posts'
   }, (payload) => {
     console.log('新しい投稿:', payload.new);
-    // UI を自動更新
+    // UIを自動更新
   })
   .subscribe();
 ```
@@ -192,7 +192,7 @@ const realtimeClient = supabase
 ### ステップ1: プロジェクトセットアップ
 
 ```bash
-# 1. Supabase プロジェクトの作成
+# 1. Supabaseプロジェクトの作成
 npx create-supabase-app my-blog
 cd my-blog
 
@@ -242,7 +242,7 @@ CREATE TABLE comments (
 ### ステップ3: Row Level Security (RLS) 設定
 
 ```sql
--- テーブルで RLS を有効化
+-- テーブルでRLSを有効化
 ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE posts ENABLE ROW LEVEL SECURITY;
 ALTER TABLE comments ENABLE ROW LEVEL SECURITY;
@@ -317,7 +317,7 @@ function BlogApp() {
     // リアルタイム更新の設定
     const channel = supabase
       .channel('posts')
-      .on('postgres_changes',
+      .on('postgres_changes', 
         { event: 'INSERT', schema: 'public', table: 'posts' },
         (payload) => {
           setPosts(prev => [payload.new, ...prev]);
@@ -360,7 +360,7 @@ function BlogApp() {
         email,
         password
       });
-
+      
       if (error) throw error;
       console.log('ログイン成功:', data);
     } catch (error) {
@@ -374,7 +374,7 @@ function BlogApp() {
         email,
         password
       });
-
+      
       if (error) throw error;
       console.log('サインアップ成功:', data);
     } catch (error) {
@@ -426,7 +426,7 @@ function BlogApp() {
         {user && (
           <CreatePostForm onSubmit={handleCreatePost} />
         )}
-
+        
         <PostList posts={posts} />
       </main>
     </div>
@@ -530,7 +530,7 @@ export default BlogApp;
 ### 実装のポイント
 
 1. **認証状態の管理**: `onAuthStateChange`でリアルタイムに認証状態を監視
-2. **RLS による自動権限制御**: データベースレベルでセキュリティを確保
+2. **RLSによる自動権限制御**: データベースレベルでセキュリティを確保
 3. **リアルタイム更新**: 新しい投稿が即座に反映される
 4. **型安全性**: TypeScriptを使用することで開発効率が向上
 
@@ -545,7 +545,7 @@ const { data, error } = await supabase
 
 // 2. インデックスの作成
 // データベースで実行
-CREATE INDEX idx_posts_published_created
+CREATE INDEX idx_posts_published_created 
 ON posts(published, created_at DESC);
 
 // 3. キャッシュの活用
@@ -556,11 +556,11 @@ const cachedPosts = useMemo(() => {
 
 ## 章のまとめ
 
-この章では、Supabase の基本的なアーキテクチャとコンポーネントについて学びました：
+この章では、Supabaseの基本的なアーキテクチャとコンポーネントについて学びました：
 
 - **統合バックエンド**: 複数のサービスを1つに統合
-- **自動 API 生成**: PostgreSQL テーブルから自動的に RESTful API を生成
-- **リアルタイム機能**: WebSocket ベースのリアルタイム通信
+- **自動API生成**: PostgreSQLテーブルから自動的にRESTful APIを生成
+- **リアルタイム機能**: WebSocketベースのリアルタイム通信
 - **認証システム**: JWT-based認証と細かい権限制御
 - **Row Level Security**: データベースレベルでのセキュリティ
 
@@ -575,7 +575,7 @@ flowchart TD
     B --> D[認証 OK<br/>Supabase Auth]
     B --> E[リアルタイム OK<br/>Realtime]
     B --> F[API OK<br/>PostgREST]
-
+    
     G[開発者] --> H[1つのサービスで<br/>全部完結！]
 ```
 
@@ -587,19 +587,19 @@ flowchart TD
 
 ---
 
-## Supabase の中身を覗いてみよう
+## Supabaseの中身を覗いてみよう
 
 ### まずは簡単に：「3つの基本機能」
 
-Supabase は主に**3つの機能**でできています：
+Supabaseは主に**3つの機能**でできています：
 
 ```mermaid
 flowchart LR
     A[あなたのアプリ] --> B[Supabase]
-
+    
     subgraph B[Supabase]
         C[ データ保存<br/>PostgreSQL]
-        D[ API 自動生成<br/>PostgREST]
+        D[ API自動生成<br/>PostgREST]
         E[ リアルタイム<br/>Realtime]
     end
 ```
@@ -609,7 +609,7 @@ flowchart LR
 | 機能 | 何をするもの？ | ブログアプリでの例 |
 |------|:-------------:|:------------------|
 |  **PostgreSQL**| データを保存する | 記事のタイトル・内容を保存 |
-|  **PostgREST**| API を自動で作る | 記事の取得・保存の API を自動作成 |
+|  **PostgREST**| API を自動で作る | 記事の取得・保存のAPI を自動作成 |
 |  **Realtime**| リアルタイム更新 | 記事が更新されると即座に画面も更新 |
 
 ### もう少し詳しく：「内部の仕組み」
@@ -622,14 +622,14 @@ flowchart TB
     Kong --> PostgREST[ API<br/>PostgREST]
     Kong --> Realtime[ リアルタイム<br/>Realtime Server]
     Kong --> Auth[ 認証<br/>Supabase Auth]
-
+    
     PostgREST --> PostgreSQL[ データベース<br/>PostgreSQL]
     Realtime --> PostgreSQL
     Auth --> PostgreSQL
-
+    
     PostgreSQL --> WAL[ 変更ログ<br/>Write-Ahead Log]
     WAL --> Realtime
-
+    
     style Client fill:#e1f5fe
     style PostgreSQL fill:#f3e5f5
     style Kong fill:#e8f5e8
@@ -637,7 +637,7 @@ flowchart TB
 
 **各コンポーネントの役割（簡単版）**：
 
-- **Kong Gateway**: 入口の門番（どの API を呼ぶかを振り分け）
+- **Kong Gateway**: 入口の門番（どのAPIを呼ぶかを振り分け）
 - **PostgREST**: API を自動で作成してくれる魔法のツール
 - **Realtime**: データが変わったら即座にお知らせ
 - **Supabase Auth**: ログイン・ログアウトを管理
@@ -653,12 +653,12 @@ flowchart TB
 
 ```text
  記事のデータ
-- タイトル: "初めての Supabase"
-- 内容: "今日から Supabase を使って..."
+- タイトル: "初めてのSupabase"
+- 内容: "今日からSupabaseを使って..."
 - 作成日: 2024-06-03
 - 作者: user_123
 
- ユーザーのデータ
+ ユーザーのデータ  
 - 名前: "田中太郎"
 - メールアドレス: "tanaka@example.com"
 - パスワード: （暗号化された文字列）
@@ -666,53 +666,53 @@ flowchart TB
 
 これらのデータを整理して保存・取得するのがデータベースの仕事です。
 
-### なぜ PostgreSQL が選ばれるの？
+### なぜPostgreSQLが選ばれるの？
 
-Supabase が数あるデータベースの中から**PostgreSQL**を選んだ理由：
+Supabaseが数あるデータベースの中から**PostgreSQL**を選んだ理由：
 
 #### 初心者でもわかるメリット
 
 | 特徴 | 初心者への影響 | 具体例 |
 |------|:------------:|:-------|
-|  **標準 SQL**| 覚えやすい | 他のシステムでも使える知識 |
+|  **標準SQL**| 覚えやすい | 他のシステムでも使える知識 |
 |  **安全性**| 勝手にデータが消えない | バックアップ・復元が確実 |
 |  **高性能**| アプリが速く動く | ユーザーを待たせない |
 |  **拡張可能**| 成長に対応できる | 小さく始めて大きく育てられる |
 
 #### 開発者向けメリット
 
-PostgreSQL は「**多機能なスイスアーミーナイフ**」のようなデータベースです：
+PostgreSQLは「**多機能なスイスアーミーナイフ**」のようなデータベースです：
 
-- [OK] **ACID 保証**: データが確実に保存される（途中で電源が切れても大丈夫）
+- [OK] **ACID保証**: データが確実に保存される（途中で電源が切れても大丈夫）
 - [OK] **高度なクエリ**: 複雑な検索・集計が簡単にできる
-- [OK] **JSON 対応**: 従来のデータとモダンなデータ両方を扱える
+- [OK] **JSON対応**: 従来のデータとモダンなデータ両方を扱える
 - [OK] **拡張機能**: 必要に応じて機能を追加できる
 
 #### 他のデータベースとの違い
 | 特徴 | PostgreSQL | MySQL | MongoDB | Firebase |
 |------|:----------:|:-----:|:-------:|:--------:|
-| ACID 保証 | [OK] 完全 | [WARN] 部分的 | [WARN] 部分的 | [NG] なし |
-| RLS 対応 | [OK] ネイティブ | [NG] なし | [NG] なし | [WARN] 限定的 |
-| JSON 処理 | [OK] 高性能 | [WARN] 基本的 | [OK] 高性能 | [OK] 高性能 |
+| ACID保証 | [OK] 完全 | [WARN] 部分的 | [WARN] 部分的 | [NG] なし |
+| RLS対応 | [OK] ネイティブ | [NG] なし | [NG] なし | [WARN] 限定的 |
+| JSON処理 | [OK] 高性能 | [WARN] 基本的 | [OK] 高性能 | [OK] 高性能 |
 | 拡張性 | [OK] 豊富 | [WARN] 限定的 | [WARN] 限定的 | [NG] なし |
-| SQL 標準 | [OK] 高準拠 | [WARN] 独自拡張 | [NG] なし | [NG] なし |
+| SQL標準 | [OK] 高準拠 | [WARN] 独自拡張 | [NG] なし | [NG] なし |
 
-**Supabase 固有の拡張機能**:
+**Supabase固有の拡張機能**:
 
-- `pg_graphql`: GraphQL エンドポイント自動生成により、REST API に加えて GraphQL も利用可能
+- `pg_graphql`: GraphQLエンドポイント自動生成により、REST APIに加えてGraphQLも利用可能
 - `pgsodium`: データベースレベルでの暗号化・復号化により、機密データの安全な処理を実現
 - `pg_stat_statements`: クエリパフォーマンス監視により、ボトルネックの早期発見と最適化が可能
 
 ```sql
 -- 拡張機能の確認
-SELECT name, default_version, installed_version
-FROM pg_available_extensions
+SELECT name, default_version, installed_version 
+FROM pg_available_extensions 
 WHERE name IN ('pg_graphql', 'pgsodium', 'pg_stat_statements');
 ```
 
-## PostgREST：「API 自動生成の魔法」
+## PostgREST：「API自動生成の魔法」
 
-### API って何？そしてなぜ必要？
+### APIって何？そしてなぜ必要？
 
 **API（Application Programming Interface）**= アプリとデータベースをつなぐ橋
 
@@ -721,26 +721,26 @@ WHERE name IN ('pg_graphql', 'pgsodium', 'pg_stat_statements');
 ```mermaid
 flowchart LR
     A[ ブログアプリ] --> B[どうやって<br/>データを取得？] --> C[ データベース]
-
+    
     D[記事を表示したい] --> E[API: 記事データを取得]
     F[新しい記事を保存したい] --> G[API: 記事データを保存]
 ```
 
-### 従来の方法：「手作業で API を作る」
+### 従来の方法：「手作業でAPI を作る」
 
 通常、開発者がこんなコードを書く必要がありました：
 
 ```javascript
-// 記事一覧を取得する API （手作業で作成）
+// 記事一覧を取得するAPI （手作業で作成）
 app.get('/api/articles', async (req, res) => {
   try {
     // 1. データベースに接続
     const connection = await getDBConnection();
-
-    // 2. SQL クエリを書く
+    
+    // 2. SQLクエリを書く
     const query = 'SELECT * FROM articles ORDER BY created_at DESC';
     const articles = await connection.query(query);
-
+    
     // 3. 結果を返す
     res.json(articles);
   } catch (error) {
@@ -749,39 +749,39 @@ app.get('/api/articles', async (req, res) => {
   }
 });
 
-// 記事を作成する API （また手作業で作成）
+// 記事を作成するAPI （また手作業で作成）
 app.post('/api/articles', async (req, res) => {
   // また同じような手順を繰り返し...
 });
 
-// 記事を更新する API （また手作業で作成）
+// 記事を更新するAPI （また手作業で作成）
 app.put('/api/articles/:id', async (req, res) => {
   // また同じような手順を繰り返し...
 });
 
-// 記事を削除する API （また手作業で作成）
+// 記事を削除するAPI （また手作業で作成）
 app.delete('/api/articles/:id', async (req, res) => {
   // また同じような手順を繰り返し...
 });
 ```
 
 **問題点**：
-- **時間がかかる**: 1つのテーブルに4つの API × 複数テーブル = 大量のコード
+- **時間がかかる**: 1つのテーブルに4つのAPI × 複数テーブル = 大量のコード
 - **バグが起きやすい**: 手動でコードを書くのでミスが発生
 - **重複作業**: 似たようなコードを何度も書く
 
 ### PostgREST：「API が自動で完成！」
 
-PostgREST を使えば、**コードを書かずに**API が完成します：
+PostgRESTを使えば、**コードを書かずに**APIが完成します：
 
 ```mermaid
 flowchart TD
-    A[ データベースにテーブル作成] --> B[ PostgREST が自動で API 生成]
-    B --> C[OK 記事取得 API 完成]
-    B --> D[OK 記事作成 API 完成]
-    B --> E[OK 記事更新 API 完成]
-    B --> F[OK 記事削除 API 完成]
-
+    A[ データベースにテーブル作成] --> B[ PostgRESTが自動でAPI生成]
+    B --> C[OK 記事取得API 完成]
+    B --> D[OK 記事作成API 完成] 
+    B --> E[OK 記事更新API 完成]
+    B --> F[OK 記事削除API 完成]
+    
     style A fill:#e3f2fd
     style B fill:#fff3e0
     style C fill:#e8f5e8
@@ -807,61 +807,61 @@ CREATE TABLE articles (
   created_at TIMESTAMP DEFAULT NOW()
 );
 
--- RLS を有効化（セキュリティ向上）
+-- RLSを有効化（セキュリティ向上）
 ALTER TABLE articles ENABLE ROW LEVEL SECURITY;
 ```
 
-自動で以下の API が生成されます：
+自動で以下のAPIが生成されます：
 
 ```bash
 [OK] GET /articles          # 記事一覧取得
-[OK] GET /articles?id=eq.1  # 特定記事取得
+[OK] GET /articles?id=eq.1  # 特定記事取得  
 [OK] POST /articles         # 記事作成
 [OK] PATCH /articles?id=eq.1 # 記事更新
 [OK] DELETE /articles?id=eq.1 # 記事削除
 ```
 
 **メリット**：
-- **即座に完成**: テーブル作成と同時に API 完成
-- **一貫性**: 全ての API が同じ品質で統一
-- **自動更新**: テーブル変更で API も自動更新
-- **高性能**: 最適化済みの SQL クエリを直接実行
+- **即座に完成**: テーブル作成と同時にAPI完成
+- **一貫性**: 全てのAPIが同じ品質で統一
+- **自動更新**: テーブル変更でAPIも自動更新
+- **高性能**: 最適化済みのSQLクエリを直接実行
 
-#### 従来の API 開発手法との違い
+#### 従来のAPI開発手法との違い
 | 項目 | PostgREST | 従来のフレームワーク |
 |------|:---------:|:------------------:|
-| **コード量**| [OK] ゼロ | [NG] 大量（CRUD 毎に実装） |
+| **コード量**| [OK] ゼロ | [NG] 大量（CRUD毎に実装） |
 | **開発時間**| [OK] 即時 | [NG] 数日〜数週間 |
 | **一貫性**| [OK] 自動保証 | [WARN] 手動実装が必要 |
 | **バグリスク**| [OK] 最小 | [NG] 実装ミスのリスク |
-| **保守性**| [OK] スキーマ駆動 | [WARN] コードと DB の同期が必要 |
-| **パフォーマンス**| [OK] 最適化済み | [WARN] ORM 経由で性能低下 |
+| **保守性**| [OK] スキーマ駆動 | [WARN] コードとDBの同期が必要 |
+| **パフォーマンス**| [OK] 最適化済み | [WARN] ORM経由で性能低下 |
 
-**Express.js/FastAPI との比較例**:
+**Express.js/FastAPIとの比較例**:
 
 ```javascript
 // 従来の手法 (Express.js)
 app.get('/tasks', async (req, res) => {
   const { limit, offset, completed } = req.query;
-
+  
   let query = 'SELECT * FROM tasks WHERE 1=1';
   const params = [];
-
+  
   if (completed !== undefined) {
     query += ' AND completed = $' + (params.length + 1);
     params.push(completed === 'true');
   }
-
+  
   if (limit) {
     query += ' LIMIT $' + (params.length + 1);
     params.push(parseInt(limit));
   }
-
+  
   if (offset) {
     query += ' OFFSET $' + (params.length + 1);
     params.push(parseInt(offset));
   }
-
+  
   try {
     const result = await db.query(query, params);
     res.json(result.rows);
@@ -876,7 +876,7 @@ app.get('/tasks', async (req, res) => {
 ```
 
 ```sql
--- テーブル作成で API が自動生成される
+-- テーブル作成でAPIが自動生成される
 CREATE TABLE tasks (
     id BIGSERIAL PRIMARY KEY,
     title TEXT NOT NULL,
@@ -885,25 +885,25 @@ CREATE TABLE tasks (
 );
 ```
 
-対応する REST API が自動生成：
+対応するREST APIが自動生成：
 
 ```http
 GET    /rest/v1/tasks           # SELECT
-POST   /rest/v1/tasks           # INSERT
+POST   /rest/v1/tasks           # INSERT  
 PATCH  /rest/v1/tasks?id=eq.1   # UPDATE
 DELETE /rest/v1/tasks?id=eq.1   # DELETE
 ```
 
 **クエリ翻訳メカニズム**:
 
-- URL パラメーター → WHERE 句変換
-- HTTP ヘッダー → SELECT 句・JOIN 句構築
-- JSON ペイロード → INSERT/UPDATE 値設定
+- URLパラメーター → WHERE句変換
+- HTTPヘッダー → SELECT句・JOIN句構築
+- JSONペイロード → INSERT/UPDATE値設定
 
 ### Realtime: リアルタイム通信
 
 #### 何を行うものか
-Supabase Realtime は、データベースの変更をリアルタイムでクライアントアプリケーションに配信するElixir/Phoenix 製の WebSocket サーバーです。PostgreSQL の WAL（Write-Ahead Log）を監視し、データ変更を即座に接続されたクライアントに通知します。
+Supabase Realtimeは、データベースの変更をリアルタイムでクライアントアプリケーションに配信するElixir/Phoenix製のWebSocketサーバーです。PostgreSQLのWAL（Write-Ahead Log）を監視し、データ変更を即座に接続されたクライアントに通知します。
 
 **実装基盤**: Elixir/Phoenix Channels（高並行性・耐障害性に優れたアクター　モデル）
 **通信プロトコル**: WebSocket (Phoenix Socket.js)
@@ -918,7 +918,7 @@ Supabase Realtime は、データベースの変更をリアルタイムでク�
 | 項目 | Supabase Realtime | Socket.io + Redis | WebSocket + Polling |
 |------|:-----------------:|:-----------------:|:-------------------:|
 | **設定の複雑さ**| [OK] ゼロ設定 | [NG] 複雑な設定 | [WARN] 中程度 |
-| **データ同期**| [OK] 自動（DB 駆動） | [NG] 手動実装 | [NG] 手動実装 |
+| **データ同期**| [OK] 自動（DB駆動） | [NG] 手動実装 | [NG] 手動実装 |
 | **スケーラビリティ**| [OK] 水平拡張 | [WARN] Redis制限 | [NG] 単一サーバー |
 | **障害復旧**| [OK] 自動 | [WARN] 部分的 | [NG] 手動 |
 | **メモリ効率**| [OK] 高効率 | [WARN] 中程度 | [NG] 非効率 |
@@ -931,15 +931,15 @@ Supabase Realtime は、データベースの変更をリアルタイムでク�
 await db.query('UPDATE tasks SET completed = true WHERE id = ?', [taskId]);
 
 // 2. 手動でクライアントに通知（実装が必要）
-io.emit('task_updated', {
-  id: taskId,
+io.emit('task_updated', { 
+  id: taskId, 
   completed: true,
   updated_at: new Date()
 });
 
 // 3. クライアント側でも手動実装が必要
 socket.on('task_updated', (data) => {
-  // UI の更新処理を手動実装
+  // UIの更新処理を手動実装
   updateTaskInUI(data);
 });
 ```
@@ -957,7 +957,7 @@ const subscription = supabase
   .channel('tasks_channel')
   .on('postgres_changes', {
     event: 'UPDATE',
-    schema: 'public',
+    schema: 'public', 
     table: 'tasks'
   }, (payload) => {
     // データ変更が自動で通知される
@@ -967,25 +967,25 @@ const subscription = supabase
 // → 実装コードが90%削減
 ```
 
-**データフロー（WAL ベース）**:
+**データフロー（WALベース）**:
 
-1. **PostgreSQL が WAL（Write-Ahead Log）に変更記録**: 全てのデータ変更が自動記録
-2. **Realtime Serverが WAL をtail監視**: リアルタイムでログを読み取り
-3. **変更を WebSocket で配信**: 関連するクライアントに即座に通知
-4. **クライアント側で自動反映**: アプリケーションの UI が自動更新
+1. **PostgreSQLがWAL（Write-Ahead Log）に変更記録**: 全てのデータ変更が自動記録
+2. **Realtime ServerがWALをtail監視**: リアルタイムでログを読み取り
+3. **変更をWebSocketで配信**: 関連するクライアントに即座に通知
+4. **クライアント側で自動反映**: アプリケーションのUIが自動更新
 
 ```javascript
 // リアルタイム購読の内部実装
 const subscription = supabase
   .channel('tasks_channel')
-  .on('postgres_changes',
+  .on('postgres_changes', 
     { event: '*', schema: 'public', table: 'tasks' },
     (payload) => console.log(payload)
   )
   .subscribe();
 ```
 
-**WAL 設定**（PostgreSQL）:
+**WAL設定**（PostgreSQL）:
 
 ```sql
 -- レプリケーション設定確認
@@ -1000,12 +1000,12 @@ SHOW max_wal_senders;
 
 ### セキュリティモデル
 
-RLS は PostgreSQL の機能を活用した行レベルアクセス制御です。
+RLSはPostgreSQLの機能を活用した行レベルアクセス制御です。
 
 **基本概念**:
 
 - **Policy**: 行レベルでの条件式
-- **Role**: PostgreSQL ユーザーロール
+- **Role**: PostgreSQLユーザーロール
 - **Context**: `auth.uid()` などの実行時情報
 
 ### ポリシー実装パターン
@@ -1051,8 +1051,8 @@ CREATE TABLE user_org_roles (
 CREATE POLICY "Org members can view" ON organizations
     FOR SELECT USING (
         EXISTS (
-            SELECT 1 FROM user_org_roles
-            WHERE user_id = auth.uid()
+            SELECT 1 FROM user_org_roles 
+            WHERE user_id = auth.uid() 
             AND org_id = organizations.id
         )
     );
@@ -1063,7 +1063,7 @@ CREATE POLICY "Org members can view" ON organizations
 **インデックス戦略**:
 
 ```sql
--- RLS クエリ最適化用インデックス
+-- RLSクエリ最適化用インデックス
 CREATE INDEX idx_user_documents_user_id ON user_documents(user_id);
 CREATE INDEX idx_user_org_roles_user_id ON user_org_roles(user_id);
 ```
@@ -1071,7 +1071,7 @@ CREATE INDEX idx_user_org_roles_user_id ON user_org_roles(user_id);
 **実行計画確認**:
 
 ```sql
-EXPLAIN (ANALYZE, BUFFERS)
+EXPLAIN (ANALYZE, BUFFERS) 
 SELECT * FROM user_documents WHERE title ILIKE '%report%';
 ```
 
@@ -1094,9 +1094,9 @@ SELECT * FROM user_documents WHERE title ILIKE '%report%';
 **セルフホスト**:
 
 ```text
-月額運用コスト =
-    インフラ費用 +
-    運用工数 × 時間単価 +
+月額運用コスト = 
+    インフラ費用 + 
+    運用工数 × 時間単価 + 
     可用性リスク × 影響度
 ```
 
@@ -1223,8 +1223,8 @@ services:
       - supabase-db
     command: >
       bash -c "
-        /app/bin/migrate &&
-        /app/bin/realtime eval 'Realtime.Release.seeds(Realtime.Repo)' &&
+        /app/bin/migrate && 
+        /app/bin/realtime eval 'Realtime.Release.seeds(Realtime.Repo)' && 
         /app/bin/server
       "
 ```
@@ -1237,7 +1237,7 @@ services:
 
 set -e
 
-echo " Supabase 開発環境セットアップ開始"
+echo " Supabase開発環境セットアップ開始"
 
 # 環境変数設定
 if [ ! -f .env ]; then
@@ -1251,12 +1251,12 @@ SUPABASE_LEGACY_SERVICE_ROLE_JWT=your-legacy-service-role-jwt
 EOF
 fi
 
-# Docker 環境起動
+# Docker環境起動
 echo " Docker Compose起動"
 docker compose up -d
 
 # データベース接続待機
-echo " PostgreSQL 起動待機"
+echo " PostgreSQL起動待機"
 until docker compose exec supabase-db pg_isready; do
     sleep 2
 done
@@ -1270,9 +1270,9 @@ echo " Supabase Studio: http://localhost:3000"
 echo " API Endpoint: http://localhost:54321"
 ```
 
-### API キー仕様の更新（publishable/secret）
+### APIキー仕様の更新（publishable/secret）
 
-Supabase Cloud では **API キー仕様が publishable/secret に移行**しています。
+Supabase Cloud では **APIキー仕様が publishable/secret に移行**しています。  
 セルフホスト環境は legacy JWT キー（`anon`/`service_role`）が前提のため、**用途ごとに区別**して扱います。
 
 **キー種別の役割**:
@@ -1281,14 +1281,14 @@ Supabase Cloud では **API キー仕様が publishable/secret に移行**して
 - **legacy JWT key**（`anon`/`service_role`）: セルフホスト・旧プロジェクト向け
 
 **使い分けの基本**:
-- REST アクセス時は **`apikey` に publishable key**を設定
+- RESTアクセス時は **`apikey` に publishable key**を設定
 - **`Authorization` はユーザーのアクセストークン（JWT）**を使用
 - secret key は **サーバー側のみ**で使用し、クライアントに配布しない
 
 **移行ガイド（Cloud）**:
 1. `.env` のキー名を `SUPABASE_PUBLISHABLE_KEY` / `SUPABASE_SECRET_KEY` に統一
 2. `Authorization` にキーを入れていた箇所を **ユーザーJWT**に切り替え
-3. 旧キーのローテーションと削除を実施（期限・手順は Supabase の告知を確認）
+3. 旧キーのローテーションと削除を実施（期限・手順はSupabaseの告知を確認）
 
 ### 基本スキーマ
 
@@ -1308,7 +1308,7 @@ CREATE TABLE profiles (
     updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- RLS 有効化
+-- RLS有効化
 ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
 
 -- ポリシー設定
@@ -1380,7 +1380,7 @@ async function testConnection() {
       .from('profiles')
       .select('count')
       .limit(1);
-
+    
     if (error) throw error;
     console.log('Connection successful');
   } catch (error) {
@@ -1389,14 +1389,14 @@ async function testConnection() {
 }
 ```
 
-#### 2. RLS ポリシーエラー
+#### 2. RLSポリシーエラー
 
 **問題**: "new row violates row-level security policy"
 
 **デバッグ方法**:
 ```sql
--- RLS ポリシーの確認
-SELECT
+-- RLSポリシーの確認
+SELECT 
   schemaname,
   tablename,
   policyname,
@@ -1414,7 +1414,7 @@ SET LOCAL request.jwt.claim.sub TO 'user-uuid-here';
 SELECT * FROM your_table_name;
 ```
 
-#### 3. Docker 環境の問題
+#### 3. Docker環境の問題
 
 **問題**: "Container exited with code 1"
 
@@ -1436,12 +1436,12 @@ docker compose up -d
 curl http://localhost:54321/rest/v1/
 ```
 
-#### 4. API 認証エラー
+#### 4. API認証エラー
 
 **問題**: "Invalid API key"
 
 **解決方法**:
-> 補足: `Authorization` に設定するのは **Supabase Auth のアクセストークン（JWT）**です。
+> 補足: `Authorization` に設定するのは **Supabase Auth のアクセストークン（JWT）**です。  
 > `SUPABASE_ACCESS_TOKEN` はログイン後に取得する値で、`.env` に固定保存しません。
 ```javascript
 // ヘッダー確認
@@ -1460,12 +1460,12 @@ async function apiRequest() {
     const response = await fetch(`${SUPABASE_URL}/rest/v1/profiles`, {
       headers
     });
-
+    
     if (!response.ok) {
       const error = await response.text();
       throw new Error(`API Error: ${response.status} - ${error}`);
     }
-
+    
     return await response.json();
   } catch (error) {
     console.error('Request failed:', error);
@@ -1480,7 +1480,7 @@ async function apiRequest() {
 
 ```sql
 -- 遅いクエリの確認
-SELECT
+SELECT 
   query,
   calls,
   total_time,
@@ -1492,7 +1492,7 @@ ORDER BY mean_time DESC
 LIMIT 10;
 
 -- インデックスの確認
-SELECT
+SELECT 
   schemaname,
   tablename,
   indexname,
@@ -1510,7 +1510,7 @@ const subscription = supabase
   .on('system', { event: '*' }, (payload) => {
     console.log('System event:', payload);
   })
-  .on('postgres_changes',
+  .on('postgres_changes', 
     { event: '*', schema: 'public' },
     (payload) => console.log('Change:', payload)
   )
@@ -1531,7 +1531,7 @@ const subscription = supabase
 
 ## まとめ
 
-本章では、Supabase の内部アーキテクチャと基本概念を技術的観点から解説しました。トラブルシューティングセクションで示したように、問題解決のためには各コンポーネントの役割を理解することが重要です。次章では、これらの基盤上での認証・認可設計について詳述します。
+本章では、Supabaseの内部アーキテクチャと基本概念を技術的観点から解説しました。トラブルシューティングセクションで示したように、問題解決のためには各コンポーネントの役割を理解することが重要です。次章では、これらの基盤上での認証・認可設計について詳述します。
 
 ## 第1章 学習まとめ
 
@@ -1539,40 +1539,40 @@ const subscription = supabase
 この章の学習進捗を以下のチェックリストで確認してください：
 
 #### **基礎理解（必須）**
-- [] Web アプリに必要な基本要素（データベース・API・認証・リアルタイム）を説明できる
-- [] Supabase の3つの基本コンポーネント（PostgreSQL・PostgREST・Realtime）の役割を理解した
-- [] 従来の開発手法と Supabase の違い・メリットを説明できる
+- [] Webアプリに必要な基本要素（データベース・API・認証・リアルタイム）を説明できる
+- [] Supabaseの3つの基本コンポーネント（PostgreSQL・PostgREST・Realtime）の役割を理解した
+- [] 従来の開発手法とSupabaseの違い・メリットを説明できる
 - [] RLS（Row Level Security）の基本概念を理解した
 
 #### **応用理解（推奨）**
-- [] PostgreSQL の ACID 保証・拡張機能の重要性を理解した
-- [] PostgREST の API 自動生成メカニズムを理解した
-- [] Realtime のメッセージング・WebSocket 通信の仕組みを理解した
+- [] PostgreSQLのACID保証・拡張機能の重要性を理解した
+- [] PostgRESTのAPI自動生成メカニズムを理解した
+- [] Realtimeのメッセージング・WebSocket通信の仕組みを理解した
 - [] Kong Gatewayの役割・API ルーティングを理解した
 
 #### **発展理解（上級者向け）**
 - [] WAL（Write-Ahead Log）ベースのリアルタイム通信の仕組みを理解した
-- [] Supabase 固有の拡張機能（pg_graphql・pgsodium等）の用途を理解した
-- [] Docker Compose環境での Supabase 開発環境を構築できる
+- [] Supabase固有の拡張機能（pg_graphql・pgsodium等）の用途を理解した
+- [] Docker Compose環境でのSupabase開発環境を構築できる
 - [] 他のBaaS（Firebase・AWS Amplify等）との技術的差異を説明できる
 
 #### **実践スキル（確認推奨）**
 - [] Supabase Studioの基本操作ができる
-- [] 簡単なテーブル作成・RLS ポリシー設定ができる
+- [] 簡単なテーブル作成・RLSポリシー設定ができる
 - [] 環境変数・接続設定を理解した
-- [] 基本的な SQL クエリ・PostgREST API を試すことができる
+- [] 基本的なSQLクエリ・PostgREST APIを試すことができる
 
 ### [OK] **習得できたスキル**
-- [OK] Supabase の基本構成（PostgreSQL + PostgREST + Realtime）理解
+- [OK] Supabaseの基本構成（PostgreSQL + PostgREST + Realtime）理解
 - [OK] Row Level Security（RLS）の基本概念理解
-- [OK] Docker 環境での Supabase 開発環境構築
-- [OK] Web アプリケーションに必要な要素の理解
+- [OK] Docker環境でのSupabase開発環境構築
+- [OK] Webアプリケーションに必要な要素の理解
 
 ### **重要ポイントの復習**
 | 概念 | 説明 | 実際の例 |
 |:-----|:-----|:---------|
 | **PostgreSQL**| データベース本体（記事データ保存） | ブログ記事・ユーザー情報の保存 |
-| **PostgREST**| API サーバー（REST API を自動生成） | `/posts` API で記事取得 |
+| **PostgREST**| APIサーバー（REST APIを自動生成） | `/posts` APIで記事取得 |
 | **Realtime**| リアルタイム更新（変更を即座に通知） | 記事投稿の瞬間にページ更新 |
 | **RLS**| 行レベルセキュリティ（データアクセス制御） | 作成者のみが自分の記事を編集可能 |
 
@@ -1580,7 +1580,7 @@ const subscription = supabase
 第2章で学ぶ認証システムの基礎となる概念を確認しましょう：
 - [OK] ユーザー認証の必要性理解
 - [OK] JWT（JSONWebToken）の基本概念
-- [OK] RLS ポリシーの役割理解
+- [OK] RLSポリシーの役割理解
 
 ### **実践演習**
 
@@ -1594,14 +1594,14 @@ const subscription = supabase
 2. **仕組み理解**: ブログアプリの例で、「記事を投稿してからリアルタイムで他のユーザーに表示される」までの流れを説明してください
 
 #### **応用演習（推奨）**
-3. **比較分析**: 従来の開発手法（例：React + Express + MySQL）と Supabase を使った開発の違いを表にまとめてください
+3. **比較分析**: 従来の開発手法（例：React + Express + MySQL）とSupabaseを使った開発の違いを表にまとめてください
 
-4. **設計思考**: あなたが作りたいアプリケーションを想定して、Supabase のどの機能が必要かリストアップしてください
+4. **設計思考**: あなたが作りたいアプリケーションを想定して、Supabaseのどの機能が必要かリストアップしてください
 
 #### **発展演習（上級者向け）**
-5. **環境構築**: Docker Composeを使ってローカル Supabase 環境を構築し、基本的な動作確認を行ってください
+5. **環境構築**: Docker Composeを使ってローカルSupabase環境を構築し、基本的な動作確認を行ってください
 
-6. **技術調査**: Supabase 以外のBaaS（Firebase・AWS Amplify等）と比較して、どのような場面で Supabase が有利かまとめてください
+6. **技術調査**: Supabase以外のBaaS（Firebase・AWS Amplify等）と比較して、どのような場面でSupabaseが有利かまとめてください
 
 #### **演習の解答例・解説**
 <details>
@@ -1609,16 +1609,16 @@ const subscription = supabase
 
 **1. 概念整理の解答例**
 - **PostgreSQL**: データを保存・管理するデータベース。高機能で安全性が高い
-- **PostgREST**: データベースのテーブルから自動で API を作ってくれるツール
+- **PostgREST**: データベースのテーブルから自動でAPIを作ってくれるツール
 - **Realtime**: データが変更されたら即座にアプリに通知してくれる仕組み
 - **RLS**: データベースレベルで「誰がどのデータを見られるか」を制御する機能
 
 **2. 仕組み理解の解答例**
-1. ユーザーがブログ記事を投稿 → PostgreSQL に保存
-2. PostgreSQL が WAL（変更ログ）に記録
-3. Realtime サーバーが変更を検知
-4. WebSocket で他のユーザーのブラウザに通知
-5. 自動で UI が更新される
+1. ユーザーがブログ記事を投稿 → PostgreSQLに保存
+2. PostgreSQLがWAL（変更ログ）に記録
+3. Realtimeサーバーが変更を検知
+4. WebSocketで他のユーザーのブラウザに通知
+5. 自動でUIが更新される
 
 </details>
 
@@ -1627,8 +1627,8 @@ const subscription = supabase
 ## 次章予告：認証・認可設計
 
 第2章では、「病院のカルテシステム」を例に、以下を学習します：
-- **JWT 認証**: 医師・看護師・患者の身分確認システム
-- **RLS ポリシー**: 「患者は自分のカルテのみ閲覧可能」な制御
+- **JWT認証**: 医師・看護師・患者の身分確認システム
+- **RLSポリシー**: 「患者は自分のカルテのみ閲覧可能」な制御
 - **ロール管理**: 医師・看護師・管理者の権限分けシステム
 
 **実用例**: 「患者Aさんは自分のカルテしか見られないが、担当医師は担当患者全員のカルテを見られる」システムを作成
@@ -1637,6 +1637,6 @@ const subscription = supabase
 
 **ナビゲーション**
 - **目次**: [はじめに](../../introduction/)
-- **次の章**: [第2章：認証・認可設計](../chapter02/)
+- **次の章**: [第2章：認証・認可設計](../chapter02/)  
 - **関連章**: [第3章〜第5-4章：アーキテクチャパターン](../chapter03/)
 - **リソース**: [動作検証](../../examples/) | [トラブルシューティング](../../guides/troubleshooting/)
