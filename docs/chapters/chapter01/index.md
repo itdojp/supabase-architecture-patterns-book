@@ -6,11 +6,11 @@ title: "第1章：Supabase アーキテクチャ理解"
 # 第1章：Supabase アーキテクチャ理解
 
 ---
-**目次に戻る**: [はじめに]({{ '/introduction/' | relative_url }})
-**前の章**: なし（最初の章）
-**次の章**: [第2章：認証・認可設計]({{ '/chapters/chapter02/' | relative_url }})
-**学習レベル**:  基礎 |  応用 |  発展
-**推定学習時間**: 3〜5時間
+- **目次に戻る**: [はじめに]({{ '/introduction/' | relative_url }})
+- **前の章**: なし（最初の章）
+- **次の章**: [第2章：認証・認可設計]({{ '/chapters/chapter02/' | relative_url }})
+- **学習レベル**:  基礎 |  応用 |  発展
+- **推定学習時間**: 3〜5時間
 ---
 
 ## この章で扱う構成
@@ -210,7 +210,7 @@ WHERE name IN ('pg_graphql', 'pgsodium', 'pg_stat_statements');
 
 この例が伝えたいポイントは、「Supabase は標準的な PostgreSQL を土台にしつつ、`pg_graphql` や `pgsodium` などの拡張機能を組み合わせることで、REST／GraphQL／暗号化／監視といった機能を一体として提供している」という点です。実際に SQL を実行する際は、必ず検証環境や Supabase の SQL エディタを用い、十分な権限を持つユーザーで実行してください。
 
-## PostgREST：「API 自動生成の魔法」
+## PostgREST：「API 自動生成の魔法」 {#postgrest-api自動生成の魔法}
 
 ### API って何？そしてなぜ必要？
 

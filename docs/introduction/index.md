@@ -10,22 +10,22 @@ title: "はじめに"
 ![Version: 1.0](https://img.shields.io/badge/Version-1.0-brightgreen.svg)
 ![Status: Active Development](https://img.shields.io/badge/Status-Active%20Development-green.svg)
 
-**著者**: 株式会社アイティードゥ
-**版**: 1.0版
-**最終更新**: 2026年5月23日
+- **著者**: 株式会社アイティードゥ
+- **版**: 1.0版
+- **最終更新**: 2026年5月23日
 
 ---
 
 ## [OK] 検証日・対象範囲・互換性ポリシー
 
-**検証日**: 2026年5月23日
+- **検証日**: 2026年5月23日
 
-**対象範囲**: Supabase Cloud（主要機能）/ セルフホスト（Docker 構成）
-**互換性ポリシー**:
-- Supabase は機能名・API キー仕様・運用機能が頻繁に更新されるため、**最新仕様は公式ドキュメントで再確認**すること
-- 本書では、**Cloud向けのpublishable/secretキー**と**セルフホスト向けのlegacy JWT キー**を区別して説明する
-- Beta/Alpha機能は本文内で明記し、代替パターンも併記する
-- 2026年5月23日時点の再レビューでは、API キー、RLS、Storage Access Control、Realtime Authorization、Edge Functions Secrets、CLI migration/testing を重点確認対象とする
+- **対象範囲**: Supabase Cloud（主要機能）/ セルフホスト（Docker 構成）
+- **互換性ポリシー**:
+  - Supabase は機能名・API キー仕様・運用機能が頻繁に更新されるため、**最新仕様は公式ドキュメントで再確認**すること
+  - 本書では、**Cloud向けのpublishable/secretキー**と**セルフホスト向けのlegacy JWT キー**を区別して説明する
+  - Beta/Alpha機能は本文内で明記し、代替パターンも併記する
+  - 2026年5月23日時点の再レビューでは、API キー、RLS、Storage Access Control、Realtime Authorization、Edge Functions Secrets、CLI migration/testing を重点確認対象とする
 
 ## この技術書の革新的アプローチ
 
