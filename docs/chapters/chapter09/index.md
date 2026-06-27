@@ -6,39 +6,39 @@ title: "第9章：アーキテクチャ選択演習"
 # 第9章：アーキテクチャ選択演習
 
 ---
-**目次に戻る**: [はじめに]({{ '/introduction/' | relative_url }})  
-**前の章**: [第8章：運用監視と自動化]({{ '/chapters/chapter08/' | relative_url }})  
-**次の章**: [第10章：統合実践プロジェクト]({{ '/chapters/chapter10/' | relative_url }})  
-**学習フェーズ**: Part IV - 実践・応用編（演習）  
-**学習レベル**:  基礎 |  応用 |  発展  
-**推定学習時間**: 4〜6時間  
-**難易度**: 中級（全章の理解が前提）
+- **目次に戻る**: [はじめに]({{ '/introduction/' | relative_url }})
+- **前の章**: [第8章：運用監視と自動化]({{ '/chapters/chapter08/' | relative_url }})
+- **次の章**: [第10章：統合実践プロジェクト]({{ '/chapters/chapter10/' | relative_url }})
+- **学習フェーズ**: Part IV - 実践・応用編（演習）
+- **学習レベル**:  基礎 |  応用 |  発展
+- **推定学習時間**: 4〜6時間
+- **難易度**: 中級（全章の理解が前提）
 ---
 
 ```text
  建築設計のプロセス
 ├──  要件ヒアリング：「どんな建物が欲しいですか？」
-├──  設計選択：一戸建て vs マンション vs 商業ビル  
+├──  設計選択：一戸建て vs マンション vs 商業ビル
 ├──  詳細設計：間取り・構造・設備の決定
 └──  段階的施工：基礎→骨組み→内装→完成
 
- Supabaseアーキテクチャ選択
+ Supabase アーキテクチャ選択
 ├──  プロジェクト要件：ユーザー数・機能・予算・期間
 ├──  パターン選択：Client-side vs Edge vs API Server
-├──  詳細設計：データベース構造・セキュリティ・UI設計
+├──  詳細設計：データベース構造・セキュリティ・UI 設計
 └──  段階的実装：MVP→機能追加→スケーリング→運用最適化
 ```
 
 ## この章で学ぶこと
 
-建築家が「平屋の家を建てたいのか、30階建てのオフィスビルを建てたいのか」によって全く異なる設計をするように、**Supabaseアプリケーションも、要件に応じて最適なアーキテクチャパターンを選択**する必要があります。
+建築家が「平屋の家を建てたいのか、30階建てのオフィスビルを建てたいのか」によって全く異なる設計をするように、**Supabase アプリケーションも、要件に応じて最適なアーキテクチャパターンを選択**する必要があります。
 
 ### 初心者が陥りがちな問題
 ```python
 # [NG] よくある初心者の思考パターン
 「とりあえずクライアントサイドで作り始めよう」
 「後で必要になったら考えればいいでしょ」
-「複雑そうだから一番安全そうなAPIサーバーにしよう」
+「複雑そうだから一番安全そうな API サーバーにしよう」
 # → 結果：過剰設計 or 後戻りコスト大
 ```
 
@@ -70,7 +70,7 @@ timeline = 8             # 開発期間を検討
 
 ## 9.1 要件からのパターン選択フレームワーク（建築設計コンサルタントシステム）
 
-レストランを開業するとき、「お客さんは何人くらい？」「どんな料理？」「予算は？」「いつオープン？」を聞いて店舗設計を決めるように、**Supabaseアプリケーションも要件を聞いて最適なアーキテクチャパターンを決定**します。
+レストランを開業するとき、「お客さんは何人くらい？」「どんな料理？」「予算は？」「いつオープン？」を聞いて店舗設計を決めるように、**Supabase アプリケーションも要件を聞いて最適なアーキテクチャパターンを決定**します。
 
 ### Step 1: 基本的な要件分析システム
 
@@ -86,7 +86,7 @@ timeline = 8             # 開発期間を検討
 |  **コンビニチェーン**| 「全国1000店舗、在庫管理」 | 本部システム＋各店端末 | 手書き帳簿（力不足） |
 |  **銀行システム**| 「数百万顧客、24時間運用」 | 冗長化された大規模システム | 個人PC（危険） |
 
-これと同じように、Supabaseでも**要件に応じて適切なアーキテクチャパターンを選択**する必要があります。
+これと同じように、Supabase でも**要件に応じて適切なアーキテクチャパターンを選択**する必要があります。
 
 ### 要件分析システムの実装
 
@@ -111,7 +111,7 @@ class ProjectScale(Enum):
 
 #  機能複雑度レベル（レストランのメニューの複雑さ）
 class ComplexityLevel(Enum):
-    LOW = "low"              # ファーストフード（基本CRUD）
+    LOW = "low"              # ファーストフード（基本 CRUD）
     MEDIUM = "medium"        # 一般レストラン（ビジネスロジック有）
     HIGH = "high"            # 高級レストラン（複雑なワークフロー）
     VERY_HIGH = "very_high"  # ミシュラン星付き（企業レベル統合）
@@ -143,13 +143,13 @@ class ProjectRequirements:
     #  基本情報（店舗の基本データ）
     project_name: str           # プロジェクト名（店舗名）
     description: str            # 説明（どんなお店？）
-    
+
     #  スケール要件（お客さんの規模）
     expected_users: int         # 想定ユーザー数（1日何人のお客さん？）
     concurrent_users: int       # 同時利用者数（一度に何人？）
     data_volume_gb: float       # データ容量（メニューの種類、顧客情報など）
     requests_per_second: int    # 秒間リクエスト数（忙しい時の注文頻度）
-    
+
     #  機能要件（お店で提供するサービス）
     real_time_features: bool         # リアルタイム機能（注文のライブ表示など）
     offline_support: bool            # オフライン対応（ネット切れても使える？）
@@ -159,20 +159,20 @@ class ProjectRequirements:
     file_uploads: bool               # ファイルアップロード（写真投稿など）
     notifications: bool              # 通知機能（注文完了のお知らせ）
     analytics_reporting: bool        # 分析レポート（売上分析など）
-    
+
     #  非機能要件（お店の品質基準）
     availability_requirement: float      # 稼働率要件（99.9% = ほぼ休まず営業）
     response_time_requirement_ms: int     # 応答時間要件（注文から何秒で応答？）
     security_level: str                  # セキュリティレベル（basic/standard/high/enterprise）
     compliance_requirements: List[str]    # 法的要件（GDPR, 食品衛生法など）
-    
+
     #  組織・プロジェクト制約（建設チーム・予算の制約）
     team_size: TeamSize                  # チーム規模（何人で開発？）
     development_timeline_weeks: int      # 開発期間（何週間で完成？）
     budget_constraint: str               # 予算制約（low/medium/high/unlimited）
     existing_infrastructure: List[str]   # 既存インフラ（すでに持っている設備）
     preferred_technologies: List[str]    # 希望技術（Python、React など）
-    
+
     #  成長予測（将来の拡張計画）
     user_growth_rate_monthly: float     # 月間ユーザー増加率（月何%ずつ成長？）
     feature_expansion_planned: bool      # 機能拡張予定（将来メニュー追加？）
@@ -192,47 +192,47 @@ class ArchitectureRecommendation:
     estimated_maintenance_effort: str       # 推定保守工数（メンテナンス負担）
 
 class ArchitectureDecisionEngine:
-    """ アーキテクチャ決定エンジン（建築設計コンサルタントAI）"""
-    
+    """ アーキテクチャ決定エンジン（建築設計コンサルタント AI）"""
+
     def __init__(self):
         #  設計ルール読み込み（建築基準・設計指針）
         self.decision_rules = self._load_decision_rules()
         #  重み係数読み込み（何を重視するか）
         self.weight_factors = self._load_weight_factors()
-    
+
     def analyze_requirements(self, requirements: ProjectRequirements) -> ArchitectureRecommendation:
         """ 要件分析とアーキテクチャ推奨（設計コンサルティング）"""
-        
+
         print(" アーキテクチャ分析を開始します...")
         print(f" プロジェクト: {requirements.project_name}")
         print(f" 想定ユーザー数: {requirements.expected_users:,}人")
         print(f" 開発期間: {requirements.development_timeline_weeks}週間")
-        
+
         #  各パターンのスコア計算（各工法の適合度採点）
         pattern_scores = {}
         print("\n 各パターンの適合度を計算中...")
-        
+
         for pattern in ArchitecturePattern:
             print(f"   {pattern.value} パターンを評価中...")
             score = self._calculate_pattern_score(requirements, pattern)
             pattern_scores[pattern] = score
             print(f"     総合スコア: {score['total_score']:.1f}/100")
-        
+
         #  最適パターン選択（最高点の工法を選択）
         best_pattern = max(pattern_scores.keys(), key=lambda p: pattern_scores[p]["total_score"])
         best_score = pattern_scores[best_pattern]
-        
+
         print(f"\n 推奨パターン: {best_pattern.value}")
         print(f" 信頼度スコア: {best_score['total_score']:.1f}/100")
-        
+
         #  推奨内容生成（提案書作成）
         recommendation = self._generate_recommendation(requirements, best_pattern, best_score, pattern_scores)
-        
+
         return recommendation
-    
+
     def _calculate_pattern_score(self, req: ProjectRequirements, pattern: ArchitecturePattern) -> Dict[str, Any]:
         """ パターン別スコア計算（建築工法の適合度評価）"""
-        
+
         #  評価項目（建築工法の評価基準）
         scores = {
             "scalability": 0,        # 拡張性（増築のしやすさ）
@@ -243,12 +243,12 @@ class ArchitectureDecisionEngine:
             "team_fit": 0,          # チーム適合性（施工チームとの相性）
             "technology_match": 0    # 技術マッチ度（希望技術との適合）
         }
-        
+
         penalties = []  # 減点要因（この工法の問題点）
         bonuses = []    # 加点要因（この工法の利点）
-        
+
         print(f"     {pattern.value} の詳細評価:")
-        
+
         #  パターン別評価実行（工法ごとの詳細チェック）
         if pattern == ArchitecturePattern.CLIENT_SIDE:
             scores.update(self._score_client_side_pattern(req, penalties, bonuses))
@@ -260,35 +260,35 @@ class ArchitectureDecisionEngine:
             scores.update(self._score_hybrid_pattern(req, penalties, bonuses))
         elif pattern == ArchitecturePattern.MICROSERVICES:
             scores.update(self._score_microservices_pattern(req, penalties, bonuses))
-        
+
         #  重み付き総合スコア計算（項目の重要度を考慮）
         # プロジェクトの性質に応じて重み付けを調整
         weight_factors = self._get_weight_factors(req)
-        
+
         total_score = sum(
             scores[criterion] * weight_factors.get(criterion, 0.14)  # デフォルト重み: 1/7
             for criterion in scores
         )
-        
+
         #  評価結果の詳細表示
         for criterion, score in scores.items():
             print(f"       {criterion}: {score}/100")
-        
+
         if bonuses:
             print(f"      [OK] 加点要因: {len(bonuses)}個")
         if penalties:
             print(f"      [NG] 減点要因: {len(penalties)}個")
-        
+
         return {
             "scores": scores,
             "total_score": total_score,
             "penalties": penalties,
             "bonuses": bonuses
         }
-    
+
     def _get_weight_factors(self, req: ProjectRequirements) -> Dict[str, float]:
         """ 重み係数の動的計算（プロジェクトの性質に応じた重要度調整）"""
-        
+
         #  基本重み（すべて均等）
         weights = {
             "scalability": 0.14,      # 拡張性
@@ -299,41 +299,41 @@ class ArchitectureDecisionEngine:
             "team_fit": 0.14,         # チーム適合性
             "technology_match": 0.16   # 技術マッチ度
         }
-        
+
         #  プロジェクトの特性に応じて重みを調整
-        
+
         # 大規模プロジェクトは拡張性重視
         if req.expected_users > 10000:
             weights["scalability"] += 0.1
             weights["development_speed"] -= 0.05
             weights["cost_efficiency"] -= 0.05
-        
+
         # 急ぎプロジェクトは開発速度重視
         if req.development_timeline_weeks < 8:
             weights["development_speed"] += 0.15
             weights["maintenance_ease"] -= 0.075
             weights["scalability"] -= 0.075
-        
+
         # 高セキュリティ要件はセキュリティ重視
         if req.security_level in ["high", "enterprise"]:
             weights["security"] += 0.1
             weights["development_speed"] -= 0.05
             weights["cost_efficiency"] -= 0.05
-        
+
         # 小規模チームはシンプルさ重視
         if req.team_size in [TeamSize.SOLO, TeamSize.SMALL]:
             weights["maintenance_ease"] += 0.1
             weights["team_fit"] += 0.05
             weights["scalability"] -= 0.15
-        
+
         return weights
-    
+
     def _score_client_side_pattern(self, req: ProjectRequirements, penalties: List, bonuses: List) -> Dict[str, int]:
         """ クライアントサイドパターン評価（木造住宅工法）"""
         scores = {}
-        
+
         print("       木造住宅工法として評価中...")
-        
+
         #  スケーラビリティ（増築のしやすさ）
         if req.expected_users < 1000:
             scores["scalability"] = 90
@@ -346,12 +346,12 @@ class ArchitectureDecisionEngine:
             scores["scalability"] = 30
             penalties.append("大規模ユーザーには構造的に不適切（マンション建設が必要）")
             print("        [NG] 大規模には向かない")
-        
+
         #  開発速度（建設の早さ）
         scores["development_speed"] = 95
         bonuses.append("プレハブ工法のように迅速な開発が可能")
         print("        [OK] 最速で建設可能")
-        
+
         #  メンテナンス性（保守の楽さ）
         if req.complexity_level == ComplexityLevel.LOW:
             scores["maintenance_ease"] = 85
@@ -364,7 +364,7 @@ class ArchitectureDecisionEngine:
             scores["maintenance_ease"] = 40
             penalties.append("複雑なロジックのメンテナンスが困難（配線・配管が複雑）")
             print("        [NG] 複雑な構造は木造では限界")
-        
+
         #  セキュリティ（防犯性）
         if req.security_level in ["basic", "standard"]:
             scores["security"] = 70
@@ -373,12 +373,12 @@ class ArchitectureDecisionEngine:
             scores["security"] = 45
             penalties.append("高度なセキュリティ要件に制限（銀行レベルは困難）")
             print("        [NG] 高セキュリティは構造的に困難")
-        
+
         #  コスト効率（建設・運用費用）
         scores["cost_efficiency"] = 95
         bonuses.append("運用コストがほぼゼロ（電気・ガス代不要）")
         print("        [OK] 運用コストが最安")
-        
+
         #  チーム適合性（施工チームとの相性）
         if req.team_size in [TeamSize.SOLO, TeamSize.SMALL]:
             scores["team_fit"] = 90
@@ -387,7 +387,7 @@ class ArchitectureDecisionEngine:
         else:
             scores["team_fit"] = 70
             print("        [WARN] 大きなチームには物足りない")
-        
+
         #  技術マッチ度（希望技術との適合）
         if "python" in [tech.lower() for tech in req.preferred_technologies]:
             scores["technology_match"] = 85
@@ -396,15 +396,15 @@ class ArchitectureDecisionEngine:
         else:
             scores["technology_match"] = 75
             print("        [OK] 一般的な技術で対応可能")
-        
+
         return scores
-    
+
     def _score_edge_functions_pattern(self, req: ProjectRequirements, penalties: List, bonuses: List) -> Dict[str, int]:
         """ Edge Functionsパターン評価（プレハブ工法）"""
         scores = {}
-        
+
         print("       プレハブ工法として評価中...")
-        
+
         #  スケーラビリティ（増築のしやすさ）
         if req.expected_users < 50000:
             scores["scalability"] = 85
@@ -413,7 +413,7 @@ class ArchitectureDecisionEngine:
         else:
             scores["scalability"] = 70
             print("        [WARN] 超大規模では制約あり")
-        
+
         #  開発速度（建設の早さ）
         if req.third_party_integrations > 2:
             scores["development_speed"] = 80
@@ -422,22 +422,22 @@ class ArchitectureDecisionEngine:
         else:
             scores["development_speed"] = 70
             print("        [OK] 標準的な建設速度")
-        
+
         #  メンテナンス性（保守の楽さ）
         scores["maintenance_ease"] = 75
         bonuses.append("モジュール化された構造で部分修理が容易")
         print("        [OK] 部分的な修理・交換が容易")
-        
+
         #  セキュリティ（防犯性）
         scores["security"] = 85
-        bonuses.append("Supabase認証統合（セキュリティシステム標準装備）")
+        bonuses.append("Supabase 認証統合（セキュリティシステム標準装備）")
         print("        [OK] 高品質なセキュリティ標準搭載")
-        
+
         #  コスト効率（建設・運用費用）
         scores["cost_efficiency"] = 80
         bonuses.append("使用量に応じた従量課金（電気代は使った分だけ）")
         print("        [OK] 使った分だけの課金")
-        
+
         #  チーム適合性（施工チームとの相性）
         if "typescript" in [tech.lower() for tech in req.preferred_technologies]:
             scores["team_fit"] = 85
@@ -447,7 +447,7 @@ class ArchitectureDecisionEngine:
             scores["team_fit"] = 65
             penalties.append("TypeScript/Deno学習コスト（新しい工法の習得必要）")
             print("        [WARN] TypeScript学習が必要")
-        
+
         #  技術マッチ度（希望技術との適合）
         if req.real_time_features:
             scores["technology_match"] = 90
@@ -456,15 +456,15 @@ class ArchitectureDecisionEngine:
         else:
             scores["technology_match"] = 75
             print("        [OK] 一般的な機能は十分対応")
-        
+
         return scores
-    
+
     def _score_api_server_pattern(self, req: ProjectRequirements, penalties: List, bonuses: List) -> Dict[str, int]:
-        """ APIサーバーパターン評価（鉄筋コンクリート工法）"""
+        """ API サーバーパターン評価（鉄筋コンクリート工法）"""
         scores = {}
-        
+
         print("       鉄筋コンクリート工法として評価中...")
-        
+
         #  スケーラビリティ（増築のしやすさ）
         if req.expected_users > 10000:
             scores["scalability"] = 95
@@ -473,7 +473,7 @@ class ArchitectureDecisionEngine:
         else:
             scores["scalability"] = 70
             print("        [WARN] 小規模には過剰設計")
-        
+
         #  開発速度（建設の早さ）
         if req.development_timeline_weeks > 12:
             scores["development_speed"] = 75
@@ -482,7 +482,7 @@ class ArchitectureDecisionEngine:
             scores["development_speed"] = 50
             penalties.append("初期開発時間が長い（基礎工事に時間が必要）")
             print("        [NG] 急ぎ工事は不向き")
-        
+
         #  メンテナンス性（保守の楽さ）
         if req.team_size in [TeamSize.MEDIUM, TeamSize.LARGE]:
             scores["maintenance_ease"] = 90
@@ -492,7 +492,7 @@ class ArchitectureDecisionEngine:
             scores["maintenance_ease"] = 60
             penalties.append("小規模チームには複雑すぎる")
             print("        [NG] 小規模チームには複雑")
-        
+
         #  セキュリティ（防犯性）
         if req.security_level in ["high", "enterprise"]:
             scores["security"] = 95
@@ -501,7 +501,7 @@ class ArchitectureDecisionEngine:
         else:
             scores["security"] = 80
             print("        [OK] 高いセキュリティを標準装備")
-        
+
         #  コスト効率（建設・運用費用）
         if req.budget_constraint in ["medium", "high", "unlimited"]:
             scores["cost_efficiency"] = 70
@@ -510,7 +510,7 @@ class ArchitectureDecisionEngine:
             scores["cost_efficiency"] = 40
             penalties.append("運用コストが高い（維持費・光熱費が高額）")
             print("        [NG] 運用コストが高額")
-        
+
         #  チーム適合性（施工チームとの相性）
         if req.team_size == TeamSize.LARGE:
             scores["team_fit"] = 90
@@ -520,7 +520,7 @@ class ArchitectureDecisionEngine:
             scores["team_fit"] = 60
             penalties.append("小規模チームには負担が大きい")
             print("        [NG] 小規模チームには負担")
-        
+
         #  技術マッチ度（希望技術との適合）
         if len(req.compliance_requirements) > 0:
             scores["technology_match"] = 95
@@ -529,15 +529,15 @@ class ArchitectureDecisionEngine:
         else:
             scores["technology_match"] = 80
             print("        [OK] 汎用的な技術要件に対応")
-        
+
         return scores
-    
+
     def _score_hybrid_pattern(self, req: ProjectRequirements, penalties: List, bonuses: List) -> Dict[str, int]:
         """ ハイブリッドパターン評価（混構造工法）"""
         scores = {}
-        
+
         print("       混構造工法として評価中...")
-        
+
         #  複雑性が高い場合に推奨（適材適所の建設）
         if req.complexity_level in [ComplexityLevel.HIGH, ComplexityLevel.VERY_HIGH]:
             scores["scalability"] = 85
@@ -562,20 +562,20 @@ class ArchitectureDecisionEngine:
             }
             penalties.append("要件に対して過剰な複雑性（簡単な家に高級建材は不要）")
             print("        [NG] シンプルな要件には過剰")
-        
+
         return scores
-    
+
     def _score_microservices_pattern(self, req: ProjectRequirements, penalties: List, bonuses: List) -> Dict[str, int]:
         """ マイクロサービスパターン評価（超高層ビル工法）"""
         scores = {}
-        
+
         print("       超高層ビル工法として評価中...")
-        
+
         #  大規模・高複雑性のみ推奨（超高層ビルが必要な場合のみ）
-        if (req.expected_users > 50000 and 
+        if (req.expected_users > 50000 and
             req.complexity_level == ComplexityLevel.VERY_HIGH and
             req.team_size == TeamSize.LARGE):
-            
+
             scores["scalability"] = 100
             scores["development_speed"] = 50
             scores["maintenance_ease"] = 60
@@ -597,7 +597,7 @@ class ArchitectureDecisionEngine:
             }
             penalties.append("要件に対して過度に複雑（戸建てに超高層ビル工法は不要）")
             print("        [NG] 要件に対して過剰すぎる")
-        
+
         return scores
 ```
 
@@ -717,16 +717,16 @@ print(f" 開発期間: {recommendation.estimated_development_time_weeks}週間")
 
 ```python
 def _generate_recommendation(
-        self, 
-        req: ProjectRequirements, 
-        best_pattern: ArchitecturePattern, 
+        self,
+        req: ProjectRequirements,
+        best_pattern: ArchitecturePattern,
         best_score: Dict[str, Any],
         all_scores: Dict[ArchitecturePattern, Dict[str, Any]]
     ) -> ArchitectureRecommendation:
         """推奨内容生成"""
-        
+
         confidence = min(100, best_score["total_score"])
-        
+
         # 推奨理由
         reasoning = [
             f"総合スコア: {confidence:.1f}/100",
@@ -735,23 +735,23 @@ def _generate_recommendation(
             f"チーム規模: {req.team_size.value}"
         ]
         reasoning.extend(best_score["bonuses"])
-        
+
         # メリット・デメリット
         pros, cons = self._get_pattern_pros_cons(best_pattern, req)
-        
+
         # リスク評価
         risks = self._assess_risks(best_pattern, req)
         risks.extend(best_score["penalties"])
-        
+
         # 移行パス
         migration_path = self._suggest_migration_path(req, best_pattern)
-        
+
         # 開発時間予測
         dev_time = self._estimate_development_time(req, best_pattern)
-        
+
         # メンテナンス工数予測
         maintenance_effort = self._estimate_maintenance_effort(req, best_pattern)
-        
+
         return ArchitectureRecommendation(
             primary_pattern=best_pattern,
             confidence_score=confidence,
@@ -763,16 +763,16 @@ def _generate_recommendation(
             estimated_development_time_weeks=dev_time,
             estimated_maintenance_effort=maintenance_effort
         )
-    
+
     def _get_pattern_pros_cons(self, pattern: ArchitecturePattern, req: ProjectRequirements) -> Tuple[List[str], List[str]]:
         """パターン別メリット・デメリット"""
-        
+
         pattern_characteristics = {
             ArchitecturePattern.CLIENT_SIDE: {
                 "pros": [
                     "迅速な開発・デプロイ",
                     "運用コストが低い",
-                    "Supabaseとの自然な統合",
+                    "Supabase との自然な統合",
                     "リアルタイム機能標準対応"
                 ],
                 "cons": [
@@ -784,8 +784,8 @@ def _generate_recommendation(
             ArchitecturePattern.EDGE_FUNCTIONS: {
                 "pros": [
                     "自動スケーリング",
-                    "Supabase認証統合",
-                    "外部API連携に適している",
+                    "Supabase 認証統合",
+                    "外部 API 連携に適している",
                     "サーバーレス運用"
                 ],
                 "cons": [
@@ -808,38 +808,38 @@ def _generate_recommendation(
                 ]
             }
         }
-        
+
         return (
             pattern_characteristics.get(pattern, {}).get("pros", []),
             pattern_characteristics.get(pattern, {}).get("cons", [])
         )
-    
+
     def _assess_risks(self, pattern: ArchitecturePattern, req: ProjectRequirements) -> List[str]:
         """リスク評価"""
         risks = []
-        
+
         if pattern == ArchitecturePattern.CLIENT_SIDE:
             if req.expected_users > 1000:
                 risks.append("ユーザー増加時のパフォーマンス劣化リスク")
             if req.security_level in ["high", "enterprise"]:
                 risks.append("セキュリティ要件を満たせないリスク")
-        
+
         elif pattern == ArchitecturePattern.EDGE_FUNCTIONS:
             if req.development_timeline_weeks < 8:
                 risks.append("学習コストによるスケジュール遅延リスク")
             risks.append("Deno/TypeScript エコシステム依存リスク")
-        
+
         elif pattern == ArchitecturePattern.API_SERVER:
             if req.team_size in [TeamSize.SOLO, TeamSize.SMALL]:
                 risks.append("小規模チームでの運用負荷過大リスク")
             if req.budget_constraint == "low":
                 risks.append("運用コスト超過リスク")
-        
+
         return risks
-    
+
     def _suggest_migration_path(self, req: ProjectRequirements, target_pattern: ArchitecturePattern) -> Optional[List[ArchitecturePattern]]:
         """移行パス提案"""
-        
+
         # 段階的移行が推奨される場合
         if target_pattern == ArchitecturePattern.API_SERVER and req.development_timeline_weeks < 16:
             return [
@@ -847,15 +847,15 @@ def _generate_recommendation(
                 ArchitecturePattern.EDGE_FUNCTIONS,
                 ArchitecturePattern.API_SERVER
             ]
-        
+
         if target_pattern == ArchitecturePattern.MICROSERVICES:
             return [
                 ArchitecturePattern.API_SERVER,
                 ArchitecturePattern.MICROSERVICES
             ]
-        
+
         return None
-    
+
     def _estimate_development_time(self, req: ProjectRequirements, pattern: ArchitecturePattern) -> int:
         """開発時間予測"""
         base_times = {
@@ -865,9 +865,9 @@ def _generate_recommendation(
             ArchitecturePattern.HYBRID: 20,
             ArchitecturePattern.MICROSERVICES: 32
         }
-        
+
         base_time = base_times.get(pattern, 12)
-        
+
         # 複雑性による調整
         complexity_multiplier = {
             ComplexityLevel.LOW: 0.8,
@@ -875,7 +875,7 @@ def _generate_recommendation(
             ComplexityLevel.HIGH: 1.5,
             ComplexityLevel.VERY_HIGH: 2.0
         }
-        
+
         # チームサイズによる調整
         team_multiplier = {
             TeamSize.SOLO: 1.5,
@@ -883,14 +883,14 @@ def _generate_recommendation(
             TeamSize.MEDIUM: 0.8,
             TeamSize.LARGE: 0.7
         }
-        
+
         adjusted_time = base_time * complexity_multiplier.get(req.complexity_level, 1.0) * team_multiplier.get(req.team_size, 1.0)
-        
+
         return int(adjusted_time)
-    
+
     def _estimate_maintenance_effort(self, req: ProjectRequirements, pattern: ArchitecturePattern) -> str:
         """メンテナンス工数予測"""
-        
+
         effort_scores = {
             ArchitecturePattern.CLIENT_SIDE: 1,
             ArchitecturePattern.EDGE_FUNCTIONS: 2,
@@ -898,31 +898,31 @@ def _generate_recommendation(
             ArchitecturePattern.HYBRID: 5,
             ArchitecturePattern.MICROSERVICES: 8
         }
-        
+
         base_effort = effort_scores.get(pattern, 3)
-        
+
         # ユーザー数による調整
         if req.expected_users > 10000:
             base_effort += 2
         elif req.expected_users > 1000:
             base_effort += 1
-        
+
         # 複雑性による調整
         if req.complexity_level in [ComplexityLevel.HIGH, ComplexityLevel.VERY_HIGH]:
             base_effort += 2
-        
+
         if base_effort <= 2:
             return "低"
         elif base_effort <= 5:
             return "中"
         else:
             return "高"
-    
+
     def _load_decision_rules(self) -> Dict[str, Any]:
         """決定ルール読み込み"""
         # 実際の実装では外部設定ファイルから読み込み
         return {}
-    
+
     def _load_weight_factors(self) -> Dict[str, float]:
         """重み係数読み込み"""
         return {
@@ -938,7 +938,7 @@ def _generate_recommendation(
 # 使用例とテストケース
 def create_sample_requirements() -> List[Tuple[str, ProjectRequirements]]:
     """サンプル要件作成"""
-    
+
     return [
         ("スタートアップMVP", ProjectRequirements(
             project_name="TaskFlow MVP",
@@ -969,7 +969,7 @@ def create_sample_requirements() -> List[Tuple[str, ProjectRequirements]]:
             international_expansion=False,
             complexity_level=ComplexityLevel.MEDIUM
         )),
-        
+
         ("エンタープライズプラットフォーム", ProjectRequirements(
             project_name="Enterprise Analytics Platform",
             description="大企業向けデータ分析プラットフォーム",
@@ -999,7 +999,7 @@ def create_sample_requirements() -> List[Tuple[str, ProjectRequirements]]:
             international_expansion=True,
             complexity_level=ComplexityLevel.VERY_HIGH
         )),
-        
+
         ("社内ツール", ProjectRequirements(
             project_name="Internal HR System",
             description="社内人事管理システム",
@@ -1029,7 +1029,7 @@ def create_sample_requirements() -> List[Tuple[str, ProjectRequirements]]:
             international_expansion=False,
             complexity_level=ComplexityLevel.MEDIUM
         )),
-        
+
         ("サンプルプロジェクト", ProjectRequirements(
             project_name="Sample Project",
             description="A sample project for testing",
@@ -1065,36 +1065,36 @@ def run_architecture_analysis():
     """アーキテクチャ分析実行"""
     engine = ArchitectureDecisionEngine()
     sample_requirements = create_sample_requirements()
-    
+
     for name, requirements in sample_requirements:
         print(f"\n{'='*60}")
         print(f"プロジェクト: {name}")
         print(f"{'='*60}")
-        
+
         recommendation = engine.analyze_requirements(requirements)
-        
+
         print(f"推奨アーキテクチャ: {recommendation.primary_pattern.value}")
         print(f"信頼度: {recommendation.confidence_score:.1f}%")
         print(f"予想開発期間: {recommendation.estimated_development_time_weeks}週間")
         print(f"メンテナンス工数: {recommendation.estimated_maintenance_effort}")
-        
+
         print("\n推奨理由:")
         for reason in recommendation.reasoning:
             print(f"  • {reason}")
-        
+
         print("\nメリット:")
         for pro in recommendation.pros:
             print(f"  ✓ {pro}")
-        
+
         print("\nデメリット:")
         for con in recommendation.cons:
             print(f"  ✗ {con}")
-        
+
         if recommendation.risks:
             print("\nリスク:")
             for risk in recommendation.risks:
                 print(f"  [WARN] {risk}")
-        
+
         if recommendation.migration_path:
             print("\n移行パス:")
             path_str = " → ".join([p.value for p in recommendation.migration_path])
@@ -1156,7 +1156,7 @@ class MigrationMilestone:
 
 class MigrationStrategy:
     """段階的移行戦略"""
-    
+
     def __init__(self):
         self.migration_patterns = {
             ("client_side", "edge_functions"): self._client_to_edge_migration,
@@ -1164,26 +1164,26 @@ class MigrationStrategy:
             ("edge_functions", "api_server"): self._edge_to_api_migration,
             ("api_server", "microservices"): self._api_to_microservices_migration
         }
-    
+
     def create_migration_plan(
-        self, 
+        self,
         current_pattern: str,
         target_pattern: str,
         project_constraints: Dict[str, Any]
     ) -> Dict[str, Any]:
         """移行計画作成"""
-        
+
         migration_key = (current_pattern, target_pattern)
-        
+
         if migration_key not in self.migration_patterns:
             return self._create_unsupported_migration_plan(current_pattern, target_pattern)
-        
+
         migration_func = self.migration_patterns[migration_key]
         return migration_func(project_constraints)
-    
+
     def _client_to_edge_migration(self, constraints: Dict[str, Any]) -> Dict[str, Any]:
         """クライアントサイド → Edge Functions 移行"""
-        
+
         tasks = [
             MigrationTask(
                 id="analyze_business_logic",
@@ -1208,7 +1208,7 @@ class MigrationStrategy:
             MigrationTask(
                 id="implement_auth_integration",
                 name="認証統合実装",
-                description="Edge FunctionsでのJWT検証とSupabase Auth統合",
+                description="Edge Functionsでの JWT 検証と Supabase Auth統合",
                 phase=MigrationPhase.PREPARATION,
                 estimated_hours=12,
                 dependencies=["setup_edge_functions_env"],
@@ -1266,7 +1266,7 @@ class MigrationStrategy:
                 owner="devops"
             )
         ]
-        
+
         milestones = [
             MigrationMilestone(
                 name="開発環境準備完了",
@@ -1302,7 +1302,7 @@ class MigrationStrategy:
                 rollback_plan="緊急時のみ全体ロールバック"
             )
         ]
-        
+
         return {
             "migration_type": "client_side_to_edge_functions",
             "estimated_duration_weeks": 12,
@@ -1323,10 +1323,10 @@ class MigrationStrategy:
                 "ユーザー満足度大幅低下"
             ]
         }
-    
+
     def _client_to_api_migration(self, constraints: Dict[str, Any]) -> Dict[str, Any]:
         """クライアントサイド → API Server 移行（段階的）"""
-        
+
         # 3段階での移行を推奨
         phases = [
             {
@@ -1342,10 +1342,10 @@ class MigrationStrategy:
             {
                 "name": "Phase 3: 統合移行",
                 "duration_weeks": 8,
-                "description": "Edge FunctionsからAPI Serverへの移行"
+                "description": "Edge Functionsから API Serverへの移行"
             }
         ]
-        
+
         return {
             "migration_type": "client_side_to_api_server_staged",
             "estimated_duration_weeks": 28,
@@ -1356,13 +1356,13 @@ class MigrationStrategy:
             "reasoning": [
                 "直接移行はリスクが高すぎる",
                 "Edge Functionsで段階的にサーバーサイド化",
-                "最終的にAPI Serverで完全制御を実現"
+                "最終的に API Serverで完全制御を実現"
             ]
         }
-    
+
     def _edge_to_api_migration(self, constraints: Dict[str, Any]) -> Dict[str, Any]:
         """Edge Functions → API Server 移行"""
-        
+
         tasks = [
             MigrationTask(
                 id="api_architecture_design",
@@ -1377,7 +1377,7 @@ class MigrationStrategy:
             MigrationTask(
                 id="infrastructure_setup",
                 name="インフラストラクチャ構築",
-                description="Kubernetes/Docker環境構築とCI/CD設定",
+                description="Kubernetes/Docker 環境構築と CI/CD設定",
                 phase=MigrationPhase.PREPARATION,
                 estimated_hours=40,
                 dependencies=[],
@@ -1386,8 +1386,8 @@ class MigrationStrategy:
             ),
             MigrationTask(
                 id="core_api_implementation",
-                name="コアAPI実装",
-                description="認証・認可・基本CRUD機能の実装",
+                name="コア API 実装",
+                description="認証・認可・基本 CRUD 機能の実装",
                 phase=MigrationPhase.IMPLEMENTATION,
                 estimated_hours=80,
                 dependencies=["api_architecture_design", "infrastructure_setup"],
@@ -1397,7 +1397,7 @@ class MigrationStrategy:
             MigrationTask(
                 id="business_logic_migration",
                 name="ビジネスロジック移行",
-                description="Edge FunctionsからFastAPIへのロジック移植",
+                description="Edge Functionsから FastAPI へのロジック移植",
                 phase=MigrationPhase.IMPLEMENTATION,
                 estimated_hours=120,
                 dependencies=["core_api_implementation"],
@@ -1435,7 +1435,7 @@ class MigrationStrategy:
                 owner="devops"
             )
         ]
-        
+
         return {
             "migration_type": "edge_functions_to_api_server",
             "estimated_duration_weeks": 20,
@@ -1449,10 +1449,10 @@ class MigrationStrategy:
                 "監視・ログシステムの移行"
             ]
         }
-    
+
     def _api_to_microservices_migration(self, constraints: Dict[str, Any]) -> Dict[str, Any]:
         """API Server → Microservices 移行"""
-        
+
         # マイクロサービス分割戦略
         service_decomposition = [
             {
@@ -1462,7 +1462,7 @@ class MigrationStrategy:
                 "priority": "high"
             },
             {
-                "service_name": "project-service", 
+                "service_name": "project-service",
                 "description": "プロジェクト・タスク管理",
                 "estimated_effort_hours": 160,
                 "priority": "high"
@@ -1480,7 +1480,7 @@ class MigrationStrategy:
                 "priority": "low"
             }
         ]
-        
+
         return {
             "migration_type": "api_server_to_microservices",
             "estimated_duration_weeks": 32,
@@ -1501,7 +1501,7 @@ class MigrationStrategy:
                 "サービス間通信（gRPC/REST）"
             ]
         }
-    
+
     def _create_unsupported_migration_plan(self, current: str, target: str) -> Dict[str, Any]:
         """未対応移行パスの場合"""
         return {
@@ -1510,10 +1510,10 @@ class MigrationStrategy:
             "message": f"直接移行パス（{current} → {target}）は推奨されません",
             "alternative_paths": self._suggest_alternative_paths(current, target)
         }
-    
+
     def _suggest_alternative_paths(self, current: str, target: str) -> List[str]:
         """代替移行パス提案"""
-        
+
         # 推奨移行経路
         migration_graph = {
             "client_side": ["edge_functions", "api_server"],
@@ -1521,38 +1521,38 @@ class MigrationStrategy:
             "api_server": ["microservices"],
             "microservices": []
         }
-        
+
         # 幅優先探索で経路探索
         from collections import deque
-        
+
         queue = deque([(current, [current])])
         visited = {current}
-        
+
         while queue:
             node, path = queue.popleft()
-            
+
             if node == target:
                 return [" → ".join(path)]
-            
+
             for neighbor in migration_graph.get(node, []):
                 if neighbor not in visited:
                     visited.add(neighbor)
                     queue.append((neighbor, path + [neighbor]))
-        
+
         return ["直接移行パスが見つかりません"]
 
 # 移行実行管理
 class MigrationExecutor:
     """移行実行管理"""
-    
+
     def __init__(self):
         self.current_migration = None
         self.execution_log = []
-    
+
     def start_migration(self, migration_plan: Dict[str, Any]) -> str:
         """移行開始"""
         migration_id = f"migration_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
-        
+
         self.current_migration = {
             "id": migration_id,
             "plan": migration_plan,
@@ -1561,59 +1561,59 @@ class MigrationExecutor:
             "completed_tasks": [],
             "current_phase": MigrationPhase.PLANNING
         }
-        
+
         self.execution_log.append({
             "timestamp": datetime.now(),
             "event": "migration_started",
             "migration_id": migration_id
         })
-        
+
         return migration_id
-    
+
     def complete_task(self, task_id: str, notes: str = "") -> bool:
         """タスク完了"""
         if not self.current_migration:
             return False
-        
+
         task = next(
             (t for t in self.current_migration["plan"]["tasks"] if t["id"] == task_id),
             None
         )
-        
+
         if not task:
             return False
-        
+
         task["completed"] = True
         task["completed_at"] = datetime.now()
         task["notes"] = notes
-        
+
         self.current_migration["completed_tasks"].append(task_id)
-        
+
         self.execution_log.append({
             "timestamp": datetime.now(),
             "event": "task_completed",
             "task_id": task_id,
             "notes": notes
         })
-        
+
         # フェーズ進行チェック
         self._check_phase_completion()
-        
+
         return True
-    
+
     def _check_phase_completion(self):
         """フェーズ完了チェック"""
         current_phase = self.current_migration["current_phase"]
-        
+
         tasks_in_phase = [
             t for t in self.current_migration["plan"]["tasks"]
             if t["phase"] == current_phase.value
         ]
-        
+
         completed_in_phase = [
             t for t in tasks_in_phase if t.get("completed", False)
         ]
-        
+
         if len(completed_in_phase) == len(tasks_in_phase):
             # 次のフェーズに進行
             next_phase = self._get_next_phase(current_phase)
@@ -1625,7 +1625,7 @@ class MigrationExecutor:
                     "phase": current_phase.value,
                     "next_phase": next_phase.value
                 })
-    
+
     def _get_next_phase(self, current_phase: MigrationPhase) -> Optional[MigrationPhase]:
         """次フェーズ取得"""
         phases = list(MigrationPhase)
@@ -1636,16 +1636,16 @@ class MigrationExecutor:
         except ValueError:
             pass
         return None
-    
+
     def get_migration_status(self) -> Dict[str, Any]:
         """移行状況取得"""
         if not self.current_migration:
             return {"status": "no_active_migration"}
-        
+
         total_tasks = len(self.current_migration["plan"]["tasks"])
         completed_tasks = len(self.current_migration["completed_tasks"])
         progress = (completed_tasks / total_tasks) * 100 if total_tasks > 0 else 0
-        
+
         return {
             "migration_id": self.current_migration["id"],
             "status": self.current_migration["status"],
@@ -1656,30 +1656,30 @@ class MigrationExecutor:
             "started_at": self.current_migration["started_at"],
             "estimated_completion": self._estimate_completion_date()
         }
-    
+
     def _estimate_completion_date(self) -> Optional[datetime]:
         """完了予定日予測"""
         if not self.current_migration:
             return None
-        
+
         # 簡単な線形予測
         total_tasks = len(self.current_migration["plan"]["tasks"])
         completed_tasks = len(self.current_migration["completed_tasks"])
-        
+
         if completed_tasks == 0:
             return None
-        
+
         elapsed_time = datetime.now() - self.current_migration["started_at"]
         average_time_per_task = elapsed_time / completed_tasks
         remaining_tasks = total_tasks - completed_tasks
-        
+
         return datetime.now() + (average_time_per_task * remaining_tasks)
 
 # 使用例
 def demo_migration_planning():
     """移行計画デモ"""
     strategy = MigrationStrategy()
-    
+
     # サンプル制約
     constraints = {
         "team_size": 5,
@@ -1687,23 +1687,23 @@ def demo_migration_planning():
         "risk_tolerance": "medium",
         "budget": "medium"
     }
-    
+
     # 移行計画作成
     plan = strategy.create_migration_plan("client_side", "edge_functions", constraints)
-    
+
     print("移行計画:")
     print(json.dumps(plan, indent=2, default=str, ensure_ascii=False))
-    
+
     # 移行実行
     executor = MigrationExecutor()
     migration_id = executor.start_migration(plan)
-    
+
     print(f"\n移行開始: {migration_id}")
-    
+
     # サンプルタスク完了
     executor.complete_task("analyze_business_logic", "要件定義完了")
     executor.complete_task("setup_edge_functions_env", "開発環境構築完了")
-    
+
     status = executor.get_migration_status()
     print(f"\n現在の進捗: {status['progress_percent']:.1f}%")
 
@@ -1752,46 +1752,46 @@ class ArchitectureComponent:
     performance_req: PerformanceRequirement
     security_req: DataSensitivity
     dependencies: List[str]
-    
+
 class HybridArchitectureDesigner:
     """ハイブリッドアーキテクチャ設計"""
-    
+
     def __init__(self):
         self.component_constraints = self._load_component_constraints()
-        
+
     def design_hybrid_architecture(
-        self, 
+        self,
         functional_requirements: List[Dict[str, Any]],
         non_functional_requirements: Dict[str, Any]
     ) -> Dict[str, Any]:
         """ハイブリッドアーキテクチャ設計"""
-        
+
         # 機能別最適配置決定
         components = []
         for req in functional_requirements:
             component = self._design_component(req, non_functional_requirements)
             components.append(component)
-        
+
         # 相互依存関係の最適化
         optimized_components = self._optimize_dependencies(components)
-        
+
         # 統合アーキテクチャ生成
         architecture = self._generate_integrated_architecture(optimized_components)
-        
+
         return architecture
-    
+
     def _design_component(
-        self, 
-        functional_req: Dict[str, Any], 
+        self,
+        functional_req: Dict[str, Any],
         non_functional_reqs: Dict[str, Any]
     ) -> ArchitectureComponent:
         """個別コンポーネント設計"""
-        
+
         name = functional_req["name"]
         responsibilities = functional_req["responsibilities"]
         data_sensitivity = DataSensitivity(functional_req.get("data_sensitivity", "internal"))
         performance_req = PerformanceRequirement(functional_req.get("performance", "medium"))
-        
+
         # 最適なコンポーネントタイプ決定
         component_type = self._select_optimal_component_type(
             responsibilities,
@@ -1799,7 +1799,7 @@ class HybridArchitectureDesigner:
             performance_req,
             non_functional_reqs
         )
-        
+
         return ArchitectureComponent(
             name=name,
             type=component_type,
@@ -1809,58 +1809,58 @@ class HybridArchitectureDesigner:
             security_req=data_sensitivity,
             dependencies=functional_req.get("dependencies", [])
         )
-    
+
     def _select_optimal_component_type(
-        self, 
+        self,
         responsibilities: List[str],
         data_sensitivity: DataSensitivity,
         performance_req: PerformanceRequirement,
         non_functional_reqs: Dict[str, Any]
     ) -> ComponentType:
         """最適なコンポーネントタイプ選択"""
-        
+
         # 決定マトリックス
         scores = {}
-        
+
         for comp_type in ComponentType:
             score = self._calculate_component_score(
                 comp_type, responsibilities, data_sensitivity, performance_req, non_functional_reqs
             )
             scores[comp_type] = score
-        
+
         return max(scores.keys(), key=lambda x: scores[x])
-    
+
     def _calculate_component_score(
         self,
         comp_type: ComponentType,
         responsibilities: List[str],
-        data_sensitivity: DataSensitivity, 
+        data_sensitivity: DataSensitivity,
         performance_req: PerformanceRequirement,
         non_functional_reqs: Dict[str, Any]
     ) -> float:
         """コンポーネントタイプスコア計算"""
-        
+
         score = 0.0
-        
+
         # 責務適合性
         if comp_type == ComponentType.CLIENT_SIDE:
             if any(r in ["ui_interaction", "real_time_updates", "offline_support"] for r in responsibilities):
                 score += 30
             if any(r in ["payment_processing", "sensitive_data_processing"] for r in responsibilities):
                 score -= 20  # セキュリティリスク
-        
+
         elif comp_type == ComponentType.EDGE_FUNCTION:
             if any(r in ["api_integration", "data_transformation", "notification"] for r in responsibilities):
                 score += 25
             if any(r in ["complex_business_logic", "heavy_computation"] for r in responsibilities):
                 score -= 15  # 実行時間制限
-        
+
         elif comp_type == ComponentType.API_SERVER:
             if any(r in ["complex_business_logic", "data_processing", "integration"] for r in responsibilities):
                 score += 35
             if any(r in ["simple_crud", "static_content"] for r in responsibilities):
                 score -= 10  # オーバーエンジニアリング
-        
+
         # セキュリティ適合性
         security_scores = {
             ComponentType.CLIENT_SIDE: {
@@ -1882,9 +1882,9 @@ class HybridArchitectureDesigner:
                 DataSensitivity.RESTRICTED: 35
             }
         }
-        
+
         score += security_scores.get(comp_type, {}).get(data_sensitivity, 0)
-        
+
         # パフォーマンス適合性
         performance_scores = {
             ComponentType.CLIENT_SIDE: {
@@ -1906,98 +1906,98 @@ class HybridArchitectureDesigner:
                 PerformanceRequirement.LOW: 20
             }
         }
-        
+
         score += performance_scores.get(comp_type, {}).get(performance_req, 0)
-        
+
         return score
-    
+
     def _optimize_dependencies(self, components: List[ArchitectureComponent]) -> List[ArchitectureComponent]:
         """依存関係最適化"""
-        
+
         # 依存関係グラフ構築
         dependency_graph = {}
         for comp in components:
             dependency_graph[comp.name] = comp.dependencies
-        
+
         # 循環依存検出
         cycles = self._detect_cycles(dependency_graph)
         if cycles:
             # 循環依存解決策提案
             for cycle in cycles:
                 self._resolve_cycle(cycle, components)
-        
+
         # 通信コスト最適化
         optimized_components = self._optimize_communication_costs(components)
-        
+
         return optimized_components
-    
+
     def _detect_cycles(self, graph: Dict[str, List[str]]) -> List[List[str]]:
         """循環依存検出"""
         cycles = []
         visited = set()
         rec_stack = set()
         path = []
-        
+
         def dfs(node):
             if node in rec_stack:
                 cycle_start = path.index(node)
                 cycles.append(path[cycle_start:])
                 return
-            
+
             if node in visited:
                 return
-            
+
             visited.add(node)
             rec_stack.add(node)
             path.append(node)
-            
+
             for neighbor in graph.get(node, []):
                 dfs(neighbor)
-            
+
             rec_stack.remove(node)
             path.pop()
-        
+
         for node in graph:
             if node not in visited:
                 dfs(node)
-        
+
         return cycles
-    
+
     def _resolve_cycle(self, cycle: List[str], components: List[ArchitectureComponent]):
         """循環依存解決"""
         # イベント駆動アーキテクチャの提案
         print(f"循環依存検出: {' -> '.join(cycle)}")
         print("解決策: イベント駆動パターンまたは共通インターフェース抽出を推奨")
-    
+
     def _optimize_communication_costs(self, components: List[ArchitectureComponent]) -> List[ArchitectureComponent]:
         """通信コスト最適化"""
-        
+
         # 高頻度通信の識別
         high_frequency_pairs = self._identify_high_frequency_communication(components)
-        
+
         # 同一デプロイメント単位への統合提案
         for pair in high_frequency_pairs:
             comp1, comp2 = pair
             if self._should_colocate(comp1, comp2):
                 print(f"推奨: {comp1.name} と {comp2.name} の同一デプロイメント検討")
-        
+
         return components
-    
+
     def _identify_high_frequency_communication(self, components: List[ArchitectureComponent]) -> List[tuple]:
         """高頻度通信の識別"""
         # 実装簡略化
         return []
-    
+
     def _should_colocate(self, comp1: ArchitectureComponent, comp2: ArchitectureComponent) -> bool:
         """同一配置判定"""
         # 同じコンポーネントタイプかつ似た要件の場合
-        return (comp1.type == comp2.type and 
+        return (comp1.type == comp2.type and
                 comp1.performance_req == comp2.performance_req and
                 comp1.security_req == comp2.security_req)
-    
+
     def _generate_integrated_architecture(self, components: List[ArchitectureComponent]) -> Dict[str, Any]:
         """統合アーキテクチャ生成"""
-        
+
         # コンポーネントタイプ別グループ化
         grouped_components = {}
         for comp in components:
@@ -2005,16 +2005,16 @@ class HybridArchitectureDesigner:
             if comp_type not in grouped_components:
                 grouped_components[comp_type] = []
             grouped_components[comp_type].append(comp)
-        
+
         # 通信パターン分析
         communication_patterns = self._analyze_communication_patterns(components)
-        
+
         # セキュリティ境界定義
         security_boundaries = self._define_security_boundaries(components)
-        
+
         # デプロイメント戦略
         deployment_strategy = self._design_deployment_strategy(grouped_components)
-        
+
         return {
             "architecture_type": "hybrid",
             "components": {
@@ -2027,7 +2027,7 @@ class HybridArchitectureDesigner:
             "monitoring_strategy": self._design_monitoring_strategy(components),
             "scalability_plan": self._design_scalability_plan(grouped_components)
         }
-    
+
     def _analyze_communication_patterns(self, components: List[ArchitectureComponent]) -> Dict[str, Any]:
         """通信パターン分析"""
         patterns = {
@@ -2035,7 +2035,7 @@ class HybridArchitectureDesigner:
             "asynchronous": [],
             "event_driven": []
         }
-        
+
         for comp in components:
             for dep in comp.dependencies:
                 # 性能要件に基づく通信パターン決定
@@ -2045,29 +2045,29 @@ class HybridArchitectureDesigner:
                     patterns["asynchronous"].append(f"{comp.name} -> {dep}")
                 else:
                     patterns["event_driven"].append(f"{comp.name} -> {dep}")
-        
+
         return patterns
-    
+
     def _define_security_boundaries(self, components: List[ArchitectureComponent]) -> List[Dict[str, Any]]:
         """セキュリティ境界定義"""
         boundaries = []
-        
+
         # データ機密性レベル別境界
         for sensitivity in DataSensitivity:
             boundary_components = [
-                comp.name for comp in components 
+                comp.name for comp in components
                 if comp.security_req == sensitivity
             ]
-            
+
             if boundary_components:
                 boundaries.append({
                     "name": f"{sensitivity.value}_boundary",
                     "components": boundary_components,
                     "security_controls": self._get_security_controls(sensitivity)
                 })
-        
+
         return boundaries
-    
+
     def _get_security_controls(self, sensitivity: DataSensitivity) -> List[str]:
         """セキュリティ制御取得"""
         controls_map = {
@@ -2076,13 +2076,13 @@ class HybridArchitectureDesigner:
             DataSensitivity.CONFIDENTIAL: ["encryption_at_rest", "encryption_in_transit", "access_monitoring"],
             DataSensitivity.RESTRICTED: ["multi_factor_auth", "data_loss_prevention", "privileged_access_management"]
         }
-        
+
         return controls_map.get(sensitivity, [])
-    
+
     def _design_deployment_strategy(self, grouped_components: Dict[str, List[ArchitectureComponent]]) -> Dict[str, Any]:
         """デプロイメント戦略設計"""
         strategy = {}
-        
+
         for comp_type, components in grouped_components.items():
             if comp_type == "client_side":
                 strategy[comp_type] = {
@@ -2103,9 +2103,9 @@ class HybridArchitectureDesigner:
                     "auto_scaling": "horizontal_pod_autoscaler",
                     "load_balancer": "nginx_ingress"
                 }
-        
+
         return strategy
-    
+
     def _design_monitoring_strategy(self, components: List[ArchitectureComponent]) -> Dict[str, Any]:
         """監視戦略設計"""
         return {
@@ -2119,24 +2119,24 @@ class HybridArchitectureDesigner:
                 for comp in components
             }
         }
-    
+
     def _get_component_monitoring(self, component: ArchitectureComponent) -> List[str]:
         """コンポーネント別監視項目"""
         base_metrics = ["response_time", "error_rate", "throughput"]
-        
+
         if component.type == ComponentType.CLIENT_SIDE:
             return base_metrics + ["page_load_time", "user_interactions"]
         elif component.type == ComponentType.EDGE_FUNCTION:
             return base_metrics + ["cold_start_time", "memory_usage"]
         elif component.type == ComponentType.API_SERVER:
             return base_metrics + ["cpu_usage", "memory_usage", "database_connections"]
-        
+
         return base_metrics
-    
+
     def _design_scalability_plan(self, grouped_components: Dict[str, List[ArchitectureComponent]]) -> Dict[str, Any]:
         """スケーラビリティ計画設計"""
         plan = {}
-        
+
         for comp_type, components in grouped_components.items():
             if comp_type == "client_side":
                 plan[comp_type] = {
@@ -2154,9 +2154,9 @@ class HybridArchitectureDesigner:
                     "target_metrics": ["cpu_utilization", "memory_utilization"],
                     "considerations": ["stateless_design", "database_connection_pooling"]
                 }
-        
+
         return plan
-    
+
     def _component_to_dict(self, component: ArchitectureComponent) -> Dict[str, Any]:
         """コンポーネント辞書変換"""
         return {
@@ -2168,7 +2168,7 @@ class HybridArchitectureDesigner:
             "security_requirement": component.security_req.value,
             "dependencies": component.dependencies
         }
-    
+
     def _load_component_constraints(self) -> Dict[str, Any]:
         """コンポーネント制約読み込み"""
         # 実装省略
@@ -2177,9 +2177,9 @@ class HybridArchitectureDesigner:
 # 実用例
 def design_sample_hybrid_architecture():
     """サンプルハイブリッドアーキテクチャ設計"""
-    
+
     designer = HybridArchitectureDesigner()
-    
+
     # 機能要件定義
     functional_requirements = [
         {
@@ -2223,7 +2223,7 @@ def design_sample_hybrid_architecture():
             "dependencies": ["data_warehouse", "ml_service"]
         }
     ]
-    
+
     # 非機能要件
     non_functional_requirements = {
         "availability": 99.9,
@@ -2233,16 +2233,16 @@ def design_sample_hybrid_architecture():
         "team_size": 8,
         "maintenance_preference": "automated"
     }
-    
+
     # アーキテクチャ設計実行
     architecture = designer.design_hybrid_architecture(
         functional_requirements,
         non_functional_requirements
     )
-    
+
     print("ハイブリッドアーキテクチャ設計結果:")
     print(json.dumps(architecture, indent=2, ensure_ascii=False))
-    
+
     return architecture
 
 if __name__ == "__main__":
@@ -2275,55 +2275,55 @@ class EnvironmentSyncDiagnostics:
             'staging': {'url': 'https://staging.supabase.co', 'key': 'staging_publishable_key'},
             'production': {'url': 'https://prod.supabase.co', 'key': 'prod_publishable_key'}
         }
-    
+
     async def diagnose_schema_differences(self):
         """スキーマ差分診断"""
-        
+
         schema_comparison = {}
-        
+
         for env_name, config in self.environments.items():
             try:
                 client = create_client(config['url'], config['key'])
-                
+
                 # テーブル構造取得
                 tables_query = """
-                SELECT 
+                SELECT
                     table_name,
                     column_name,
                     data_type,
                     is_nullable,
                     column_default
-                FROM information_schema.columns 
+                FROM information_schema.columns
                 WHERE table_schema = 'public'
                 ORDER BY table_name, ordinal_position;
                 """
-                
+
                 result = await client.rpc('execute_sql', {'query': tables_query}).execute()
                 schema_comparison[env_name] = result.data
-                
+
             except Exception as e:
                 schema_comparison[env_name] = {"error": str(e)}
-        
+
         # 差分分析
         differences = self._analyze_schema_differences(schema_comparison)
-        
+
         return {
             "environments": list(self.environments.keys()),
             "schema_comparison": schema_comparison,
             "differences": differences,
             "recommendations": self._generate_sync_recommendations(differences)
         }
-    
+
     def _analyze_schema_differences(self, schemas):
         """スキーマ差分分析"""
         differences = []
-        
+
         if 'local' in schemas and 'staging' in schemas:
-            local_tables = {f"{row['table_name']}.{row['column_name']}" 
+            local_tables = {f"{row['table_name']}.{row['column_name']}"
                           for row in schemas['local'] if 'error' not in schemas['local']}
-            staging_tables = {f"{row['table_name']}.{row['column_name']}" 
+            staging_tables = {f"{row['table_name']}.{row['column_name']}"
                             for row in schemas['staging'] if 'error' not in schemas['staging']}
-            
+
             # ローカルにのみ存在
             local_only = local_tables - staging_tables
             if local_only:
@@ -2331,21 +2331,21 @@ class EnvironmentSyncDiagnostics:
                     "type": "missing_in_staging",
                     "items": list(local_only)
                 })
-            
+
             # ステージングにのみ存在
             staging_only = staging_tables - local_tables
             if staging_only:
                 differences.append({
-                    "type": "missing_in_local", 
+                    "type": "missing_in_local",
                     "items": list(staging_only)
                 })
-        
+
         return differences
-    
+
     def _generate_sync_recommendations(self, differences):
         """同期推奨事項生成"""
         recommendations = []
-        
+
         for diff in differences:
             if diff['type'] == 'missing_in_staging':
                 recommendations.append(
@@ -2355,7 +2355,7 @@ class EnvironmentSyncDiagnostics:
                 recommendations.append(
                     "ステージング→ローカルへのスキーマ同期が必要"
                 )
-        
+
         return recommendations
 
 # 実行例
@@ -2369,22 +2369,22 @@ class AutoMigrationManager:
     def __init__(self, source_env, target_env):
         self.source = source_env
         self.target = target_env
-    
+
     async def generate_sync_migration(self):
         """同期用マイグレーション生成"""
-        
-        # 1. 差分SQLの生成
+
+        # 1. 差分 SQL の生成
         diff_sql = await self._generate_diff_sql()
-        
+
         # 2. マイグレーションファイル作成
         migration_file = f"sync_{self.source}_to_{self.target}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.sql"
-        
+
         with open(f"supabase/migrations/{migration_file}", 'w') as f:
             f.write(diff_sql)
-        
+
         # 3. 検証スクリプト作成
         validation_script = self._generate_validation_script()
-        
+
         return {
             "migration_file": migration_file,
             "validation_script": validation_script,
@@ -2394,30 +2394,30 @@ class AutoMigrationManager:
                 "3. 本番環境への適用"
             ]
         }
-    
+
     async def _generate_diff_sql(self):
-        """差分SQL生成"""
+        """差分 SQL 生成"""
         return """
-        -- スキーマ同期SQL
+        -- スキーマ同期 SQL
         -- 注意: 本番環境での実行前に十分なテストを実施してください
-        
+
         BEGIN;
-        
+
         -- 新しいテーブル作成
         CREATE TABLE IF NOT EXISTS new_feature_table (
             id SERIAL PRIMARY KEY,
             name TEXT NOT NULL,
             created_at TIMESTAMPTZ DEFAULT NOW()
         );
-        
+
         -- 既存テーブルの修正
-        ALTER TABLE existing_table 
+        ALTER TABLE existing_table
         ADD COLUMN IF NOT EXISTS new_column TEXT;
-        
+
         -- インデックス作成
-        CREATE INDEX IF NOT EXISTS idx_new_feature_name 
+        CREATE INDEX IF NOT EXISTS idx_new_feature_name
         ON new_feature_table(name);
-        
+
         COMMIT;
         """
 ```
@@ -2426,7 +2426,7 @@ class AutoMigrationManager:
 
 **症状**:
 - CI/CDでテストが間欠的に失敗
-- ローカルでは成功するがCI環境で失敗
+- ローカルでは成功するが CI 環境で失敗
 - テスト間でのデータ競合
 
 **診断・解決手法**:
@@ -2440,32 +2440,32 @@ class TestStabilityManager:
     def __init__(self, supabase_client):
         self.client = supabase_client
         self.test_isolation_prefix = f"test_{uuid.uuid4().hex[:8]}_"
-    
+
     async def setup_isolated_test_environment(self):
         """分離されたテスト環境セットアップ"""
-        
+
         # 1. テスト専用スキーマ作成
         test_schema = f"test_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
-        
+
         create_schema_sql = f"""
         CREATE SCHEMA IF NOT EXISTS {test_schema};
         SET search_path TO {test_schema}, public;
         """
-        
+
         await self.client.rpc('execute_sql', {'query': create_schema_sql}).execute()
-        
+
         # 2. テストデータの準備
         test_data = await self._create_test_data()
-        
+
         return {
             "test_schema": test_schema,
             "test_data": test_data,
             "cleanup_function": lambda: self._cleanup_test_environment(test_schema)
         }
-    
+
     async def _create_test_data(self):
         """テストデータ作成"""
-        
+
         # 決定的なテストデータ（毎回同じ結果）
         test_users = []
         for i in range(5):
@@ -2476,34 +2476,34 @@ class TestStabilityManager:
                 "created_at": datetime.now().isoformat()
             }
             test_users.append(user_data)
-        
+
         # バッチ挿入でパフォーマンス向上
         result = await self.client.table('users').insert(test_users).execute()
-        
+
         return {
             "users": test_users,
             "user_count": len(test_users)
         }
-    
+
     async def _cleanup_test_environment(self, test_schema):
         """テスト環境クリーンアップ"""
-        
+
         cleanup_sql = f"""
         DROP SCHEMA IF EXISTS {test_schema} CASCADE;
         """
-        
+
         await self.client.rpc('execute_sql', {'query': cleanup_sql}).execute()
 
 # pytest設定例
 @pytest.fixture
 async def stable_test_env():
     """安定したテスト環境フィクスチャ"""
-    
+
     manager = TestStabilityManager(supabase_client)
     env = await manager.setup_isolated_test_environment()
-    
+
     yield env
-    
+
     # クリーンアップ
     await env['cleanup_function']()
 
@@ -2511,14 +2511,14 @@ async def stable_test_env():
 @pytest.mark.asyncio
 async def test_user_creation_stable(stable_test_env):
     """安定したユーザー作成テスト"""
-    
+
     # テストデータを使用
     test_data = stable_test_env['test_data']
-    
+
     # 決定的なアサーション
     assert len(test_data['users']) == 5
     assert all(user['email'].endswith('@example.com') for user in test_data['users'])
-    
+
     # 冪等性確認
     result = await supabase.table('users').select('*').execute()
     assert len(result.data) >= 5
@@ -2537,10 +2537,10 @@ class DeploymentValidator:
     def __init__(self, target_environment):
         self.env = target_environment
         self.validation_results = []
-    
+
     async def validate_deployment(self):
         """デプロイメント検証実行"""
-        
+
         validations = [
             self._validate_database_connectivity,
             self._validate_environment_variables,
@@ -2548,7 +2548,7 @@ class DeploymentValidator:
             self._validate_realtime_functionality,
             self._validate_security_policies
         ]
-        
+
         for validation in validations:
             try:
                 result = await validation()
@@ -2559,44 +2559,44 @@ class DeploymentValidator:
                     "status": "failed",
                     "error": str(e)
                 })
-        
+
         return self._generate_deployment_report()
-    
+
     async def _validate_database_connectivity(self):
         """データベース接続検証"""
-        
+
         connection_tests = []
-        
+
         # 基本接続テスト
         try:
             result = await self.env['client'].table('_health').select('*').limit(1).execute()
             connection_tests.append({"test": "basic_connection", "status": "passed"})
         except Exception as e:
             connection_tests.append({"test": "basic_connection", "status": "failed", "error": str(e)})
-        
+
         # 認証テスト
         try:
             auth_result = await self.env['client'].auth.get_user()
             connection_tests.append({"test": "auth_service", "status": "passed"})
         except Exception as e:
             connection_tests.append({"test": "auth_service", "status": "failed", "error": str(e)})
-        
+
         return {
             "validation": "database_connectivity",
             "status": "passed" if all(t["status"] == "passed" for t in connection_tests) else "failed",
             "details": connection_tests
         }
-    
+
     async def _validate_environment_variables(self):
         """環境変数検証"""
-        
+
         required_vars = [
             'SUPABASE_URL',
-            'SUPABASE_PUBLISHABLE_KEY', 
+            'SUPABASE_PUBLISHABLE_KEY',
             'SUPABASE_SECRET_KEY',
             'DATABASE_URL'
         ]
-        
+
         var_status = []
         for var in required_vars:
             value = os.getenv(var)
@@ -2611,18 +2611,18 @@ class DeploymentValidator:
                     "variable": var,
                     "status": "missing"
                 })
-        
+
         return {
             "validation": "environment_variables",
             "status": "passed" if all(v["status"] == "present" for v in var_status) else "failed",
             "details": var_status
         }
-    
+
     async def _validate_api_endpoints(self):
-        """APIエンドポイント検証"""
-        
+        """API エンドポイント検証"""
+
         endpoint_tests = []
-        
+
         # REST API テスト
         try:
             response = await self.env['client'].table('users').select('count').execute()
@@ -2637,7 +2637,7 @@ class DeploymentValidator:
                 "status": "failed",
                 "error": str(e)
             })
-        
+
         # Realtime テスト
         try:
             # リアルタイム接続テスト
@@ -2649,23 +2649,23 @@ class DeploymentValidator:
             subscription.unsubscribe()
         except Exception as e:
             endpoint_tests.append({
-                "endpoint": "Realtime", 
+                "endpoint": "Realtime",
                 "status": "failed",
                 "error": str(e)
             })
-        
+
         return {
             "validation": "api_endpoints",
             "status": "passed" if all(t["status"] == "passed" for t in endpoint_tests) else "failed",
             "details": endpoint_tests
         }
-    
+
     def _generate_deployment_report(self):
         """デプロイメントレポート生成"""
-        
+
         passed_validations = sum(1 for v in self.validation_results if v["status"] == "passed")
         total_validations = len(self.validation_results)
-        
+
         return {
             "deployment_environment": self.env['name'],
             "validation_timestamp": datetime.now().isoformat(),
@@ -2678,25 +2678,25 @@ class DeploymentValidator:
             "detailed_results": self.validation_results,
             "recommendations": self._generate_deployment_recommendations()
         }
-    
+
     def _generate_deployment_recommendations(self):
         """デプロイメント推奨事項生成"""
-        
+
         recommendations = []
-        
+
         failed_validations = [v for v in self.validation_results if v["status"] == "failed"]
-        
+
         for validation in failed_validations:
             if "database_connectivity" in validation["validation"]:
                 recommendations.append("データベース接続設定を確認してください")
             elif "environment_variables" in validation["validation"]:
                 recommendations.append("環境変数の設定を確認してください")
             elif "api_endpoints" in validation["validation"]:
-                recommendations.append("APIエンドポイントの設定を確認してください")
-        
+                recommendations.append("API エンドポイントの設定を確認してください")
+
         if not failed_validations:
             recommendations.append("すべての検証に成功しました。デプロイメント完了です。")
-        
+
         return recommendations
 ```
 
@@ -2715,7 +2715,7 @@ class AutomatedCodeReview:
     def __init__(self, project_path):
         self.project_path = project_path
         self.review_rules = self._load_review_rules()
-    
+
     def _load_review_rules(self):
         """レビュールール定義"""
         return {
@@ -2726,7 +2726,7 @@ class AutomatedCodeReview:
                     "severity": "critical"
                 },
                 {
-                    "rule": "rls_policy_check", 
+                    "rule": "rls_policy_check",
                     "pattern": r"supabase\.table\([^)]+\)\.select\(",
                     "severity": "warning",
                     "check": "ensure_rls_enabled"
@@ -2754,16 +2754,16 @@ class AutomatedCodeReview:
                 }
             ]
         }
-    
+
     def analyze_code_changes(self, file_changes):
         """コード変更分析"""
-        
+
         review_comments = []
-        
+
         for file_path, changes in file_changes.items():
             file_comments = self._analyze_file(file_path, changes)
             review_comments.extend(file_comments)
-        
+
         return {
             "total_issues": len(review_comments),
             "critical_issues": len([c for c in review_comments if c["severity"] == "critical"]),
@@ -2772,16 +2772,16 @@ class AutomatedCodeReview:
             "comments": review_comments,
             "approval_recommendation": self._generate_approval_recommendation(review_comments)
         }
-    
+
     def _analyze_file(self, file_path, changes):
         """ファイル分析"""
-        
+
         comments = []
-        
+
         for category, rules in self.review_rules.items():
             for rule in rules:
                 matches = re.finditer(rule["pattern"], changes, re.MULTILINE)
-                
+
                 for match in matches:
                     comment = {
                         "file": file_path,
@@ -2792,15 +2792,15 @@ class AutomatedCodeReview:
                         "suggestion": self._generate_suggestion(rule)
                     }
                     comments.append(comment)
-        
+
         return comments
-    
+
     def _generate_approval_recommendation(self, comments):
         """承認推奨判定"""
-        
+
         critical_count = len([c for c in comments if c["severity"] == "critical"])
         warning_count = len([c for c in comments if c["severity"] == "warning"])
-        
+
         if critical_count > 0:
             return {
                 "recommendation": "reject",
@@ -2832,10 +2832,10 @@ class AutomatedCodeReview:
 class TechnicalDebtMonitor:
     def __init__(self, project_metrics):
         self.metrics = project_metrics
-    
+
     def analyze_technical_debt(self):
         """技術債務分析"""
-        
+
         debt_indicators = {
             "code_complexity": self._analyze_code_complexity(),
             "test_coverage": self._analyze_test_coverage(),
@@ -2843,19 +2843,19 @@ class TechnicalDebtMonitor:
             "security_vulnerabilities": self._analyze_security_issues(),
             "documentation_coverage": self._analyze_documentation()
         }
-        
+
         debt_score = self._calculate_debt_score(debt_indicators)
-        
+
         return {
             "overall_debt_score": debt_score,
             "debt_level": self._categorize_debt_level(debt_score),
             "indicators": debt_indicators,
             "recommendations": self._generate_debt_reduction_plan(debt_indicators)
         }
-    
+
     def _calculate_debt_score(self, indicators):
         """債務スコア計算"""
-        
+
         weights = {
             "code_complexity": 0.25,
             "test_coverage": 0.20,
@@ -2863,26 +2863,26 @@ class TechnicalDebtMonitor:
             "security_vulnerabilities": 0.25,
             "documentation_coverage": 0.10
         }
-        
+
         weighted_score = sum(
             indicators[indicator]["score"] * weights[indicator]
             for indicator in indicators
         )
-        
+
         return round(weighted_score, 2)
-    
+
     def _generate_debt_reduction_plan(self, indicators):
         """債務削減計画生成"""
-        
+
         plan = []
-        
+
         # 優先度順に並べ替え
         sorted_indicators = sorted(
             indicators.items(),
             key=lambda x: x[1]["priority"],
             reverse=True
         )
-        
+
         for indicator_name, data in sorted_indicators:
             if data["score"] < 7.0:  # 7.0未満は改善対象
                 plan.append({
@@ -2892,7 +2892,7 @@ class TechnicalDebtMonitor:
                     "actions": data.get("suggested_actions", []),
                     "estimated_effort": data.get("effort_estimate", "medium")
                 })
-        
+
         return plan
 ```
 
@@ -2959,7 +2959,7 @@ class TechnicalDebtMonitor:
 
 **ナビゲーション**
 - **目次**: [はじめに]({{ '/introduction/' | relative_url }})
-- **前の章**: [第8章：運用監視と自動化]({{ '/chapters/chapter08/' | relative_url }})  
+- **前の章**: [第8章：運用監視と自動化]({{ '/chapters/chapter08/' | relative_url }})
 - **最終章**: [第10章：統合実践プロジェクト]({{ '/chapters/chapter10/' | relative_url }})
 - **関連章**: [第3章〜第5-4章：アーキテクチャパターン]({{ '/chapters/chapter03/' | relative_url }}) | [選択ガイド]({{ '/guides/pattern-selection/' | relative_url }})
 - **リソース**: [アーキテクチャ決定ツール]({{ site.repository }}/tree/main/src/chapters/chapter09/) | [移行チェックリスト]({{ '/appendices/appendix01/' | relative_url }}#operational-checklists)

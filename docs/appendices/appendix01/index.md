@@ -6,11 +6,11 @@ title: "付録B: 参考資料"
 # 付録B: 参考資料
 
 ---
-**目次に戻る**: [はじめに]({{ '/introduction/' | relative_url }})  
-**関連章**: [全章]({{ '/introduction/' | relative_url }}) で参照されるリファレンス資料集  
-**用途**: 開発中の即座な参照・トラブルシューティング・実装支援  
-**利用方法**: 必要時に該当セクションを参照  
-**レベル**: 全レベル対応（基礎〜上級）
+- **目次に戻る**: [はじめに]({{ '/introduction/' | relative_url }})
+- **関連章**: [全章]({{ '/introduction/' | relative_url }}) で参照されるリファレンス資料集
+- **用途**: 開発中の即座な参照・トラブルシューティング・実装支援
+- **利用方法**: 必要時に該当セクションを参照
+- **レベル**: 全レベル対応（基礎〜上級）
 ---
 
 ## 付録の使い方
@@ -36,12 +36,12 @@ title: "付録B: 参考資料"
 
 ## A. 環境構築スクリプト集 {#appendix-env-setup-scripts}
 
-### A.1 Supabase開発環境セットアップ
+### A.1 Supabase 開発環境セットアップ
 
 ```bash
 #!/bin/bash
 # setup_supabase_dev.sh
-# Supabase開発環境の完全自動セットアップ
+# Supabase 開発環境の完全自動セットアップ
 
 set -euo pipefail
 
@@ -50,7 +50,7 @@ PROJECT_NAME="${1:-supabase-app}"
 POSTGRES_PASSWORD="${2:-$(openssl rand -base64 32)}"
 JWT_SECRET="${3:-$(openssl rand -base64 64)}"
 
-echo " Supabase開発環境セットアップ開始"
+echo " Supabase 開発環境セットアップ開始"
 echo "プロジェクト名: $PROJECT_NAME"
 
 # 必要なツールのチェック
@@ -81,7 +81,7 @@ setup_project_structure() {
 # 環境変数ファイル生成
 create_env_files() {
     cat > .env << EOF
-# Supabase設定
+# Supabase 設定
 SUPABASE_URL=http://localhost:54321
 # ローカル（セルフホスト）の場合は legacy JWT（anon/service_role）を設定
 SUPABASE_PUBLISHABLE_KEY=sb_publishable_XXXXXXXXXXXXXXXX
@@ -94,10 +94,10 @@ POSTGRES_DB=postgres
 POSTGRES_USER=postgres
 POSTGRES_PASSWORD=$POSTGRES_PASSWORD
 
-# JWT設定
+# JWT 設定
 JWT_SECRET=$JWT_SECRET
 
-# API設定
+# API 設定
 API_PORT=8000
 API_HOST=0.0.0.0
 
@@ -205,15 +205,15 @@ services:
       GOTRUE_JWT_ADMIN_GROUP_NAME: service_role
       GOTRUE_EXTERNAL_EMAIL_ENABLED: true
       GOTRUE_MAILER_AUTOCONFIRM: true
-      GOTRUE_SMTP_HOST: 
+      GOTRUE_SMTP_HOST:
       GOTRUE_SMTP_PORT: 587
-      GOTRUE_SMTP_USER: 
-      GOTRUE_SMTP_PASS: 
+      GOTRUE_SMTP_USER:
+      GOTRUE_SMTP_PASS:
     depends_on:
       - supabase-db
     restart: unless-stopped
 
-  # PostgREST（自動API生成）
+  # PostgREST（自動 API 生成）
   supabase-rest:
     image: postgrest/postgrest:v11.2.0
     container_name: supabase-rest
@@ -249,8 +249,8 @@ services:
       - supabase-db
     command: >
       bash -c "
-        /app/bin/migrate && 
-        /app/bin/realtime eval 'Realtime.Release.seeds(Realtime.Repo)' && 
+        /app/bin/migrate &&
+        /app/bin/realtime eval 'Realtime.Release.seeds(Realtime.Repo)' &&
         /app/bin/server
       "
     restart: unless-stopped
@@ -443,37 +443,37 @@ CREATE INDEX idx_tasks_assignee_id ON tasks(assignee_id);
 CREATE INDEX idx_tasks_status ON tasks(status);
 CREATE INDEX idx_tasks_due_date ON tasks(due_date) WHERE due_date IS NOT NULL;
 
--- RLS有効化
+-- RLS 有効化
 ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE organizations ENABLE ROW LEVEL SECURITY;
 ALTER TABLE organization_members ENABLE ROW LEVEL SECURITY;
 ALTER TABLE projects ENABLE ROW LEVEL SECURITY;
 ALTER TABLE tasks ENABLE ROW LEVEL SECURITY;
 
--- プロファイルのRLSポリシー
+-- プロファイルの RLS ポリシー
 CREATE POLICY "Users can view own profile" ON profiles
     FOR SELECT USING (auth.uid() = id);
 
 CREATE POLICY "Users can update own profile" ON profiles
     FOR UPDATE USING (auth.uid() = id);
 
--- 組織のRLSポリシー
+-- 組織の RLS ポリシー
 CREATE POLICY "Organization members can view" ON organizations
     FOR SELECT USING (
         EXISTS (
-            SELECT 1 FROM organization_members 
-            WHERE organization_id = organizations.id 
+            SELECT 1 FROM organization_members
+            WHERE organization_id = organizations.id
             AND user_id = auth.uid()
         )
     );
 
--- タスクのRLSポリシー
+-- タスクの RLS ポリシー
 CREATE POLICY "Task visibility" ON tasks
     FOR SELECT USING (
         EXISTS (
             SELECT 1 FROM projects p
             JOIN organization_members om ON p.organization_id = om.organization_id
-            WHERE p.id = tasks.project_id 
+            WHERE p.id = tasks.project_id
             AND om.user_id = auth.uid()
         )
     );
@@ -488,20 +488,20 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- 更新日時トリガー
-CREATE TRIGGER update_profiles_updated_at 
-    BEFORE UPDATE ON profiles 
+CREATE TRIGGER update_profiles_updated_at
+    BEFORE UPDATE ON profiles
     FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
-CREATE TRIGGER update_organizations_updated_at 
-    BEFORE UPDATE ON organizations 
+CREATE TRIGGER update_organizations_updated_at
+    BEFORE UPDATE ON organizations
     FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
-CREATE TRIGGER update_projects_updated_at 
-    BEFORE UPDATE ON projects 
+CREATE TRIGGER update_projects_updated_at
+    BEFORE UPDATE ON projects
     FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
-CREATE TRIGGER update_tasks_updated_at 
-    BEFORE UPDATE ON tasks 
+CREATE TRIGGER update_tasks_updated_at
+    BEFORE UPDATE ON tasks
     FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
 -- プロファイル自動作成関数
@@ -530,7 +530,7 @@ create_dev_scripts() {
     # 起動スクリプト
     cat > scripts/start.sh << 'EOF'
 #!/bin/bash
-echo " Supabase開発環境起動中..."
+echo " Supabase 開発環境起動中..."
 docker compose up -d
 
 echo " サービス起動待機中..."
@@ -542,7 +542,7 @@ curl -f http://localhost:54321/rest/v1/ > /dev/null 2>&1 && echo "[OK] PostgREST
 curl -f http://localhost:54321/auth/v1/settings > /dev/null 2>&1 && echo "[OK] Auth: OK" || echo "[NG] Auth: NG"
 curl -f http://localhost:3000 > /dev/null 2>&1 && echo "[OK] Studio: OK" || echo "[NG] Studio: NG"
 
-echo " Supabase開発環境が利用可能です"
+echo " Supabase 開発環境が利用可能です"
 echo " Studio: http://localhost:3000"
 echo " API: http://localhost:54321"
 echo " Database: localhost:54322"
@@ -551,7 +551,7 @@ EOF
     # 停止スクリプト
     cat > scripts/stop.sh << 'EOF'
 #!/bin/bash
-echo " Supabase開発環境停止中..."
+echo " Supabase 開発環境停止中..."
 docker compose down
 echo "[OK] 停止完了"
 EOF
@@ -559,7 +559,7 @@ EOF
     # リセットスクリプト
     cat > scripts/reset.sh << 'EOF'
 #!/bin/bash
-echo " Supabase開発環境リセット中..."
+echo " Supabase 開発環境リセット中..."
 docker compose down -v
 docker compose up -d
 echo "[OK] リセット完了"
@@ -597,7 +597,7 @@ main() {
     create_dev_scripts
 
     echo ""
-    echo " Supabase開発環境セットアップ完了！"
+    echo " Supabase 開発環境セットアップ完了！"
     echo ""
     echo "次のステップ:"
     echo "1. cd $PROJECT_NAME"
@@ -647,25 +647,25 @@ check_prerequisites() {
 # イメージビルドとプッシュ
 build_and_push_images() {
     echo " Docker イメージビルド中..."
-    
+
     # FastAPI アプリケーション
     docker build -t "myapp/api:$VERSION" ./apps/fastapi-server/
     docker push "myapp/api:$VERSION"
-    
+
     # Flet クライアント（必要に応じて）
     if [[ -f "./apps/flet-client/Dockerfile" ]]; then
         docker build -t "myapp/client:$VERSION" ./apps/flet-client/
         docker push "myapp/client:$VERSION"
     fi
-    
+
     echo "[OK] イメージプッシュ完了"
 }
 
 # データベースマイグレーション
 run_migrations() {
     echo " データベースマイグレーション実行中..."
-    
-    # Kubernetesジョブでマイグレーション実行
+
+    # Kubernetes ジョブでマイグレーション実行
     kubectl apply -f - <<EOF
 apiVersion: batch/v1
 kind: Job
@@ -690,14 +690,14 @@ EOF
 
     # ジョブ完了待機
     kubectl wait --for=condition=complete job/migration-$VERSION -n $ENVIRONMENT --timeout=300s
-    
+
     echo "[OK] マイグレーション完了"
 }
 
 # アプリケーションデプロイ
 deploy_application() {
     echo " アプリケーションデプロイ中..."
-    
+
     # Helm チャートでデプロイ
     helm upgrade --install myapp ./helm/myapp \
         --namespace $ENVIRONMENT \
@@ -705,35 +705,35 @@ deploy_application() {
         --set environment=$ENVIRONMENT \
         --values ./helm/values-$ENVIRONMENT.yaml \
         --wait
-    
+
     echo "[OK] アプリケーションデプロイ完了"
 }
 
 # ヘルスチェック
 health_check() {
     echo " ヘルスチェック実行中..."
-    
+
     local api_url
     if [[ "$ENVIRONMENT" == "production" ]]; then
         api_url="https://api.myapp.com"
     else
         api_url="https://api-staging.myapp.com"
     fi
-    
+
     local max_attempts=30
     local attempt=1
-    
+
     while [[ $attempt -le $max_attempts ]]; do
         if curl -f "$api_url/health" > /dev/null 2>&1; then
             echo "[OK] ヘルスチェック成功"
             return 0
         fi
-        
+
         echo " ヘルスチェック失敗 ($attempt/$max_attempts)"
         sleep 10
         ((attempt++))
     done
-    
+
     echo "[NG] ヘルスチェック失敗"
     return 1
 }
@@ -741,33 +741,33 @@ health_check() {
 # ロールバック関数
 rollback() {
     echo " ロールバック実行中..."
-    
+
     local previous_version
     previous_version=$(helm history myapp -n $ENVIRONMENT --max 2 -o json | jq -r '.[1].app_version')
-    
+
     helm rollback myapp -n $ENVIRONMENT
-    
+
     echo "[OK] ロールバック完了 (version: $previous_version)"
 }
 
 # メイン実行
 main() {
     check_prerequisites
-    
+
     # バックアップ作成
     echo " デプロイ前バックアップ作成中..."
     ./scripts/backup_production.sh
-    
+
     build_and_push_images
     run_migrations
     deploy_application
-    
+
     if ! health_check; then
         echo "[NG] デプロイ失敗 - ロールバック実行"
         rollback
         exit 1
     fi
-    
+
     echo " デプロイ成功！"
     echo " URL: https://$(kubectl get ingress myapp-ingress -n $ENVIRONMENT -o jsonpath='{.spec.rules[0].host}')"
 }
@@ -779,7 +779,7 @@ main "$@"
 
 ## B. 設定ファイルテンプレート
 
-### B.1 Kubernetes設定
+### B.1 Kubernetes 設定
 
 ```yaml
 # k8s/namespace.yaml
@@ -892,25 +892,25 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    
+
     - name: Set up Python
       uses: actions/setup-python@v6
       with:
         python-version: '3.11'
-    
+
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
         pip install -r requirements-test.txt
-    
+
     - name: Run tests
       env:
         DATABASE_URL: postgresql://postgres:postgres@localhost:5432/test_db
         JWT_SECRET: test-secret
       run: |
         pytest tests/ -v --cov=app --cov-report=xml
-    
+
     - name: Upload coverage
       uses: codecov/codecov-action@v5
       with:
@@ -920,7 +920,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-    
+
     - name: Run Trivy vulnerability scanner
       uses: aquasecurity/trivy-action@0.33.1
       with:
@@ -928,7 +928,7 @@ jobs:
         scan-ref: '.'
         format: 'sarif'
         output: 'trivy-results.sarif'
-    
+
     - name: Upload Trivy scan results
       uses: github/codeql-action/upload-sarif@v4
       with:
@@ -941,17 +941,17 @@ jobs:
       image-digest: ${{ steps.build.outputs.digest }}
     steps:
     - uses: actions/checkout@v4
-    
+
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
-    
+
     - name: Log in to Container Registry
       uses: docker/login-action@v3
       with:
         registry: ${{ env.REGISTRY }}
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
-    
+
     - name: Extract metadata
       id: meta
       uses: docker/metadata-action@v5
@@ -962,7 +962,7 @@ jobs:
           type=ref,event=pr
           type=sha,prefix={{branch}}-
           type=raw,value=latest,enable={{is_default_branch}}
-    
+
     - name: Build and push
       id: build
       uses: docker/build-push-action@v5
@@ -982,7 +982,7 @@ jobs:
     environment: staging
     steps:
     - uses: actions/checkout@v4
-    
+
     - name: Deploy to staging
       run: |
         echo "Deploying to staging environment"
@@ -995,14 +995,14 @@ jobs:
     environment: production
     steps:
     - uses: actions/checkout@v4
-    
+
     - name: Deploy to production
       run: |
         echo "Deploying to production environment"
         # Kubernetes/Helm deployment commands
 ```
 
-### B.3 FastAPI設定テンプレート
+### B.3 FastAPI 設定テンプレート
 
 ```python
 # app/core/config.py
@@ -1011,45 +1011,45 @@ from typing import Optional, List
 import secrets
 
 class Settings(BaseSettings):
-    # API設定
+    # API 設定
     API_V1_STR: str = "/api/v1"
     SECRET_KEY: str = secrets.token_urlsafe(32)
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 8  # 8日
-    
+
     # CORS設定
     BACKEND_CORS_ORIGINS: List[str] = ["http://localhost:3000"]
-    
+
     # データベース設定
     POSTGRES_SERVER: str
     POSTGRES_USER: str
     POSTGRES_PASSWORD: str
     POSTGRES_DB: str
     POSTGRES_PORT: int = 5432
-    
-    # Supabase設定
+
+    # Supabase 設定
     SUPABASE_URL: str
     SUPABASE_PUBLISHABLE_KEY: str
     SUPABASE_SECRET_KEY: str
-    
+
     # Redis設定
     REDIS_URL: str = "redis://localhost:6379"
-    
+
     # 外部サービス
     STRIPE_SECRET_KEY: Optional[str] = None
     SENDGRID_API_KEY: Optional[str] = None
-    
+
     # 監視設定
     SENTRY_DSN: Optional[str] = None
     LOG_LEVEL: str = "INFO"
-    
+
     # 本番環境固有設定
     ENVIRONMENT: str = "development"
     DEBUG: bool = True
-    
+
     @property
     def DATABASE_URL(self) -> str:
         return f"postgresql://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}@{self.POSTGRES_SERVER}:{self.POSTGRES_PORT}/{self.POSTGRES_DB}"
-    
+
     @property
     def ASYNC_DATABASE_URL(self) -> str:
         return f"postgresql+asyncpg://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}@{self.POSTGRES_SERVER}:{self.POSTGRES_PORT}/{self.POSTGRES_DB}"
@@ -1074,14 +1074,14 @@ settings = Settings()
 - [ ] secret key / `service_role` がブラウザ、モバイル、公開リポジトリ、URL、未マスクログへ露出していないか
 - [ ] デフォルトパスワードが変更されているか
 - [ ] 不要なポートが開放されていないか
-- [ ] ローカルSupabaseスタックが公開ネットワークへ露出していないか
-- [ ] 公開スキーマのRLSポリシーが適切に設定されているか
+- [ ] ローカル Supabase スタックが公開ネットワークへ露出していないか
+- [ ] 公開スキーマの RLS ポリシーが適切に設定されているか
 - [ ] Storage の `storage.objects` ポリシーが操作別に設定されているか
 - [ ] Realtime private channel の `realtime.messages` ポリシーが設定されているか
 - [ ] Edge Functions の `--no-verify-jwt` 使用箇所に署名検証または独自認可が実装されているか
-- [ ] JWTトークンの有効期限が適切か
+- [ ] JWT トークンの有効期限が適切か
 - [ ] 入力値のバリデーションが実装されているか
-- [ ] SQLインジェクション対策が実装されているか
+- [ ] SQL インジェクション対策が実装されているか
 - [ ] XSS対策が実装されているか
 - [ ] CSRF対策が実装されているか
 
@@ -1089,7 +1089,7 @@ settings = Settings()
 
 - [ ] HTTPS通信が強制されているか
 - [ ] セキュリティヘッダーが設定されているか
-- [ ] IPホワイトリストが設定されているか
+- [ ] IP ホワイトリストが設定されているか
 - [ ] ファイアウォール設定が適切か
 - [ ] データベースの暗号化が有効か
 - [ ] バックアップの暗号化が有効か
@@ -1112,7 +1112,7 @@ settings = Settings()
 
 #### アプリケーション
 
-- [ ] APIレスポンス時間が要件を満たしているか
+- [ ] API レスポンス時間が要件を満たしているか
 - [ ] キャッシュ戦略が実装されているか
 - [ ] 不要なN+1クエリが除去されているか
 - [ ] 非同期処理が適切に実装されているか
@@ -1179,8 +1179,8 @@ const { data, error } = await supabase
 const { data, error } = await supabase
   .from('tasks')
   .select(`
-    id, 
-    title, 
+    id,
+    title,
     assignee:assignee_id(id, name),
     project:project_id(id, name)
   `)
@@ -1268,20 +1268,20 @@ channel
 
 ### D.2 PostgreSQL / RLS パターン集
 
-#### 高度なRLSポリシー
+#### 高度な RLS ポリシー
 
 ```sql
 -- 動的条件ポリシー
 CREATE POLICY "Dynamic project access" ON tasks
     FOR ALL USING (
-        CASE 
+        CASE
             WHEN current_setting('app.user_role', true) = 'admin' THEN true
-            WHEN current_setting('app.user_role', true) = 'manager' THEN 
+            WHEN current_setting('app.user_role', true) = 'manager' THEN
                 project_id IN (
-                    SELECT id FROM projects 
+                    SELECT id FROM projects
                     WHERE manager_id = auth.uid()
                 )
-            ELSE 
+            ELSE
                 assignee_id = auth.uid()
         END
     );
@@ -1331,7 +1331,7 @@ CREATE POLICY "Hierarchical access" ON employees
 - `429 Too Many Requests` - レート制限
 - `500 Internal Server Error` - サーバーエラー
 
-#### PostgreSQLエラーコード
+#### PostgreSQL エラーコード
 
 - `23505` - 一意制約違反
 - `23503` - 外部キー制約違反
@@ -1340,15 +1340,15 @@ CREATE POLICY "Hierarchical access" ON employees
 - `42P01` - テーブル未存在
 - `42703` - カラム未存在
 
-#### Supabase固有エラー
+#### Supabase 固有エラー
 
 - `PGRST301` - 単一行期待だが複数行
 - `PGRST204` - 該当データなし
-- `PGRST000` - PostgreSQLエラー
+- `PGRST000` - PostgreSQL エラー
 
 ### D.4 設定値リファレンス
 
-#### PostgreSQL重要設定
+#### PostgreSQL 重要設定
 
 ```sql
 -- 接続設定
@@ -1360,7 +1360,7 @@ shared_buffers = 256MB
 effective_cache_size = 1GB
 work_mem = 4MB
 
--- WAL設定
+-- WAL 設定
 wal_level = replica
 max_wal_senders = 10
 max_replication_slots = 10
@@ -1375,7 +1375,7 @@ log_min_duration_statement = 1000
 log_line_prefix = '%t [%p]: [%l-1] user=%u,db=%d,app=%a,client=%h '
 ```
 
-#### PostgREST設定
+#### PostgREST 設定
 
 ```toml
 db-uri = "postgresql://user:pass@host:port/db"
@@ -1410,22 +1410,22 @@ DENO_DEBUG=true
 LOG_LEVEL=DEBUG
 ```
 
-### D.5 有用なSQLクエリ集
+### D.5 有用な SQL クエリ集
 
 ```sql
 -- データベース使用量分析
-SELECT 
+SELECT
     schemaname,
     tablename,
     pg_size_pretty(pg_total_relation_size(schemaname||'.'||tablename)) as total_size,
     pg_size_pretty(pg_relation_size(schemaname||'.'||tablename)) as table_size,
     pg_size_pretty(pg_total_relation_size(schemaname||'.'||tablename) - pg_relation_size(schemaname||'.'||tablename)) as index_size
-FROM pg_tables 
+FROM pg_tables
 WHERE schemaname = 'public'
 ORDER BY pg_total_relation_size(schemaname||'.'||tablename) DESC;
 
 -- インデックス効果分析
-SELECT 
+SELECT
     schemaname,
     tablename,
     indexname,
@@ -1433,11 +1433,11 @@ SELECT
     idx_tup_read,
     idx_tup_fetch,
     pg_size_pretty(pg_relation_size(indexrelid)) as index_size
-FROM pg_stat_user_indexes 
+FROM pg_stat_user_indexes
 ORDER BY idx_scan DESC;
 
 -- アクティブな接続確認
-SELECT 
+SELECT
     pid,
     usename,
     application_name,
@@ -1445,12 +1445,12 @@ SELECT
     state,
     query_start,
     query
-FROM pg_stat_activity 
+FROM pg_stat_activity
 WHERE state != 'idle'
 ORDER BY query_start;
 
 -- RLS ポリシー一覧
-SELECT 
+SELECT
     schemaname,
     tablename,
     policyname,
@@ -1458,21 +1458,21 @@ SELECT
     roles,
     cmd,
     qual
-FROM pg_policies 
+FROM pg_policies
 WHERE schemaname = 'public'
 ORDER BY tablename, policyname;
 
 -- スロークエリ分析
-SELECT 
+SELECT
     query,
     calls,
     total_time,
     mean_time,
     max_time,
     stddev_time
-FROM pg_stat_statements 
+FROM pg_stat_statements
 WHERE calls > 100
-ORDER BY mean_time DESC 
+ORDER BY mean_time DESC
 LIMIT 20;
 ```
 
@@ -1480,28 +1480,28 @@ LIMIT 20;
 
 ## 終章
 
-本教科書では、Supabaseを活用した3つの主要アーキテクチャパターンの実践的実装を通じて、モダンアプリケーション開発の包括的な知識を習得しました。
+本教科書では、Supabase を活用した3つの主要アーキテクチャパターンの実践的実装を通じて、モダンアプリケーション開発の包括的な知識を習得しました。
 
 **習得した主要スキル**:
 
 - アーキテクチャパターンの適切な選択判断
 - セキュリティを考慮した認証・認可システムの設計
-- スケーラブルなデータベース設計とRLS実装
+- スケーラブルなデータベース設計と RLS 実装
 - パフォーマンス最適化の体系的アプローチ
 - 運用自動化とトラブルシューティング手法
 
 **実践への応用**:
-本書で学んだパターンと手法は、Supabaseを使用するプロジェクトだけでなく、モダンなフルスタック開発全般に応用可能です。とくに、セキュリティファーストの設計思想と段階的な拡張戦略は、あらゆる規模のプロジェクトで価値を発揮します。
+本書で学んだパターンと手法は、Supabase を使用するプロジェクトだけでなく、モダンなフルスタック開発全般に応用可能です。とくに、セキュリティファーストの設計思想と段階的な拡張戦略は、あらゆる規模のプロジェクトで価値を発揮します。
 
 **継続的な学習**:
-技術の進歩に合わせて、定期的に最新のベストプラクティスとSupabaseの新機能をキャッチアップし、本書の内容をアップデートしていくことを推奨します。
+技術の進歩に合わせて、定期的に最新のベストプラクティスと Supabase の新機能をキャッチアップし、本書の内容をアップデートしていくことを推奨します。
 
 **コミュニティへの貢献**:
 学んだ知識を活用して、オープンソースプロジェクトへの貢献や技術記事の執筆など、コミュニティへの還元も検討してください。
 
 ---
 
-最新の情報とサンプルコードは、GitHubリポジトリで公開・更新しています。
+最新の情報とサンプルコードは、GitHub リポジトリで公開・更新しています。
 
 ## Happy Coding with Supabase!
 
@@ -1527,7 +1527,7 @@ LIMIT 20;
 この付録は学習・実装の経験を積むことで、さらに価値が高まります：
 - 実際の開発で遭遇した課題・解決策の追記
 - チーム固有のベストプラクティスの蓄積
-- 新しいSupabase機能・コミュニティ情報の反映
+- 新しい Supabase 機能・コミュニティ情報の反映
 
 ---
 

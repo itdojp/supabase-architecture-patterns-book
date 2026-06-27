@@ -67,7 +67,7 @@
     "chapters": [
       {
         "id": "chapter01",
-        "title": "第1章：Supabaseアーキテクチャ理解",
+        "title": "第1章：Supabase アーキテクチャ理解",
         "description": "Supabase 全体像と基本構成を理解する",
         "path": "/chapters/chapter01/"
       },
@@ -85,13 +85,13 @@
       },
       {
         "id": "chapter04",
-        "title": "第4章：パターン2 - Edge Functions活用",
+        "title": "第4章：パターン2 - Edge Functions 活用",
         "description": "Edge Functions を用いたサーバーレス構成を学ぶ",
         "path": "/chapters/chapter04/"
       },
       {
         "id": "chapter05-1",
-        "title": "第5-1章：パターン3 - 独立APIサーバー",
+        "title": "第5-1章：パターン3 - 独立 API サーバー",
         "description": "独立 API サーバー導入時の責務分割を学ぶ",
         "path": "/chapters/chapter05-1/"
       },

@@ -6,17 +6,17 @@ title: "第5-3章：拡張性設計とパフォーマンス最適化"
 # 第5-3章：拡張性設計とパフォーマンス最適化
 
 ---
-**目次に戻る**: [はじめに]({{ '/introduction/' | relative_url }})  
-**前の章**: [第5-2章：マルチテナンシーと複雑ビジネスロジック]({{ '/chapters/chapter05-2/' | relative_url }})  
-**次の章**: [第5-4章：RAG/ベクトル検索アーキテクチャ]({{ '/chapters/chapter05-4/' | relative_url }})  
-**アーキテクチャ**: 独立APIサーバー（FastAPI + スケーリング・最適化）  
-**学習レベル**:  基礎 |  応用 |  発展  
-**推定学習時間**: 5〜7時間  
-**難易度**: 上級（5-1,5-2完了・インフラ・運用知識必要）
+- **目次に戻る**: [はじめに]({{ '/introduction/' | relative_url }})
+- **前の章**: [第5-2章：マルチテナンシーと複雑ビジネスロジック]({{ '/chapters/chapter05-2/' | relative_url }})
+- **次の章**: [第5-4章：RAG/ベクトル検索アーキテクチャ]({{ '/chapters/chapter05-4/' | relative_url }})
+- **アーキテクチャ**: 独立 API サーバー（FastAPI + スケーリング・最適化）
+- **学習レベル**:  基礎 |  応用 |  発展
+- **推定学習時間**: 5〜7時間
+- **難易度**: 上級（5-1,5-2完了・インフラ・運用知識必要）
 ---
 
 ## この章で扱う構成
-- 構成: 独立APIサーバー + 運用/拡張
+- 構成: 独立 API サーバー + 運用/拡張
 - 推奨用途: 成長期の性能・拡張要件への対応
 - 非推奨用途: 初期段階で運用要件が小さいケース
 
@@ -25,7 +25,7 @@ title: "第5-3章：拡張性設計とパフォーマンス最適化"
 この章では、第5-1章, 5-2で構築したSaaSプラットフォームを、**「全国チェーン展開」**レベルまで成長させる技術を学びます。
 
 - **初心者**: システムが重くならない仕組み（キャッシュ・最適化）がわかる
-- **中級者**: 大量アクセスに耐えるスケーリング戦略がわかる  
+- **中級者**: 大量アクセスに耐えるスケーリング戦略がわかる
 - **上級者**: エンタープライズ級の監視・運用システムが構築できる
 
 ## まずは身近な例から：「全国チェーン展開する人気ラーメン店」
@@ -72,14 +72,14 @@ flowchart TD
     B --> C[ サーバー1<br/>東日本担当]
     B --> D[ サーバー2<br/>西日本担当]
     B --> E[ サーバー3<br/>予備サーバー]
-    
+
     C --> F[ Redis キャッシュ<br/>よく注文される商品を高速表示]
     D --> F
     E --> F
-    
+
     F --> G[ メインデータベース<br/>全ての注文・顧客データ]
     F --> H[ 分析データベース<br/>売上・統計データ]
-    
+
     I[ 監視システム] --> C
     I --> D
     I --> E
@@ -111,7 +111,7 @@ from functools import wraps
 
 class CacheManager:
     """高速キャッシュ管理システム（コンビニの冷蔵庫みたいな仕組み）"""
-    
+
     def __init__(self):
         # Redis接続（超高速なデータ保存場所）
         self.redis_client = redis.from_url(
@@ -121,25 +121,25 @@ class CacheManager:
             health_check_interval=30  # 30秒ごとに健康チェック
         )
         self.default_ttl = 3600  # 1時間でデータ自動削除
-    
+
     def get(self, key: str, default: Any = None) -> Any:
         """データを高速取得（冷蔵庫からドリンクを取り出す感じ）"""
         try:
             cached_data = self.redis_client.get(self._make_key(key))
             if cached_data is None:
                 return default  # キャッシュにない場合はデフォルト値
-            
+
             # データを元の形に復元
             try:
-                return json.loads(cached_data)  # JSON形式で保存されている場合
+                return json.loads(cached_data)  # JSON 形式で保存されている場合
             except json.JSONDecodeError:
                 import pickle
                 return pickle.loads(cached_data)  # バイナリ形式の場合
-                
+
         except Exception as e:
             print(f"キャッシュ取得エラー: {e}")
             return default
-    
+
     def set(self, key: str, value: Any, ttl: Optional[int] = None) -> bool:
         """データを高速保存（冷蔵庫にドリンクを入れる感じ）"""
         try:
@@ -148,37 +148,37 @@ class CacheManager:
                 ttl = self.default_ttl  # デフォルト1時間
             elif isinstance(ttl, timedelta):
                 ttl = int(ttl.total_seconds())
-            
+
             # データを保存用に変換
             try:
                 serialized_value = json.dumps(value, default=str)
             except (TypeError, ValueError):
                 import pickle
                 serialized_value = pickle.dumps(value)
-            
+
             # Redis に保存（期限付き）
             return self.redis_client.setex(
                 self._make_key(key),
                 ttl,
                 serialized_value
             )
-            
+
         except Exception as e:
             print(f"キャッシュ保存エラー: {e}")
             return False
-    
+
     def get_or_set(self, key: str, callable_obj, ttl: Optional[int] = None) -> Any:
         """キャッシュがあれば使う、なければ計算して保存"""
         # まずキャッシュを確認
         cached_value = self.get(key)
         if cached_value is not None:
             return cached_value  # キャッシュヒット！高速で返す
-        
+
         # キャッシュになければ、時間のかかる処理を実行
         fresh_value = callable_obj()
         self.set(key, fresh_value, ttl)  # 次回のために保存
         return fresh_value
-    
+
     def _make_key(self, key: str) -> str:
         """キー名を統一（アプリ名を付けて他と区別）"""
         return f"{settings.PROJECT_NAME}:{key}"
@@ -196,7 +196,7 @@ def cached(ttl: Optional[int] = None):
             import hashlib
             args_str = str(args) + str(sorted(kwargs.items()))
             cache_key = f"{func.__name__}:{hashlib.md5(args_str.encode()).hexdigest()}"
-            
+
             # キャッシュがあれば使う、なければ実行して保存
             return cache.get_or_set(cache_key, lambda: func(*args, **kwargs), ttl)
         return wrapper
@@ -207,11 +207,11 @@ def cached(ttl: Optional[int] = None):
 def get_user_dashboard_data(user_id: int):
     """ユーザーダッシュボードの重いデータ取得（最初だけ時間かかる）"""
     print(f"重い計算実行中... ユーザー {user_id}")
-    
+
     # 重い処理（データベース検索、集計など）
     # 2回目以降は瞬時に返ってくる！
     time.sleep(2)  # 2秒の重い処理をシミュレート
-    
+
     return {
         "user_id": user_id,
         "total_projects": 15,
@@ -223,7 +223,7 @@ def get_user_dashboard_data(user_id: int):
 **初心者向け解説**：
 
 | 概念 | 何をしているか | 身近な例 |
-|:-----|:-------------|:---------| 
+|:-----|:-------------|:---------|
 | `Redis` | 超高速でデータを保存・取得できる場所 | コンビニの冷蔵庫（よく売れる商品を手前に） |
 | `TTL（生存時間）` | データを自動で削除する期限 | 食材の賞味期限 |
 | `get_or_set()` | あれば使う、なければ作って保存 | 「冷蔵庫にあれば取る、なければ作って入れる」 |
@@ -246,14 +246,14 @@ import logging
 
 class DatabaseOptimizer:
     """データベース最適化システム（図書館の司書さんみたいな仕組み）"""
-    
+
     def __init__(self, engine):
         self.engine = engine
         self._setup_query_monitoring()  # クエリ監視を開始
-    
+
     def _setup_query_monitoring(self):
         """遅いクエリを自動で見つける仕組み"""
-        
+
         @event.listens_for(Engine, "before_cursor_execute")
         def receive_before_cursor_execute(conn, cursor, statement, parameters, context, executemany):
             # クエリ開始時刻を記録
@@ -263,7 +263,7 @@ class DatabaseOptimizer:
         def receive_after_cursor_execute(conn, cursor, statement, parameters, context, executemany):
             # クエリ実行時間を計算
             total = time.time() - context._query_start_time
-            
+
             # 1秒以上かかったクエリを警告（お客さんを待たせるレベル）
             if total > 1.0:
                 logging.warning(
@@ -271,43 +271,43 @@ class DatabaseOptimizer:
                     f"SQL: {statement}\n"
                     f"パラメータ: {parameters}"
                 )
-    
+
     def create_connection_pool(self):
         """コネクションプール設定（窓口カウンターの効率化）"""
-        
+
         # データベース接続を使い回す仕組み（窓口の人数を調整）
         from sqlalchemy import create_engine
         from sqlalchemy.pool import QueuePool
-        
+
         engine = create_engine(
             "postgresql://user:pass@localhost/db",
-            
+
             # プール設定（銀行窓口の人数管理みたいな感じ）
             poolclass=QueuePool,
             pool_size=10,           # 常時待機する窓口数
             max_overflow=20,        # 混雑時に増やせる窓口数
             pool_timeout=30,        # 窓口待ちの最大時間（秒）
             pool_recycle=3600,      # 1時間で窓口担当者を交代
-            
+
             # 接続オプション
-            echo=False,             # SQLログ出力（開発時はTrue）
-            future=True             # 新しいAPIを使用
+            echo=False,             # SQL ログ出力（開発時はTrue）
+            future=True             # 新しい API を使用
         )
-        
+
         return engine
-    
+
     def setup_database_partitioning(self):
         """テーブル分割設定（大きな本棚を分割管理）"""
-        
+
         # 日付ベースでテーブル分割（月ごとの帳簿みたいに分ける）
         partition_sql = """
         -- タスクテーブルを月別に分割
         CREATE TABLE tasks_y2024m01 PARTITION OF tasks
             FOR VALUES FROM ('2024-01-01') TO ('2024-02-01');
-        
-        CREATE TABLE tasks_y2024m02 PARTITION OF tasks  
+
+        CREATE TABLE tasks_y2024m02 PARTITION OF tasks
             FOR VALUES FROM ('2024-02-01') TO ('2024-03-01');
-        
+
         -- 古いパーティションの自動削除（古い帳簿の廃棄）
         CREATE OR REPLACE FUNCTION cleanup_old_partitions()
         RETURNS void AS $$
@@ -316,9 +316,9 @@ class DatabaseOptimizer:
         BEGIN
             -- 1年以上古いパーティションを削除
             FOR partition_name IN
-                SELECT schemaname||'.'||tablename 
-                FROM pg_tables 
-                WHERE tablename LIKE 'tasks_y%' 
+                SELECT schemaname||'.'||tablename
+                FROM pg_tables
+                WHERE tablename LIKE 'tasks_y%'
                 AND tablename < 'tasks_y' || to_char(CURRENT_DATE - INTERVAL '1 year', 'YYYY"m"MM')
             LOOP
                 EXECUTE 'DROP TABLE IF EXISTS ' || partition_name;
@@ -327,7 +327,7 @@ class DatabaseOptimizer:
         END;
         $$ LANGUAGE plpgsql;
         """
-        
+
         with self.engine.connect() as conn:
             conn.execute(text(partition_sql))
             conn.commit()
@@ -336,7 +336,7 @@ class DatabaseOptimizer:
 **初心者向け解説**：
 
 | 概念 | 何をしているか | 身近な例 |
-|:-----|:-------------|:---------| 
+|:-----|:-------------|:---------|
 | `@event.listens_for` | データベース操作を自動で監視 | 図書館で「本を借りる時間」を自動計測 |
 | `コネクションプール` | データベース接続を使い回し | 銀行窓口の人数を効率的に管理 |
 | `pool_size=10` | 常時待機する接続数 | 平常時の窓口担当者10人 |
@@ -375,34 +375,34 @@ class ServerNode:
 class LoadBalancingStrategy(Enum):
     """負荷分散方式"""
     ROUND_ROBIN = "round_robin"           # 順番に案内
-    WEIGHTED_ROUND_ROBIN = "weighted"     # 能力に応じて案内  
+    WEIGHTED_ROUND_ROBIN = "weighted"     # 能力に応じて案内
     LEAST_CONNECTIONS = "least_conn"      # 空いてる店舗優先
     RANDOM = "random"                     # ランダム案内
 
 class LoadBalancer:
     """ロードバランサー（チェーン店の案内係）"""
-    
+
     def __init__(self, strategy: LoadBalancingStrategy = LoadBalancingStrategy.ROUND_ROBIN):
         self.servers: List[ServerNode] = []
         self.strategy = strategy
         self.current_index = 0  # Round Robin用のカウンター
         self.health_check_interval = 30  # 30秒ごとに健康診断
-        
+
     def add_server(self, server: ServerNode):
         """サーバーを追加（新店舗オープン）"""
         self.servers.append(server)
         print(f" 新店舗追加: {server.host}:{server.port} (重み: {server.weight})")
-    
+
     def get_next_server(self) -> Optional[ServerNode]:
         """次のサーバーを選択（お客さんをどの店舗に案内するか）"""
-        
+
         # 健康なサーバーだけフィルタリング
         healthy_servers = [s for s in self.servers if s.is_healthy]
-        
+
         if not healthy_servers:
             print("[WARN] 利用可能な店舗がありません！")
             return None
-        
+
         if self.strategy == LoadBalancingStrategy.ROUND_ROBIN:
             return self._round_robin_select(healthy_servers)
         elif self.strategy == LoadBalancingStrategy.WEIGHTED_ROUND_ROBIN:
@@ -411,115 +411,115 @@ class LoadBalancer:
             return self._least_connections_select(healthy_servers)
         else:  # RANDOM
             return random.choice(healthy_servers)
-    
+
     def _round_robin_select(self, servers: List[ServerNode]) -> ServerNode:
         """順番選択（順番に案内）"""
         if not servers:
             return None
-            
+
         # 現在のインデックスを更新
         server = servers[self.current_index % len(servers)]
         self.current_index += 1
-        
+
         print(f" Round Robin: {server.host}:{server.port} を選択")
         return server
-    
+
     def _weighted_round_robin_select(self, servers: List[ServerNode]) -> ServerNode:
         """重み付き選択（大きな店舗により多くのお客さんを案内）"""
-        
+
         # 重みの合計を計算
         total_weight = sum(server.weight for server in servers)
-        
+
         # ランダムな数値を重みで選択
         random_value = random.randint(1, total_weight)
         current_weight = 0
-        
+
         for server in servers:
             current_weight += server.weight
             if random_value <= current_weight:
                 print(f" 重み付き選択: {server.host}:{server.port} (重み: {server.weight})")
                 return server
-        
+
         # フォールバック
         return servers[0]
-    
+
     def _least_connections_select(self, servers: List[ServerNode]) -> ServerNode:
         """最小接続選択（一番空いてる店舗に案内）"""
-        
+
         # 接続数が最小のサーバーを選択
         least_busy_server = min(servers, key=lambda s: s.current_connections)
-        
+
         print(f" 最小接続: {least_busy_server.host}:{least_busy_server.port} "
               f"(接続数: {least_busy_server.current_connections})")
-        
+
         return least_busy_server
-    
+
     async def health_check_loop(self):
         """定期健康診断（各店舗の状況チェック）"""
-        
+
         while True:
             print(" サーバー健康診断を開始...")
-            
+
             # 各サーバーの健康状態をチェック
             for server in self.servers:
                 is_healthy = await self._check_server_health(server)
-                
+
                 if server.is_healthy != is_healthy:
                     # 状態が変わった場合の通知
                     status = "回復" if is_healthy else "ダウン"
                     print(f" {server.host}:{server.port} が{status}しました")
-                
+
                 server.is_healthy = is_healthy
                 server.last_health_check = time.time()
-            
+
             # 健康な店舗数をレポート
             healthy_count = sum(1 for s in self.servers if s.is_healthy)
             print(f" 健康な店舗: {healthy_count}/{len(self.servers)}")
-            
+
             # 次の健康診断まで待機
             await asyncio.sleep(self.health_check_interval)
-    
+
     async def _check_server_health(self, server: ServerNode) -> bool:
         """個別サーバー健康診断（店舗の営業確認）"""
-        
+
         try:
             start_time = time.time()
-            
-            # HTTPでサーバーの生存確認
+
+            # HTTP でサーバーの生存確認
             async with aiohttp.ClientSession() as session:
                 async with session.get(
                     f"http://{server.host}:{server.port}/health",
                     timeout=aiohttp.ClientTimeout(total=5)
                 ) as response:
-                    
+
                     # 応答時間を記録
                     server.response_time = time.time() - start_time
-                    
-                    # HTTPステータスが200番台なら健康
+
+                    # HTTP ステータスが200番台なら健康
                     is_healthy = 200 <= response.status < 300
-                    
+
                     if is_healthy:
                         print(f"[OK] {server.host}:{server.port} は健康です (応答時間: {server.response_time:.2f}秒)")
                     else:
                         print(f"[NG] {server.host}:{server.port} エラー応答: {response.status}")
-                    
+
                     return is_healthy
-                    
+
         except asyncio.TimeoutError:
             print(f" {server.host}:{server.port} タイムアウト")
             return False
         except Exception as e:
             print(f" {server.host}:{server.port} 接続エラー: {e}")
             return False
-    
+
     def get_load_balancer_stats(self) -> Dict[str, Any]:
         """ロードバランサーの統計情報"""
-        
+
         total_servers = len(self.servers)
         healthy_servers = sum(1 for s in self.servers if s.is_healthy)
         total_connections = sum(s.current_connections for s in self.servers)
         avg_response_time = sum(s.response_time for s in self.servers) / total_servers if total_servers > 0 else 0
-        
+
         return {
             "strategy": self.strategy.value,
             "total_servers": total_servers,
@@ -542,25 +542,25 @@ class LoadBalancer:
 # 実際の使用例
 async def setup_load_balancer():
     """ロードバランサーセットアップ例"""
-    
+
     # ロードバランサーを作成
     lb = LoadBalancer(LoadBalancingStrategy.LEAST_CONNECTIONS)
-    
+
     # サーバーを追加（チェーン店舗追加）
     lb.add_server(ServerNode("app1", "192.168.1.10", 8000, weight=1))
     lb.add_server(ServerNode("app2", "192.168.1.11", 8000, weight=2))  # 高性能サーバー
     lb.add_server(ServerNode("app3", "192.168.1.12", 8000, weight=1))
-    
+
     # 健康診断を開始
     health_task = asyncio.create_task(lb.health_check_loop())
-    
+
     return lb, health_task
 ```
 
 **初心者向け解説**：
 
 | 概念 | 何をしているか | 身近な例 |
-|:-----|:-------------|:---------| 
+|:-----|:-------------|:---------|
 | `ロードバランサー` | お客さんを効率よく店舗に案内 | ファストフード店の案内係 |
 | `Round Robin` | 順番に案内する方式 | 「1番窓口、次は2番窓口」の順番案内 |
 | `重み付き選択` | 大きな店舗により多く案内 | 「大型店には多く、小型店には少なく」 |
@@ -590,7 +590,7 @@ import json
 class SystemMetrics:
     """システム指標（店舗の状況報告書）"""
     timestamp: datetime
-    cpu_percent: float          # CPU使用率（コックさんの忙しさ）
+    cpu_percent: float          # CPU 使用率（コックさんの忙しさ）
     memory_percent: float       # メモリ使用率（冷蔵庫の満杯度）
     disk_percent: float         # ディスク使用率（倉庫の満杯度）
     network_io: Dict[str, int]  # ネットワークIO（お客さんの出入り）
@@ -599,51 +599,51 @@ class SystemMetrics:
 
 class MetricsCollector:
     """メトリクス収集システム（本部の情報収集部門）"""
-    
+
     def __init__(self):
         self.metrics_history: List[SystemMetrics] = []
         self.collection_interval = 10  # 10秒ごとに収集
         self.retention_hours = 24      # 24時間分保持
-        
+
     async def start_collection(self):
         """メトリクス収集開始（定期的な店舗巡回）"""
         print(" システム監視を開始します...")
-        
+
         while True:
             try:
                 # 現在のシステム状況を収集
                 metrics = self._collect_current_metrics()
-                
+
                 # 履歴に追加
                 self.metrics_history.append(metrics)
-                
+
                 # 古いデータを削除（24時間以上前）
                 self._cleanup_old_metrics()
-                
+
                 # 異常検知
                 await self._detect_anomalies(metrics)
-                
+
                 # 次の収集まで待機
                 await asyncio.sleep(self.collection_interval)
-                
+
             except Exception as e:
                 print(f"[NG] メトリクス収集エラー: {e}")
                 await asyncio.sleep(5)  # エラー時は少し待つ
-    
+
     def _collect_current_metrics(self) -> SystemMetrics:
         """現在のシステム指標を収集（店舗の現状調査）"""
-        
-        # CPU使用率（コックさんがどれだけ忙しいか）
+
+        # CPU 使用率（コックさんがどれだけ忙しいか）
         cpu_percent = psutil.cpu_percent(interval=1)
-        
+
         # メモリ使用率（冷蔵庫の満杯度）
         memory = psutil.virtual_memory()
         memory_percent = memory.percent
-        
+
         # ディスク使用率（倉庫の満杯度）
         disk = psutil.disk_usage('/')
         disk_percent = (disk.used / disk.total) * 100
-        
+
         # ネットワークIO（お客さんの出入り状況）
         network = psutil.net_io_counters()
         network_io = {
@@ -652,13 +652,13 @@ class MetricsCollector:
             "packets_sent": network.packets_sent,
             "packets_recv": network.packets_recv
         }
-        
+
         # アクティブ接続数（店内のお客さん数）
         active_connections = len(psutil.net_connections(kind='inet'))
-        
+
         # 応答時間は別途測定（簡略化）
         response_time = self._measure_response_time()
-        
+
         metrics = SystemMetrics(
             timestamp=datetime.utcnow(),
             cpu_percent=cpu_percent,
@@ -668,89 +668,89 @@ class MetricsCollector:
             active_connections=active_connections,
             response_time=response_time
         )
-        
+
         # 収集した情報をログ出力
         print(f" {metrics.timestamp.strftime('%H:%M:%S')}: "
               f"CPU:{cpu_percent:.1f}% "
               f"MEM:{memory_percent:.1f}% "
               f"接続:{active_connections}件")
-        
+
         return metrics
-    
+
     def _measure_response_time(self) -> float:
         """応答時間測定（注文から提供までの時間）"""
         # 実際の実装では、アプリケーションレベルで測定
         # ここでは簡略化
         return 0.1  # 100ms
-    
+
     async def _detect_anomalies(self, metrics: SystemMetrics):
         """異常検知（問題の早期発見）"""
-        
+
         warnings = []
-        
-        # CPU使用率が80%超過（コックさんが疲れ気味）
+
+        # CPU 使用率が80%超過（コックさんが疲れ気味）
         if metrics.cpu_percent > 80:
-            warnings.append(f"[WARN] CPU使用率が高いです: {metrics.cpu_percent:.1f}%")
-        
+            warnings.append(f"[WARN] CPU 使用率が高いです: {metrics.cpu_percent:.1f}%")
+
         # メモリ使用率が85%超過（冷蔵庫がほぼ満杯）
         if metrics.memory_percent > 85:
             warnings.append(f"[WARN] メモリ使用率が高いです: {metrics.memory_percent:.1f}%")
-        
+
         # ディスク使用率が90%超過（倉庫がほぼ満杯）
         if metrics.disk_percent > 90:
             warnings.append(f"[WARN] ディスク使用率が高いです: {metrics.disk_percent:.1f}%")
-        
+
         # 応答時間が1秒超過（お客さんを待たせすぎ）
         if metrics.response_time > 1.0:
             warnings.append(f"[WARN] 応答時間が遅いです: {metrics.response_time:.2f}秒")
-        
+
         # 警告がある場合はアラート送信
         if warnings:
             await self._send_alert(warnings)
-    
+
     async def _send_alert(self, warnings: List[str]):
         """アラート送信（緊急事態の通知）"""
-        
+
         alert_message = "[CRITICAL] システム警告:\n" + "\n".join(warnings)
         print(alert_message)
-        
+
         # 実際の実装では以下のような通知を送信:
         # - Slack通知
         # - メール通知
         # - PagerDuty等のインシデント管理システム
         # - SMS通知（重要な障害の場合）
-        
+
         # 例: Slack通知（実装例）
         # await self._send_slack_notification(alert_message)
-    
+
     def _cleanup_old_metrics(self):
         """古いメトリクスデータの削除（古い資料の廃棄）"""
-        
+
         cutoff_time = datetime.utcnow() - timedelta(hours=self.retention_hours)
-        
+
         # 24時間より古いデータを削除
         self.metrics_history = [
-            m for m in self.metrics_history 
+            m for m in self.metrics_history
             if m.timestamp > cutoff_time
         ]
-    
+
     def get_metrics_summary(self, hours: int = 1) -> Dict[str, Any]:
         """指定時間のメトリクス集計（期間レポート）"""
-        
+
         since_time = datetime.utcnow() - timedelta(hours=hours)
         recent_metrics = [
-            m for m in self.metrics_history 
+            m for m in self.metrics_history
             if m.timestamp > since_time
         ]
-        
+
         if not recent_metrics:
             return {"error": "No metrics available"}
-        
+
         # 平均値、最大値、最小値を計算
         cpu_values = [m.cpu_percent for m in recent_metrics]
         memory_values = [m.memory_percent for m in recent_metrics]
         response_times = [m.response_time for m in recent_metrics]
-        
+
         return {
             "period_hours": hours,
             "data_points": len(recent_metrics),
@@ -774,7 +774,7 @@ class MetricsCollector:
 
 class AlertManager:
     """アラート管理システム（緊急事態管理部門）"""
-    
+
     def __init__(self):
         self.alert_rules = {
             "cpu_critical": {"threshold": 90, "severity": "critical"},
@@ -783,40 +783,40 @@ class AlertManager:
             "response_time_warning": {"threshold": 2.0, "severity": "warning"}
         }
         self.alert_history = []
-    
+
     async def process_metrics(self, metrics: SystemMetrics):
         """メトリクスからアラートをチェック"""
-        
+
         alerts = []
-        
-        # CPU使用率チェック
+
+        # CPU 使用率チェック
         if metrics.cpu_percent >= self.alert_rules["cpu_critical"]["threshold"]:
             alerts.append({
                 "rule": "cpu_critical",
-                "message": f"CPU使用率が危険レベル: {metrics.cpu_percent:.1f}%",
+                "message": f"CPU 使用率が危険レベル: {metrics.cpu_percent:.1f}%",
                 "severity": "critical",
                 "timestamp": metrics.timestamp
             })
-        
+
         # メモリ使用率チェック
         if metrics.memory_percent >= self.alert_rules["memory_critical"]["threshold"]:
             alerts.append({
-                "rule": "memory_critical", 
+                "rule": "memory_critical",
                 "message": f"メモリ使用率が危険レベル: {metrics.memory_percent:.1f}%",
                 "severity": "critical",
                 "timestamp": metrics.timestamp
             })
-        
+
         # 各アラートを処理
         for alert in alerts:
             await self._handle_alert(alert)
-    
+
     async def _handle_alert(self, alert: Dict[str, Any]):
         """個別アラート処理"""
-        
+
         # アラート履歴に記録
         self.alert_history.append(alert)
-        
+
         # 重要度に応じた処理
         if alert["severity"] == "critical":
             print(f"[CRITICAL] 【緊急】{alert['message']}")
@@ -826,12 +826,12 @@ class AlertManager:
             print(f"[WARN] 【警告】{alert['message']}")
             # 通常の警告通知
             await self._send_warning_notification(alert)
-    
+
     async def _send_critical_notification(self, alert):
         """緊急通知送信"""
         # SMS、電話、Slack即座通知など
         pass
-    
+
     async def _send_warning_notification(self, alert):
         """警告通知送信"""
         # メール、Slack通知など
@@ -840,22 +840,22 @@ class AlertManager:
 # 実際の使用例
 async def setup_monitoring():
     """監視システムセットアップ"""
-    
+
     collector = MetricsCollector()
     alert_manager = AlertManager()
-    
+
     # 監視開始
     monitor_task = asyncio.create_task(collector.start_collection())
-    
+
     return collector, alert_manager, monitor_task
 ```
 
 **初心者向け解説**：
 
 | 概念 | 何をしているか | 身近な例 |
-|:-----|:-------------|:---------| 
+|:-----|:-------------|:---------|
 | `psutil` | システムの状況を調べるツール | 体温計や血圧計（システムの健康診断） |
-| `CPU使用率` | コンピューターがどれだけ忙しいか | コックさんがどれだけ忙しく働いているか |
+| `CPU 使用率` | コンピューターがどれだけ忙しいか | コックさんがどれだけ忙しく働いているか |
 | `メモリ使用率` | 作業用メモリがどれだけ使われているか | 冷蔵庫がどれだけ満杯か |
 | `アクティブ接続数` | 同時に利用している人数 | 店内にいるお客さんの数 |
 | `異常検知` | いつもと違う状況を自動で見つける | 「お客さんが多すぎて待ち時間が長い」を自動発見 |
@@ -900,10 +900,10 @@ class Alert:
 
 class NotificationChannel:
     """通知チャンネル（連絡方法）"""
-    
+
     async def send_slack_notification(self, alert: Alert, webhook_url: str):
         """Slack通知（チャット通知）"""
-        
+
         # 重要度に応じて色を変更
         color_map = {
             AlertSeverity.INFO: "#36a64f",      # 緑
@@ -911,15 +911,15 @@ class NotificationChannel:
             AlertSeverity.CRITICAL: "#ff0000",  # 赤
             AlertSeverity.FATAL: "#8B0000"      # 暗赤
         }
-        
+
         # 重要度に応じて絵文字を変更
         emoji_map = {
             AlertSeverity.INFO: "",
-            AlertSeverity.WARNING: "[WARN]", 
+            AlertSeverity.WARNING: "[WARN]",
             AlertSeverity.CRITICAL: "[CRITICAL]",
             AlertSeverity.FATAL: ""
         }
-        
+
         payload = {
             "attachments": [
                 {
@@ -948,7 +948,7 @@ class NotificationChannel:
                 }
             ]
         }
-        
+
         try:
             async with aiohttp.ClientSession() as session:
                 async with session.post(webhook_url, json=payload) as response:
@@ -956,20 +956,20 @@ class NotificationChannel:
                         print(f"[OK] Slack通知送信成功: {alert.title}")
                     else:
                         print(f"[NG] Slack通知送信失敗: {response.status}")
-                        
+
         except Exception as e:
             print(f" Slack通知エラー: {e}")
-    
+
     async def send_email_notification(self, alert: Alert, email_config: Dict[str, str]):
         """メール通知（メール通知）"""
-        
+
         try:
             # メール作成
             msg = MIMEMultipart()
             msg['From'] = email_config['from_email']
             msg['To'] = email_config['to_email']
             msg['Subject'] = f"[{alert.severity.value.upper()}] {alert.title}"
-            
+
             # HTML本文作成
             html_body = f"""
             <html>
@@ -977,7 +977,7 @@ class NotificationChannel:
                 <h2 style="color: {'red' if alert.severity in [AlertSeverity.CRITICAL, AlertSeverity.FATAL] else 'orange'};">
                     システム警告
                 </h2>
-                
+
                 <table style="border-collapse: collapse; width: 100%;">
                     <tr>
                         <td style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">タイトル</td>
@@ -996,117 +996,117 @@ class NotificationChannel:
                         <td style="border: 1px solid #ddd; padding: 8px;">{alert.source}</td>
                     </tr>
                 </table>
-                
+
                 <h3>詳細メッセージ</h3>
                 <p>{alert.message}</p>
-                
+
                 <hr>
                 <p><small>このメールは自動送信されました。</small></p>
             </body>
             </html>
             """
-            
+
             msg.attach(MIMEText(html_body, 'html'))
-            
+
             # SMTP送信
             server = smtplib.SMTP(email_config['smtp_server'], email_config['smtp_port'])
             server.starttls()
             server.login(email_config['username'], email_config['password'])
             server.send_message(msg)
             server.quit()
-            
+
             print(f"[OK] メール通知送信成功: {alert.title}")
-            
+
         except Exception as e:
             print(f" メール通知エラー: {e}")
 
 class LogManager:
     """ログ管理システム（お店の日報管理）"""
-    
+
     def __init__(self, log_level: str = "INFO"):
         self.log_level = log_level
         self.log_buffer = []  # メモリ内ログバッファ
-        
+
     def log(self, level: str, message: str, extra_data: Dict[str, Any] = None):
         """ログ記録（日報への記録）"""
-        
+
         log_entry = {
             "timestamp": datetime.utcnow().isoformat(),
             "level": level,
             "message": message,
             "extra_data": extra_data or {}
         }
-        
+
         # メモリバッファに追加
         self.log_buffer.append(log_entry)
-        
+
         # コンソール出力（開発時）
         timestamp_str = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
         print(f"[{timestamp_str}] {level}: {message}")
-        
+
         # ファイルに書き込み（実際の実装では）
         # self._write_to_file(log_entry)
-        
+
         # 長期保存用にデータベースに保存（実際の実装では）
         # await self._save_to_database(log_entry)
-    
+
     def info(self, message: str, **kwargs):
         """情報ログ"""
         self.log("INFO", message, kwargs)
-    
+
     def warning(self, message: str, **kwargs):
         """警告ログ"""
         self.log("WARNING", message, kwargs)
-    
+
     def error(self, message: str, **kwargs):
         """エラーログ"""
         self.log("ERROR", message, kwargs)
-    
+
     def critical(self, message: str, **kwargs):
         """緊急ログ"""
         self.log("CRITICAL", message, kwargs)
-    
+
     def get_recent_logs(self, hours: int = 1, level: Optional[str] = None) -> List[Dict[str, Any]]:
         """最近のログ取得（期間指定で日報確認）"""
-        
+
         since_time = datetime.utcnow() - timedelta(hours=hours)
-        
+
         filtered_logs = []
         for log_entry in self.log_buffer:
             log_time = datetime.fromisoformat(log_entry["timestamp"])
-            
+
             # 時間範囲チェック
             if log_time < since_time:
                 continue
-            
+
             # レベルフィルター
             if level and log_entry["level"] != level:
                 continue
-            
+
             filtered_logs.append(log_entry)
-        
+
         return filtered_logs
 
 class AlertingSystem:
     """統合アラートシステム（緊急事態対応本部）"""
-    
+
     def __init__(self):
         self.notification_channel = NotificationChannel()
         self.log_manager = LogManager()
         self.alert_history = []
         self.suppression_rules = {}  # アラート抑制ルール
-        
+
     async def send_alert(
-        self, 
-        title: str, 
-        message: str, 
+        self,
+        title: str,
+        message: str,
         severity: AlertSeverity,
         source: str,
         slack_webhook: Optional[str] = None,
         email_config: Optional[Dict[str, str]] = None
     ):
         """アラート送信（緊急事態の発報）"""
-        
+
         # アラート作成
         alert = Alert(
             id=f"{source}_{datetime.utcnow().timestamp()}",
@@ -1116,75 +1116,75 @@ class AlertingSystem:
             timestamp=datetime.utcnow(),
             source=source
         )
-        
+
         # アラート抑制チェック（同じ警告の連発を防ぐ）
         if self._should_suppress_alert(alert):
             self.log_manager.info(f"アラート抑制: {alert.title}")
             return
-        
+
         # アラート履歴に記録
         self.alert_history.append(alert)
-        
+
         # ログに記録
         self.log_manager.log(
             level=severity.value.upper(),
             message=f"アラート発生: {title}",
             extra_data={"alert_id": alert.id, "source": source}
         )
-        
+
         # 通知送信
         notifications = []
-        
+
         if slack_webhook:
             notifications.append(
                 self.notification_channel.send_slack_notification(alert, slack_webhook)
             )
-        
+
         if email_config:
             notifications.append(
                 self.notification_channel.send_email_notification(alert, email_config)
             )
-        
+
         # 複数通知を並行実行
         if notifications:
             await asyncio.gather(*notifications, return_exceptions=True)
-    
+
     def _should_suppress_alert(self, alert: Alert) -> bool:
         """アラート抑制判定（同じ警告の連発防止）"""
-        
+
         # 過去5分間に同じタイプのアラートがあったら抑制
         five_minutes_ago = datetime.utcnow() - timedelta(minutes=5)
-        
+
         for past_alert in self.alert_history:
-            if (past_alert.timestamp > five_minutes_ago and 
+            if (past_alert.timestamp > five_minutes_ago and
                 past_alert.title == alert.title and
                 past_alert.source == alert.source):
                 return True
-        
+
         return False
-    
+
     def get_alert_summary(self, hours: int = 24) -> Dict[str, Any]:
         """アラート集計（期間レポート）"""
-        
+
         since_time = datetime.utcnow() - timedelta(hours=hours)
         recent_alerts = [
-            alert for alert in self.alert_history 
+            alert for alert in self.alert_history
             if alert.timestamp > since_time
         ]
-        
+
         # 重要度別集計
         severity_counts = {}
         for severity in AlertSeverity:
             severity_counts[severity.value] = len([
-                a for a in recent_alerts 
+                a for a in recent_alerts
                 if a.severity == severity
             ])
-        
+
         # 発生源別集計
         source_counts = {}
         for alert in recent_alerts:
             source_counts[alert.source] = source_counts.get(alert.source, 0) + 1
-        
+
         return {
             "period_hours": hours,
             "total_alerts": len(recent_alerts),
@@ -1204,25 +1204,25 @@ class AlertingSystem:
 # 実際の使用例
 async def setup_alerting():
     """アラートシステムセットアップ"""
-    
+
     alerting = AlertingSystem()
-    
+
     # テスト警告送信
     await alerting.send_alert(
-        title="CPU使用率が高いです",
-        message="CPU使用率が85%を超えました。システムの負荷を確認してください。",
+        title="CPU 使用率が高いです",
+        message="CPU 使用率が85%を超えました。システムの負荷を確認してください。",
         severity=AlertSeverity.WARNING,
         source="monitoring_system",
         slack_webhook="https://hooks.slack.com/services/YOUR/WEBHOOK/URL"
     )
-    
+
     return alerting
 ```
 
 **初心者向け解説**：
 
 | 概念 | 何をしているか | 身近な例 |
-|:-----|:-------------|:---------| 
+|:-----|:-------------|:---------|
 | `AlertSeverity` | 緊急度のランク分け | 「お知らせ・注意・警報・緊急事態」の段階 |
 | `Slack通知` | チャットアプリへの即座通知 | LINE で「お店が忙しいです！」と連絡 |
 | `アラート抑制` | 同じ警告の連発を防ぐ | 「5分以内の同じ警告は1回だけ」ルール |
@@ -1256,7 +1256,7 @@ jobs:
   #  Step 1: テスト実行（品質チェック）
   test:
     runs-on: ubuntu-latest
-    
+
     services:
       postgres:
         image: postgres:15
@@ -1270,7 +1270,7 @@ jobs:
           --health-retries 5
         ports:
           - 5432:5432
-      
+
       redis:
         image: redis:7
         options: >-
@@ -1280,51 +1280,51 @@ jobs:
           --health-retries 5
         ports:
           - 6379:6379
-    
+
     steps:
     - name:  コードチェックアウト
       uses: actions/checkout@v4
-    
+
     - name:  Python環境セットアップ
       uses: actions/setup-python@v6
       with:
         python-version: ${{ env.PYTHON_VERSION }}
         cache: 'pip'
-    
+
     - name:  依存関係インストール
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
         pip install -r requirements-dev.txt
-    
+
     - name:  コード品質チェック（リンター）
       run: |
         # フォーマットチェック
         black --check .
-        
-        # インポート整理チェック  
+
+        # インポート整理チェック
         isort --check-only .
-        
+
         # 静的解析
         flake8 .
-        
+
         # 型チェック
         mypy .
-    
+
     - name:  単体テスト実行
       env:
         DATABASE_URL: postgresql://postgres:postgres@localhost:5432/test_db
         REDIS_URL: redis://localhost:6379/0
       run: |
         pytest tests/unit/ -v --cov=app --cov-report=xml
-    
+
     - name:  統合テスト実行
       env:
         DATABASE_URL: postgresql://postgres:postgres@localhost:5432/test_db
         REDIS_URL: redis://localhost:6379/0
       run: |
         pytest tests/integration/ -v
-    
+
     - name:  API テスト実行
       env:
         DATABASE_URL: postgresql://postgres:postgres@localhost:5432/test_db
@@ -1333,10 +1333,10 @@ jobs:
         # アプリケーション起動
         uvicorn app.main:app --host 0.0.0.0 --port 8000 &
         sleep 10
-        
+
         # API テスト実行
         pytest tests/api/ -v
-    
+
     - name:  テストカバレッジアップロード
       uses: codecov/codecov-action@v5
       with:
@@ -1348,25 +1348,25 @@ jobs:
     needs: test
     runs-on: ubuntu-latest
     if: github.event_name == 'push'
-    
+
     outputs:
       image-tag: ${{ steps.meta.outputs.tags }}
       image-digest: ${{ steps.build.outputs.digest }}
-    
+
     steps:
     - name:  コードチェックアウト
       uses: actions/checkout@v4
-    
+
     - name:  Docker Buildx セットアップ
       uses: docker/setup-buildx-action@v3
-    
+
     - name:  Container Registry ログイン
       uses: docker/login-action@v3
       with:
         registry: ${{ env.REGISTRY }}
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
-    
+
     - name:  メタデータ生成
       id: meta
       uses: docker/metadata-action@v4
@@ -1377,7 +1377,7 @@ jobs:
           type=ref,event=pr
           type=sha,prefix={{branch}}-
           type=raw,value=latest,enable={{is_default_branch}}
-    
+
     - name:  Docker イメージビルド・プッシュ
       id: build
       uses: docker/build-push-action@v6
@@ -1396,20 +1396,20 @@ jobs:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/develop'
     environment: development
-    
+
     steps:
     - name:  開発環境デプロイ
       run: |
         echo " 開発環境にデプロイ中..."
-        
-        # Kubernetesにデプロイ（例）
+
+        # Kubernetes にデプロイ（例）
         # kubectl set image deployment/saas-platform \
         #   app=${{ needs.build.outputs.image-tag }} \
         #   --namespace=development
-        
+
         # ヘルスチェック
         # kubectl rollout status deployment/saas-platform --namespace=development
-        
+
         echo "[OK] 開発環境デプロイ完了！"
 
   #  Step 4: 本番環境デプロイ
@@ -1418,47 +1418,47 @@ jobs:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
     environment: production
-    
+
     steps:
     - name:  本番前チェック
       run: |
         echo " 本番環境デプロイ前チェック..."
-        
+
         # データベースマイグレーションのドライラン
         # alembic upgrade head --sql
-        
+
         # 設定ファイルの妥当性チェック
         # python -c "from app.core.config import settings; print('設定OK')"
-        
+
         echo "[OK] 事前チェック完了"
-    
+
     - name:  本番環境デプロイ
       run: |
         echo " 本番環境にデプロイ中..."
-        
+
         # ブルーグリーンデプロイ（例）
         # kubectl apply -f k8s/production/
         # kubectl set image deployment/saas-platform \
         #   app=${{ needs.build.outputs.image-tag }} \
         #   --namespace=production
-        
+
         # ローリングアップデート完了待機
         # kubectl rollout status deployment/saas-platform --namespace=production
-        
+
         echo "[OK] 本番環境デプロイ完了！"
-    
+
     - name:  本番環境ヘルスチェック
       run: |
         echo " 本番環境ヘルスチェック..."
-        
+
         # API ヘルスチェック
         # curl -f https://api.yourapp.com/health || exit 1
-        
+
         # データベース接続チェック
         # python scripts/health_check.py
-        
+
         echo "[OK] 本番環境正常動作確認"
-    
+
     - name:  デプロイ通知
       if: always()
       run: |
@@ -1466,7 +1466,7 @@ jobs:
         # curl -X POST -H 'Content-type: application/json' \
         #   --data '{"text":" 本番環境デプロイ完了"}' \
         #   ${{ secrets.SLACK_WEBHOOK_URL }}
-        
+
         echo " 関係者に通知送信完了"
 
   #  Step 5: データベースマイグレーション
@@ -1475,38 +1475,38 @@ jobs:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
     environment: production
-    
+
     steps:
     - name:  コードチェックアウト
       uses: actions/checkout@v4
-    
+
     - name:  Python環境セットアップ
       uses: actions/setup-python@v6
       with:
         python-version: ${{ env.PYTHON_VERSION }}
-    
+
     - name:  依存関係インストール
       run: |
         pip install alembic psycopg2-binary
-    
+
     - name:  データベースマイグレーション実行
       env:
         DATABASE_URL: ${{ secrets.PROD_DATABASE_URL }}
       run: |
         echo " データベースマイグレーション実行..."
-        
+
         # マイグレーション実行
         alembic upgrade head
-        
+
         echo "[OK] マイグレーション完了"
 ```
 
 **初心者向け解説**：
 
 | 概念 | 何をしているか | 身近な例 |
-|:-----|:-------------|:---------| 
+|:-----|:-------------|:---------|
 | `CI/CD` | コード更新→テスト→デプロイを自動化 | 料理のレシピ通りに自動で調理する機械 |
-| `GitHub Actions` | GitHubでのワークフロー自動実行 | 「コードが更新されたら自動でテスト開始」 |
+| `GitHub Actions` | GitHub でのワークフロー自動実行 | 「コードが更新されたら自動でテスト開始」 |
 | `pytest` | Pythonのテスト実行ツール | 料理が美味しくできたかの味見 |
 | `Docker` | アプリを箱詰めして動かす技術 | 「どこでも同じ環境で動く」お弁当箱 |
 | `ブルーグリーンデプロイ` | 2つの環境を使って安全にデプロイ | 新店舗を準備してからお客さんを案内 |
@@ -1545,22 +1545,22 @@ jobs:
             "overflow": pool.overflow(),         # 臨時駐車台数
             "status": f"{pool.checkedout()}/{pool.size() + pool.overflow()}"  # 使用率
         }
-    
+
     def analyze_table_sizes(self):
         """どのテーブルが重いかを調査（図書館のどの棚が重いか確認）"""
         with self.engine.connect() as conn:
             # テーブルサイズ情報を取得
             result = conn.execute(text("""
-                SELECT 
+                SELECT
                     tablename as table_name,
                     pg_size_pretty(pg_total_relation_size('public.'||tablename)) as size,
                     pg_total_relation_size('public.'||tablename) as size_bytes
-                FROM pg_tables 
+                FROM pg_tables
                 WHERE schemaname = 'public'
                 ORDER BY pg_total_relation_size('public.'||tablename) DESC
                 LIMIT 10;
             """))
-            
+
             table_sizes = []
             for row in result:
                 table_sizes.append({
@@ -1568,24 +1568,24 @@ jobs:
                     'readable_size': row.size,  # "125 MB" のような読みやすい形式
                     'bytes': row.size_bytes     # 正確なバイト数
                 })
-            
+
             return table_sizes
-    
+
     def find_unused_indexes(self):
         """使われていないインデックスを発見（使わない本棚を見つける）"""
         with self.engine.connect() as conn:
             result = conn.execute(text("""
-                SELECT 
+                SELECT
                     schemaname,
                     tablename,
                     indexname,
                     pg_size_pretty(pg_relation_size(indexrelid)) as size
-                FROM pg_stat_user_indexes 
+                FROM pg_stat_user_indexes
                 WHERE idx_scan = 0  -- 1回も使われていないインデックス
                 AND schemaname = 'public'
                 ORDER BY pg_relation_size(indexrelid) DESC;
             """))
-            
+
             unused_indexes = []
             for row in result:
                 unused_indexes.append({
@@ -1593,35 +1593,35 @@ jobs:
                     'index': row.indexname,
                     'wasted_size': row.size
                 })
-            
+
             return unused_indexes
-    
+
     def create_monthly_partition(self, table_name: str, year: int, month: int):
         """月次パーティション作成（月ごとにファイルを分ける整理術）"""
-        
+
         partition_name = f"{table_name}_y{year}m{month:02d}"
         start_date = f"{year}-{month:02d}-01"
-        
+
         # 次月の1日を終了日とする
         if month == 12:
             end_date = f"{year + 1}-01-01"
         else:
             end_date = f"{year}-{month + 1:02d}-01"
-        
+
         create_sql = f"""
         -- {year}年{month}月のデータ専用テーブルを作成
-        CREATE TABLE IF NOT EXISTS {partition_name} 
-        PARTITION OF {table_name} 
+        CREATE TABLE IF NOT EXISTS {partition_name}
+        PARTITION OF {table_name}
         FOR VALUES FROM ('{start_date}') TO ('{end_date}');
-        
+
         -- 高速検索用のインデックスを作成
-        CREATE INDEX IF NOT EXISTS {partition_name}_created_at_idx 
+        CREATE INDEX IF NOT EXISTS {partition_name}_created_at_idx
         ON {partition_name} (created_at);
-        
-        CREATE INDEX IF NOT EXISTS {partition_name}_user_id_idx 
+
+        CREATE INDEX IF NOT EXISTS {partition_name}_user_id_idx
         ON {partition_name} (user_id);
         """
-        
+
         return create_sql
 
 # 使用例：賢いデータベース管理
@@ -1645,7 +1645,7 @@ if unused:
 **初心者向け解説**：
 
 | 概念 | 何をしているか | 身近な例 |
-|:-----|:-------------|:---------| 
+|:-----|:-------------|:---------|
 | `クエリ監視` | 遅いデータベース検索を自動で発見 | 図書館で「この本探すのに10分もかかってる」と気づく |
 | `接続プール` | データベース接続を使い回して効率化 | タクシー会社の車両管理（無駄に車を増やさない） |
 | `テーブルサイズ分析` | どのデータが重いかを把握 | 引っ越し時に「この箱が一番重い」と把握 |
@@ -1686,30 +1686,30 @@ class ServerInstance:
 
 class LoadBalancer:
     """ロードバランサー（お客さんを適切な店舗に案内するシステム）"""
-    
+
     def __init__(self):
         self.servers: List[ServerInstance] = []  # 管理している店舗一覧
         self.algorithm = "weighted_round_robin"   # 案内方法
         self.current_index = 0                   # 現在の案内先インデックス
-    
+
     def add_server(self, server: ServerInstance):
         """新しい店舗を追加"""
         self.servers.append(server)
         print(f" 新店舗追加: {server.id} ({server.host}:{server.port})")
-    
+
     def get_healthy_servers(self) -> List[ServerInstance]:
         """営業中の店舗一覧を取得"""
         healthy = [s for s in self.servers if s.status == HealthStatus.HEALTHY]
         print(f"[OK] 営業中店舗: {len(healthy)}店舗")
         return healthy
-    
+
     def select_server(self) -> ServerInstance:
         """お客さんを案内する店舗を選択"""
         healthy_servers = self.get_healthy_servers()
-        
+
         if not healthy_servers:
             raise Exception("[NG] 営業中の店舗がありません！")
-        
+
         # 案内方法による選択
         if self.algorithm == "round_robin":
             return self._round_robin_selection(healthy_servers)
@@ -1720,48 +1720,48 @@ class LoadBalancer:
         else:
             # ランダム選択（お任せ案内）
             return random.choice(healthy_servers)
-    
+
     def _round_robin_selection(self, servers: List[ServerInstance]) -> ServerInstance:
         """順番に案内（公平に回す）"""
         server = servers[self.current_index % len(servers)]
         self.current_index += 1
         print(f" 順番案内: {server.id} へご案内")
         return server
-    
+
     def _weighted_round_robin_selection(self, servers: List[ServerInstance]) -> ServerInstance:
         """処理能力に応じて案内（大きな店舗により多くのお客さんを）"""
         total_weight = sum(s.weight for s in servers)
         rand_weight = random.randint(1, total_weight)
-        
+
         current_weight = 0
         for server in servers:
             current_weight += server.weight
             if rand_weight <= current_weight:
                 print(f" 重み付き案内: {server.id} へご案内 (weight: {server.weight})")
                 return server
-        
+
         return servers[0]  # フォールバック
-    
+
     def _least_connections_selection(self, servers: List[ServerInstance]) -> ServerInstance:
         """一番空いている店舗に案内"""
         least_busy = min(servers, key=lambda s: s.current_connections)
         print(f" 空いている店舗に案内: {least_busy.id} (お客さん{least_busy.current_connections}人)")
         return least_busy
-    
+
     async def health_check(self):
         """全店舗の健康状態をチェック（巡回点検）"""
         print(" 全店舗の健康チェック開始...")
-        
+
         for server in self.servers:
             try:
                 # 店舗に「元気ですか？」と確認
                 start_time = time.time()
                 is_healthy = await self._check_server_health(server)
                 response_time = time.time() - start_time
-                
+
                 server.response_time = response_time
                 server.last_health_check = time.time()
-                
+
                 if is_healthy:
                     if response_time > 5.0:  # 5秒以上は少し疲れ気味
                         server.status = HealthStatus.DEGRADED
@@ -1772,18 +1772,18 @@ class LoadBalancer:
                 else:
                     server.status = HealthStatus.UNHEALTHY
                     print(f" {server.id}: 体調不良で休業中")
-                    
+
             except Exception as e:
                 server.status = HealthStatus.UNHEALTHY
                 print(f" {server.id}: 連絡がつきません - {str(e)}")
-    
+
     async def _check_server_health(self, server: ServerInstance) -> bool:
         """個別店舗の健康チェック"""
         import httpx
-        
+
         try:
             async with httpx.AsyncClient(timeout=5.0) as client:
-                # 店舗のヘルスチェックAPI呼び出し
+                # 店舗のヘルスチェック API 呼び出し
                 response = await client.get(f"http://{server.host}:{server.port}/health")
                 return response.status_code == 200
         except:
@@ -1794,7 +1794,7 @@ load_balancer = LoadBalancer()
 
 # 店舗を追加
 load_balancer.add_server(ServerInstance("tokyo-1", "10.0.1.100", 8000, weight=2))    # 大型店舗
-load_balancer.add_server(ServerInstance("osaka-1", "10.0.1.101", 8000, weight=2))    # 大型店舗  
+load_balancer.add_server(ServerInstance("osaka-1", "10.0.1.101", 8000, weight=2))    # 大型店舗
 load_balancer.add_server(ServerInstance("backup-1", "10.0.1.102", 8000, weight=1))   # 予備店舗
 
 # お客さんが来たら適切な店舗に案内
@@ -1808,7 +1808,7 @@ except Exception as e:
 **初心者向け解説**：
 
 | 概念 | 何をしているか | 身近な例 |
-|:-----|:-------------|:---------| 
+|:-----|:-------------|:---------|
 | `LoadBalancer` | お客さんを適切なサーバーに案内 | レストランチェーンの案内係 |
 | `HealthStatus` | 各サーバーの稼働状況を管理 | 各店舗の営業状況（営業中・休業中・混雑中） |
 | `Round Robin` | 順番にサーバーを使って公平に分散 | 「次のお客様は2号店へ、その次は3号店へ」 |
@@ -1836,7 +1836,7 @@ def receive_before_cursor_execute(conn, cursor, statement, parameters, context, 
 @event.listens_for(Engine, "after_cursor_execute")
 def receive_after_cursor_execute(conn, cursor, statement, parameters, context, executemany):
     total = time.time() - context._query_start_time
-    
+
     # 1秒以上のクエリを警告
     if total > 1.0:
         logging.warning(
@@ -1848,7 +1848,7 @@ def receive_after_cursor_execute(conn, cursor, statement, parameters, context, e
 class DatabaseOptimizer:
     def __init__(self, engine):
         self.engine = engine
-    
+
     def get_connection_pool_status(self):
         """コネクションプール状態取得"""
         pool = self.engine.pool
@@ -1859,7 +1859,7 @@ class DatabaseOptimizer:
             "overflow": pool.overflow(),
             "status": f"{pool.checkedout()}/{pool.size() + pool.overflow()}"
         }
-    
+
     def analyze_query_performance(self, query: str, limit: int = 10):
         """クエリパフォーマンス分析"""
         with self.engine.connect() as conn:
@@ -1867,53 +1867,53 @@ class DatabaseOptimizer:
             explain_query = f"EXPLAIN (ANALYZE, BUFFERS, FORMAT JSON) {query}"
             result = conn.execute(text(explain_query))
             explain_data = result.fetchone()[0]
-            
+
             return {
                 "execution_time": explain_data[0]["Execution Time"],
                 "planning_time": explain_data[0]["Planning Time"],
                 "plan": explain_data[0]["Plan"]
             }
-    
+
     def get_database_statistics(self):
         """データベース統計情報取得"""
         with self.engine.connect() as conn:
             # テーブルサイズ
             table_sizes = conn.execute(text("""
-                SELECT 
+                SELECT
                     schemaname,
                     tablename,
                     pg_size_pretty(pg_total_relation_size(schemaname||'.'||tablename)) as size,
                     pg_total_relation_size(schemaname||'.'||tablename) as size_bytes
-                FROM pg_tables 
+                FROM pg_tables
                 WHERE schemaname = 'public'
                 ORDER BY pg_total_relation_size(schemaname||'.'||tablename) DESC;
             """)).fetchall()
-            
+
             # インデックス効率
             index_usage = conn.execute(text("""
-                SELECT 
+                SELECT
                     schemaname,
                     tablename,
                     indexname,
                     idx_scan as index_scans,
                     idx_tup_read as tuples_read,
                     idx_tup_fetch as tuples_fetched
-                FROM pg_stat_user_indexes 
+                FROM pg_stat_user_indexes
                 ORDER BY idx_scan DESC;
             """)).fetchall()
-            
+
             # 未使用インデックス
             unused_indexes = conn.execute(text("""
-                SELECT 
+                SELECT
                     schemaname,
                     tablename,
                     indexname,
                     pg_size_pretty(pg_relation_size(indexrelid)) as size
-                FROM pg_stat_user_indexes 
+                FROM pg_stat_user_indexes
                 WHERE idx_scan = 0
                 AND schemaname = 'public';
             """)).fetchall()
-            
+
             return {
                 "table_sizes": [dict(row._mapping) for row in table_sizes],
                 "index_usage": [dict(row._mapping) for row in index_usage],
@@ -1925,24 +1925,24 @@ def create_audit_log_partition(year: int, month: int):
     """監査ログパーティション作成"""
     partition_name = f"audit_logs_y{year}m{month:02d}"
     start_date = f"{year}-{month:02d}-01"
-    
+
     if month == 12:
         end_date = f"{year + 1}-01-01"
     else:
         end_date = f"{year}-{month + 1:02d}-01"
-    
+
     create_partition_sql = f"""
-    CREATE TABLE IF NOT EXISTS {partition_name} 
-    PARTITION OF audit_logs 
+    CREATE TABLE IF NOT EXISTS {partition_name}
+    PARTITION OF audit_logs
     FOR VALUES FROM ('{start_date}') TO ('{end_date}');
-    
-    CREATE INDEX IF NOT EXISTS {partition_name}_created_at_idx 
+
+    CREATE INDEX IF NOT EXISTS {partition_name}_created_at_idx
     ON {partition_name} (created_at);
-    
-    CREATE INDEX IF NOT EXISTS {partition_name}_user_id_idx 
+
+    CREATE INDEX IF NOT EXISTS {partition_name}_user_id_idx
     ON {partition_name} (user_id);
     """
-    
+
     return create_partition_sql
 ```
 
@@ -1978,26 +1978,26 @@ class LoadBalancer:
         self.servers: List[ServerInstance] = []
         self.algorithm = "weighted_round_robin"
         self.current_index = 0
-    
+
     def add_server(self, server: ServerInstance):
         """サーバー追加"""
         self.servers.append(server)
-    
+
     def remove_server(self, server_id: str):
         """サーバー削除"""
         self.servers = [s for s in self.servers if s.id != server_id]
-    
+
     def get_healthy_servers(self) -> List[ServerInstance]:
         """健全なサーバー一覧取得"""
         return [s for s in self.servers if s.status == HealthStatus.HEALTHY]
-    
+
     def select_server(self) -> ServerInstance:
         """サーバー選択"""
         healthy_servers = self.get_healthy_servers()
-        
+
         if not healthy_servers:
             raise Exception("No healthy servers available")
-        
+
         if self.algorithm == "round_robin":
             return self._round_robin_selection(healthy_servers)
         elif self.algorithm == "weighted_round_robin":
@@ -2006,42 +2006,42 @@ class LoadBalancer:
             return self._least_connections_selection(healthy_servers)
         else:
             return random.choice(healthy_servers)
-    
+
     def _round_robin_selection(self, servers: List[ServerInstance]) -> ServerInstance:
         """ラウンドロビン選択"""
         server = servers[self.current_index % len(servers)]
         self.current_index += 1
         return server
-    
+
     def _weighted_round_robin_selection(self, servers: List[ServerInstance]) -> ServerInstance:
         """重み付きラウンドロビン選択"""
         total_weight = sum(s.weight for s in servers)
         rand_weight = random.randint(1, total_weight)
-        
+
         current_weight = 0
         for server in servers:
             current_weight += server.weight
             if rand_weight <= current_weight:
                 return server
-        
+
         return servers[0]  # フォールバック
-    
+
     def _least_connections_selection(self, servers: List[ServerInstance]) -> ServerInstance:
         """最少コネクション選択"""
         return min(servers, key=lambda s: s.current_connections)
-    
+
     async def health_check(self):
         """ヘルスチェック実行"""
         for server in self.servers:
             try:
-                # HTTPヘルスチェック実行
+                # HTTP ヘルスチェック実行
                 start_time = time.time()
                 is_healthy = await self._check_server_health(server)
                 response_time = time.time() - start_time
-                
+
                 server.response_time = response_time
                 server.last_health_check = time.time()
-                
+
                 if is_healthy:
                     if response_time > 5.0:  # 5秒以上は劣化
                         server.status = HealthStatus.DEGRADED
@@ -2049,14 +2049,14 @@ class LoadBalancer:
                         server.status = HealthStatus.HEALTHY
                 else:
                     server.status = HealthStatus.UNHEALTHY
-                    
+
             except Exception:
                 server.status = HealthStatus.UNHEALTHY
-    
+
     async def _check_server_health(self, server: ServerInstance) -> bool:
         """個別サーバーヘルスチェック"""
         import httpx
-        
+
         try:
             async with httpx.AsyncClient(timeout=5.0) as client:
                 response = await client.get(f"http://{server.host}:{server.port}/health")
@@ -2110,18 +2110,18 @@ class MetricsCollector:
         self.system_metrics_history: List[SystemMetrics] = []
         self.app_metrics_history: List[ApplicationMetrics] = []
         self.max_history_size = 1000
-        
+
         # カウンター
         self.request_count = 0
         self.error_count = 0
         self.response_times: List[float] = []
-    
+
     def collect_system_metrics(self) -> SystemMetrics:
         """システムメトリクス収集"""
         memory = psutil.virtual_memory()
         disk = psutil.disk_usage('/')
         network = psutil.net_io_counters()
-        
+
         metrics = SystemMetrics(
             timestamp=datetime.utcnow(),
             cpu_percent=psutil.cpu_percent(interval=1),
@@ -2134,30 +2134,30 @@ class MetricsCollector:
             },
             process_count=len(psutil.pids())
         )
-        
+
         # 履歴保存
         self.system_metrics_history.append(metrics)
         if len(self.system_metrics_history) > self.max_history_size:
             self.system_metrics_history.pop(0)
-        
+
         return metrics
-    
+
     def collect_application_metrics(self) -> ApplicationMetrics:
         """アプリケーションメトリクス収集"""
         from app.core.database import engine
         from app.core.cache import cache
-        
+
         # データベース接続数
         db_connections = 0
         if hasattr(engine.pool, 'checkedout'):
             db_connections = engine.pool.checkedout()
-        
+
         # レスポンス時間平均
         avg_response_time = 0
         if self.response_times:
             avg_response_time = sum(self.response_times) / len(self.response_times)
             self.response_times = self.response_times[-100:]  # 直近100件のみ保持
-        
+
         # キャッシュヒット率
         cache_hit_ratio = 0
         try:
@@ -2168,39 +2168,39 @@ class MetricsCollector:
                 cache_hit_ratio = hits / (hits + misses) * 100
         except:
             pass
-        
+
         metrics = ApplicationMetrics(
             timestamp=datetime.utcnow(),
-            active_connections=0,  # FastAPIから取得
+            active_connections=0,  # FastAPI から取得
             request_count=self.request_count,
             error_count=self.error_count,
             avg_response_time=avg_response_time,
             cache_hit_ratio=cache_hit_ratio,
             database_connections=db_connections
         )
-        
+
         self.app_metrics_history.append(metrics)
         if len(self.app_metrics_history) > self.max_history_size:
             self.app_metrics_history.pop(0)
-        
+
         return metrics
-    
+
     def record_request(self, response_time: float, is_error: bool = False):
         """リクエスト記録"""
         self.request_count += 1
         self.response_times.append(response_time)
-        
+
         if is_error:
             self.error_count += 1
-    
+
     def get_summary(self) -> Dict[str, Any]:
         """メトリクス要約取得"""
         if not self.system_metrics_history or not self.app_metrics_history:
             return {}
-        
+
         recent_system = self.system_metrics_history[-10:]  # 直近10件
         recent_app = self.app_metrics_history[-10:]
-        
+
         return {
             "system": {
                 "avg_cpu": sum(m.cpu_percent for m in recent_system) / len(recent_system),
@@ -2230,20 +2230,20 @@ import time
 class MetricsMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next):
         start_time = time.time()
-        
+
         try:
             response = await call_next(request)
-            
+
             # リクエスト記録
             response_time = time.time() - start_time
             is_error = response.status_code >= 400
             metrics_collector.record_request(response_time, is_error)
-            
+
             # レスポンスヘッダーに追加
             response.headers["X-Response-Time"] = f"{response_time:.3f}"
-            
+
             return response
-            
+
         except Exception as e:
             response_time = time.time() - start_time
             metrics_collector.record_request(response_time, True)
@@ -2264,8 +2264,8 @@ import traceback
 from app.core.config import settings
 
 class JSONFormatter(logging.Formatter):
-    """JSON形式ログフォーマッター"""
-    
+    """JSON 形式ログフォーマッター"""
+
     def format(self, record):
         log_entry = {
             "timestamp": datetime.utcnow().isoformat(),
@@ -2276,7 +2276,7 @@ class JSONFormatter(logging.Formatter):
             "function": record.funcName,
             "line": record.lineno
         }
-        
+
         # 例外情報追加
         if record.exc_info:
             log_entry["exception"] = {
@@ -2284,35 +2284,35 @@ class JSONFormatter(logging.Formatter):
                 "message": str(record.exc_info[1]),
                 "traceback": traceback.format_exception(*record.exc_info)
             }
-        
+
         # 追加フィールド
         if hasattr(record, 'user_id'):
             log_entry["user_id"] = record.user_id
-        
+
         if hasattr(record, 'organization_id'):
             log_entry["organization_id"] = record.organization_id
-        
+
         if hasattr(record, 'request_id'):
             log_entry["request_id"] = record.request_id
-        
+
         return json.dumps(log_entry)
 
 def setup_logging():
     """ログ設定初期化"""
-    
+
     # ルートロガー設定
     root_logger = logging.getLogger()
     root_logger.setLevel(getattr(logging, settings.LOG_LEVEL))
-    
+
     # 既存ハンドラー削除
     for handler in root_logger.handlers[:]:
         root_logger.removeHandler(handler)
-    
+
     # コンソールハンドラー
     console_handler = logging.StreamHandler()
     console_handler.setFormatter(JSONFormatter())
     root_logger.addHandler(console_handler)
-    
+
     # ファイルハンドラー（本番環境）
     if not settings.DEBUG:
         file_handler = logging.handlers.RotatingFileHandler(
@@ -2322,7 +2322,7 @@ def setup_logging():
         )
         file_handler.setFormatter(JSONFormatter())
         root_logger.addHandler(file_handler)
-    
+
     # 外部ログ収集（例：Datadog）
     if hasattr(settings, 'DATADOG_API_KEY'):
         datadog_handler = DatadogHandler(settings.DATADOG_API_KEY)
@@ -2330,19 +2330,19 @@ def setup_logging():
 
 class StructuredLogger:
     """構造化ログヘルパー"""
-    
+
     def __init__(self, name: str):
         self.logger = logging.getLogger(name)
-    
+
     def info(self, message: str, **kwargs):
         self._log(logging.INFO, message, **kwargs)
-    
+
     def warning(self, message: str, **kwargs):
         self._log(logging.WARNING, message, **kwargs)
-    
+
     def error(self, message: str, **kwargs):
         self._log(logging.ERROR, message, **kwargs)
-    
+
     def _log(self, level: int, message: str, **kwargs):
         extra = {k: v for k, v in kwargs.items() if k not in ['exc_info']}
         self.logger.log(level, message, extra=extra, exc_info=kwargs.get('exc_info'))
@@ -2403,19 +2403,19 @@ class AlertRule:
         self.description = description
         self.cooldown = timedelta(minutes=cooldown_minutes)
         self.last_triggered = None
-    
+
     def should_trigger(self, metrics: Dict[str, Any]) -> bool:
         """アラート発火条件チェック"""
         # クールダウン期間中は発火しない
         if self.last_triggered and datetime.utcnow() - self.last_triggered < self.cooldown:
             return False
-        
+
         return self.condition(metrics)
-    
+
     def trigger(self) -> Alert:
         """アラート発火"""
         self.last_triggered = datetime.utcnow()
-        
+
         return Alert(
             id=f"{self.name}_{int(self.last_triggered.timestamp())}",
             title=f"Alert: {self.name}",
@@ -2431,43 +2431,43 @@ class AlertManager:
         self.rules: List[AlertRule] = []
         self.active_alerts: Dict[str, Alert] = {}
         self.alert_handlers: List[Callable[[Alert], None]] = []
-        
+
         # デフォルトルール設定
         self._setup_default_rules()
-    
+
     def add_rule(self, rule: AlertRule):
         """アラートルール追加"""
         self.rules.append(rule)
-    
+
     def add_handler(self, handler: Callable[[Alert], None]):
         """アラートハンドラー追加"""
         self.alert_handlers.append(handler)
-    
+
     async def check_alerts(self, metrics: Dict[str, Any]):
         """アラートチェック実行"""
         for rule in self.rules:
             if rule.should_trigger(metrics):
                 alert = rule.trigger()
                 await self._handle_alert(alert)
-    
+
     async def _handle_alert(self, alert: Alert):
         """アラート処理"""
         self.active_alerts[alert.id] = alert
-        
+
         # 各ハンドラーで処理
         for handler in self.alert_handlers:
             try:
                 await self._run_handler(handler, alert)
             except Exception as e:
                 app_logger.error(f"Alert handler error: {e}", alert_id=alert.id)
-    
+
     async def _run_handler(self, handler: Callable, alert: Alert):
         """ハンドラー実行"""
         if asyncio.iscoroutinefunction(handler):
             await handler(alert)
         else:
             handler(alert)
-    
+
     def resolve_alert(self, alert_id: str):
         """アラート解決"""
         if alert_id in self.active_alerts:
@@ -2475,18 +2475,18 @@ class AlertManager:
             alert.resolved = True
             alert.resolved_at = datetime.utcnow()
             del self.active_alerts[alert_id]
-    
+
     def _setup_default_rules(self):
         """デフォルトアラートルール設定"""
-        
-        # CPU使用率アラート
+
+        # CPU 使用率アラート
         self.add_rule(AlertRule(
             name="high_cpu_usage",
             condition=lambda m: m.get("system", {}).get("avg_cpu", 0) > 80,
             severity=AlertSeverity.WARNING,
-            description="CPU使用率が80%を超えています"
+            description="CPU 使用率が80%を超えています"
         ))
-        
+
         # メモリ使用率アラート
         self.add_rule(AlertRule(
             name="high_memory_usage",
@@ -2494,7 +2494,7 @@ class AlertManager:
             severity=AlertSeverity.ERROR,
             description="メモリ使用率が85%を超えています"
         ))
-        
+
         # エラー率アラート
         self.add_rule(AlertRule(
             name="high_error_rate",
@@ -2502,7 +2502,7 @@ class AlertManager:
             severity=AlertSeverity.ERROR,
             description="エラー率が5%を超えています"
         ))
-        
+
         # レスポンス時間アラート
         self.add_rule(AlertRule(
             name="slow_response_time",
@@ -2515,18 +2515,18 @@ class AlertManager:
 async def slack_alert_handler(alert: Alert):
     """Slack通知送信"""
     import httpx
-    
+
     webhook_url = settings.SLACK_WEBHOOK_URL
     if not webhook_url:
         return
-    
+
     color_map = {
         AlertSeverity.INFO: "#36a64f",
-        AlertSeverity.WARNING: "#ff9900", 
+        AlertSeverity.WARNING: "#ff9900",
         AlertSeverity.ERROR: "#ff0000",
         AlertSeverity.CRITICAL: "#8b0000"
     }
-    
+
     message = {
         "attachments": [{
             "color": color_map.get(alert.severity, "#36a64f"),
@@ -2539,7 +2539,7 @@ async def slack_alert_handler(alert: Alert):
             ]
         }]
     }
-    
+
     async with httpx.AsyncClient() as client:
         await client.post(webhook_url, json=message)
 
@@ -2552,7 +2552,7 @@ alert_manager.add_handler(slack_alert_handler)
 
 ## CI/CDとデプロイ戦略
 
-### Docker設定
+### Docker 設定
 
 ```dockerfile
 # Dockerfile
@@ -2671,7 +2671,7 @@ env:
 jobs:
   test:
     runs-on: ubuntu-latest
-    
+
     services:
       postgres:
         image: postgres:15
@@ -2685,7 +2685,7 @@ jobs:
           --health-retries 5
         ports:
           - 5432:5432
-          
+
       redis:
         image: redis
         options: >-
@@ -2698,31 +2698,31 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    
+
     - name: Set up Python
       uses: actions/setup-python@v6
       with:
         python-version: '3.11'
-        
+
     - name: Cache dependencies
       uses: actions/cache@v4
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
-        
+
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
         pip install pytest pytest-cov pytest-asyncio
-        
+
     - name: Run linting
       run: |
         pip install flake8 black isort
         flake8 app
         black --check app
         isort --check-only app
-        
+
     - name: Run tests
       env:
         DATABASE_URL: postgresql://postgres:postgres@localhost:5432/test_db
@@ -2730,7 +2730,7 @@ jobs:
         SECRET_KEY: test-secret-key
       run: |
         pytest tests/ -v --cov=app --cov-report=xml
-        
+
     - name: Upload coverage
       uses: codecov/codecov-action@v5
       with:
@@ -2740,7 +2740,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-    
+
     - name: Run security scan
       run: |
         pip install safety bandit
@@ -2751,20 +2751,20 @@ jobs:
     needs: [test, security]
     runs-on: ubuntu-latest
     if: github.event_name == 'push'
-    
+
     steps:
     - uses: actions/checkout@v4
-    
+
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
-      
+
     - name: Log in to Container Registry
       uses: docker/login-action@v3
       with:
         registry: ${{ env.REGISTRY }}
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
-        
+
     - name: Extract metadata
       id: meta
       uses: docker/metadata-action@v4
@@ -2774,7 +2774,7 @@ jobs:
           type=ref,event=branch
           type=ref,event=pr
           type=sha
-          
+
     - name: Build and push
       uses: docker/build-push-action@v6
       with:
@@ -2790,7 +2790,7 @@ jobs:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
     environment: production
-    
+
     steps:
     - name: Deploy to production
       run: |
@@ -2827,14 +2827,14 @@ logger = logging.getLogger(__name__)
 
 async def diagnose_database_connection():
     """データベース接続診断"""
-    
+
     logger.info("Starting database connection diagnostics...")
-    
+
     # 1. 設定確認
     db_url = settings.database_url
     logger.info(f"Database URL configured: {bool(db_url)}")
     logger.info(f"Database URL (masked): {db_url[:20]}...{db_url[-10:] if len(db_url) > 30 else db_url}")
-    
+
     # 2. 基本接続テスト
     try:
         engine = create_engine(
@@ -2843,49 +2843,49 @@ async def diagnose_database_connection():
             pool_pre_ping=True,
             echo=True  # SQL ログ出力
         )
-        
+
         with engine.connect() as connection:
             result = connection.execute(text("SELECT 1 as test"))
             test_value = result.scalar()
             logger.info(f"Basic connection test: {test_value == 1}")
-            
+
     except Exception as e:
         logger.error(f"Basic connection failed: {e}")
         return False
-    
+
     # 3. 接続プール診断
     try:
         from app.core.database import engine as app_engine
         pool = app_engine.pool
-        
+
         logger.info(f"Pool status:")
         logger.info(f"  - Size: {pool.size()}")
         logger.info(f"  - Checked in: {pool.checkedin()}")
         logger.info(f"  - Checked out: {pool.checkedout()}")
         logger.info(f"  - Overflow: {pool.overflow()}")
-        
+
     except Exception as e:
         logger.error(f"Pool diagnostics failed: {e}")
-    
+
     # 4. パフォーマンステスト
     try:
         import time
         start_time = time.time()
-        
+
         with engine.connect() as connection:
             # 複数クエリ実行
             for i in range(10):
                 connection.execute(text("SELECT pg_sleep(0.1)"))
-        
+
         execution_time = time.time() - start_time
         logger.info(f"Performance test: {execution_time:.2f}s for 10 queries")
-        
+
         if execution_time > 5:
             logger.warning("Slow database performance detected")
-            
+
     except Exception as e:
         logger.error(f"Performance test failed: {e}")
-    
+
     return True
 
 # 使用例
@@ -2912,10 +2912,10 @@ class OptimizedDatabaseManager:
         self.engine = None
         self.SessionLocal = None
         self._setup_engine()
-    
+
     def _setup_engine(self):
         """最適化されたエンジン設定"""
-        
+
         # 本番環境用設定
         if settings.ENVIRONMENT == "production":
             self.engine = create_engine(
@@ -2940,7 +2940,7 @@ class OptimizedDatabaseManager:
                 echo=settings.DEBUG,
                 connect_args={"check_same_thread": False} if "sqlite" in self.database_url else {}
             )
-        
+
         # 接続イベントリスナー
         @event.listens_for(self.engine, "connect")
         def set_sqlite_pragma(dbapi_connection, connection_record):
@@ -2948,17 +2948,17 @@ class OptimizedDatabaseManager:
                 cursor = dbapi_connection.cursor()
                 cursor.execute("PRAGMA foreign_keys=ON")
                 cursor.close()
-        
+
         @event.listens_for(self.engine, "checkout")
         def receive_checkout(dbapi_connection, connection_record, connection_proxy):
             logger.debug("Connection checked out from pool")
-        
+
         self.SessionLocal = sessionmaker(
             autocommit=False,
             autoflush=False,
             bind=self.engine
         )
-    
+
     @contextmanager
     def get_session(self):
         """安全なセッション管理"""
@@ -2972,7 +2972,7 @@ class OptimizedDatabaseManager:
             raise
         finally:
             session.close()
-    
+
     async def health_check(self) -> bool:
         """ヘルスチェック"""
         try:
@@ -2982,7 +2982,7 @@ class OptimizedDatabaseManager:
         except Exception as e:
             logger.error(f"Database health check failed: {e}")
             return False
-    
+
     def get_connection_info(self) -> dict:
         """接続情報取得"""
         pool = self.engine.pool
@@ -3022,12 +3022,12 @@ class MigrationDiagnostics:
     def __init__(self, alembic_cfg_path: str = "alembic.ini"):
         self.alembic_cfg = Config(alembic_cfg_path)
         self.engine = create_engine(settings.database_url)
-    
+
     def check_migration_status(self):
         """マイグレーション状態確認"""
-        
+
         logger.info("Checking migration status...")
-        
+
         # 現在のリビジョン確認
         try:
             with self.engine.connect() as connection:
@@ -3036,113 +3036,113 @@ class MigrationDiagnostics:
                     self.engine,
                     connection=connection
                 )
-                
+
                 with context.begin_transaction():
                     current_rev = context.get_current_revision()
                     logger.info(f"Current database revision: {current_rev}")
-        
+
         except Exception as e:
             logger.error(f"Failed to get current revision: {e}")
             return False
-        
+
         # 利用可能なマイグレーション確認
         try:
             script_dir = ScriptDirectory.from_config(self.alembic_cfg)
             heads = script_dir.get_heads()
             logger.info(f"Available heads: {heads}")
-            
+
             # 待機中のマイグレーション
             revisions = script_dir.walk_revisions("head", current_rev)
             pending = list(revisions)
             logger.info(f"Pending migrations: {len(pending)}")
-            
+
             for rev in pending[:5]:  # 最初の5件のみ表示
                 logger.info(f"  - {rev.revision}: {rev.doc}")
-                
+
         except Exception as e:
             logger.error(f"Failed to check pending migrations: {e}")
             return False
-        
+
         return True
-    
+
     def validate_models_vs_database(self):
         """モデルとデータベースの整合性確認"""
-        
+
         try:
             from app.models import Base
-            
+
             # モデルから期待されるメタデータ
             model_metadata = Base.metadata
-            
+
             # データベースの実際のメタデータ
             db_metadata = MetaData()
             db_metadata.reflect(bind=self.engine)
-            
+
             # テーブル比較
             model_tables = set(model_metadata.tables.keys())
             db_tables = set(db_metadata.tables.keys())
-            
+
             missing_in_db = model_tables - db_tables
             extra_in_db = db_tables - model_tables
-            
+
             if missing_in_db:
                 logger.warning(f"Tables missing in database: {missing_in_db}")
-            
+
             if extra_in_db:
                 logger.warning(f"Extra tables in database: {extra_in_db}")
-            
+
             # 共通テーブルのカラム比較
             common_tables = model_tables & db_tables
             for table_name in common_tables:
                 model_table = model_metadata.tables[table_name]
                 db_table = db_metadata.tables[table_name]
-                
+
                 model_columns = set(model_table.columns.keys())
                 db_columns = set(db_table.columns.keys())
-                
+
                 missing_columns = model_columns - db_columns
                 extra_columns = db_columns - model_columns
-                
+
                 if missing_columns:
                     logger.warning(f"Table {table_name} - missing columns: {missing_columns}")
-                
+
                 if extra_columns:
                     logger.warning(f"Table {table_name} - extra columns: {extra_columns}")
-            
+
             return len(missing_in_db) == 0 and len(extra_in_db) == 0
-            
+
         except Exception as e:
             logger.error(f"Model validation failed: {e}")
             return False
-    
+
     def repair_migration_state(self):
         """マイグレーション状態修復"""
-        
+
         logger.info("Attempting to repair migration state...")
-        
+
         try:
             # 1. データベースのバックアップ推奨メッセージ
             logger.warning("IMPORTANT: Please backup your database before proceeding!")
-            
+
             # 2. マイグレーション履歴テーブル確認
             with self.engine.connect() as connection:
                 result = connection.execute(text("""
-                    SELECT table_name 
-                    FROM information_schema.tables 
+                    SELECT table_name
+                    FROM information_schema.tables
                     WHERE table_name = 'alembic_version'
                 """))
-                
+
                 if not result.fetchone():
                     logger.info("Creating alembic_version table...")
                     command.stamp(self.alembic_cfg, "head")
-                
+
             # 3. 強制的に最新リビジョンにスタンプ（慎重に）
             logger.info("Stamping database to head revision...")
             command.stamp(self.alembic_cfg, "head")
-            
+
             logger.info("Migration repair completed")
             return True
-            
+
         except Exception as e:
             logger.error(f"Migration repair failed: {e}")
             return False
@@ -3227,34 +3227,34 @@ logger = logging.getLogger(__name__)
 class TenantIsolationDiagnostics:
     def __init__(self, db: Session):
         self.db = db
-    
+
     async def verify_rls_policies(self) -> Dict[str, Any]:
         """RLS ポリシー確認"""
-        
+
         logger.info("Verifying RLS policies...")
-        
+
         # 1. RLS が有効なテーブル確認
         result = self.db.execute(text("""
-            SELECT schemaname, tablename, rowsecurity 
-            FROM pg_tables 
-            WHERE schemaname = 'public' 
+            SELECT schemaname, tablename, rowsecurity
+            FROM pg_tables
+            WHERE schemaname = 'public'
             AND tablename IN ('users', 'organizations', 'projects', 'tasks')
         """))
-        
+
         rls_status = {}
         for row in result:
             rls_status[row.tablename] = row.rowsecurity
-        
+
         logger.info(f"RLS status: {rls_status}")
-        
+
         # 2. 適用されているポリシー確認
         policies = self.db.execute(text("""
             SELECT schemaname, tablename, policyname, cmd, qual, with_check
-            FROM pg_policies 
+            FROM pg_policies
             WHERE schemaname = 'public'
             ORDER BY tablename, policyname
         """))
-        
+
         policy_info = []
         for policy in policies:
             policy_info.append({
@@ -3264,81 +3264,81 @@ class TenantIsolationDiagnostics:
                 'condition': policy.qual,
                 'check': policy.with_check
             })
-        
+
         logger.info(f"Active policies: {len(policy_info)}")
-        
+
         return {
             'rls_enabled': rls_status,
             'policies': policy_info
         }
-    
+
     async def test_tenant_isolation(
-        self, 
-        user1_id: int, 
-        user2_id: int, 
-        org1_id: int, 
+        self,
+        user1_id: int,
+        user2_id: int,
+        org1_id: int,
         org2_id: int
     ) -> bool:
         """テナント分離テスト"""
-        
+
         logger.info("Testing tenant isolation...")
-        
+
         try:
             # 1. ユーザー1でログイン状態をシミュレート
             self.db.execute(text("""
                 SELECT set_config('request.jwt.claim.sub', :user_id, true)
             """), {"user_id": str(user1_id)})
-            
+
             # 2. 組織1のプロジェクト確認
             org1_projects = self.db.execute(text("""
-                SELECT id, name, organization_id 
-                FROM projects 
+                SELECT id, name, organization_id
+                FROM projects
                 WHERE organization_id = :org_id
             """), {"org_id": org1_id}).fetchall()
-            
+
             logger.info(f"User1 can see {len(org1_projects)} projects from org1")
-            
+
             # 3. 組織2のプロジェクト確認（見えてはいけない）
             org2_projects = self.db.execute(text("""
-                SELECT id, name, organization_id 
-                FROM projects 
+                SELECT id, name, organization_id
+                FROM projects
                 WHERE organization_id = :org_id
             """), {"org_id": org2_id}).fetchall()
-            
+
             logger.info(f"User1 can see {len(org2_projects)} projects from org2")
-            
+
             # 4. 分離確認
             if len(org2_projects) > 0:
                 logger.error("SECURITY VIOLATION: User can see other tenant's data!")
                 return False
-            
+
             # 5. ユーザー2でテスト
             self.db.execute(text("""
                 SELECT set_config('request.jwt.claim.sub', :user_id, true)
             """), {"user_id": str(user2_id)})
-            
+
             org1_projects_user2 = self.db.execute(text("""
-                SELECT id, name, organization_id 
-                FROM projects 
+                SELECT id, name, organization_id
+                FROM projects
                 WHERE organization_id = :org_id
             """), {"org_id": org1_id}).fetchall()
-            
+
             if len(org1_projects_user2) > 0:
                 logger.error("SECURITY VIOLATION: User2 can see org1's data!")
                 return False
-            
+
             logger.info("[OK] Tenant isolation test passed")
             return True
-            
+
         except Exception as e:
             logger.error(f"Tenant isolation test failed: {e}")
             return False
-    
+
     async def fix_missing_rls_policies(self):
-        """不足しているRLSポリシーの修復"""
-        
+        """不足している RLS ポリシーの修復"""
+
         logger.info("Checking and fixing RLS policies...")
-        
+
         # 必要なポリシー定義
         required_policies = [
             {
@@ -3348,7 +3348,7 @@ class TenantIsolationDiagnostics:
                     CREATE POLICY tenant_isolation ON projects
                     FOR ALL USING (
                         organization_id IN (
-                            SELECT organization_id 
+                            SELECT organization_id
                             FROM user_organizations uo
                             WHERE uo.user_id = (current_setting('request.jwt.claim.sub'))::int
                         )
@@ -3362,7 +3362,7 @@ class TenantIsolationDiagnostics:
                     CREATE POLICY tenant_isolation ON tasks
                     FOR ALL USING (
                         project_id IN (
-                            SELECT p.id 
+                            SELECT p.id
                             FROM projects p
                             JOIN user_organizations uo ON p.organization_id = uo.organization_id
                             WHERE uo.user_id = (current_setting('request.jwt.claim.sub'))::int
@@ -3371,27 +3371,27 @@ class TenantIsolationDiagnostics:
                 '''
             }
         ]
-        
+
         for policy_def in required_policies:
             try:
                 # 既存ポリシー確認
                 existing = self.db.execute(text(f"""
-                    SELECT 1 FROM pg_policies 
-                    WHERE tablename = '{policy_def['table']}' 
+                    SELECT 1 FROM pg_policies
+                    WHERE tablename = '{policy_def['table']}'
                     AND policyname = '{policy_def['policy']}'
                 """)).fetchone()
-                
+
                 if not existing:
                     logger.info(f"Creating policy {policy_def['policy']} for {policy_def['table']}")
                     self.db.execute(text(policy_def['sql']))
-                    
-                    # RLS有効化
+
+                    # RLS 有効化
                     self.db.execute(text(f"""
                         ALTER TABLE {policy_def['table']} ENABLE ROW LEVEL SECURITY
                     """))
-                    
+
                     self.db.commit()
-                    
+
             except Exception as e:
                 logger.error(f"Failed to create policy for {policy_def['table']}: {e}")
                 self.db.rollback()
@@ -3400,15 +3400,15 @@ class TenantIsolationDiagnostics:
 async def diagnose_tenant_security():
     db = next(get_db())
     diagnostics = TenantIsolationDiagnostics(db)
-    
-    # RLS確認
+
+    # RLS 確認
     rls_info = await diagnostics.verify_rls_policies()
-    
+
     # テナント分離テスト
     isolation_ok = await diagnostics.test_tenant_isolation(
         user1_id=1, user2_id=2, org1_id=1, org2_id=2
     )
-    
+
     if not isolation_ok:
         await diagnostics.fix_missing_rls_policies()
 ```
@@ -3420,7 +3420,7 @@ async def diagnose_tenant_security():
 **症状**:
 - 大量のデータベースクエリ実行
 - ページ読み込みが遅い
-- CPU使用率が高い
+- CPU 使用率が高い
 
 **診断手順**:
 ```python
@@ -3441,26 +3441,26 @@ class QueryDiagnostics:
         self.queries: List[Dict[str, Any]] = []
         self.query_counts = defaultdict(int)
         self.monitoring = False
-    
+
     def start_monitoring(self):
         """クエリ監視開始"""
         self.monitoring = True
         self.queries.clear()
         self.query_counts.clear()
-        
+
         @event.listens_for(Engine, "before_cursor_execute")
         def receive_before_cursor_execute(conn, cursor, statement, parameters, context, executemany):
             if self.monitoring:
                 context._query_start_time = time.time()
-        
+
         @event.listens_for(Engine, "after_cursor_execute")
         def receive_after_cursor_execute(conn, cursor, statement, parameters, context, executemany):
             if self.monitoring:
                 total = time.time() - context._query_start_time
-                
+
                 # クエリ正規化（パラメータを除去）
                 normalized_query = self._normalize_query(statement)
-                
+
                 query_info = {
                     'query': statement,
                     'normalized': normalized_query,
@@ -3468,18 +3468,18 @@ class QueryDiagnostics:
                     'duration': total,
                     'timestamp': time.time()
                 }
-                
+
                 self.queries.append(query_info)
                 self.query_counts[normalized_query] += 1
-                
+
                 # スロークエリ警告
                 if total > 1.0:
                     logger.warning(f"Slow query detected: {total:.2f}s - {statement[:100]}...")
-    
+
     def stop_monitoring(self):
         """クエリ監視停止"""
         self.monitoring = False
-    
+
     def _normalize_query(self, query: str) -> str:
         """クエリ正規化"""
         import re
@@ -3489,15 +3489,15 @@ class QueryDiagnostics:
         # 複数の空白を単一に
         normalized = re.sub(r'\s+', ' ', normalized.strip())
         return normalized
-    
+
     def analyze_queries(self) -> Dict[str, Any]:
         """クエリ分析"""
         if not self.queries:
             return {"error": "No queries recorded"}
-        
+
         total_queries = len(self.queries)
         total_time = sum(q['duration'] for q in self.queries)
-        
+
         # N+1問題検出
         n_plus_one_patterns = []
         for normalized, count in self.query_counts.items():
@@ -3507,17 +3507,17 @@ class QueryDiagnostics:
                     'count': count,
                     'severity': 'high' if count > 50 else 'medium'
                 })
-        
+
         # 最遅クエリ
         slowest_queries = sorted(self.queries, key=lambda x: x['duration'], reverse=True)[:5]
-        
+
         # 頻繁なクエリ
         frequent_queries = sorted(
-            self.query_counts.items(), 
-            key=lambda x: x[1], 
+            self.query_counts.items(),
+            key=lambda x: x[1],
             reverse=True
         )[:10]
-        
+
         return {
             'total_queries': total_queries,
             'total_time': total_time,
@@ -3536,31 +3536,31 @@ class QueryDiagnostics:
                 for q, count in frequent_queries
             ]
         }
-    
+
     @contextmanager
     def monitor_request(self, endpoint: str):
         """リクエスト単位でのクエリ監視"""
         logger.info(f"Starting query monitoring for {endpoint}")
         self.start_monitoring()
-        
+
         try:
             yield self
         finally:
             self.stop_monitoring()
             analysis = self.analyze_queries()
-            
+
             # N+1問題警告
             if analysis.get('n_plus_one_patterns'):
                 logger.warning(f"N+1 query patterns detected in {endpoint}:")
                 for pattern in analysis['n_plus_one_patterns']:
                     logger.warning(f"  - {pattern['query'][:100]}... (count: {pattern['count']})")
-            
+
             logger.info(f"Query analysis for {endpoint}: {analysis['total_queries']} queries, {analysis['total_time']:.2f}s total")
 
 # グローバルインスタンス
 query_diagnostics = QueryDiagnostics()
 
-# FastAPI依存性注入
+# FastAPI 依存性注入
 from fastapi import Depends
 
 def get_query_monitor():
@@ -3589,15 +3589,15 @@ from app.models.user import User
 class OptimizedProjectService:
     def __init__(self, db: Session):
         self.db = db
-    
+
     def get_user_projects_optimized(self, user_id: int) -> List[Project]:
         """N+1問題を解決したプロジェクト取得"""
-        
+
         # 悪い例（N+1問題あり）:
         # projects = self.db.query(Project).filter_by(user_id=user_id).all()
         # for project in projects:
         #     _ = project.tasks  # これが各プロジェクトごとに別のクエリを実行
-        
+
         # 良い例（eager loading使用）:
         projects = (
             self.db.query(Project)
@@ -3611,14 +3611,14 @@ class OptimizedProjectService:
             .filter(ProjectMember.is_active == True)
             .all()
         )
-        
+
         return projects
-    
+
     def get_project_with_tasks_batch(self, project_ids: List[int]) -> Dict[int, List[Task]]:
         """バッチでタスク取得"""
-        
+
         from app.models.task import Task
-        
+
         # プロジェクトIDでタスクを一括取得
         tasks = (
             self.db.query(Task)
@@ -3626,17 +3626,17 @@ class OptimizedProjectService:
             .filter(Task.project_id.in_(project_ids))
             .all()
         )
-        
+
         # プロジェクトIDでグループ化
         tasks_by_project = defaultdict(list)
         for task in tasks:
             tasks_by_project[task.project_id].append(task)
-        
+
         return dict(tasks_by_project)
-    
+
     async def get_dashboard_data_optimized(self, user_id: int) -> Dict[str, Any]:
         """ダッシュボード用最適化クエリ"""
-        
+
         # 1つのクエリで必要なデータを全て取得
         result = self.db.execute(text("""
             WITH user_projects AS (
@@ -3646,7 +3646,7 @@ class OptimizedProjectService:
                 WHERE pm.user_id = :user_id AND pm.is_active = true
             ),
             project_stats AS (
-                SELECT 
+                SELECT
                     up.id as project_id,
                     up.name as project_name,
                     COUNT(t.id) as total_tasks,
@@ -3656,17 +3656,17 @@ class OptimizedProjectService:
                 LEFT JOIN tasks t ON up.id = t.project_id
                 GROUP BY up.id, up.name
             )
-            SELECT 
+            SELECT
                 ps.*,
-                CASE 
-                    WHEN ps.total_tasks > 0 
+                CASE
+                    WHEN ps.total_tasks > 0
                     THEN (ps.completed_tasks * 100.0 / ps.total_tasks)
-                    ELSE 0 
+                    ELSE 0
                 END as completion_percentage
             FROM project_stats ps
             ORDER BY ps.project_name
         """), {"user_id": user_id})
-        
+
         projects = []
         for row in result:
             projects.append({
@@ -3677,7 +3677,7 @@ class OptimizedProjectService:
                 'my_tasks': row.my_tasks,
                 'completion_percentage': float(row.completion_percentage)
             })
-        
+
         return {
             'projects': projects,
             'total_projects': len(projects),
@@ -3700,8 +3700,8 @@ import traceback
 from datetime import datetime
 
 class JSONFormatter(logging.Formatter):
-    """JSON形式ログフォーマッター"""
-    
+    """JSON 形式ログフォーマッター"""
+
     def format(self, record):
         log_entry = {
             'timestamp': datetime.utcnow().isoformat(),
@@ -3712,7 +3712,7 @@ class JSONFormatter(logging.Formatter):
             'function': record.funcName,
             'line': record.lineno
         }
-        
+
         # 例外情報追加
         if record.exc_info:
             log_entry['exception'] = {
@@ -3720,17 +3720,17 @@ class JSONFormatter(logging.Formatter):
                 'message': str(record.exc_info[1]),
                 'traceback': traceback.format_exception(*record.exc_info)
             }
-        
+
         # カスタム属性追加
         for key, value in record.__dict__.items():
             if key.startswith('custom_'):
                 log_entry[key[7:]] = value  # 'custom_' プレフィックス除去
-        
+
         return json.dumps(log_entry, ensure_ascii=False)
 
 def setup_logging(environment: str = "development") -> None:
     """ログ設定初期化"""
-    
+
     if environment == "production":
         config = {
             'version': 1,
@@ -3823,7 +3823,7 @@ def setup_logging(environment: str = "development") -> None:
                 'handlers': ['console']
             }
         }
-    
+
     logging.config.dictConfig(config)
 
 # ログヘルパー関数
@@ -3832,7 +3832,7 @@ def log_function_call(func):
     def wrapper(*args, **kwargs):
         logger = logging.getLogger(func.__module__)
         logger.debug(f"Calling {func.__name__} with args={args}, kwargs={kwargs}")
-        
+
         try:
             result = func(*args, **kwargs)
             logger.debug(f"{func.__name__} completed successfully")
@@ -3843,7 +3843,7 @@ def log_function_call(func):
                 'custom_error_type': type(e).__name__
             })
             raise
-    
+
     return wrapper
 
 # 使用例
@@ -3855,9 +3855,9 @@ def create_project(project_data: dict):
         'custom_project_name': project_data.get('name'),
         'custom_organization_id': project_data.get('organization_id')
     })
-    
+
     # プロジェクト作成処理...
-    
+
     logger.info("Project created successfully", extra={
         'custom_project_id': project.id
     })
@@ -3878,7 +3878,7 @@ def create_project(project_data: dict):
 
 **アーキテクチャ比較まとめ**:
 
-| 項目 | クライアント実装 | Edge Functions | 独立APIサーバー |
+| 項目 | クライアント実装 | Edge Functions | 独立 API サーバー |
 |------|-----------------|----------------|----------------|
 | 開発速度 |  |  |  |
 | 拡張性 |  |  |  |
@@ -3886,7 +3886,7 @@ def create_project(project_data: dict):
 |運用負荷 |  |  |  |
 | コスト効率 |  |  |  |
 
-これで独立APIサーバーパターンの実装が完了しました。要件に応じて最適なアーキテクチャを選択し、段階的に移行する戦略が重要です。
+これで独立 API サーバーパターンの実装が完了しました。要件に応じて最適なアーキテクチャを選択し、段階的に移行する戦略が重要です。
 
 ---
 
@@ -3895,7 +3895,7 @@ def create_project(project_data: dict):
 ### 演習問題
 
 1. **キャッシュ戦略設計**
-   - 与えられたAPIエンドポイントに対して最適なキャッシュ戦略を設計してください
+   - 与えられた API エンドポイントに対して最適なキャッシュ戦略を設計してください
    - TTL値の設定根拠を説明してください
 
 2. **メトリクス分析**
@@ -3907,7 +3907,7 @@ def create_project(project_data: dict):
    - 誤検知を最小化する戦略を含めてください
 
 4. **CI/CD設計**
-   - セキュリティを考慮したCI/CDパイプラインを設計してください
+   - セキュリティを考慮した CI/CDパイプラインを設計してください
    - 各ステージの目的と実行内容を明記してください
 
 ### 確認事項
@@ -3948,16 +3948,16 @@ def create_project(project_data: dict):
 ### **第5-1章〜第5-4章（パターン3）達成状況**
 | 章 | 主要テーマ | 技術習得レベル | 実用適用範囲 |
 |:--------|:----------|:-------------|:-------------|
-| **5-1**| APIサーバー基礎 |  FastAPI + SQLAlchemy | 小規模サービス・MVP |
+| **5-1**| API サーバー基礎 |  FastAPI + SQLAlchemy | 小規模サービス・MVP |
 | **5-2**| マルチテナント |  企業分離・複雑権限 | 中規模SaaS・B2Bサービス |
 | **5-3**| スケーリング・運用 |  エンタープライズ級 | 大規模サービス・国際展開 |
-| **5-4**| RAG/ベクトル検索 |  pgvector + 監査ログ | AI検索・FAQ・ナレッジ活用 |
+| **5-4**| RAG/ベクトル検索 |  pgvector + 監査ログ | AI 検索・FAQ・ナレッジ活用 |
 
 ### **Part II（アーキテクチャパターン）完了**
 3つのアーキテクチャパターンの習得完了：
 - [OK] **第3章**: クライアントサイド（個人・小規模チーム向け）
-- [OK] **第4章**: Edge Functions（スタートアップ・中規模向け）  
-- [OK] **第5-1章**: 独立APIサーバー（エンタープライズ・大規模向け）
+- [OK] **第4章**: Edge Functions（スタートアップ・中規模向け）
+- [OK] **第5-1章**: 独立 API サーバー（エンタープライズ・大規模向け）
 
 ---
 
@@ -3965,9 +3965,9 @@ def create_project(project_data: dict):
 
 第6章では、「**F1マシンのチューニング・エンジニア**」レベルの最適化技術を学習します：
 - **データベース最適化**: インデックス・パーティション・クエリチューニング
-- **API高速化**: PostgREST設定・キャッシュ戦略・レスポンス最適化
+- **API 高速化**: PostgREST 設定・キャッシュ戦略・レスポンス最適化
 - **監視・測定**: パフォーマンス計測・ボトルネック特定・継続改善
-- **自動最適化**: AI駆動の性能改善・プロアクティブなチューニング
+- **自動最適化**: AI 駆動の性能改善・プロアクティブなチューニング
 
 **実装目標**: 「ユーザーが体感する待ち時間を1秒未満に最適化する高速システム」
 
@@ -3975,7 +3975,7 @@ def create_project(project_data: dict):
 
 **ナビゲーション**
 - **目次**: [はじめに]({{ '/introduction/' | relative_url }})
-- **前の章**: [第5-2章：マルチテナンシーと複雑ビジネスロジック]({{ '/chapters/chapter05-2/' | relative_url }})  
+- **前の章**: [第5-2章：マルチテナンシーと複雑ビジネスロジック]({{ '/chapters/chapter05-2/' | relative_url }})
 - **次の章**: [第6章：パフォーマンス最適化]({{ '/chapters/chapter06/' | relative_url }})
-- **関連章**: [第5-1章：パターン3 - 独立APIサーバー]({{ '/chapters/chapter05-1/' | relative_url }}) | [第8章：運用監視と自動化]({{ '/chapters/chapter08/' | relative_url }})
+- **関連章**: [第5-1章：パターン3 - 独立 API サーバー]({{ '/chapters/chapter05-1/' | relative_url }}) | [第8章：運用監視と自動化]({{ '/chapters/chapter08/' | relative_url }})
 - **リソース**: [スケーリング設計]({{ site.repository }}/tree/main/src/examples/performance/) | [運用チェックリスト]({{ '/appendices/appendix01/' | relative_url }}#operational-checklists)

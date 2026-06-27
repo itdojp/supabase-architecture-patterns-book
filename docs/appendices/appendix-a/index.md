@@ -7,11 +7,11 @@ title: "付録A: 技術リソース集"
 # 付録A: 技術リソース集
 
 ---
-**目次に戻る**: [はじめに]({{ '/introduction/' | relative_url }})  
-**前の章**: [第10章：統合実践プロジェクト]({{ '/chapters/chapter10/' | relative_url }})  
-**次の付録**: [付録B: 参考資料]({{ '/appendices/appendix01/' | relative_url }})  
-**用途**: 技術リファレンス・外部リソース集  
-**利用方法**: 必要時に該当セクションを参照  
+- **目次に戻る**: [はじめに]({{ '/introduction/' | relative_url }})
+- **前の章**: [第10章：統合実践プロジェクト]({{ '/chapters/chapter10/' | relative_url }})
+- **次の付録**: [付録B: 参考資料]({{ '/appendices/appendix01/' | relative_url }})
+- **用途**: 技術リファレンス・外部リソース集
+- **利用方法**: 必要時に該当セクションを参照
 ---
 
 本書で扱う設計判断（認証・認可、RLS、Edge Functions、運用監視、性能最適化など）を深掘りするための参照先を整理します。
@@ -60,7 +60,7 @@ title: "付録A: 技術リソース集"
 
 - Stripe Docs: https://stripe.com/docs
 
-## A.7 UIクライアント（Flet）
+## A.7 UI クライアント（Flet）
 
 - Flet: https://flet.dev/
 - GitHub（flet-dev/flet）: https://github.com/flet-dev/flet

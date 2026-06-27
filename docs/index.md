@@ -27,8 +27,8 @@ permalink: /
 
 ## 想定読者
 - Supabase を用いてプロダクトを構築・運用したい Web/アプリ開発者
-- 認証・権限管理・DB設計（RLS を含む）を前提にアーキテクチャを検討する担当者
-- 複数パターン（クライアント直結/Edge Functions/独立APIサーバー等）のトレードオフを整理したいテックリード/アーキテクト
+- 認証・権限管理・DB 設計（RLS を含む）を前提にアーキテクチャを検討する担当者
+- 複数パターン（クライアント直結/Edge Functions/独立 API サーバー等）のトレードオフを整理したいテックリード/アーキテクト
 
 ## 前提知識
 - Web開発の基礎（HTTP、REST、JSON、認証の概念）
@@ -43,11 +43,11 @@ permalink: /
 ## 目次
 
 - [はじめに]({{ site.baseurl }}/introduction/)
-- [第1章：Supabaseアーキテクチャ理解]({{ site.baseurl }}/chapters/chapter01/) — Supabase 全体像と基本構成
+- [第1章：Supabase アーキテクチャ理解]({{ site.baseurl }}/chapters/chapter01/) — Supabase 全体像と基本構成
 - [第2章：認証・認可設計]({{ site.baseurl }}/chapters/chapter02/) — 認証・認可と RLS 設計
 - [第3章：パターン1 - クライアントサイド実装]({{ site.baseurl }}/chapters/chapter03/) — クライアント直結パターン
-- [第4章：パターン2 - Edge Functions活用]({{ site.baseurl }}/chapters/chapter04/) — Edge Functions を用いたサーバーレス実装
-- [第5-1章：パターン3 - 独立APIサーバー]({{ site.baseurl }}/chapters/chapter05-1/) — 独立APIサーバーの導入
+- [第4章：パターン2 - Edge Functions 活用]({{ site.baseurl }}/chapters/chapter04/) — Edge Functions を用いたサーバーレス実装
+- [第5-1章：パターン3 - 独立 API サーバー]({{ site.baseurl }}/chapters/chapter05-1/) — 独立 API サーバーの導入
 - [第5-2章：マルチテナンシーと複雑ビジネスロジック]({{ site.baseurl }}/chapters/chapter05-2/) — SaaS向け設計
 - [第5-3章：拡張性設計とパフォーマンス最適化]({{ site.baseurl }}/chapters/chapter05-3/) — スケーリング/最適化
 - [第5-4章：RAG/ベクトル検索アーキテクチャ]({{ site.baseurl }}/chapters/chapter05-4/) — RAG/ベクトル検索
@@ -80,11 +80,11 @@ permalink: /
 
 本書を実プロジェクトへ適用する前に、以下を PR 単位で確認してください。
 
-- **APIキー境界**: Cloud では `sb_publishable_...` と `sb_secret_...`、セルフホスト/互換用途では legacy `anon` / `service_role` を区別する。`secret` / `service_role` は RLS を迂回し得るため、ブラウザ、モバイル、公開リポジトリ、URL、未マスクログへ出さない。
-- **RLS責任境界**: 公開スキーマのテーブルは RLS を有効化し、`anon` / `authenticated` ロールごとの `SELECT` / `INSERT` / `UPDATE` / `DELETE` 権限を明示する。`auth.uid()` が `null` になり得るケースを条件式で扱う。
+- **API キー境界**: Cloud では `sb_publishable_...` と `sb_secret_...`、セルフホスト/互換用途では legacy `anon` / `service_role` を区別する。`secret` / `service_role` は RLS を迂回し得るため、ブラウザ、モバイル、公開リポジトリ、URL、未マスクログへ出さない。
+- **RLS 責任境界**: 公開スキーマのテーブルは RLS を有効化し、`anon` / `authenticated` ロールごとの `SELECT` / `INSERT` / `UPDATE` / `DELETE` 権限を明示する。`auth.uid()` が `null` になり得るケースを条件式で扱う。
 - **Storage / Realtime**: Storage は `storage.objects`、Realtime private channel は `realtime.messages` の RLS を前提に、アップロード、上書き、購読、Broadcast、Presence の操作別ポリシーを確認する。
 - **Edge Functions**: Deno 互換の Edge Runtime、Secrets、JWT 検証、`--no-verify-jwt` の使用理由を確認する。公開 Webhook や publishable/secret キーを使う関数では、関数内部で署名検証または `apikey` ヘッダー検証を実装する。
-- **CLI / CI/CD**: Supabase CLI、Docker 互換ランタイム、migration、seed、型生成、RLS/DBテストを CI で再実行可能にする。ローカル Supabase スタックを公開ネットワークへ露出させない。
+- **CLI / CI/CD**: Supabase CLI、Docker 互換ランタイム、migration、seed、型生成、RLS/DB テストを CI で再実行可能にする。ローカル Supabase スタックを公開ネットワークへ露出させない。
 - **Review Completion Gate**: GitHub Copilot review の本文・inline comment・suggestion を全件確認し、未解決 review thread 0 件をマージ条件にする。
 
 ## 利用と更新情報
@@ -103,14 +103,13 @@ permalink: /
 
 ## ライセンス
 
-本書は **CC BY-NC-SA 4.0（商用は別契約）** ライセンスで公開されています。  
+本書は **CC BY-NC-SA 4.0（商用は別契約）** ライセンスで公開されています。
 **教育・研究・個人学習での利用は自由**ですが、**商用利用には事前許諾**が必要です。
 
 [詳細なライセンス条件](https://github.com/itdojp/it-engineer-knowledge-architecture/blob/main/LICENSE.md)
 
-**お問い合わせ**  
-株式会社アイティードゥ（ITDO Inc.）  
-Email: [knowledge@itdo.jp](mailto:knowledge@itdo.jp)
+- **お問い合わせ**: 株式会社アイティードゥ（ITDO Inc.）
+- **Email**: [knowledge@itdo.jp](mailto:knowledge@itdo.jp)
 
 ---
 

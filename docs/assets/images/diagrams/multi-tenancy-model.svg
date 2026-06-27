@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg width="800" height="600" viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
-  <title>Supabaseマルチテナンシーモデル</title>
+  <title>Supabase マルチテナンシーモデル</title>
   <desc>スキーマ分離、行レベル分離、データベース分離の各マルチテナンシー戦略</desc>
   <defs>
     <style>
@@ -26,34 +26,34 @@
   </defs>
 
   <!-- Title -->
-  <text x="400" y="30" class="title-text" text-anchor="middle">Supabaseマルチテナンシーモデル</text>
+  <text x="400" y="30" class="title-text" text-anchor="middle">Supabase マルチテナンシーモデル</text>
 
   <!-- Schema-based Isolation -->
   <g id="schema-isolation">
     <rect x="60" y="60" width="220" height="200" class="schema-model" rx="4"/>
     <text x="170" y="80" class="model-title" text-anchor="middle">スキーマベース分離</text>
-    
+
     <!-- Database Structure -->
     <rect x="80" y="90" width="180" height="160" fill="var(--svg-bg)" stroke="var(--svg-primary)" stroke-width="1" rx="4"/>
     <text x="170" y="110" class="component-text" text-anchor="middle" font-weight="500">単一データベース</text>
-    
+
     <!-- Tenant Schemas -->
     <rect x="90" y="120" width="70" height="40" class="tenant-box" rx="2"/>
     <text x="125" y="135" class="annotation-text" text-anchor="middle">Schema A</text>
     <text x="125" y="150" class="annotation-text" text-anchor="middle">Tenant 1</text>
-    
+
     <rect x="170" y="120" width="70" height="40" class="tenant-box" rx="2"/>
     <text x="205" y="135" class="annotation-text" text-anchor="middle">Schema B</text>
     <text x="205" y="150" class="annotation-text" text-anchor="middle">Tenant 2</text>
-    
+
     <rect x="90" y="170" width="70" height="40" class="tenant-box" rx="2"/>
     <text x="125" y="185" class="annotation-text" text-anchor="middle">Schema C</text>
     <text x="125" y="200" class="annotation-text" text-anchor="middle">Tenant 3</text>
-    
+
     <rect x="170" y="170" width="70" height="40" class="tenant-box" rx="2"/>
     <text x="205" y="185" class="annotation-text" text-anchor="middle">Public</text>
     <text x="205" y="200" class="annotation-text" text-anchor="middle">共通データ</text>
-    
+
     <text x="170" y="230" class="annotation-text" text-anchor="middle">search_path切替</text>
     <text x="170" y="245" class="annotation-text" text-anchor="middle">論理的分離</text>
   </g>
@@ -62,49 +62,49 @@
   <g id="row-isolation">
     <rect x="290" y="60" width="220" height="200" class="row-model" rx="4"/>
     <text x="400" y="80" class="model-title" text-anchor="middle">行レベル分離 (RLS)</text>
-    
+
     <!-- Database Structure -->
     <rect x="310" y="90" width="180" height="160" fill="var(--svg-bg)" stroke="var(--svg-warning)" stroke-width="1" rx="4"/>
     <text x="400" y="110" class="component-text" text-anchor="middle" font-weight="500">共有テーブル</text>
-    
+
     <!-- Data Rows with Tenant ID -->
     <rect x="320" y="120" width="160" height="25" fill="var(--svg-bg)" stroke="var(--svg-warning)" stroke-width="1" rx="2"/>
     <text x="330" y="137" class="annotation-text">Row 1 | tenant_id: A | data...</text>
-    
+
     <rect x="320" y="150" width="160" height="25" fill="var(--svg-bg)" stroke="var(--svg-warning)" stroke-width="1" rx="2"/>
     <text x="330" y="167" class="annotation-text">Row 2 | tenant_id: B | data...</text>
-    
+
     <rect x="320" y="180" width="160" height="25" fill="var(--svg-bg)" stroke="var(--svg-warning)" stroke-width="1" rx="2"/>
     <text x="330" y="197" class="annotation-text">Row 3 | tenant_id: A | data...</text>
-    
+
     <rect x="320" y="210" width="160" height="25" fill="var(--svg-bg)" stroke="var(--svg-warning)" stroke-width="1" rx="2"/>
     <text x="330" y="227" class="annotation-text">Row 4 | tenant_id: C | data...</text>
-    
-    <text x="400" y="245" class="annotation-text" text-anchor="middle">RLSポリシーで自動フィルタ</text>
+
+    <text x="400" y="245" class="annotation-text" text-anchor="middle">RLS ポリシーで自動フィルタ</text>
   </g>
 
   <!-- Database-level Isolation -->
   <g id="database-isolation">
     <rect x="520" y="60" width="220" height="200" class="database-model" rx="4"/>
     <text x="630" y="80" class="model-title" text-anchor="middle">データベースレベル分離</text>
-    
+
     <!-- Multiple Databases -->
     <rect x="540" y="90" width="80" height="50" fill="var(--svg-bg)" stroke="var(--svg-success)" stroke-width="1" rx="4"/>
     <text x="580" y="110" class="component-text" text-anchor="middle" font-weight="500">DB-A</text>
     <text x="580" y="125" class="annotation-text" text-anchor="middle">Tenant 1</text>
-    
+
     <rect x="640" y="90" width="80" height="50" fill="var(--svg-bg)" stroke="var(--svg-success)" stroke-width="1" rx="4"/>
     <text x="680" y="110" class="component-text" text-anchor="middle" font-weight="500">DB-B</text>
     <text x="680" y="125" class="annotation-text" text-anchor="middle">Tenant 2</text>
-    
+
     <rect x="540" y="150" width="80" height="50" fill="var(--svg-bg)" stroke="var(--svg-success)" stroke-width="1" rx="4"/>
     <text x="580" y="170" class="component-text" text-anchor="middle" font-weight="500">DB-C</text>
     <text x="580" y="185" class="annotation-text" text-anchor="middle">Tenant 3</text>
-    
+
     <rect x="640" y="150" width="80" height="50" fill="var(--svg-bg)" stroke="var(--svg-success)" stroke-width="1" rx="4"/>
     <text x="680" y="170" class="component-text" text-anchor="middle" font-weight="500">DB-D</text>
     <text x="680" y="185" class="annotation-text" text-anchor="middle">Tenant 4</text>
-    
+
     <text x="630" y="215" class="annotation-text" text-anchor="middle">完全物理分離</text>
     <text x="630" y="230" class="annotation-text" text-anchor="middle">独立接続</text>
     <text x="630" y="245" class="annotation-text" text-anchor="middle">最高セキュリティ</text>
@@ -114,37 +114,37 @@
   <g id="comparison-matrix">
     <rect x="60" y="280" width="680" height="160" fill="var(--svg-neutral)" fill-opacity="0.05" stroke="var(--svg-text)" stroke-width="2" rx="4"/>
     <text x="400" y="300" class="component-text" text-anchor="middle" font-weight="500">マルチテナンシーモデル比較</text>
-    
+
     <!-- Headers -->
     <text x="140" y="320" class="component-text" font-weight="500">評価項目</text>
     <text x="300" y="320" class="component-text" text-anchor="middle">スキーマ分離</text>
     <text x="450" y="320" class="component-text" text-anchor="middle">行レベル分離</text>
-    <text x="600" y="320" class="component-text" text-anchor="middle">DB分離</text>
-    
+    <text x="600" y="320" class="component-text" text-anchor="middle">DB 分離</text>
+
     <!-- Isolation Level -->
     <text x="140" y="340" class="annotation-text">分離レベル</text>
     <text x="300" y="340" class="annotation-text" text-anchor="middle">中</text>
     <text x="450" y="340" class="annotation-text" text-anchor="middle">低</text>
     <text x="600" y="340" class="annotation-text" text-anchor="middle">高</text>
-    
+
     <!-- Scalability -->
     <text x="140" y="360" class="annotation-text">スケーラビリティ</text>
     <text x="300" y="360" class="annotation-text" text-anchor="middle">中 (～1000)</text>
     <text x="450" y="360" class="annotation-text" text-anchor="middle">高 (～10000)</text>
     <text x="600" y="360" class="annotation-text" text-anchor="middle">低 (～100)</text>
-    
+
     <!-- Cost -->
     <text x="140" y="380" class="annotation-text">コスト</text>
     <text x="300" y="380" class="annotation-text" text-anchor="middle">中</text>
     <text x="450" y="380" class="annotation-text" text-anchor="middle">低</text>
     <text x="600" y="380" class="annotation-text" text-anchor="middle">高</text>
-    
+
     <!-- Management -->
     <text x="140" y="400" class="annotation-text">管理複雑度</text>
     <text x="300" y="400" class="annotation-text" text-anchor="middle">中</text>
     <text x="450" y="400" class="annotation-text" text-anchor="middle">低</text>
     <text x="600" y="400" class="annotation-text" text-anchor="middle">高</text>
-    
+
     <!-- Customization -->
     <text x="140" y="420" class="annotation-text">カスタマイズ性</text>
     <text x="300" y="420" class="annotation-text" text-anchor="middle">中</text>
@@ -156,24 +156,24 @@
   <g id="security-considerations">
     <rect x="80" y="460" width="640" height="120" class="security-layer" rx="4"/>
     <text x="400" y="480" class="model-title" text-anchor="middle">セキュリティ実装</text>
-    
+
     <!-- Schema Security -->
     <rect x="100" y="490" width="180" height="70" fill="var(--svg-bg)" stroke="var(--svg-neutral)" stroke-width="1" rx="4"/>
     <text x="190" y="510" class="component-text" text-anchor="middle" font-weight="500">スキーマ分離</text>
     <text x="110" y="525" class="annotation-text">• GRANT/REVOKE制御</text>
     <text x="110" y="540" class="annotation-text">• search_path制限</text>
     <text x="110" y="555" class="annotation-text">• デフォルト権限設定</text>
-    
+
     <!-- RLS Security -->
     <rect x="310" y="490" width="180" height="70" fill="var(--svg-bg)" stroke="var(--svg-neutral)" stroke-width="1" rx="4"/>
-    <text x="400" y="510" class="component-text" text-anchor="middle" font-weight="500">RLS実装</text>
+    <text x="400" y="510" class="component-text" text-anchor="middle" font-weight="500">RLS 実装</text>
     <text x="320" y="525" class="annotation-text">• auth.uid()ベース制御</text>
     <text x="320" y="540" class="annotation-text">• テナントIDポリシー</text>
     <text x="320" y="555" class="annotation-text">• 動的フィルタリング</text>
-    
+
     <!-- Database Security -->
     <rect x="520" y="490" width="180" height="70" fill="var(--svg-bg)" stroke="var(--svg-neutral)" stroke-width="1" rx="4"/>
-    <text x="610" y="510" class="component-text" text-anchor="middle" font-weight="500">DB分離</text>
+    <text x="610" y="510" class="component-text" text-anchor="middle" font-weight="500">DB 分離</text>
     <text x="530" y="525" class="annotation-text">• 独立した認証</text>
     <text x="530" y="540" class="annotation-text">• ネットワーク分離</text>
     <text x="530" y="555" class="annotation-text">• バックアップ分離</text>
