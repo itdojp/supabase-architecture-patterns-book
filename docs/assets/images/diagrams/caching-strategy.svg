@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg width="800" height="600" viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
-  <title>Supabaseキャッシング戦略</title>
+  <title>Supabase キャッシング戦略</title>
   <desc>クライアント、Edge、データベースレベルでの包括的なキャッシング戦略とCDN統合</desc>
   <defs>
     <style>
@@ -33,37 +33,37 @@
   </defs>
 
   <!-- Title -->
-  <text x="400" y="30" class="title-text" text-anchor="middle">Supabaseキャッシング戦略</text>
+  <text x="400" y="30" class="title-text" text-anchor="middle">Supabase キャッシング戦略</text>
 
   <!-- Client-side Cache Layer -->
   <g id="client-cache">
     <rect x="60" y="60" width="680" height="100" class="client-cache" rx="4"/>
     <text x="400" y="80" class="layer-title" text-anchor="middle">クライアントサイドキャッシュ</text>
-    
+
     <!-- Browser Cache -->
     <rect x="80" y="90" width="120" height="50" fill="var(--svg-bg)" stroke="var(--svg-primary)" stroke-width="1" rx="4"/>
     <text x="140" y="110" class="cache-text" text-anchor="middle" font-weight="500">ブラウザキャッシュ</text>
     <text x="90" y="125" class="annotation-text">• LocalStorage</text>
     <text x="90" y="135" class="annotation-text">• SessionStorage</text>
-    
+
     <!-- React Query -->
     <rect x="220" y="90" width="120" height="50" fill="var(--svg-bg)" stroke="var(--svg-primary)" stroke-width="1" rx="4"/>
     <text x="280" y="110" class="cache-text" text-anchor="middle" font-weight="500">React Query</text>
     <text x="230" y="125" class="annotation-text">• データ同期</text>
     <text x="230" y="135" class="annotation-text">• 自動リフレッシュ</text>
-    
+
     <!-- SWR Cache -->
     <rect x="360" y="90" width="120" height="50" fill="var(--svg-bg)" stroke="var(--svg-primary)" stroke-width="1" rx="4"/>
     <text x="420" y="110" class="cache-text" text-anchor="middle" font-weight="500">SWR</text>
     <text x="370" y="125" class="annotation-text">• Stale-While-Revalidate</text>
     <text x="370" y="135" class="annotation-text">• バックグラウンド更新</text>
-    
+
     <!-- IndexedDB -->
     <rect x="500" y="90" width="120" height="50" fill="var(--svg-bg)" stroke="var(--svg-primary)" stroke-width="1" rx="4"/>
     <text x="560" y="110" class="cache-text" text-anchor="middle" font-weight="500">IndexedDB</text>
     <text x="510" y="125" class="annotation-text">• 大容量データ</text>
     <text x="510" y="135" class="annotation-text">• オフライン対応</text>
-    
+
     <!-- Service Worker -->
     <rect x="640" y="90" width="80" height="50" fill="var(--svg-bg)" stroke="var(--svg-primary)" stroke-width="1" rx="4"/>
     <text x="680" y="110" class="cache-text" text-anchor="middle" font-weight="500">Service Worker</text>
@@ -75,19 +75,19 @@
   <g id="cdn-layer">
     <rect x="60" y="180" width="340" height="100" class="cdn-layer" rx="4"/>
     <text x="230" y="200" class="layer-title" text-anchor="middle">CDN Layer</text>
-    
+
     <!-- CloudFlare -->
     <rect x="80" y="210" width="100" height="50" fill="var(--svg-bg)" stroke="var(--svg-error)" stroke-width="1" rx="4"/>
     <text x="130" y="230" class="cache-text" text-anchor="middle" font-weight="500">CloudFlare</text>
     <text x="90" y="245" class="annotation-text">• 静的アセット</text>
     <text x="90" y="255" class="annotation-text">• API Cache</text>
-    
+
     <!-- Fastly -->
     <rect x="190" y="210" width="100" height="50" fill="var(--svg-bg)" stroke="var(--svg-error)" stroke-width="1" rx="4"/>
     <text x="240" y="230" class="cache-text" text-anchor="middle" font-weight="500">Fastly</text>
     <text x="200" y="245" class="annotation-text">• Edge Computing</text>
     <text x="200" y="255" class="annotation-text">• リアルタイム配信</text>
-    
+
     <!-- Storage CDN -->
     <rect x="300" y="210" width="80" height="50" fill="var(--svg-bg)" stroke="var(--svg-error)" stroke-width="1" rx="4"/>
     <text x="340" y="230" class="cache-text" text-anchor="middle" font-weight="500">Storage CDN</text>
@@ -99,23 +99,23 @@
   <g id="edge-cache">
     <rect x="420" y="180" width="320" height="100" class="edge-cache" rx="4"/>
     <text x="580" y="200" class="layer-title" text-anchor="middle">Edge Functions キャッシュ</text>
-    
+
     <!-- In-Memory Cache -->
     <rect x="440" y="210" width="90" height="50" fill="var(--svg-bg)" stroke="var(--svg-warning)" stroke-width="1" rx="4"/>
     <text x="485" y="230" class="cache-text" text-anchor="middle" font-weight="500">Memory Cache</text>
     <text x="450" y="245" class="annotation-text">• 高速アクセス</text>
     <text x="450" y="255" class="annotation-text">• TTL管理</text>
-    
+
     <!-- Redis Edge -->
     <rect x="540" y="210" width="90" height="50" fill="var(--svg-bg)" stroke="var(--svg-warning)" stroke-width="1" rx="4"/>
     <text x="585" y="230" class="cache-text" text-anchor="middle" font-weight="500">Redis Edge</text>
     <text x="550" y="245" class="annotation-text">• 分散キャッシュ</text>
     <text x="550" y="255" class="annotation-text">• セッション</text>
-    
+
     <!-- Response Cache -->
     <rect x="640" y="210" width="80" height="50" fill="var(--svg-bg)" stroke="var(--svg-warning)" stroke-width="1" rx="4"/>
     <text x="680" y="230" class="cache-text" text-anchor="middle" font-weight="500">Response</text>
-    <text x="650" y="245" class="annotation-text">• API結果</text>
+    <text x="650" y="245" class="annotation-text">• API 結果</text>
     <text x="650" y="255" class="annotation-text">• JSON</text>
   </g>
 
@@ -123,35 +123,35 @@
   <g id="db-cache">
     <rect x="60" y="300" width="680" height="120" class="db-cache" rx="4"/>
     <text x="400" y="320" class="layer-title" text-anchor="middle">データベースレベルキャッシュ</text>
-    
+
     <!-- Query Cache -->
     <rect x="80" y="330" width="120" height="70" fill="var(--svg-bg)" stroke="var(--svg-success)" stroke-width="1" rx="4"/>
     <text x="140" y="350" class="cache-text" text-anchor="middle" font-weight="500">Query Cache</text>
     <text x="90" y="365" class="annotation-text">• 結果セット</text>
     <text x="90" y="380" class="annotation-text">• プリペアード</text>
     <text x="90" y="395" class="annotation-text">• 実行計画</text>
-    
+
     <!-- Connection Pool -->
     <rect x="220" y="330" width="120" height="70" fill="var(--svg-bg)" stroke="var(--svg-success)" stroke-width="1" rx="4"/>
     <text x="280" y="350" class="cache-text" text-anchor="middle" font-weight="500">Connection Pool</text>
     <text x="230" y="365" class="annotation-text">• PgBouncer</text>
     <text x="230" y="380" class="annotation-text">• 接続再利用</text>
     <text x="230" y="395" class="annotation-text">• トランザクション</text>
-    
+
     <!-- Materialized Views -->
     <rect x="360" y="330" width="120" height="70" fill="var(--svg-bg)" stroke="var(--svg-success)" stroke-width="1" rx="4"/>
     <text x="420" y="350" class="cache-text" text-anchor="middle" font-weight="500">Materialized View</text>
     <text x="370" y="365" class="annotation-text">• 事前計算</text>
     <text x="370" y="380" class="annotation-text">• 集計データ</text>
     <text x="370" y="395" class="annotation-text">• 定期更新</text>
-    
+
     <!-- Redis Cache -->
     <rect x="500" y="330" width="120" height="70" fill="var(--svg-bg)" stroke="var(--svg-success)" stroke-width="1" rx="4"/>
     <text x="560" y="350" class="cache-text" text-anchor="middle" font-weight="500">Redis Cache</text>
     <text x="510" y="365" class="annotation-text">• セッション</text>
     <text x="510" y="380" class="annotation-text">• 頻繁アクセス</text>
     <text x="510" y="395" class="annotation-text">• リアルタイムデータ</text>
-    
+
     <!-- Buffer Cache -->
     <rect x="640" y="330" width="80" height="70" fill="var(--svg-bg)" stroke="var(--svg-success)" stroke-width="1" rx="4"/>
     <text x="680" y="350" class="cache-text" text-anchor="middle" font-weight="500">Buffer</text>
@@ -164,7 +164,7 @@
   <g id="invalidation-strategy">
     <rect x="60" y="440" width="340" height="140" fill="var(--svg-error)" fill-opacity="0.05" stroke="var(--svg-error)" stroke-width="2" rx="4"/>
     <text x="230" y="460" class="cache-text" text-anchor="middle" font-weight="500">キャッシュ無効化戦略</text>
-    
+
     <!-- TTL Based -->
     <rect x="80" y="470" width="100" height="90" fill="var(--svg-bg)" stroke="var(--svg-error)" stroke-width="1" rx="4"/>
     <text x="130" y="490" class="cache-text" text-anchor="middle" font-weight="500">TTLベース</text>
@@ -172,7 +172,7 @@
     <text x="90" y="520" class="annotation-text">• 自動失効</text>
     <text x="90" y="535" class="annotation-text">• シンプル</text>
     <text x="90" y="550" class="annotation-text">• 遅延可能性</text>
-    
+
     <!-- Event Based -->
     <rect x="190" y="470" width="100" height="90" fill="var(--svg-bg)" stroke="var(--svg-error)" stroke-width="1" rx="4"/>
     <text x="240" y="490" class="cache-text" text-anchor="middle" font-weight="500">イベント駆動</text>
@@ -180,11 +180,11 @@
     <text x="200" y="520" class="annotation-text">• Webhook</text>
     <text x="200" y="535" class="annotation-text">• リアルタイム</text>
     <text x="200" y="550" class="annotation-text">• 複雑</text>
-    
+
     <!-- Manual -->
     <rect x="300" y="470" width="80" height="90" fill="var(--svg-bg)" stroke="var(--svg-error)" stroke-width="1" rx="4"/>
     <text x="340" y="490" class="cache-text" text-anchor="middle" font-weight="500">手動無効化</text>
-    <text x="310" y="505" class="annotation-text">• API呼出</text>
+    <text x="310" y="505" class="annotation-text">• API 呼出</text>
     <text x="310" y="520" class="annotation-text">• 管理画面</text>
     <text x="310" y="535" class="annotation-text">• 即座</text>
     <text x="310" y="550" class="annotation-text">• 運用負荷</text>
@@ -194,26 +194,26 @@
   <g id="performance-metrics">
     <rect x="420" y="440" width="320" height="140" fill="var(--svg-primary)" fill-opacity="0.05" stroke="var(--svg-primary)" stroke-width="2" rx="4"/>
     <text x="580" y="460" class="cache-text" text-anchor="middle" font-weight="500">パフォーマンス指標</text>
-    
+
     <!-- Hit Rate -->
     <rect x="440" y="470" width="140" height="40" fill="var(--svg-bg)" stroke="var(--svg-primary)" stroke-width="1" rx="4"/>
     <text x="510" y="490" class="cache-text" text-anchor="middle" font-weight="500">キャッシュヒット率</text>
     <text x="510" y="505" class="annotation-text" text-anchor="middle">目標: >90%</text>
-    
+
     <!-- Latency -->
     <rect x="590" y="470" width="130" height="40" fill="var(--svg-bg)" stroke="var(--svg-primary)" stroke-width="1" rx="4"/>
     <text x="655" y="490" class="cache-text" text-anchor="middle" font-weight="500">レイテンシ削減</text>
     <text x="655" y="505" class="annotation-text" text-anchor="middle">50〜80% 改善</text>
-    
+
     <!-- Bandwidth -->
     <rect x="440" y="520" width="140" height="40" fill="var(--svg-bg)" stroke="var(--svg-primary)" stroke-width="1" rx="4"/>
     <text x="510" y="540" class="cache-text" text-anchor="middle" font-weight="500">帯域幅削減</text>
     <text x="510" y="555" class="annotation-text" text-anchor="middle">60〜70% 削減</text>
-    
+
     <!-- Cost -->
     <rect x="590" y="520" width="130" height="40" fill="var(--svg-bg)" stroke="var(--svg-primary)" stroke-width="1" rx="4"/>
     <text x="655" y="540" class="cache-text" text-anchor="middle" font-weight="500">コスト削減</text>
-    <text x="655" y="555" class="annotation-text" text-anchor="middle">DB負荷軽減</text>
+    <text x="655" y="555" class="annotation-text" text-anchor="middle">DB 負荷軽減</text>
   </g>
 
   <!-- Cache Flow Arrows -->

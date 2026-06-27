@@ -6,37 +6,37 @@ title: "第3章：パターン1 - クライアントサイド実装"
 # 第3章：パターン1 - クライアントサイド実装
 
 ---
-**目次に戻る**: [はじめに]({{ '/introduction/' | relative_url }})  
-**前の章**: [第2章：認証・認可設計]({{ '/chapters/chapter02/' | relative_url }})  
-**次の章**: [第4章：パターン2 - Edge Functions活用]({{ '/chapters/chapter04/' | relative_url }})  
-**学習レベル**:  基礎 ➜  応用  
-**推定学習時間**: 6〜10時間  
+**目次に戻る**: [はじめに]({{ '/introduction/' | relative_url }})
+**前の章**: [第2章：認証・認可設計]({{ '/chapters/chapter02/' | relative_url }})
+**次の章**: [第4章：パターン2 - Edge Functions 活用]({{ '/chapters/chapter04/' | relative_url }})
+**学習レベル**:  基礎 ➜  応用
+**推定学習時間**: 6〜10時間
 **アーキテクチャ**: 木造住宅工法（シンプル・高速・個人向け）
 ---
 
 ## この章で扱う構成
 - 構成: クライアント直結（Client Only）
-- 推奨用途: 小規模/試作/シンプルCRUD
+- 推奨用途: 小規模/試作/シンプル CRUD
 - 非推奨用途: 複雑な業務ロジックや監査要件があるケース
 
 ## **前章の復習**（第2章からの継続）
 
 第2章で学んだ**認証・認可の基本概念**を振り返りましょう：
 - [OK] **認証（Authentication）**: 「あなたは誰ですか？」の確認
-- [OK] **認可（Authorization）**: 「何をしていいですか？」の制御  
+- [OK] **認可（Authorization）**: 「何をしていいですか？」の制御
 - [OK] **RLS（Row Level Security）**: データベースレベルでの自動アクセス制御
-- [OK] **JWT**: 安全なセッション管理・API認証の仕組み
+- [OK] **JWT**: 安全なセッション管理・API 認証の仕組み
 
 これらのセキュリティ基盤を使って、今度は**実際に動くアプリケーション**を作成します。
 
-> **第2章の理解度確認**: 認証と認可の違い、RLSの役割を説明できますか？不安な場合は[第2章]({{ '/chapters/chapter02/' | relative_url }})を復習してください。
+> **第2章の理解度確認**: 認証と認可の違い、RLS の役割を説明できますか？不安な場合は[第2章]({{ '/chapters/chapter02/' | relative_url }})を復習してください。
 
 ## この章で学ぶこと（初心者向け）
 
-この章では、**「手作りアプリ」**的なアプローチでSupabaseを使った実用的なアプリを作ります。
+この章では、**「手作りアプリ」**的なアプローチで Supabase を使った実用的なアプリを作ります。
 
-- **初心者**: Pythonアプリが実際にSupabaseと通信する様子がわかる
-- **中級者**: リアルタイム機能とエラーハンドリングの実装方法がわかる  
+- **初心者**: Pythonアプリが実際に Supabase と通信する様子がわかる
+- **中級者**: リアルタイム機能とエラーハンドリングの実装方法がわかる
 - **上級者**: クライアントサイドアーキテクチャの設計パターンが理解できる
 
 ## まずは身近な例から：「デスクトップのTodoアプリ」
@@ -56,14 +56,14 @@ title: "第3章：パターン1 - クライアントサイド実装"
 flowchart TD
     A[Pythonアプリ] --> B[データファイル<br/>pickle/json]
     A --> C[データベース<br/>SQLite]
-    A --> D[サーバー<br/>自作API]
-    
+    A --> D[サーバー<br/>自作 API]
+
     E[開発者] --> F[全部自分で<br/>作る必要がある]
 ```
 
 **大変なこと**：
 - データベース設計・管理
-- サーバー・API開発  
+- サーバー・API 開発
 - リアルタイム同期の仕組み
 - ログイン機能の実装
 - 複数デバイス対応
@@ -76,12 +76,12 @@ flowchart TD
     B --> C[ データ保存<br/>PostgreSQL]
     B --> D[ ログイン<br/>Auth]
     B --> E[ リアルタイム<br/>Realtime]
-    
+
     F[開発者] --> G[アプリのロジックだけ<br/>集中できる！]
 ```
 
 **メリット**：
-- **シンプル**: PythonからSupabaseに直接接続
+- **シンプル**: Pythonから Supabase に直接接続
 - **高速開発**: サーバー不要で即座にプロトタイプ
 - **低コスト**: サーバー運用費用なし
 - **デバッグ簡単**: 全てのコードが手元にある
@@ -116,7 +116,7 @@ flowchart TD
 
 ```text
  デスクトップアプリ: Python Flet
-   └─ 「Windowsアプリのような見た目が作れるPythonライブラリ」
+   └─ 「Windows アプリのような見た目が作れるPythonライブラリ」
 
  バックエンド: Supabase
    ├─  データ保存: PostgreSQL
@@ -143,7 +143,7 @@ flowchart TD
 ├──  config/                # ← 設定関連
 ├──  models/                # ← データモデル
 ├──  services/              # ← 各種サービス
-├──  ui/                    # ← 画面・UI関連
+├──  ui/                    # ← 画面・UI 関連
 └──  utils/                 # ← ユーティリティ
 ```
 
@@ -180,7 +180,7 @@ async def main(page: ft.Page):
     page.title = "タスク管理システム"
     page.window_width = 1200
     page.window_height = 800
-    
+
     # アプリケーション初期化・起動
     app = TaskManagerApp(page)
     await app.run()
@@ -215,7 +215,7 @@ from ui.pages.dashboard_page import DashboardPage
 
 class AppState:
     """アプリケーション状態管理"""
-    
+
     def __init__(self):
         self.current_user = None      # 現在ログインしているユーザー
         self.current_page = "login"   # 今表示している画面
@@ -224,19 +224,19 @@ class AppState:
 
 class TaskManagerApp:
     """タスク管理アプリケーションメインクラス"""
-    
+
     def __init__(self, page: ft.Page):
         self.page = page
         self.state = AppState()
-        
-        # Supabaseと通信するサービスを初期化
+
+        # Supabase と通信するサービスを初期化
         self.auth_service = AuthService()    # ログイン・ログアウト
         self.task_service = TaskService()    # タスクの作成・表示・更新
-        
+
         # 画面ページ
         self.login_page = LoginPage(self)
         self.dashboard_page = DashboardPage(self)
-    
+
     async def run(self):
         """アプリケーションを開始"""
         # 最初はログイン画面を表示
@@ -253,9 +253,9 @@ class TaskManagerApp:
 | `LoginPage` | ログイン画面 | アプリの玄関口 |
 | `DashboardPage` | メイン画面 | タスクが表示される居間 |
 
-### Step 3: Supabaseとの通信（auth_service.py）
+### Step 3: Supabase との通信（auth_service.py）
 
-ログイン機能がどのようにSupabaseと通信するかを見てみましょう：
+ログイン機能がどのように Supabase と通信するかを見てみましょう：
 
 ```python
 # services/auth_service.py（抜粋・簡略化）
@@ -265,28 +265,28 @@ import os
 
 class AuthService:
     def __init__(self):
-        # Supabaseに接続
+        # Supabase に接続
         url = os.getenv("SUPABASE_URL")
         key = os.getenv("SUPABASE_PUBLISHABLE_KEY")
         self.supabase = create_client(url, key)
-    
+
     async def login(self, email: str, password: str):
         """ログイン処理"""
         try:
-            # Supabaseにログイン情報を送信
+            # Supabase にログイン情報を送信
             response = await self.supabase.auth.sign_in_with_password({
                 "email": email,
                 "password": password
             })
-            
+
             if response.user:
                 return {"success": True, "user": response.user}
             else:
                 return {"success": False, "error": "ログインに失敗しました"}
-                
+
         except Exception as e:
             return {"success": False, "error": str(e)}
-    
+
     async def signup(self, email: str, password: str):
         """ユーザー登録処理"""
         try:
@@ -303,8 +303,8 @@ class AuthService:
 
 | コード部分 | 何をしているか | 身近な例 |
 |:----------|:-------------|:---------|
-| `create_client(url, key)` | Supabaseへの接続を準備 | 銀行のATMにカードを挿入 |
-| `sign_in_with_password()` | ログイン情報をSupabaseに送信 | ATMに暗証番号を入力 |
+| `create_client(url, key)` | Supabase への接続を準備 | 銀行のATMにカードを挿入 |
+| `sign_in_with_password()` | ログイン情報を Supabase に送信 | ATMに暗証番号を入力 |
 | `response.user` | ログイン成功時のユーザー情報 | ATMが「ようこそ田中様」と表示 |
 | `try/except` | エラーが起きた時の対処 | ATMで「暗証番号が違います」と表示 |
 
@@ -333,7 +333,7 @@ class TaskStatus(str, Enum):
 
 class Task(BaseModel):
     """タスクモデル"""
-    
+
     id: int = None                    # タスクの番号
     title: str                       # タスクのタイトル（「牛乳を買う」等）
     description: str = None          # 詳細説明（省略可能）
@@ -343,14 +343,14 @@ class Task(BaseModel):
     user_id: str = None             # 作成したユーザー
     created_at: datetime = None     # 作成日時
     updated_at: datetime = None     # 更新日時
-    
+
     @property
     def is_overdue(self) -> bool:
         """期限切れかどうかを判定"""
         if self.due_date and self.status != "completed":
             return self.due_date < date.today()
         return False
-    
+
     @property
     def priority_color(self) -> str:
         """優先度に応じた色を返す"""
@@ -385,17 +385,17 @@ flowchart TD
     C -->|Yes| D[ メイン画面<br/>DashboardPage]
     C -->|No| E[NG エラー表示]
     E --> B
-    
+
     D --> F[ タスク作成]
     D --> G[ タスク表示]
     D --> H[ タスク編集]
     D --> I[ タスク削除]
-    
-    F --> J[ Supabaseに保存<br/>task_service.py]
-    G --> K[ Supabaseから読込<br/>task_service.py]
+
+    F --> J[ Supabase に保存<br/>task_service.py]
+    G --> K[ Supabase から読込<br/>task_service.py]
     H --> J
     I --> J
-    
+
     J --> L[ リアルタイム更新<br/>他のユーザーにも即座に反映]
     K --> L
     L --> M[ 画面を自動更新]
@@ -404,10 +404,10 @@ flowchart TD
 
 **流れの説明**：
 1. **アプリ起動**: main.py でアプリが始まる
-2. **ログイン**: AuthService を使ってSupabaseに認証
+2. **ログイン**: AuthService を使って Supabase に認証
 3. **メイン画面**: DashboardPage でタスク一覧を表示
 4. **タスク操作**: 作成・表示・編集・削除
-5. **データ同期**: Supabaseを通じて他のユーザーとリアルタイム同期
+5. **データ同期**: Supabase を通じて他のユーザーとリアルタイム同期
 6. **画面更新**: 変更があると自動で画面が更新される
 
 ---
@@ -419,7 +419,7 @@ flowchart TD
 **必要なもの**：
 - Python 3.11以上
 - テキストエディタ（VS Code推奨）
-- Supabaseアカウント（無料）
+- Supabase アカウント（無料）
 
 **セットアップ手順**：
 
@@ -443,14 +443,14 @@ pip install -r requirements.txt
 cp .env.example .env
 ```
 
-### Step 2: Supabase設定
+### Step 2: Supabase 設定
 
-1. **Supabaseプロジェクト作成**
+1. **Supabase プロジェクト作成**
    - https://supabase.com にアクセス
    - 「New Project」でプロジェクト作成
    - プロジェクト名: `task-manager-tutorial`
 
-2. **API設定の取得**
+2. **API 設定の取得**
    - Project Settings → API
    - 「URL」と「publishable key」をコピー
 
@@ -463,7 +463,7 @@ cp .env.example .env
 
 ### Step 3: データベーステーブル作成
 
-Supabase Dashboard で以下のSQLを実行：
+Supabase Dashboard で以下の SQL を実行：
 
 ```sql
 -- タスクテーブル作成
@@ -486,7 +486,7 @@ ALTER TABLE tasks ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Users can view own tasks" ON tasks
     FOR SELECT USING (auth.uid() = user_id);
 
--- ユーザーは自分のタスクのみ作成可能  
+-- ユーザーは自分のタスクのみ作成可能
 CREATE POLICY "Users can create own tasks" ON tasks
     FOR INSERT WITH CHECK (auth.uid() = user_id);
 
@@ -519,7 +519,7 @@ python main.py
 
 | テスト項目 | 操作手順 | 期待結果 |
 |:----------|:---------|:---------|
-|  ユーザー登録 | メール・パスワード入力→「登録」 | Supabaseからメール認証要求 |
+|  ユーザー登録 | メール・パスワード入力→「登録」 | Supabase からメール認証要求 |
 |  ログイン | 認証済みメール・パスワード→「ログイン」 | メイン画面に遷移 |
 |  タスク作成 | 「+」ボタン→タイトル入力→「保存」 | タスクが一覧に表示 |
 |  タスク編集 | タスククリック→内容変更→「保存」 | 変更が反映される |
@@ -602,7 +602,7 @@ pip install flet==0.21.2
 |:----------------|:-------------|:-------------|
 | 環境構築でエラー | Python・pip未インストール | 公式サイトから最新版をインストール |
 | モジュールエラー | 仮想環境を使っていない | `python -m venv venv` で仮想環境作成 |
-| Supabaseエラー | API キーの設定ミス | Dashboard で正しいキーをコピー |
+| Supabase エラー | API キーの設定ミス | Dashboard で正しいキーをコピー |
 | アプリが起動しない | 依存関係の不備 | `pip install -r requirements.txt` を再実行 |
 
 ### 中級者（プログラミング経験1〜3年）
@@ -642,7 +642,7 @@ pip install flet==0.21.2
 **学習の進め方**：
 1. [OK] **設計思想の理解**: なぜこのパターンを選択したか
 2. [OK] **制約と限界の把握**: クライアントサイドの課題
-3. [OK] **他手法との比較**: Edge Functions・独立APIとの違い
+3. [OK] **他手法との比較**: Edge Functions・独立 API との違い
 4. [OK] **プロダクション対応**: 運用を見据えた改善
 
 **プロダクション課題**：
@@ -654,13 +654,13 @@ pip install flet==0.21.2
 ### 各レベル共通の学習チェックリスト
 
 **基本理解**：
-- [] Supabaseクライアントライブラリの使い方
+- [] Supabase クライアントライブラリの使い方
 - [] Row Level Security (RLS) の仕組み
 - [] リアルタイム機能の実装方法
 - [] 認証・認可の統合方法
 
 **実践スキル**：
-- [] Python + Flet でのGUIアプリ開発
+- [] Python + Flet での GUI アプリ開発
 - [] 非同期処理（async/await）の活用
 - [] エラーハンドリングとログ出力
 - [] 環境変数と設定管理
@@ -678,15 +678,15 @@ pip install flet==0.21.2
 | 確認項目 | チェック |
 |:---------|:--------:|
 | タスク管理アプリが正常に動作する | □ |
-| Supabaseの基本操作ができる | □ |
-| RLSの仕組みを理解している | □ |
+| Supabase の基本操作ができる | □ |
+| RLS の仕組みを理解している | □ |
 | 基本的なエラーは自力で解決できる | □ |
 
 **第4章 の予習ポイント**：
 - **Edge Functions**: サーバーレス関数の概念
 - **Deno**: Node.js とは異なるランタイム
 - **TypeScript**: 型安全なJavaScript
-- **API設計**: RESTful なエンドポイント設計
+- **API 設計**: RESTful なエンドポイント設計
 
 ---
 
@@ -701,7 +701,7 @@ task-manager/
 ├── config/
 │   ├── __init__.py
 │   ├── settings.py         # 設定管理
-│   └── database.py         # Supabase接続設定
+│   └── database.py         # Supabase 接続設定
 ├── models/
 │   ├── __init__.py
 │   ├── base.py            # 基底モデル
@@ -745,25 +745,25 @@ from typing import Optional
 import os
 
 class Settings(BaseSettings):
-    # Supabase設定
+    # Supabase 設定
     SUPABASE_URL: str
     SUPABASE_PUBLISHABLE_KEY: str
     SUPABASE_SECRET_KEY: Optional[str] = None
-    
+
     # アプリケーション設定
     APP_NAME: str = "Task Manager"
     APP_VERSION: str = "1.0.0"
     DEBUG: bool = False
-    
+
     # キャッシュ設定
     CACHE_TTL: int = 300  # 5分
     MAX_CACHE_SIZE: int = 1000
-    
-    # UI設定
+
+    # UI 設定
     WINDOW_WIDTH: int = 1200
     WINDOW_HEIGHT: int = 800
     THEME_MODE: str = "light"
-    
+
     class Config:
         env_file = ".env"
         case_sensitive = True
@@ -781,36 +781,36 @@ import logging
 class SupabaseManager:
     _instance: Optional['SupabaseManager'] = None
     _client: Optional[Client] = None
-    
+
     def __new__(cls) -> 'SupabaseManager':
         if cls._instance is None:
             cls._instance = super().__new__(cls)
         return cls._instance
-    
+
     def initialize(self) -> Client:
-        """Supabaseクライアント初期化"""
+        """Supabase クライアント初期化"""
         if self._client is None:
             try:
                 self._client = create_client(
                     supabase_url=settings.SUPABASE_URL,
                     supabase_key=settings.SUPABASE_PUBLISHABLE_KEY
                 )
-                logging.info("Supabaseクライアント初期化完了")
+                logging.info("Supabase クライアント初期化完了")
             except Exception as e:
-                logging.error(f"Supabase初期化エラー: {e}")
+                logging.error(f"Supabase 初期化エラー: {e}")
                 raise
         return self._client
-    
+
     @property
     def client(self) -> Client:
         if self._client is None:
             return self.initialize()
         return self._client
-    
+
     def get_user(self):
         """現在のユーザー取得"""
         return self._client.auth.get_user()
-    
+
     def is_authenticated(self) -> bool:
         """認証状態確認"""
         try:
@@ -836,7 +836,7 @@ class BaseEntity(BaseModel):
     id: Optional[int] = None
     created_at: Optional[datetime] = None
     updated_at: Optional[datetime] = None
-    
+
     class Config:
         from_attributes = True
         json_encoders = {
@@ -844,15 +844,15 @@ class BaseEntity(BaseModel):
         }
 
 class SupabaseResponse(BaseModel):
-    """Supabase APIレスポンス基底クラス"""
+    """Supabase API レスポンス基底クラス"""
     data: Optional[Any] = None
     error: Optional[Dict[str, Any]] = None
     count: Optional[int] = None
-    
+
     @property
     def is_success(self) -> bool:
         return self.error is None
-    
+
     @property
     def error_message(self) -> str:
         if self.error:
@@ -876,7 +876,7 @@ class TaskPriority(str, Enum):
 
 class TaskStatus(str, Enum):
     TODO = "todo"
-    IN_PROGRESS = "in_progress" 
+    IN_PROGRESS = "in_progress"
     COMPLETED = "completed"
     CANCELLED = "cancelled"
 
@@ -891,7 +891,7 @@ class Task(BaseEntity):
     assignee_id: Optional[str] = None
     project_id: Optional[int] = None
     tags: Optional[list[str]] = Field(default_factory=list)
-    
+
     @validator('completed_at', always=True)
     def set_completed_at(cls, v, values):
         """完了状態時の自動タイムスタンプ設定"""
@@ -900,14 +900,14 @@ class Task(BaseEntity):
         elif values.get('status') != TaskStatus.COMPLETED:
             return None
         return v
-    
+
     @property
     def is_overdue(self) -> bool:
         """期限切れ判定"""
         if self.due_date and self.status not in [TaskStatus.COMPLETED, TaskStatus.CANCELLED]:
             return self.due_date < date.today()
         return False
-    
+
     @property
     def priority_order(self) -> int:
         """優先度による並び順"""
@@ -927,7 +927,7 @@ class TaskFilter(BaseModel):
     project_id: Optional[int] = None
     overdue_only: bool = False
     search_query: Optional[str] = None
-    
+
 class TaskCreate(BaseModel):
     title: str = Field(..., min_length=1, max_length=200)
     description: Optional[str] = Field(None, max_length=1000)
@@ -962,8 +962,8 @@ class AuthService:
     def __init__(self):
         self.supabase = supabase_manager.client
         self._current_user: Optional[User] = None
-    
-    async def sign_up(self, email: str, password: str, 
+
+    async def sign_up(self, email: str, password: str,
                       user_data: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
         """ユーザー登録"""
         try:
@@ -974,17 +974,17 @@ class AuthService:
                     "data": user_data or {}
                 }
             })
-            
+
             if response.user:
                 logging.info(f"ユーザー登録成功: {email}")
                 return {"success": True, "user": response.user}
             else:
                 return {"success": False, "error": "Registration failed"}
-                
+
         except AuthError as e:
             logging.error(f"登録エラー: {e}")
             return {"success": False, "error": str(e)}
-    
+
     async def sign_in(self, email: str, password: str) -> Dict[str, Any]:
         """ログイン"""
         try:
@@ -992,18 +992,18 @@ class AuthService:
                 "email": email,
                 "password": password
             })
-            
+
             if response.user:
                 self._current_user = User(**response.user.model_dump())
                 logging.info(f"ログイン成功: {email}")
                 return {"success": True, "user": response.user}
             else:
                 return {"success": False, "error": "Invalid credentials"}
-                
+
         except AuthError as e:
             logging.error(f"ログインエラー: {e}")
             return {"success": False, "error": str(e)}
-    
+
     async def sign_out(self) -> Dict[str, Any]:
         """ログアウト"""
         try:
@@ -1014,12 +1014,12 @@ class AuthService:
         except AuthError as e:
             logging.error(f"ログアウトエラー: {e}")
             return {"success": False, "error": str(e)}
-    
+
     def get_current_user(self) -> Optional[User]:
         """現在のユーザー取得"""
         if self._current_user:
             return self._current_user
-            
+
         try:
             user_response = self.supabase.auth.get_user()
             if user_response.user:
@@ -1028,24 +1028,24 @@ class AuthService:
         except:
             pass
         return None
-    
+
     def is_authenticated(self) -> bool:
         """認証状態確認"""
         return self.get_current_user() is not None
-    
+
     async def update_user(self, user_data: UserUpdate) -> Dict[str, Any]:
         """ユーザー情報更新"""
         try:
             response = await self.supabase.auth.update_user({
                 "data": user_data.model_dump(exclude_unset=True)
             })
-            
+
             if response.user:
                 self._current_user = User(**response.user.model_dump())
                 return {"success": True, "user": response.user}
             else:
                 return {"success": False, "error": "Update failed"}
-                
+
         except AuthError as e:
             logging.error(f"ユーザー更新エラー: {e}")
             return {"success": False, "error": str(e)}
@@ -1070,22 +1070,22 @@ class TaskService:
     def __init__(self):
         self.supabase = supabase_manager.client
         self.table_name = "tasks"
-    
+
     async def create_task(self, task_data: TaskCreate) -> Dict[str, Any]:
         """タスク作成"""
         try:
             current_user = auth_service.get_current_user()
             if not current_user:
                 return {"success": False, "error": "認証が必要です"}
-            
+
             # タスクデータに作成者を設定
             task_dict = task_data.model_dump()
             task_dict["user_id"] = current_user.id
-            
+
             response = await self.supabase.table(self.table_name)\
                 .insert(task_dict)\
                 .execute()
-            
+
             if response.data:
                 task = Task(**response.data[0])
                 # キャッシュ無効化
@@ -1094,101 +1094,101 @@ class TaskService:
                 return {"success": True, "task": task}
             else:
                 return {"success": False, "error": "タスク作成に失敗しました"}
-                
+
         except APIError as e:
             logging.error(f"タスク作成エラー: {e}")
             return {"success": False, "error": str(e)}
-    
+
     async def get_tasks(self, filter_params: Optional[TaskFilter] = None) -> List[Task]:
         """タスク一覧取得"""
         try:
             current_user = auth_service.get_current_user()
             if not current_user:
                 return []
-            
+
             # キャッシュキー生成
             cache_key = f"tasks:{current_user.id}"
             if filter_params:
                 cache_key += f":{hash(filter_params.model_dump_json())}"
-            
+
             # キャッシュチェック
             cached_tasks = cache_manager.get(cache_key)
             if cached_tasks is not None:
                 return [Task(**task) for task in cached_tasks]
-            
+
             # データベースクエリ構築
             query = self.supabase.table(self.table_name)\
                 .select("*")\
                 .eq("user_id", current_user.id)
-            
+
             # フィルタ適用
             if filter_params:
                 query = self._apply_filters(query, filter_params)
-            
+
             # 並び順設定
             query = query.order("created_at", desc=True)
-            
+
             response = await query.execute()
-            
+
             if response.data:
                 tasks = [Task(**task_data) for task_data in response.data]
                 # キャッシュ保存
                 cache_manager.set(
-                    cache_key, 
+                    cache_key,
                     [task.model_dump() for task in tasks]
                 )
                 return tasks
             else:
                 return []
-                
+
         except APIError as e:
             logging.error(f"タスク取得エラー: {e}")
             return []
-    
+
     def _apply_filters(self, query, filters: TaskFilter):
         """フィルタ条件をクエリに適用"""
         if filters.status:
             query = query.eq("status", filters.status)
-        
+
         if filters.priority:
             query = query.eq("priority", filters.priority)
-        
+
         if filters.assignee_id:
             query = query.eq("assignee_id", filters.assignee_id)
-        
+
         if filters.project_id:
             query = query.eq("project_id", filters.project_id)
-        
+
         if filters.search_query:
             query = query.or_(
                 f"title.ilike.%{filters.search_query}%,"
                 f"description.ilike.%{filters.search_query}%"
             )
-        
+
         if filters.overdue_only:
             from datetime import date
             query = query.lt("due_date", date.today().isoformat())\
                          .in_("status", ["todo", "in_progress"])
-        
+
         return query
-    
-    async def update_task(self, task_id: int, 
+
+    async def update_task(self, task_id: int,
                          update_data: TaskUpdate) -> Dict[str, Any]:
         """タスク更新"""
         try:
             current_user = auth_service.get_current_user()
             if not current_user:
                 return {"success": False, "error": "認証が必要です"}
-            
+
             # 更新データ準備
             update_dict = update_data.model_dump(exclude_unset=True)
-            
+
             response = await self.supabase.table(self.table_name)\
                 .update(update_dict)\
                 .eq("id", task_id)\
                 .eq("user_id", current_user.id)\
                 .execute()
-            
+
             if response.data:
                 task = Task(**response.data[0])
                 # キャッシュ無効化
@@ -1197,24 +1197,24 @@ class TaskService:
                 return {"success": True, "task": task}
             else:
                 return {"success": False, "error": "タスクが見つからないか、更新権限がありません"}
-                
+
         except APIError as e:
             logging.error(f"タスク更新エラー: {e}")
             return {"success": False, "error": str(e)}
-    
+
     async def delete_task(self, task_id: int) -> Dict[str, Any]:
         """タスク削除"""
         try:
             current_user = auth_service.get_current_user()
             if not current_user:
                 return {"success": False, "error": "認証が必要です"}
-            
+
             response = await self.supabase.table(self.table_name)\
                 .delete()\
                 .eq("id", task_id)\
                 .eq("user_id", current_user.id)\
                 .execute()
-            
+
             if response.data:
                 # キャッシュ無効化
                 cache_manager.clear_pattern("tasks:*")
@@ -1222,36 +1222,36 @@ class TaskService:
                 return {"success": True}
             else:
                 return {"success": False, "error": "タスクが見つからないか、削除権限がありません"}
-                
+
         except APIError as e:
             logging.error(f"タスク削除エラー: {e}")
             return {"success": False, "error": str(e)}
-    
+
     async def get_task_statistics(self) -> Dict[str, Any]:
         """タスク統計情報取得"""
         try:
             current_user = auth_service.get_current_user()
             if not current_user:
                 return {}
-            
+
             cache_key = f"task_stats:{current_user.id}"
             cached_stats = cache_manager.get(cache_key)
             if cached_stats is not None:
                 return cached_stats
-            
+
             # 各ステータスの件数取得
             response = await self.supabase.rpc(
                 'get_task_statistics',
                 {'user_uuid': current_user.id}
             ).execute()
-            
+
             if response.data:
                 stats = response.data[0]
                 cache_manager.set(cache_key, stats, ttl=60)  # 1分キャッシュ
                 return stats
             else:
                 return {}
-                
+
         except APIError as e:
             logging.error(f"統計取得エラー: {e}")
             return {}
@@ -1281,7 +1281,7 @@ class RealtimeService:
         self._subscriptions: Dict[str, Any] = {}
         self._callbacks: Dict[str, list[Callable]] = {}
         self._is_connected = False
-        
+
     async def connect(self):
         """リアルタイム接続開始"""
         try:
@@ -1289,86 +1289,86 @@ class RealtimeService:
             if not current_user:
                 logging.warning("リアルタイム接続: ユーザー未認証")
                 return False
-            
+
             # タスクテーブルの変更を監視
             await self._subscribe_to_tasks()
             self._is_connected = True
             logging.info("リアルタイム接続成功")
             return True
-            
+
         except Exception as e:
             logging.error(f"リアルタイム接続エラー: {e}")
             return False
-    
+
     async def disconnect(self):
         """リアルタイム接続終了"""
         try:
             for subscription_id in list(self._subscriptions.keys()):
                 await self._unsubscribe(subscription_id)
-            
+
             self._is_connected = False
             logging.info("リアルタイム接続終了")
-            
+
         except Exception as e:
             logging.error(f"リアルタイム切断エラー: {e}")
-    
+
     async def _subscribe_to_tasks(self):
         """タスクテーブル変更監視"""
         current_user = auth_service.get_current_user()
         if not current_user:
             return
-        
+
         subscription_id = "tasks_subscription"
-        
+
         # 既存の購読があれば削除
         if subscription_id in self._subscriptions:
             await self._unsubscribe(subscription_id)
-        
+
         try:
-            # Supabase Realtime購読
+            # Supabase Realtime 購読
             subscription = self.supabase.table("tasks")\
                 .on("*", self._handle_task_change)\
                 .subscribe()
-            
+
             self._subscriptions[subscription_id] = subscription
             logging.info("タスクリアルタイム監視開始")
-            
+
         except Exception as e:
             logging.error(f"タスク監視エラー: {e}")
-    
+
     def _handle_task_change(self, payload: Dict[str, Any]):
         """タスク変更イベントハンドラ"""
         try:
             event_type = payload.get("eventType")
             record = payload.get("new", payload.get("old", {}))
-            
+
             current_user = auth_service.get_current_user()
             if not current_user:
                 return
-            
+
             # 自分のタスクのみ処理
             if record.get("user_id") != current_user.id:
                 return
-            
+
             logging.info(f"タスク変更検知: {event_type}, ID: {record.get('id')}")
-            
+
             # 登録されたコールバック実行
             for callback in self._callbacks.get("task_change", []):
                 try:
                     callback(event_type, record)
                 except Exception as e:
                     logging.error(f"コールバック実行エラー: {e}")
-                    
+
         except Exception as e:
             logging.error(f"タスク変更処理エラー: {e}")
-    
+
     def register_callback(self, event_type: str, callback: Callable):
         """コールバック登録"""
         if event_type not in self._callbacks:
             self._callbacks[event_type] = []
         self._callbacks[event_type].append(callback)
         logging.info(f"コールバック登録: {event_type}")
-    
+
     def unregister_callback(self, event_type: str, callback: Callable):
         """コールバック解除"""
         if event_type in self._callbacks:
@@ -1377,7 +1377,7 @@ class RealtimeService:
                 logging.info(f"コールバック解除: {event_type}")
             except ValueError:
                 pass
-    
+
     async def _unsubscribe(self, subscription_id: str):
         """購読解除"""
         if subscription_id in self._subscriptions:
@@ -1388,7 +1388,7 @@ class RealtimeService:
                 logging.info(f"購読解除: {subscription_id}")
             except Exception as e:
                 logging.error(f"購読解除エラー: {e}")
-    
+
     @property
     def is_connected(self) -> bool:
         return self._is_connected
@@ -1437,35 +1437,35 @@ from utils.exceptions import *
 class ErrorHandler:
     def __init__(self):
         self.error_callbacks: Dict[type, Callable] = {}
-    
+
     def register_handler(self, exception_type: type, handler: Callable):
         """エラーハンドラ登録"""
         self.error_callbacks[exception_type] = handler
-    
+
     def handle_error(self, error: Exception, page: ft.Page = None) -> bool:
         """エラー処理"""
         error_type = type(error)
-        
+
         # 特定のハンドラがあれば実行
         if error_type in self.error_callbacks:
             try:
                 return self.error_callbacks[error_type](error, page)
             except Exception as e:
                 logging.error(f"エラーハンドラ実行失敗: {e}")
-        
+
         # デフォルト処理
         return self._default_error_handler(error, page)
-    
+
     def _default_error_handler(self, error: Exception, page: ft.Page = None) -> bool:
         """デフォルトエラーハンドラ"""
         error_message = str(error)
         logging.error(f"未処理エラー: {error_message}")
-        
+
         if page:
             self._show_error_dialog(page, "エラーが発生しました", error_message)
-        
+
         return True
-    
+
     def _show_error_dialog(self, page: ft.Page, title: str, message: str):
         """エラーダイアログ表示"""
         dialog = ft.AlertDialog(
@@ -1478,7 +1478,7 @@ class ErrorHandler:
         page.dialog = dialog
         dialog.open = True
         page.update()
-    
+
     def _close_dialog(self, page: ft.Page):
         """ダイアログ閉じる"""
         if page.dialog:
@@ -1506,13 +1506,13 @@ class ConnectionManager:
         self._last_check = None
         self._status_callbacks: list[Callable] = []
         self._check_task: Optional[asyncio.Task] = None
-        
+
     async def start_monitoring(self):
         """接続監視開始"""
         if self._check_task is None or self._check_task.done():
             self._check_task = asyncio.create_task(self._monitor_connection())
             logging.info("接続監視開始")
-    
+
     async def stop_monitoring(self):
         """接続監視停止"""
         if self._check_task and not self._check_task.done():
@@ -1522,7 +1522,7 @@ class ConnectionManager:
             except asyncio.CancelledError:
                 pass
             logging.info("接続監視停止")
-    
+
     async def _monitor_connection(self):
         """接続状態監視ループ"""
         while True:
@@ -1534,51 +1534,51 @@ class ConnectionManager:
             except Exception as e:
                 logging.error(f"接続チェックエラー: {e}")
                 await asyncio.sleep(5)  # エラー時は短間隔で再試行
-    
+
     async def _check_connection(self):
         """実際の接続チェック"""
         try:
-            # Supabaseヘルスチェック
+            # Supabase ヘルスチェック
             from config.settings import settings
-            
+
             async with httpx.AsyncClient(timeout=5.0) as client:
                 response = await client.get(f"{settings.SUPABASE_URL}/rest/v1/")
                 is_online = response.status_code == 200
-                
+
         except Exception as e:
             logging.warning(f"接続チェック失敗: {e}")
             is_online = False
-        
+
         # 状態変更時のみ通知
         if is_online != self._is_online:
             self._is_online = is_online
             self._last_check = datetime.now()
-            
+
             status = "オンライン" if is_online else "オフライン"
             logging.info(f"接続状態変更: {status}")
-            
+
             # コールバック実行
             for callback in self._status_callbacks:
                 try:
                     callback(is_online)
                 except Exception as e:
                     logging.error(f"接続状態コールバックエラー: {e}")
-    
+
     def register_status_callback(self, callback: Callable[[bool], None]):
         """接続状態変更コールバック登録"""
         self._status_callbacks.append(callback)
-    
+
     def unregister_status_callback(self, callback: Callable[[bool], None]):
         """接続状態変更コールバック解除"""
         try:
             self._status_callbacks.remove(callback)
         except ValueError:
             pass
-    
+
     @property
     def is_online(self) -> bool:
         return self._is_online
-    
+
     @property
     def last_check(self) -> Optional[datetime]:
         return self._last_check
@@ -1614,11 +1614,11 @@ class PerformanceMonitor:
     def __init__(self):
         self.metrics_history: list[PerformanceMetrics] = []
         self.max_history = 100
-    
+
     def collect_metrics(self, active_tasks: int = 0) -> PerformanceMetrics:
         """現在のパフォーマンスメトリクス収集"""
         process = psutil.Process()
-        
+
         metrics = PerformanceMetrics(
             timestamp=datetime.now(),
             memory_usage_mb=process.memory_info().rss / 1024 / 1024,
@@ -1626,20 +1626,20 @@ class PerformanceMonitor:
             active_tasks_count=active_tasks,
             cache_hit_ratio=cache_manager.hit_ratio
         )
-        
+
         self.metrics_history.append(metrics)
         if len(self.metrics_history) > self.max_history:
             self.metrics_history.pop(0)
-        
+
         return metrics
-    
+
     def get_performance_summary(self) -> Dict[str, Any]:
         """パフォーマンス要約取得"""
         if not self.metrics_history:
             return {}
-        
+
         recent_metrics = self.metrics_history[-10:]  # 直近10件
-        
+
         return {
             "avg_memory_mb": sum(m.memory_usage_mb for m in recent_metrics) / len(recent_metrics),
             "max_memory_mb": max(m.memory_usage_mb for m in recent_metrics),
@@ -1661,11 +1661,11 @@ from dataclasses import dataclass
 
 class ProjectScale(Enum):
     SMALL = "small"      # < 1000 users
-    MEDIUM = "medium"    # 1000-10000 users  
+    MEDIUM = "medium"    # 1000-10000 users
     LARGE = "large"      # > 10000 users
 
 class ComplexityLevel(Enum):
-    LOW = "low"          # 基本CRUD
+    LOW = "low"          # 基本 CRUD
     MEDIUM = "medium"    # ビジネスロジック有
     HIGH = "high"        # 複雑な処理・外部連携
 
@@ -1693,7 +1693,7 @@ class ArchitectureAdvisor:
                 ],
                 "cons": [
                     "スケーラビリティ制限",
-                    "複雑ロジック実装困難", 
+                    "複雑ロジック実装困難",
                     "セキュリティ境界制限",
                     "オフライン機能制限"
                 ],
@@ -1701,47 +1701,47 @@ class ArchitectureAdvisor:
                 "suitable_complexity": [ComplexityLevel.LOW, ComplexityLevel.MEDIUM]
             }
         }
-    
+
     def evaluate_client_side_fit(self, requirements: ProjectRequirements) -> Dict[str, Any]:
         """クライアントサイド実装適合性評価"""
         score = 100  # 満点から減点方式
         issues = []
         recommendations = []
-        
+
         # ユーザー数評価
         if requirements.expected_users > 1000:
             score -= 30
             issues.append("想定ユーザー数が推奨上限を超過")
-            recommendations.append("Edge Functions または独立APIサーバーを検討")
-        
+            recommendations.append("Edge Functions または独立 API サーバーを検討")
+
         # 複雑性評価
         if requirements.business_logic_complexity == ComplexityLevel.HIGH:
             score -= 25
             issues.append("ビジネスロジックが複雑")
             recommendations.append("サーバーサイド実装でロジック分離を推奨")
-        
+
         # 外部連携評価
         if requirements.third_party_integrations > 3:
             score -= 20
             issues.append("外部連携が多い")
             recommendations.append("API Gateway パターンを検討")
-        
+
         # コンプライアンス評価
         sensitive_compliance = ["GDPR", "HIPAA", "SOX", "PCI-DSS"]
         if any(req in sensitive_compliance for req in requirements.compliance_requirements):
             score -= 15
             issues.append("厳格なコンプライアンス要件")
             recommendations.append("セキュリティ境界の明確化が必要")
-        
+
         # 開発リソース評価
         if requirements.development_timeline_weeks < 4:
             score += 15  # 短期開発では有利
             recommendations.append("迅速な開発が可能")
-        
+
         if requirements.team_size < 3:
             score += 10  # 小チームでは有利
             recommendations.append("小規模チームでの開発効率が良い")
-        
+
         return {
             "suitability_score": max(0, score),
             "recommendation": self._get_recommendation(score),
@@ -1750,7 +1750,7 @@ class ArchitectureAdvisor:
             "estimated_dev_time_weeks": self._estimate_dev_time(requirements),
             "estimated_maintenance_effort": self._estimate_maintenance(requirements)
         }
-    
+
     def _get_recommendation(self, score: int) -> str:
         if score >= 80:
             return "強く推奨"
@@ -1760,34 +1760,34 @@ class ArchitectureAdvisor:
             return "条件付き推奨"
         else:
             return "非推奨"
-    
+
     def _estimate_dev_time(self, req: ProjectRequirements) -> int:
         base_weeks = 2  # 基本実装時間
-        
+
         if req.business_logic_complexity == ComplexityLevel.MEDIUM:
             base_weeks += 1
         elif req.business_logic_complexity == ComplexityLevel.HIGH:
             base_weeks += 3
-        
+
         base_weeks += req.third_party_integrations * 0.5
-        
+
         if req.offline_support_required:
             base_weeks += 1
-        
+
         return int(base_weeks)
-    
+
     def _estimate_maintenance(self, req: ProjectRequirements) -> str:
         factors = []
-        
+
         if req.expected_users > 500:
             factors.append("ユーザー増加による負荷監視")
-        
+
         if req.business_logic_complexity == ComplexityLevel.HIGH:
             factors.append("複雑ロジックのメンテナンス")
-        
+
         if req.third_party_integrations > 2:
             factors.append("外部連携の変更対応")
-        
+
         if len(factors) == 0:
             return "低"
         elif len(factors) <= 2:
@@ -1825,7 +1825,7 @@ from dataclasses import dataclass
 
 class MigrationPhase(Enum):
     ASSESSMENT = "assessment"
-    PREPARATION = "preparation" 
+    PREPARATION = "preparation"
     MIGRATION = "migration"
     VALIDATION = "validation"
     CLEANUP = "cleanup"
@@ -1839,19 +1839,19 @@ class MigrationTask:
     risk_level: str  # "low", "medium", "high"
 
 class MigrationPlanner:
-    def generate_migration_plan(self, 
-                               current_pattern: str, 
+    def generate_migration_plan(self,
+                               current_pattern: str,
                                target_pattern: str,
                                project_size: str) -> Dict[str, Any]:
         """移行計画生成"""
-        
+
         if current_pattern == "client_side" and target_pattern == "edge_functions":
             return self._plan_client_to_edge_migration(project_size)
         elif current_pattern == "client_side" and target_pattern == "api_server":
             return self._plan_client_to_api_migration(project_size)
         else:
             return {"error": "未対応の移行パス"}
-    
+
     def _plan_client_to_edge_migration(self, project_size: str) -> Dict[str, Any]:
         """クライアント→Edge Functions移行計画"""
         tasks = [
@@ -1891,7 +1891,7 @@ class MigrationPlanner:
                 risk_level="medium"
             )
         ]
-        
+
         return {
             "migration_path": "client_side → edge_functions",
             "estimated_total_hours": sum(task.estimated_hours for task in tasks),
@@ -1949,7 +1949,7 @@ ft.app(target=main, port=8080, view=ft.AppView.WEB_BROWSER)
 - ポート競合チェック: `netstat -ano | findstr :8000`
 - ファイアウォール設定確認
 
-#### 問題2: Supabaseクライアント接続エラー
+#### 問題2: Supabase クライアント接続エラー
 
 **症状**:
 - `supabase.table()` 実行時の接続タイムアウト
@@ -1979,7 +1979,7 @@ except Exception as e:
 
 ### クライアントサイド実装の一般的な問題
 
-#### 問題3: RLSポリシーでデータアクセスできない
+#### 問題3: RLS ポリシーでデータアクセスできない
 
 **症状**:
 - 認証後もデータが取得できない
@@ -1999,11 +1999,11 @@ def check_auth_status(supabase):
         return False
 ```
 
-2. **RLSポリシー確認**:
+2. **RLS ポリシー確認**:
 ```sql
--- Supabase SQLエディタで実行
-SELECT policyname, cmd, qual 
-FROM pg_policies 
+-- Supabase SQL エディタで実行
+SELECT policyname, cmd, qual
+FROM pg_policies
 WHERE tablename = 'tasks';
 ```
 
@@ -2012,7 +2012,7 @@ WHERE tablename = 'tasks';
 # 1. 認証なしでpublicテーブルアクセス
 response = supabase.table('public_table').select('*').execute()
 
-# 2. 認証ありでprotectedテーブルアクセス  
+# 2. 認証ありでprotectedテーブルアクセス
 user = supabase.auth.get_user()
 if user.user:
     response = supabase.table('tasks').select('*').execute()
@@ -2021,7 +2021,7 @@ if user.user:
 #### 問題4: リアルタイム更新が動作しない
 
 **症状**:
-- データベース変更がUIに反映されない
+- データベース変更が UI に反映されない
 - リアルタイムサブスクリプションエラー
 
 **解決手順**:
@@ -2031,21 +2031,21 @@ import flet as ft
 def setup_realtime_debug(supabase, page):
     def handle_changes(payload):
         print(f"Realtime payload: {payload}")
-        # UI更新処理
+        # UI 更新処理
         page.update()
-    
+
     def handle_error(error):
         print(f"Realtime error: {error}")
-    
+
     # リアルタイム設定
     subscription = supabase.table('tasks').on(
         'INSERT', handle_changes
     ).on(
-        'UPDATE', handle_changes  
+        'UPDATE', handle_changes
     ).on(
         'DELETE', handle_changes
     ).subscribe()
-    
+
     return subscription
 ```
 
@@ -2055,7 +2055,7 @@ def setup_realtime_debug(supabase, page):
 
 **症状**:
 - 初期データ読み込みが遅い
-- UIがフリーズする
+- UI がフリーズする
 
 **最適化手法**:
 ```python
@@ -2066,28 +2066,28 @@ async def load_data_paginated(supabase, page_size=50):
     """ページネーション付きデータ読み込み"""
     offset = 0
     all_data = []
-    
+
     while True:
         response = await supabase.table('tasks').select('*').range(
             offset, offset + page_size - 1
         ).execute()
-        
+
         if not response.data:
             break
-            
+
         all_data.extend(response.data)
         offset += page_size
-        
-        # UI更新の機会を提供
+
+        # UI 更新の機会を提供
         await asyncio.sleep(0.1)
-    
+
     return all_data
 
-# 非同期UI更新
+# 非同期 UI 更新
 async def update_ui_async(page, data):
     for item in data:
         page.add(ft.Text(item['title']))
-        await asyncio.sleep(0.01)  # UIレスポンシブ性確保
+        await asyncio.sleep(0.01)  # UI レスポンシブ性確保
     page.update()
 ```
 
@@ -2114,24 +2114,24 @@ class DebugSupabaseClient:
     def __init__(self, url, key):
         self.client = create_client(url, key)
         self.logger = logging.getLogger(__name__)
-    
+
     def table(self, table_name):
         self.logger.debug(f"Accessing table: {table_name}")
         return self.client.table(table_name)
-    
+
     def auth(self):
         return self.client.auth
 
 # 使用例
 def main(page: ft.Page):
     page.title = "Debug Task Manager"
-    
+
     # デバッグ用クライアント
     supabase = DebugSupabaseClient(
         os.getenv('SUPABASE_URL'),
         os.getenv('SUPABASE_PUBLISHABLE_KEY')
     )
-    
+
     # アプリケーション処理...
 ```
 
@@ -2149,7 +2149,7 @@ def main(page: ft.Page):
 
 **制約事項**:
 - クライアント側でのビジネスロジック実装によるセキュリティリスク
-- RLSのみでの認可制御による柔軟性の制限
+- RLS のみでの認可制御による柔軟性の制限
 - 大量データ処理時のクライアント負荷
 
 ## 理解度チェック
@@ -2158,8 +2158,8 @@ def main(page: ft.Page):
 
 ### 基本概念
 - [] Fletフレームワークの基本構造を説明できる
-- [] Supabaseクライアントの初期化と設定ができる
-- [] RLSポリシーの設計と実装ができる
+- [] Supabase クライアントの初期化と設定ができる
+- [] RLS ポリシーの設計と実装ができる
 
 ### 実装スキル
 - [] 認証機能付きFletアプリを実装できる
@@ -2184,7 +2184,7 @@ def main(page: ft.Page):
 ### 復習推奨ポイント
 理解が不十分な場合は以下を復習してください：
 - **認証実装**: [第2章：認証・認可設計]({{ '/chapters/chapter02/' | relative_url }})を確認
-- **RLS設計**: [セキュリティ強化]({{ '/chapters/chapter07/' | relative_url }})で詳細学習
+- **RLS 設計**: [セキュリティ強化]({{ '/chapters/chapter07/' | relative_url }})で詳細学習
 - **パフォーマンス**: [第6章：パフォーマンス最適化]({{ '/chapters/chapter06/' | relative_url }})で深掘り
 
 ### 関連リソース
@@ -2198,7 +2198,7 @@ def main(page: ft.Page):
 
 | 前の章 | 現在の章 | 次の章 |
 |---------|----------|--------|
-| [第2章：認証・認可設計]({{ '/chapters/chapter02/' | relative_url }}) | **第3章：パターン1 - クライアントサイド実装**| [第4章：パターン2 - Edge Functions活用]({{ '/chapters/chapter04/' | relative_url }}) |
+| [第2章：認証・認可設計]({{ '/chapters/chapter02/' | relative_url }}) | **第3章：パターン1 - クライアントサイド実装**| [第4章：パターン2 - Edge Functions 活用]({{ '/chapters/chapter04/' | relative_url }}) |
 
 ### 学習パス確認
 
@@ -2207,7 +2207,7 @@ flowchart LR
     A[第2章] --> B[第3章 ]
     B --> C[第4章]
     B --> D[第5-1章]
-    
+
     style B fill:#e1f5fe
 ```
 
@@ -2223,15 +2223,15 @@ flowchart LR
 
 #### **基礎理解（必須）**
 - [] クライアントサイド実装のメリット・デメリットを説明できる
-- [] Python Fletの基本的なUI コンポーネント・レイアウトを理解した
-- [] Supabaseクライアントライブラリの基本的な使い方を理解した
-- [] CRUD操作（作成・読み取り・更新・削除）を実装できる
+- [] Python Fletの基本的な UI コンポーネント・レイアウトを理解した
+- [] Supabase クライアントライブラリの基本的な使い方を理解した
+- [] CRUD 操作（作成・読み取り・更新・削除）を実装できる
 
 #### **応用理解（推奨）**
 - [] リアルタイム機能（リアルタイム購読・更新）を実装できる
 - [] Fletでの状態管理・イベント処理パターンを理解した
 - [] エラーハンドリング・ユーザーフィードバックを適切に実装できる
-- [] レスポンシブなUI設計・ユーザー体験を考慮した実装ができる
+- [] レスポンシブな UI 設計・ユーザー体験を考慮した実装ができる
 
 #### **発展理解（上級者向け）**
 - [] 大量データの効率的な表示・ページネーション実装ができる
@@ -2242,7 +2242,7 @@ flowchart LR
 #### **実践スキル（確認推奨）**
 - [] 開発環境の構築・Fletアプリケーションの起動ができる
 - [] タスク管理システムの基本機能を実装できる
-- [] Supabaseとの認証連携を実装できる
+- [] Supabase との認証連携を実装できる
 - [] 基本的なデバッグ・トラブルシューティングができる
 
 ### [OK] **習得できたスキル**
@@ -2255,7 +2255,7 @@ flowchart LR
 | 項目 | 特徴 | 適用場面 |
 |:-----|:-----|:---------|
 | **構造**| 木造住宅（シンプル・軽量） | 個人用途・小規模チーム |
-| **開発速度**| 最速（直接DB接続） | プロトタイプ・MVP開発 |
+| **開発速度**| 最速（直接 DB 接続） | プロトタイプ・MVP開発 |
 | **コスト**| 最安（サーバー不要） | 予算制約のあるプロジェクト |
 | **スケール**| 小〜中規模（〜5,000人） | スタートアップ・社内ツール |
 
@@ -2269,7 +2269,7 @@ flowchart LR
 ├──  柔軟性・自動スケール・外部連携
 └──  TypeScript学習・複雑性増加
 
- API Server ← 第5-1章で学習  
+ API Server ← 第5-1章で学習
 ├──  完全制御・大規模対応・エンタープライズ
 └──  開発時間・運用コスト・複雑性
 ```
@@ -2279,12 +2279,12 @@ flowchart LR
 |:-----|:-----------------|:---------|
 | ユーザー数 < 1,000人 | [OK] 最適 | **強く推奨**|
 | 開発期間 < 4週間 | [OK] 最適 | **強く推奨**|
-| 複雑ビジネスロジック | [NG] 不適合 | Edge/API検討 |
+| 複雑ビジネスロジック | [NG] 不適合 | Edge/API 検討 |
 | 高セキュリティ要件 | [WARN] 制限あり | API Server推奨 |
 
 ---
 
-## 次章予告：パターン2 - Edge Functions活用
+## 次章予告：パターン2 - Edge Functions 活用
 
 ### **次章に向けた準備課題**
 
@@ -2295,9 +2295,9 @@ flowchart LR
 - [] サーバーサイド処理が必要な場面の理解（決済・メール送信など）
 - [] JavaScript/TypeScriptの基本文法（変数・関数・Promise）
 
-#### **推奨準備**  
+#### **推奨準備**
 - [] Deno環境のインストール・基本操作
-- [] REST APIの基本概念（GET・POST・PUT・DELETE）
+- [] REST API の基本概念（GET・POST・PUT・DELETE）
 - [] 非同期処理（async/await）の理解
 
 #### **学習知識の確認**
@@ -2320,7 +2320,7 @@ flowchart LR
 
 ### **具体的な実装例**
 - 薬剤在庫管理・処方チェックシステム
-- 外部薬局との在庫連携API
+- 外部薬局との在庫連携 API
 - [WARN] 薬剤相互作用・アレルギーチェック
 - 患者向け服薬指導システム
 
@@ -2331,12 +2331,12 @@ flowchart LR
 **ナビゲーション**
 - **目次**: [はじめに]({{ '/introduction/' | relative_url }})
 - **前の章**: [第2章：認証・認可設計]({{ '/chapters/chapter02/' | relative_url }})
-- **次の章**: [第4章：パターン2 - Edge Functions活用]({{ '/chapters/chapter04/' | relative_url }})
-- **同レベル**: [第5-1章：パターン3 - 独立APIサーバー]({{ '/chapters/chapter05-1/' | relative_url }})
+- **次の章**: [第4章：パターン2 - Edge Functions 活用]({{ '/chapters/chapter04/' | relative_url }})
+- **同レベル**: [第5-1章：パターン3 - 独立 API サーバー]({{ '/chapters/chapter05-1/' | relative_url }})
 - **実践**: [サンプルコード]({{ site.repository }}/tree/main/src/examples/pattern1/) | [動作検証]({{ '/guides/code-verification/' | relative_url }})
 
 ### **関連リソース**
 - [トラブルシューティング]({{ '/guides/troubleshooting/' | relative_url }})
-- [パターン選択ガイド]({{ '/guides/pattern-selection/' | relative_url }})  
+- [パターン選択ガイド]({{ '/guides/pattern-selection/' | relative_url }})
 - [運用チェックリスト]({{ '/appendices/appendix01/' | relative_url }}#operational-checklists)
 - [コード検証ガイド]({{ '/guides/code-verification/' | relative_url }})

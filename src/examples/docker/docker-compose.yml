@@ -1,5 +1,5 @@
 # Supabase Architecture Patterns - Docker Compose
-# 3つのパターンを統合したDocker環境
+# 3つのパターンを統合した Docker 環境
 
 version: '3.8'
 

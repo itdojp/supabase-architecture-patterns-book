@@ -6,26 +6,26 @@ title: "第5-4章：RAG/ベクトル検索アーキテクチャ"
 # 第5-4章：RAG/ベクトル検索アーキテクチャ
 
 ---
-**目次に戻る**: [はじめに]({{ '/introduction/' | relative_url }})  
-**前の章**: [第5-3章：拡張性設計とパフォーマンス最適化]({{ '/chapters/chapter05-3/' | relative_url }})  
-**次の章**: [第6章：パフォーマンス最適化]({{ '/chapters/chapter06/' | relative_url }})  
-**アーキテクチャ**: RAG / ベクトル検索 / 監査ログ  
-**学習レベル**:  基礎 |  応用 |  発展  
-**推定学習時間**: 5〜7時間  
+**目次に戻る**: [はじめに]({{ '/introduction/' | relative_url }})
+**前の章**: [第5-3章：拡張性設計とパフォーマンス最適化]({{ '/chapters/chapter05-3/' | relative_url }})
+**次の章**: [第6章：パフォーマンス最適化]({{ '/chapters/chapter06/' | relative_url }})
+**アーキテクチャ**: RAG / ベクトル検索 / 監査ログ
+**学習レベル**:  基礎 |  応用 |  発展
+**推定学習時間**: 5〜7時間
 **難易度**: 中上級（RLS・Edge Functions 基礎必須）
 ---
 
 ## この章で扱う構成
 - 構成: RAG/ベクトル検索
-- 推奨用途: AI検索・FAQ・ナレッジ活用
-- 非推奨用途: AI機能が不要、またはデータが極小のケース
+- 推奨用途: AI 検索・FAQ・ナレッジ活用
+- 非推奨用途: AI 機能が不要、またはデータが極小のケース
 
 ## この章で学ぶこと
 
-- Supabaseで **RAG（Retrieval Augmented Generation）**を構成するための全体像
+- Supabase で **RAG（Retrieval Augmented Generation）**を構成するための全体像
 - **pgvector**と **Vector Buckets**の使い分け
 - 自動埋め込み生成（キュー + Edge Functions）の実装方針
-- 監査・評価ログの設計と、マルチテナントRLSの適用
+- 監査・評価ログの設計と、マルチテナント RLS の適用
 
 ---
 
@@ -45,7 +45,7 @@ flowchart TD
 ```
 
 **基本設計のポイント**:
-- 検索結果（chunk_id）は **必ずDBへ記録**
+- 検索結果（chunk_id）は **必ず DB へ記録**
 - プロンプト・モデル名・コストは **監査ログへ保存**
 - **tenant_id / user_id**を全テーブルに付与
 
@@ -53,11 +53,11 @@ flowchart TD
 
 ## 5-4.2 pgvector と Vector Buckets の比較
 
-| 項目 | pgvector（DB内） | Vector Buckets（Storage） |
+| 項目 | pgvector（DB 内） | Vector Buckets（Storage） |
 |------|------------------|---------------------------|
 | 成熟度 | [OK] 安定運用向き | [WARN] Alpha（破壊的変更の可能性） |
-| 検索性能 | [OK] 高速（同一DB内） | [OK] 大規模向き |
-| 運用 | [OK] SQLで完結 | [WARN] 仕様追従が必要 |
+| 検索性能 | [OK] 高速（同一 DB 内） | [OK] 大規模向き |
+| 運用 | [OK] SQL で完結 | [WARN] 仕様追従が必要 |
 | 推奨用途 | まずはこちら | 大規模/実験用途 |
 
 **実務方針**:
@@ -137,7 +137,7 @@ CREATE INDEX IF NOT EXISTS idx_embeddings_embedding_hnsw
 
 **補足（pgmqについて）**:
 - `pgmq` は PostgreSQL 上にメッセージキューを実装する拡張機能です
-- Supabaseの標準コンポーネントではないため、導入が難しい場合は  
+- Supabase の標準コンポーネントではないため、導入が難しい場合は
   **jobsテーブル方式**（`status`, `retry_count`, `last_error` など）で代替できます
 
 **運用上の注意**:
@@ -146,7 +146,7 @@ CREATE INDEX IF NOT EXISTS idx_embeddings_embedding_hnsw
 
 ---
 
-## 5-4.5 マルチテナントRAGとRLS
+## 5-4.5 マルチテナントRAGと RLS
 
 RAGは **tenant_id を最優先キー**にします。
 
@@ -173,7 +173,7 @@ CREATE POLICY "tenant_log" ON retrieval_logs
 
 ## 5-4.6 評価と監査（必須）
 
-AIアプリは **再現性・説明責任**が重要です。
+AI アプリは **再現性・説明責任**が重要です。
 
 **記録すべき情報**:
 - `retrieved_chunk_ids`
@@ -193,7 +193,7 @@ AIアプリは **再現性・説明責任**が重要です。
 - RAGは **検索と生成を分離**して安全性を上げる
 - **pgvectorが基本、Vector Bucketsは検証用途**
 - 自動埋め込みは **キュー + Edge Functions**で安定運用
-- **監査ログ**がAI運用の核になる
+- **監査ログ**が AI 運用の核になる
 
 ---
 

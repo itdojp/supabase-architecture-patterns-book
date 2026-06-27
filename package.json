@@ -5,7 +5,7 @@
   "author": "ITDO Inc.（株式会社アイティードゥ）",
   "license": "CC-BY-NC-SA-4.0",
   "engines": {
-    "node": ">=20.0.0"
+    "node": ">=20.18.1"
   },
   "scripts": {
     "start": "jekyll serve --livereload",
@@ -44,5 +44,11 @@
   "bugs": {
     "url": "https://github.com/itdojp/supabase-architecture-patterns-book/issues"
   },
-  "homepage": "https://itdojp.github.io/supabase-architecture-patterns-book/"
+  "homepage": "https://itdojp.github.io/supabase-architecture-patterns-book/",
+  "overrides": {
+    "js-yaml": "4.3.0",
+    "markdown-it": "14.2.0",
+    "linkify-it": "5.0.1",
+    "undici": "7.28.0"
+  }
 }

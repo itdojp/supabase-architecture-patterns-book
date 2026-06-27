@@ -6,12 +6,12 @@ title: "第10章：統合実践プロジェクト"
 # 第10章：統合実践プロジェクト
 
 ---
-**目次に戻る**: [はじめに]({{ '/introduction/' | relative_url }})  
-**前の章**: [第9章：アーキテクチャ選択演習]({{ '/chapters/chapter09/' | relative_url }})  
-**完了**: [学習修了・次のステップ]({{ '/introduction/' | relative_url }})  
-**学習フェーズ**: Part IV - 実践・応用編（統合実践）  
-**学習レベル**:  基礎 |  応用 |  発展  
-**推定学習時間**: 8〜12時間  
+**目次に戻る**: [はじめに]({{ '/introduction/' | relative_url }})
+**前の章**: [第9章：アーキテクチャ選択演習]({{ '/chapters/chapter09/' | relative_url }})
+**完了**: [学習修了・次のステップ]({{ '/introduction/' | relative_url }})
+**学習フェーズ**: Part IV - 実践・応用編（統合実践）
+**学習レベル**:  基礎 |  応用 |  発展
+**推定学習時間**: 8〜12時間
 **難易度**: 上級（全章の知識統合が必要）
 ---
 
@@ -25,8 +25,8 @@ title: "第10章：統合実践プロジェクト"
  EduConnect統合プラットフォーム
 ├──  学習者ポータル：Python Fletでデスクトップアプリ
 ├──  コース管理：Deno Edge Functionsで動画配信
-├──  管理ダッシュボード：FastAPIで高度な分析
-└──  Supabaseインフラ：データベース・認証・ストレージ
+├──  管理ダッシュボード：FastAPI で高度な分析
+└──  Supabase インフラ：データベース・認証・ストレージ
 ```
 
 ## この章で学ぶこと
@@ -36,7 +36,7 @@ title: "第10章：統合実践プロジェクト"
 ### 初心者が陥りがちな問題
 ```python
 # [NG] よくある初心者の統合失敗パターン
-「とりあえず全部APIサーバーで作ろう」  # → 過剰設計
+「とりあえず全部 API サーバーで作ろう」  # → 過剰設計
 「後で統合すればいいでしょ」        # → 技術的負債
 「セキュリティは最後に考える」      # → 設計やり直し
 # → 結果：プロジェクト炎上・予算超過・品質問題
@@ -47,7 +47,7 @@ title: "第10章：統合実践プロジェクト"
 # [OK] プロの統合設計アプローチ
 適材適所_設計 = {
     "学習者ポータル": "Client-side",    # 個人用途→木造住宅
-    "コース管理": "Edge Functions",     # 外部連携→プレハブ工法  
+    "コース管理": "Edge Functions",     # 外部連携→プレハブ工法
     "管理機能": "API Server",          # 企業用途→鉄筋コンクリート
     "共通インフラ": "Supabase"          # 全棟共通設備
 }
@@ -66,7 +66,7 @@ title: "第10章：統合実践プロジェクト"
 
 | 成果物 | 内容 | ビジネス価値 |
 |:-------|:-----|:------------|
-| **本格的なWebアプリ**| 3パターン統合システム | 実際の企業で使える品質 |
+| **本格的なWeb アプリ**| 3パターン統合システム | 実際の企業で使える品質 |
 | **運用環境一式**| CI/CD・監視・バックアップ | 24時間365日運用可能 |
 | **技術ドキュメント**| 設計書・運用手順・障害対応 | チーム開発・引き継ぎ対応 |
 | **ポートフォリオ**| GitHub・デモサイト・技術説明 | 転職・案件獲得に使える |
@@ -84,10 +84,10 @@ title: "第10章：統合実践プロジェクト"
 
 ### クライアント企業プロフィール
 
-**企業名**: 東京教育アカデミー株式会社  
-**事業内容**: 大学受験予備校・オンライン教育・企業研修  
-**規模**: 従業員200名、年間受講生15,000人  
-**予算**: 年間IT予算2,000万円  
+**企業名**: 東京教育アカデミー株式会社
+**事業内容**: 大学受験予備校・オンライン教育・企業研修
+**規模**: 従業員200名、年間受講生15,000人
+**予算**: 年間IT予算2,000万円
 **期間**: 6ヶ月での本格運用開始
 
 ### ビジネス要件（何を作るか）
@@ -102,19 +102,19 @@ title: "第10章：統合実践プロジェクト"
 
 #### 主要機能要件
 
-**学習者ポータル（一般ユーザー向け）**  
+**学習者ポータル（一般ユーザー向け）**
 - オフライン学習対応（電車内でも使える）
 - 進捗の自動同期
 - リアルタイム質問・チャット
 - 親御さんへの進捗レポート
 
-**コース管理システム（講師・教材管理）**  
+**コース管理システム（講師・教材管理）**
 - 動画コンテンツ配信（適応的画質）
 - 自動採点システム
 - 証明書・修了証の自動生成
 - 外部教材システム連携
 
-**管理ダッシュボード（経営陣・管理者向け）**  
+**管理ダッシュボード（経営陣・管理者向け）**
 - 学習進捗の統計分析
 - 売上・コスト分析
 - 法的要件対応（個人情報保護等）
@@ -158,7 +158,7 @@ title: "第10章：統合実践プロジェクト"
 
 #### 共通インフラ（ライフライン）
 
-| インフラ | 実際の施設 | Supabaseサービス | 役割 |
+| インフラ | 実際の施設 | Supabase サービス | 役割 |
 |:---------|:----------|:----------------|:-----|
 | **電力供給**| 電力会社 | Supabase Auth | 全建物の認証・ログイン |
 | **上下水道**| 水道局 | PostgreSQL Database | 全データの保存・管理 |
@@ -173,7 +173,7 @@ title: "第10章：統合実践プロジェクト"
  昼: 動画教材を視聴 → [プレハブ棟の配信機能]
  夜: 進捗確認、親への報告 → [全建物のデータ統合]
 
- 講師の1日の流れ  
+ 講師の1日の流れ
  朝: 課題の自動採点結果確認 → [プレハブ棟の採点機能]
  昼: 新しい動画教材をアップロード → [共通ストレージ]
  夕: 学習状況分析レポート確認 → [本社ビルの分析機能]
@@ -188,9 +188,9 @@ title: "第10章：統合実践プロジェクト"
 
 このように**適材適所で技術を選択**することで：
 
-[OK] **コスト最適化**: 必要最小限の技術で最大効果  
-[OK] **性能最適化**: 各用途に最適な工法で高性能  
-[OK] **保守性**: 複雑さを適切に分散して管理しやすく  
+[OK] **コスト最適化**: 必要最小限の技術で最大効果
+[OK] **性能最適化**: 各用途に最適な工法で高性能
+[OK] **保守性**: 複雑さを適切に分散して管理しやすく
 [OK] **スケーラビリティ**: 各部分を独立してスケール可能
 
 ---
@@ -230,7 +230,7 @@ educonnect/
 │   └── backup/             # バックアップ設備
 ├──  docs/                 # 設計書・取扱説明書
 │   ├── architecture.md     # 全体設計書
-│   ├── api-docs/           # API設計書
+│   ├── api-docs/           # API 設計書
 │   └── deployment.md       # 運用手順書
 └──  scripts/             # 建設・運用用スクリプト
     ├── setup.sh            # 初期セットアップ
@@ -259,7 +259,7 @@ educonnect/
 version: '3.8'
 
 services:
-  #  Supabase基盤インフラ（発電所・浄水場・通信局を統合した巨大施設）
+  #  Supabase 基盤インフラ（発電所・浄水場・通信局を統合した巨大施設）
   supabase:
     image: supabase/supabase:latest
     ports:
@@ -356,7 +356,7 @@ networks:
 
 **初心者向け解説**：
 
-このDocker Composeファイルは、複合施設の**設備配置図**と同じです：
+この Docker Composeファイルは、複合施設の**設備配置図**と同じです：
 
 | 設備 | 実際の施設 | 役割 | ポート |
 |:-----|:----------|:-----|:-------|
@@ -375,7 +375,7 @@ networks:
 #  .env - セキュリティキー管理ファイル
 # [WARN] このファイルは絶対にGitにコミットしないこと！
 
-#  Supabase認証キー（建物の入場パス）
+#  Supabase 認証キー（建物の入場パス）
 SUPABASE_URL=http://localhost:54321
 SUPABASE_PUBLISHABLE_KEY=sb_publishable_XXXXXXXXXXXXXXXX        #  一般利用者パス
 SUPABASE_SECRET_KEY=sb_secret_XXXXXXXXXXXXXXXX  #  管理者マスターキー
@@ -470,7 +470,7 @@ CREATE TABLE learning_progress (
 
 -- 分析・レポート用ビュー
 CREATE VIEW course_analytics AS
-SELECT 
+SELECT
     c.id as course_id,
     c.title,
     c.organization_id,
@@ -482,7 +482,7 @@ FROM courses c
 LEFT JOIN learning_progress lp ON c.id = lp.course_id
 GROUP BY c.id, c.title, c.organization_id;
 
--- RLSポリシー設定
+-- RLS ポリシー設定
 ALTER TABLE organizations ENABLE ROW LEVEL SECURITY;
 ALTER TABLE user_profiles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE courses ENABLE ROW LEVEL SECURITY;
@@ -492,8 +492,8 @@ ALTER TABLE learning_progress ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "org_isolation_organizations" ON organizations
     FOR ALL USING (
         id IN (
-            SELECT organization_id 
-            FROM user_profiles 
+            SELECT organization_id
+            FROM user_profiles
             WHERE id = auth.uid()
         )
     );
@@ -501,8 +501,8 @@ CREATE POLICY "org_isolation_organizations" ON organizations
 CREATE POLICY "org_isolation_users" ON user_profiles
     FOR ALL USING (
         organization_id IN (
-            SELECT organization_id 
-            FROM user_profiles 
+            SELECT organization_id
+            FROM user_profiles
             WHERE id = auth.uid()
         )
     );
@@ -510,8 +510,8 @@ CREATE POLICY "org_isolation_users" ON user_profiles
 CREATE POLICY "org_isolation_courses" ON courses
     FOR ALL USING (
         organization_id IN (
-            SELECT organization_id 
-            FROM user_profiles 
+            SELECT organization_id
+            FROM user_profiles
             WHERE id = auth.uid()
         )
     );
@@ -520,8 +520,8 @@ CREATE POLICY "progress_owner_only" ON learning_progress
     FOR ALL USING (
         user_id = auth.uid() OR
         EXISTS (
-            SELECT 1 FROM user_profiles 
-            WHERE id = auth.uid() 
+            SELECT 1 FROM user_profiles
+            WHERE id = auth.uid()
             AND role IN ('admin', 'instructor')
             AND organization_id = (
                 SELECT organization_id FROM user_profiles WHERE id = learning_progress.user_id
@@ -552,39 +552,39 @@ class AuthManager:
     def __init__(self, supabase_url: str, supabase_key: str):
         self.supabase = create_client(supabase_url, supabase_key)
         self.security = HTTPBearer()
-    
+
     async def get_current_user(
-        self, 
+        self,
         credentials: HTTPAuthorizationCredentials = Depends(HTTPBearer())
     ) -> UserContext:
         """統合認証：全パターンで共通利用"""
-        
+
         try:
-            # JWTトークン検証
+            # JWT トークン検証
             token = credentials.credentials
             user_response = await self.supabase.auth.get_user(token)
-            
+
             if user_response.user is None:
                 raise HTTPException(status_code=401, detail="Invalid token")
-            
+
             # ユーザープロファイル取得
             profile_response = await self.supabase.table('user_profiles')\
                 .select('*')\
                 .eq('id', user_response.user.id)\
                 .single()\
                 .execute()
-            
+
             if not profile_response.data:
                 raise HTTPException(status_code=404, detail="User profile not found")
-            
+
             profile = profile_response.data
-            
+
             # ロール・権限取得
             permissions = await self._get_user_permissions(
-                profile['role'], 
+                profile['role'],
                 profile['organization_id']
             )
-            
+
             return UserContext(
                 id=profile['id'],
                 email=profile['email'],
@@ -592,13 +592,13 @@ class AuthManager:
                 role=profile['role'],
                 permissions=permissions
             )
-            
+
         except Exception as e:
             raise HTTPException(status_code=401, detail=f"Authentication failed: {str(e)}")
-    
+
     async def _get_user_permissions(self, role: str, org_id: str) -> List[str]:
         """ロールベース権限管理"""
-        
+
         role_permissions = {
             'student': [
                 'courses:read',
@@ -618,14 +618,14 @@ class AuthManager:
                 'settings:*'
             ]
         }
-        
+
         return role_permissions.get(role, [])
 
 # 権限チェックデコレータ
 def require_permission(permission: str):
     def decorator(func):
         async def wrapper(
-            *args, 
+            *args,
             current_user: UserContext = Depends(AuthManager.get_current_user),
             **kwargs
         ):
@@ -671,28 +671,28 @@ class EduConnectApp:
         self.course_service = CourseService()
         self.progress_service = ProgressService()
         self.realtime_service = RealtimeService()
-        
+
     async def main(self, page: ft.Page):
         """メインアプリケーション"""
-        
+
         page.title = "EduConnect - 学習ポータル"
         page.theme_mode = ft.ThemeMode.LIGHT
         page.window_width = 1200
         page.window_height = 800
-        
+
         # ページ状態管理
         self.page = page
-        
+
         # 認証状態確認
         await self._check_auth_status()
-        
+
         # 初期ページ表示
         await self._render_current_page()
-        
+
         # リアルタイム機能初期化
         if self.state.current_user:
             await self._setup_realtime()
-    
+
     async def _check_auth_status(self):
         """認証状態確認"""
         try:
@@ -704,7 +704,7 @@ class EduConnectApp:
         except Exception as e:
             print(f"Auth check failed: {e}")
             self.state.current_page = "login"
-    
+
     async def _load_user_data(self):
         """ユーザーデータ読み込み"""
         try:
@@ -713,24 +713,24 @@ class EduConnectApp:
                 self.state.current_user['id']
             )
             self.state.courses = courses
-            
+
             # 進捗情報取得
             progress = await self.progress_service.get_user_progress(
                 self.state.current_user['id']
             )
             self.state.progress = progress
-            
+
         except Exception as e:
             print(f"Data loading failed: {e}")
-    
+
     async def _render_current_page(self):
         """現在ページのレンダリング"""
         self.page.controls.clear()
-        
+
         if self.state.current_page == "login":
             login_page = LoginPage(self._on_login_success)
             self.page.add(login_page.build())
-            
+
         elif self.state.current_page == "dashboard":
             dashboard_page = DashboardPage(
                 user=self.state.current_user,
@@ -740,7 +740,7 @@ class EduConnectApp:
                 on_logout=self._on_logout
             )
             self.page.add(dashboard_page.build())
-            
+
         elif self.state.current_page == "course":
             course_page = CoursePage(
                 course=self.state.selected_course,
@@ -748,41 +748,41 @@ class EduConnectApp:
                 on_back=self._on_back_to_dashboard
             )
             self.page.add(course_page.build())
-        
+
         await self.page.update_async()
-    
+
     async def _setup_realtime(self):
         """リアルタイム機能セットアップ"""
-        
+
         def on_progress_update(payload):
             """進捗更新のリアルタイム同期"""
             asyncio.create_task(self._handle_progress_update(payload))
-        
+
         def on_course_update(payload):
             """コース更新のリアルタイム同期"""
             asyncio.create_task(self._handle_course_update(payload))
-        
+
         # 進捗更新の監視
         await self.realtime_service.subscribe_to_progress_updates(
             self.state.current_user['id'],
             on_progress_update
         )
-        
+
         # コース更新の監視
         await self.realtime_service.subscribe_to_course_updates(
             self.state.current_user['organization_id'],
             on_course_update
         )
-    
+
     async def _handle_progress_update(self, payload):
         """進捗更新ハンドラ"""
         # 進捗データ更新
         await self._load_user_data()
-        
-        # UI更新
+
+        # UI 更新
         if self.state.current_page == "dashboard":
             await self._render_current_page()
-    
+
     async def _on_login_success(self, user):
         """ログイン成功ハンドラ"""
         self.state.current_user = user
@@ -790,13 +790,13 @@ class EduConnectApp:
         await self._load_user_data()
         await self._setup_realtime()
         await self._render_current_page()
-    
+
     async def _on_course_select(self, course):
         """コース選択ハンドラ"""
         self.state.selected_course = course
         self.state.current_page = "course"
         await self._render_current_page()
-    
+
     async def _on_logout(self):
         """ログアウトハンドラ"""
         await self.auth_service.sign_out()
@@ -889,7 +889,7 @@ serve(async (req: Request): Promise<Response> => {
 
   } catch (error) {
     console.error('Course management error:', error)
-    
+
     return new Response(JSON.stringify({
       success: false,
       error: error.message
@@ -1011,7 +1011,7 @@ async function handleCertificateGeneration(supabase: any, user: any, request: Co
     throw new Error('Course not completed')
   }
 
-  // 証明書生成API呼び出し
+  // 証明書生成 API 呼び出し
   const certificateResponse = await fetch(`${Deno.env.get('CERTIFICATE_SERVICE_URL')}/generate`, {
     method: 'POST',
     headers: {
@@ -1080,24 +1080,24 @@ async def get_course_performance(
     db: Session = Depends(get_db)
 ):
     """コースパフォーマンス分析"""
-    
+
     analytics_service = AnalyticsService(db)
-    
+
     # デフォルト期間設定（過去30日）
     if not start_date:
         start_date = datetime.now() - timedelta(days=30)
     if not end_date:
         end_date = datetime.now()
-    
+
     try:
         analytics = await analytics_service.get_course_performance(
             organization_id=current_user.organization_id,
             start_date=start_date,
             end_date=end_date
         )
-        
+
         return analytics
-        
+
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Analytics generation failed: {str(e)}")
 
@@ -1109,26 +1109,26 @@ async def get_engagement_report(
     db: Session = Depends(get_db)
 ):
     """ユーザーエンゲージメントレポート"""
-    
+
     analytics_service = AnalyticsService(db)
-    
+
     period_mapping = {
         "7d": timedelta(days=7),
         "30d": timedelta(days=30),
         "90d": timedelta(days=90)
     }
-    
+
     if period not in period_mapping:
         raise HTTPException(status_code=400, detail="Invalid period")
-    
+
     try:
         report = await analytics_service.generate_engagement_report(
             organization_id=current_user.organization_id,
             period=period_mapping[period]
         )
-        
+
         return report
-        
+
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Report generation failed: {str(e)}")
 
@@ -1141,19 +1141,19 @@ from datetime import datetime, timedelta
 class AnalyticsService:
     def __init__(self, db_session):
         self.db = db_session
-    
+
     async def get_course_performance(
-        self, 
+        self,
         organization_id: str,
         start_date: datetime,
         end_date: datetime
     ) -> List[Dict]:
         """高度なコース分析"""
-        
+
         # 複雑な分析クエリ
         query = text("""
         WITH course_metrics AS (
-            SELECT 
+            SELECT
                 c.id,
                 c.title,
                 COUNT(DISTINCT lp.user_id) as total_enrollments,
@@ -1161,21 +1161,21 @@ class AnalyticsService:
                 PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY lp.completion_percentage) as median_completion,
                 SUM(lp.time_spent_minutes) as total_time_spent,
                 COUNT(CASE WHEN lp.completion_percentage = 100 THEN 1 END) as completions,
-                
+
                 -- 学習速度分析
                 AVG(
-                    CASE 
-                        WHEN lp.completion_percentage > 0 
+                    CASE
+                        WHEN lp.completion_percentage > 0
                         THEN lp.time_spent_minutes / lp.completion_percentage * 100
                     END
                 ) as avg_time_to_complete,
-                
+
                 -- エンゲージメント指標
                 COUNT(DISTINCT DATE(lp.last_accessed_at)) as active_days,
                 AVG(
                     EXTRACT(days FROM lp.updated_at - lp.created_at)
                 ) as avg_learning_duration_days
-                
+
             FROM courses c
             LEFT JOIN learning_progress lp ON c.id = lp.course_id
             WHERE c.organization_id = :org_id
@@ -1183,58 +1183,58 @@ class AnalyticsService:
             GROUP BY c.id, c.title
         ),
         benchmark_data AS (
-            SELECT 
+            SELECT
                 AVG(avg_completion) as industry_avg_completion,
                 AVG(total_time_spent / NULLIF(total_enrollments, 0)) as industry_avg_time_per_user
             FROM course_metrics
         )
-        SELECT 
+        SELECT
             cm.*,
             bd.industry_avg_completion,
             bd.industry_avg_time_per_user,
-            
+
             -- パフォーマンス評価
-            CASE 
+            CASE
                 WHEN cm.avg_completion > bd.industry_avg_completion * 1.2 THEN 'excellent'
                 WHEN cm.avg_completion > bd.industry_avg_completion THEN 'good'
                 WHEN cm.avg_completion > bd.industry_avg_completion * 0.8 THEN 'average'
                 ELSE 'needs_improvement'
             END as performance_rating,
-            
+
             -- リスク指標
-            CASE 
+            CASE
                 WHEN cm.avg_completion < 30 AND cm.total_enrollments > 10 THEN 'high_dropout_risk'
                 WHEN cm.avg_time_to_complete > bd.industry_avg_time_per_user * 2 THEN 'engagement_risk'
                 ELSE 'normal'
             END as risk_indicator
-            
+
         FROM course_metrics cm
         CROSS JOIN benchmark_data bd
         ORDER BY cm.total_enrollments DESC, cm.avg_completion DESC
         """)
-        
+
         result = await self.db.execute(query, {
             'org_id': organization_id,
             'start_date': start_date,
             'end_date': end_date
         })
-        
+
         return [dict(row) for row in result.fetchall()]
-    
+
     async def generate_engagement_report(
         self,
         organization_id: str,
         period: timedelta
     ) -> Dict:
         """ユーザーエンゲージメント詳細分析"""
-        
+
         end_date = datetime.now()
         start_date = end_date - period
-        
+
         # エンゲージメント指標計算
         engagement_query = text("""
         WITH user_activity AS (
-            SELECT 
+            SELECT
                 up.id as user_id,
                 up.full_name,
                 up.role,
@@ -1243,15 +1243,15 @@ class AnalyticsService:
                 SUM(lp.time_spent_minutes) as total_time_spent,
                 AVG(lp.completion_percentage) as avg_completion,
                 MAX(lp.last_accessed_at) as last_activity,
-                
+
                 -- セッション分析
-                COUNT(DISTINCT 
-                    CASE 
-                        WHEN lp.last_accessed_at >= :start_date 
+                COUNT(DISTINCT
+                    CASE
+                        WHEN lp.last_accessed_at >= :start_date
                         THEN DATE(lp.last_accessed_at)
                     END
                 ) as recent_active_days
-                
+
             FROM user_profiles up
             LEFT JOIN learning_progress lp ON up.id = lp.user_id
             WHERE up.organization_id = :org_id
@@ -1259,9 +1259,9 @@ class AnalyticsService:
             GROUP BY up.id, up.full_name, up.role
         ),
         engagement_segments AS (
-            SELECT 
+            SELECT
                 *,
-                CASE 
+                CASE
                     WHEN recent_active_days >= 20 AND avg_completion > 70 THEN 'highly_engaged'
                     WHEN recent_active_days >= 10 AND avg_completion > 40 THEN 'moderately_engaged'
                     WHEN recent_active_days >= 3 AND avg_completion > 20 THEN 'low_engaged'
@@ -1269,7 +1269,7 @@ class AnalyticsService:
                 END as engagement_level
             FROM user_activity
         )
-        SELECT 
+        SELECT
             engagement_level,
             COUNT(*) as user_count,
             AVG(total_time_spent) as avg_time_spent,
@@ -1277,7 +1277,7 @@ class AnalyticsService:
             AVG(courses_enrolled) as avg_courses_enrolled
         FROM engagement_segments
         GROUP BY engagement_level
-        ORDER BY 
+        ORDER BY
             CASE engagement_level
                 WHEN 'highly_engaged' THEN 1
                 WHEN 'moderately_engaged' THEN 2
@@ -1285,17 +1285,17 @@ class AnalyticsService:
                 WHEN 'at_risk' THEN 4
             END
         """)
-        
+
         result = await self.db.execute(engagement_query, {
             'org_id': organization_id,
             'start_date': start_date
         })
-        
+
         engagement_data = [dict(row) for row in result.fetchall()]
-        
+
         # 推奨アクション生成
         recommendations = self._generate_engagement_recommendations(engagement_data)
-        
+
         return {
             "period": f"{period.days} days",
             "generated_at": datetime.now().isoformat(),
@@ -1308,16 +1308,16 @@ class AnalyticsService:
                 ) / sum(seg["user_count"] for seg in engagement_data) * 100
             }
         }
-    
+
     def _generate_engagement_recommendations(self, engagement_data: List[Dict]) -> List[Dict]:
         """エンゲージメント改善推奨事項生成"""
-        
+
         recommendations = []
-        
+
         for segment in engagement_data:
             level = segment["engagement_level"]
             count = segment["user_count"]
-            
+
             if level == "at_risk" and count > 5:
                 recommendations.append({
                     "priority": "high",
@@ -1326,7 +1326,7 @@ class AnalyticsService:
                     "description": f"{count}名のリスクユーザーに対して再エンゲージメントキャンペーンを実施",
                     "expected_impact": "20〜30%のユーザー復帰率"
                 })
-            
+
             if level == "low_engaged" and count > 10:
                 recommendations.append({
                     "priority": "medium",
@@ -1335,7 +1335,7 @@ class AnalyticsService:
                     "description": f"{count}名の低エンゲージメントユーザーに個別化学習パスを提供",
                     "expected_impact": "エンゲージメント40%向上"
                 })
-        
+
         return recommendations
 ```
 
@@ -1357,11 +1357,11 @@ from frontend.src.services.auth_service import AuthService
 
 class TestEduConnectIntegration:
     """エンドツーエンド統合テスト"""
-    
+
     @pytest.fixture
     def client(self):
         return TestClient(app)
-    
+
     @pytest.fixture
     async def authenticated_user(self):
         """テスト用認証ユーザー"""
@@ -1372,10 +1372,10 @@ class TestEduConnectIntegration:
             "organization_id": "test-org-id",
             "role": "student"
         })
-    
+
     async def test_complete_learning_journey(self, client, authenticated_user):
         """完全な学習ジャーニーテスト"""
-        
+
         # 1. ユーザー登録・ログイン
         login_response = client.post("/api/v1/auth/login", json={
             "email": "test@example.com",
@@ -1384,15 +1384,15 @@ class TestEduConnectIntegration:
         assert login_response.status_code == 200
         token = login_response.json()["access_token"]
         headers = {"Authorization": f"Bearer {token}"}
-        
+
         # 2. コース一覧取得
         courses_response = client.get("/api/v1/courses", headers=headers)
         assert courses_response.status_code == 200
         courses = courses_response.json()
         assert len(courses) > 0
-        
+
         course_id = courses[0]["id"]
-        
+
         # 3. コース登録 (Edge Function)
         enrollment_response = client.post(
             "/functions/v1/course-management",
@@ -1404,10 +1404,10 @@ class TestEduConnectIntegration:
         )
         assert enrollment_response.status_code == 200
         assert enrollment_response.json()["success"] is True
-        
+
         # 4. 学習進捗更新
         progress_response = client.post(
-            "/functions/v1/course-management", 
+            "/functions/v1/course-management",
             headers=headers,
             json={
                 "action": "progress",
@@ -1420,17 +1420,17 @@ class TestEduConnectIntegration:
             }
         )
         assert progress_response.status_code == 200
-        
+
         # 5. 進捗確認 (FastAPI)
         progress_check = client.get(f"/api/v1/progress/{course_id}", headers=headers)
         assert progress_check.status_code == 200
         progress_data = progress_check.json()
         assert progress_data["completion_percentage"] == 50
-        
+
         # 6. コース完了
         completion_response = client.post(
             "/functions/v1/course-management",
-            headers=headers, 
+            headers=headers,
             json={
                 "action": "complete",
                 "courseId": course_id,
@@ -1441,50 +1441,50 @@ class TestEduConnectIntegration:
             }
         )
         assert completion_response.status_code == 200
-        
+
         # 7. 証明書生成
         certificate_response = client.post(
             "/functions/v1/course-management",
             headers=headers,
             json={
-                "action": "certificate", 
+                "action": "certificate",
                 "courseId": course_id
             }
         )
         assert certificate_response.status_code == 200
         certificate = certificate_response.json()
         assert "certificate" in certificate
-        
+
         # 8. 分析データ確認 (管理者権限必要)
         admin_token = await self._get_admin_token()
         admin_headers = {"Authorization": f"Bearer {admin_token}"}
-        
+
         analytics_response = client.get(
             "/api/v1/analytics/course-performance",
             headers=admin_headers
         )
         assert analytics_response.status_code == 200
         analytics = analytics_response.json()
-        
+
         # コース完了が分析に反映されているか確認
         course_analytics = next(
             (a for a in analytics if a["id"] == course_id), None
         )
         assert course_analytics is not None
         assert course_analytics["completions"] >= 1
-    
+
     async def test_realtime_synchronization(self, client, authenticated_user):
         """リアルタイム同期テスト"""
-        
-        # WebSocket接続シミュレーション
+
+        # WebSocket 接続シミュレーション
         with patch('frontend.src.services.realtime_service.RealtimeService') as mock_realtime:
             mock_client = Mock()
             mock_realtime.return_value = mock_client
-            
+
             # 進捗更新イベント発生
             token = await self._get_user_token(authenticated_user)
             headers = {"Authorization": f"Bearer {token}"}
-            
+
             progress_response = client.post(
                 "/functions/v1/course-management",
                 headers=headers,
@@ -1494,10 +1494,10 @@ class TestEduConnectIntegration:
                     "data": {"completionPercentage": 75}
                 }
             )
-            
+
             # リアルタイムイベントが発火されたか確認
             assert progress_response.status_code == 200
-            
+
             # モックでイベント受信確認
             mock_client.send.assert_called()
             sent_payload = mock_client.send.call_args[0][0]
@@ -1506,45 +1506,45 @@ class TestEduConnectIntegration:
 
 # パフォーマンステスト
 class TestPerformance:
-    
+
     @pytest.mark.performance
     async def test_concurrent_user_load(self):
         """同時接続負荷テスト"""
-        
+
         async def simulate_user_session():
             """ユーザーセッションシミュレーション"""
             # ログイン -> コース閲覧 -> 進捗更新のフロー
             # 実装省略
             pass
-        
+
         # 100同時ユーザーのシミュレーション
         tasks = [simulate_user_session() for _ in range(100)]
         start_time = asyncio.get_event_loop().time()
-        
+
         await asyncio.gather(*tasks)
-        
+
         elapsed_time = asyncio.get_event_loop().time() - start_time
-        
+
         # 性能要件: 100ユーザーセッション完了が30秒以内
         assert elapsed_time < 30.0
-        
+
     @pytest.mark.performance
     async def test_database_query_performance(self, client):
         """データベースクエリ性能テスト"""
-        
+
         admin_token = await self._get_admin_token()
         headers = {"Authorization": f"Bearer {admin_token}"}
-        
+
         start_time = asyncio.get_event_loop().time()
-        
+
         # 重い分析クエリの実行
         response = client.get(
             "/api/v1/analytics/course-performance",
             headers=headers
         )
-        
+
         elapsed_time = asyncio.get_event_loop().time() - start_time
-        
+
         assert response.status_code == 200
         # 性能要件: 分析クエリが2秒以内
         assert elapsed_time < 2.0
@@ -1569,7 +1569,7 @@ env:
 jobs:
   test:
     runs-on: ubuntu-latest
-    
+
     services:
       postgres:
         image: postgres:15
@@ -1581,7 +1581,7 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
-      
+
       redis:
         image: redis:7
         options: >-
@@ -1589,26 +1589,26 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
-    
+
     steps:
     - uses: actions/checkout@v4
-    
+
     - name: Setup Python
       uses: actions/setup-python@v6
       with:
         python-version: '3.11'
-    
-    - name: Setup Deno  
+
+    - name: Setup Deno
       uses: denoland/setup-deno@v2
       with:
         deno-version: v1.40.x
-    
+
     - name: Install Python dependencies
       run: |
         cd backend
         pip install -r requirements.txt
         pip install pytest pytest-asyncio pytest-cov
-    
+
     - name: Run Python tests
       env:
         DATABASE_URL: postgresql://postgres:postgres@localhost:5432/test_db
@@ -1616,17 +1616,17 @@ jobs:
       run: |
         cd backend
         pytest tests/ -v --cov=app --cov-report=xml
-    
+
     - name: Run Deno tests
       run: |
         cd edge-functions
         deno test --allow-all
-    
+
     - name: Run Frontend tests
       run: |
         cd frontend
         python -m pytest tests/ -v
-    
+
     - name: Integration tests
       run: |
         pytest tests/integration/ -v --timeout=300
@@ -1635,13 +1635,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-    
+
     - name: Run security scan
       run: |
         pip install safety bandit
         safety check
         bandit -r backend/app/
-    
+
     - name: Dependency vulnerability scan
       uses: pypa/gh-action-pip-audit@v1.1.0
 
@@ -1649,31 +1649,31 @@ jobs:
     needs: [test, security]
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
-    
+
     steps:
     - uses: actions/checkout@v4
-    
+
     - name: Log in to Container Registry
       uses: docker/login-action@v3
       with:
         registry: ${{ env.REGISTRY }}
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
-    
+
     - name: Build and push Backend
       uses: docker/build-push-action@v6
       with:
         context: ./backend
         push: true
         tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/backend:latest
-    
-    - name: Build and push Frontend  
+
+    - name: Build and push Frontend
       uses: docker/build-push-action@v6
       with:
         context: ./frontend
         push: true
         tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/frontend:latest
-    
+
     - name: Deploy Edge Functions
       run: |
         npx supabase functions deploy course-management
@@ -1682,7 +1682,7 @@ jobs:
       env:
         SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
         SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
-    
+
     - name: Deploy to Production
       run: |
         echo "Deploying to production environment"
@@ -1713,7 +1713,7 @@ services:
       - '--web.console.templates=/etc/prometheus/consoles'
       - '--web.enable-lifecycle'
       - '--web.enable-admin-api'
-    
+
   grafana:
     image: grafana/grafana:latest
     ports:
@@ -1724,14 +1724,14 @@ services:
       - grafana_data:/var/lib/grafana
       - ./grafana/dashboards:/etc/grafana/provisioning/dashboards
       - ./grafana/datasources:/etc/grafana/provisioning/datasources
-  
+
   alertmanager:
     image: prom/alertmanager:latest
     ports:
       - "9093:9093"
     volumes:
       - ./alertmanager.yml:/etc/alertmanager/alertmanager.yml
-  
+
   loki:
     image: grafana/loki:latest
     ports:
@@ -1739,7 +1739,7 @@ services:
     command: -config.file=/etc/loki/local-config.yaml
     volumes:
       - ./loki-config.yaml:/etc/loki/local-config.yaml
-  
+
   promtail:
     image: grafana/promtail:latest
     volumes:
@@ -1763,7 +1763,7 @@ volumes:
    - [OK] エンタープライズセキュリティ対応
 
 2. **運用基盤**
-   - [OK] 完全なCI/CDパイプライン
+   - [OK] 完全な CI/CDパイプライン
    - [OK] 包括的テストスイート
    - [OK] 監視・アラート基盤
 
@@ -1848,7 +1848,7 @@ flowchart LR
     A[第1章〜第9章] --> B[第10章 ]
     B --> C[実務プロジェクト適用]
     B --> D[チーム開発実践]
-    
+
     style B fill:#e1f5fe
 ```
 
@@ -1863,7 +1863,7 @@ flowchart LR
 ### **学習全体の成果**
 | 学習段階 | 習得内容 | 実践レベル | 適用場面 |
 |:---------|:---------|:-----------|:---------|
-| **Part I**| Supabase基礎・認証 |  個人開発 | 学習・プロトタイプ |
+| **Part I**| Supabase 基礎・認証 |  個人開発 | 学習・プロトタイプ |
 | **Part II**| 3つのアーキテクチャパターン |  チーム開発 | 実業務・スタートアップ |
 | **Part III**| 運用・セキュリティ・パフォーマンス |  企業レベル | エンタープライズ・SaaS |
 | **Part IV**| 統合・実践・問題解決 |  エキスパート | 技術リード・アーキテクト |
@@ -1871,17 +1871,17 @@ flowchart LR
 ### **次のステップ（学習修了後の進路）**
 
 #### **即戦力レベル（すぐに活用）**
-- [OK] 既存プロジェクトへのSupabase導入提案・実装
+- [OK] 既存プロジェクトへの Supabase 導入提案・実装
 - [OK] 新規プロジェクトでのアーキテクチャ選択・設計責任者
-- [OK] チーム内でのSupabase技術指導・メンタリング
+- [OK] チーム内での Supabase 技術指導・メンタリング
 
 #### **上級エンジニアレベル（更なる発展）**
-- [OK] 企業のSupabase移行プロジェクトリード
+- [OK] 企業の Supabase 移行プロジェクトリード
 - [OK] SaaS製品のテクニカルアーキテクト
-- [OK] Supabaseコミュニティでの技術発信・貢献
+- [OK] Supabase コミュニティでの技術発信・貢献
 
 #### **エキスパートレベル（業界貢献）**
-- [OK] Supabase関連の技術書籍・記事執筆
+- [OK] Supabase 関連の技術書籍・記事執筆
 - [OK] 技術カンファレンスでの講演・事例発表
 - [OK] Supabase Partnerships・技術アドバイザー
 
@@ -1895,13 +1895,13 @@ flowchart LR
 - **品質力**: エンタープライズ級のセキュリティ・パフォーマンス実装
 - **実践力**: 実際のビジネス要件を満たすプロダクト開発
 
-Supabaseアーキテクチャパターンの学習が完了しました。実際のプロジェクトでの活用を始めてください！
+Supabase アーキテクチャパターンの学習が完了しました。実際のプロジェクトでの活用を始めてください！
 
 ---
 
 **最終ナビゲーション**
 - **目次**: [はじめに]({{ '/introduction/' | relative_url }})
-- **前の章**: [第9章：アーキテクチャ選択演習]({{ '/chapters/chapter09/' | relative_url }})  
+- **前の章**: [第9章：アーキテクチャ選択演習]({{ '/chapters/chapter09/' | relative_url }})
 - **修了後**: [学習継続ガイド]({{ '/introduction/' | relative_url }})
 - **復習**: [全章まとめ]({{ '/introduction/' | relative_url }}) | [パターン比較]({{ '/guides/pattern-selection/' | relative_url }})
 - **リソース**: [コミュニティ](https://supabase.com/community) | [公式ドキュメント](https://supabase.com/docs)

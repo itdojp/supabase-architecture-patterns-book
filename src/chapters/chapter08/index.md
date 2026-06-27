@@ -71,9 +71,9 @@ def api_endpoint():
 └── [CRITICAL] ナースコール：異常値検知時に看護師に即座通知
 
  システム健康監視システム
-├──  CPU使用率：プロセッサーの負荷状況を監視
-├──  メモリ使用率：RAMの使用状況を追跡
-├──  レスポンス時間：API応答時間の測定
+├──  CPU 使用率：プロセッサーの負荷状況を監視
+├──  メモリ使用率：RAM の使用状況を追跡
+├──  レスポンス時間：API 応答時間の測定
 ├──  ダッシュボード：すべてのメトリクスを一画面で表示
 └── [CRITICAL] アラート：異常値検知時に管理者に即座通知
 ```
@@ -101,7 +101,7 @@ class HealthStatus(Enum):
 @dataclass
 class HealthMetric:
     """健康指標（バイタルサイン）"""
-    name: str                    # 指標名（CPU使用率、メモリ使用率など）
+    name: str                    # 指標名（CPU 使用率、メモリ使用率など）
     value: float                 # 現在値
     unit: str                    # 単位（%、MB、msなど）
     status: HealthStatus         # 健康状態
@@ -112,72 +112,72 @@ class HealthMetric:
 
 class SystemHealthMonitor:
     """システム健康監視システム（病院のモニタリングシステム）"""
-    
+
     def __init__(self):
         self.supabase_url = "https://your-project.supabase.co"
         self.supabase_key = "sb_publishable_XXXXXXXXXXXXXXXX"
-        
+
         #  健康しきい値設定（病院の正常値範囲）
         self.thresholds = {
-            'cpu_usage': {'warning': 70.0, 'critical': 85.0},           # CPU使用率
+            'cpu_usage': {'warning': 70.0, 'critical': 85.0},           # CPU 使用率
             'memory_usage': {'warning': 75.0, 'critical': 90.0},        # メモリ使用率
             'disk_usage': {'warning': 80.0, 'critical': 95.0},          # ディスク使用率
             'response_time': {'warning': 2000.0, 'critical': 5000.0},   # レスポンス時間(ms)
             'error_rate': {'warning': 1.0, 'critical': 5.0},            # エラー率(%)
-            'database_connections': {'warning': 80.0, 'critical': 95.0} # DB接続使用率
+            'database_connections': {'warning': 80.0, 'critical': 95.0} # DB 接続使用率
         }
-    
+
     def check_system_health(self) -> Dict[str, HealthMetric]:
         """システム全体の健康診断（総合健康チェック）"""
-        
+
         health_metrics = {}
-        
-        #  CPU使用率チェック（心拍数のような基本バイタル）
+
+        #  CPU 使用率チェック（心拍数のような基本バイタル）
         cpu_metric = self._check_cpu_usage()
         health_metrics['cpu'] = cpu_metric
-        
+
         #  メモリ使用率チェック（血圧のような重要指標）
         memory_metric = self._check_memory_usage()
         health_metrics['memory'] = memory_metric
-        
+
         #  ディスク使用率チェック（体重のような容量指標）
         disk_metric = self._check_disk_usage()
         health_metrics['disk'] = disk_metric
-        
+
         #  ネットワーク応答時間チェック（反射神経のような反応速度）
         response_metric = self._check_response_time()
         health_metrics['response_time'] = response_metric
-        
+
         #  データベース接続チェック（血液循環のような重要機能）
         db_metric = self._check_database_health()
         health_metrics['database'] = db_metric
-        
-        #  Supabase API健康チェック（生命維持装置のような外部依存）
+
+        #  Supabase API 健康チェック（生命維持装置のような外部依存）
         supabase_metric = self._check_supabase_health()
         health_metrics['supabase'] = supabase_metric
-        
+
         return health_metrics
-    
+
     def _check_cpu_usage(self) -> HealthMetric:
-        """CPU使用率チェック（心拍数測定）"""
-        
-        #  5秒間の平均CPU使用率を測定
+        """CPU 使用率チェック（心拍数測定）"""
+
+        #  5秒間の平均 CPU 使用率を測定
         cpu_percent = psutil.cpu_percent(interval=5)
-        
+
         #  健康状態判定
         thresholds = self.thresholds['cpu_usage']
         if cpu_percent >= thresholds['critical']:
             status = HealthStatus.CRITICAL
-            message = f"[WARN] CPU使用率が危険レベル！サーバー増強が必要です"
+            message = f"[WARN] CPU 使用率が危険レベル！サーバー増強が必要です"
         elif cpu_percent >= thresholds['warning']:
-            status = HealthStatus.WARNING  
-            message = f" CPU使用率が高めです。最適化を検討してください"
+            status = HealthStatus.WARNING
+            message = f" CPU 使用率が高めです。最適化を検討してください"
         else:
             status = HealthStatus.HEALTHY
-            message = f"[OK] CPU使用率は正常範囲内です"
-        
+            message = f"[OK] CPU 使用率は正常範囲内です"
+
         return HealthMetric(
-            name="CPU使用率",
+            name="CPU 使用率",
             value=cpu_percent,
             unit="%",
             status=status,
@@ -186,18 +186,18 @@ class SystemHealthMonitor:
             timestamp=datetime.now(),
             message=message
         )
-    
+
     def _check_memory_usage(self) -> HealthMetric:
         """メモリ使用率チェック（血圧測定）"""
-        
+
         #  メモリ使用状況を取得
         memory = psutil.virtual_memory()
         memory_percent = memory.percent
-        
+
         #  使用量を分かりやすい単位に変換
         used_gb = memory.used / (1024**3)  # ギガバイト
         total_gb = memory.total / (1024**3)
-        
+
         #  健康状態判定
         thresholds = self.thresholds['memory_usage']
         if memory_percent >= thresholds['critical']:
@@ -209,7 +209,7 @@ class SystemHealthMonitor:
         else:
             status = HealthStatus.HEALTHY
             message = f"[OK] メモリ使用量は正常 {used_gb:.1f}GB/{total_gb:.1f}GB"
-        
+
         return HealthMetric(
             name="メモリ使用率",
             value=memory_percent,
@@ -220,19 +220,19 @@ class SystemHealthMonitor:
             timestamp=datetime.now(),
             message=message
         )
-    
+
     def _check_disk_usage(self) -> HealthMetric:
         """ディスク使用率チェック（体重測定）"""
-        
+
         #  ディスク使用状況を取得
         disk = psutil.disk_usage('/')
         disk_percent = (disk.used / disk.total) * 100
-        
+
         #  使用量を分かりやすい単位に変換
         used_gb = disk.used / (1024**3)
         total_gb = disk.total / (1024**3)
         free_gb = disk.free / (1024**3)
-        
+
         #  健康状態判定
         thresholds = self.thresholds['disk_usage']
         if disk_percent >= thresholds['critical']:
@@ -244,7 +244,7 @@ class SystemHealthMonitor:
         else:
             status = HealthStatus.HEALTHY
             message = f"[OK] ディスク容量に余裕あり 残り{free_gb:.1f}GB"
-        
+
         return HealthMetric(
             name="ディスク使用率",
             value=disk_percent,
@@ -255,34 +255,34 @@ class SystemHealthMonitor:
             timestamp=datetime.now(),
             message=message
         )
-    
+
     def _check_response_time(self) -> HealthMetric:
-        """API応答時間チェック（反射神経テスト）"""
-        
+        """API 応答時間チェック（反射神経テスト）"""
+
         try:
-            #  自分のAPIエンドポイントに対するレスポンス時間を測定
+            #  自分の API エンドポイントに対するレスポンス時間を測定
             start_time = time.time()
-            response = requests.get(f"{self.supabase_url}/rest/v1/", 
+            response = requests.get(f"{self.supabase_url}/rest/v1/",
                                   headers={"apikey": self.supabase_key},
                                   timeout=10)
             end_time = time.time()
-            
+
             response_time_ms = (end_time - start_time) * 1000  # ミリ秒
-            
+
             #  健康状態判定
             thresholds = self.thresholds['response_time']
             if response_time_ms >= thresholds['critical']:
                 status = HealthStatus.CRITICAL
-                message = f" APIレスポンスが非常に遅い！{response_time_ms:.0f}ms"
+                message = f" API レスポンスが非常に遅い！{response_time_ms:.0f}ms"
             elif response_time_ms >= thresholds['warning']:
                 status = HealthStatus.WARNING
-                message = f" APIレスポンスが遅めです {response_time_ms:.0f}ms"
+                message = f" API レスポンスが遅めです {response_time_ms:.0f}ms"
             else:
                 status = HealthStatus.HEALTHY
-                message = f" APIレスポンスは高速 {response_time_ms:.0f}ms"
-            
+                message = f" API レスポンスは高速 {response_time_ms:.0f}ms"
+
             return HealthMetric(
-                name="API応答時間",
+                name="API 応答時間",
                 value=response_time_ms,
                 unit="ms",
                 status=status,
@@ -291,25 +291,25 @@ class SystemHealthMonitor:
                 timestamp=datetime.now(),
                 message=message
             )
-            
+
         except Exception as e:
             # [NG] 接続できない場合
             return HealthMetric(
-                name="API応答時間",
+                name="API 応答時間",
                 value=999999,  # 非常に大きな値
                 unit="ms",
                 status=HealthStatus.CRITICAL,
                 threshold_warning=self.thresholds['response_time']['warning'],
                 threshold_critical=self.thresholds['response_time']['critical'],
                 timestamp=datetime.now(),
-                message=f" API接続エラー: {str(e)}"
+                message=f" API 接続エラー: {str(e)}"
             )
-    
+
     def _check_database_health(self) -> HealthMetric:
         """データベース健康チェック（血液検査）"""
-        
+
         try:
-            #  Supabaseへの簡単なクエリでDB接続をテスト
+            #  Supabase への簡単なクエリで DB 接続をテスト
             start_time = time.time()
             response = requests.get(
                 f"{self.supabase_url}/rest/v1/health?select=status",
@@ -320,9 +320,9 @@ class SystemHealthMonitor:
                 timeout=5
             )
             end_time = time.time()
-            
+
             query_time_ms = (end_time - start_time) * 1000
-            
+
             if response.status_code == 200:
                 # [OK] 接続成功
                 if query_time_ms < 500:
@@ -338,7 +338,7 @@ class SystemHealthMonitor:
                 # [NG] エラーレスポンス
                 status = HealthStatus.CRITICAL
                 message = f" データベースエラー: HTTP {response.status_code}"
-            
+
             return HealthMetric(
                 name="データベース接続",
                 value=query_time_ms,
@@ -349,7 +349,7 @@ class SystemHealthMonitor:
                 timestamp=datetime.now(),
                 message=message
             )
-            
+
         except Exception as e:
             # [NG] 接続例外
             return HealthMetric(
@@ -362,46 +362,46 @@ class SystemHealthMonitor:
                 timestamp=datetime.now(),
                 message=f" データベース接続不可: {str(e)}"
             )
-    
+
     def _check_supabase_health(self) -> HealthMetric:
         """Supabase サービス健康チェック（外部機器チェック）"""
-        
+
         try:
-            #  Supabaseの各サービスをチェック
+            #  Supabase の各サービスをチェック
             services_status = []
-            
+
             # Auth service check
             auth_response = requests.get(f"{self.supabase_url}/auth/v1/health", timeout=5)
             auth_healthy = auth_response.status_code == 200
             services_status.append(("認証", auth_healthy))
-            
+
             # Storage service check (if available)
             try:
-                storage_response = requests.get(f"{self.supabase_url}/storage/v1/object", 
-                                              headers={"apikey": self.supabase_key}, 
+                storage_response = requests.get(f"{self.supabase_url}/storage/v1/object",
+                                              headers={"apikey": self.supabase_key},
                                               timeout=5)
                 storage_healthy = storage_response.status_code in [200, 400]  # 400 is OK for this endpoint
                 services_status.append(("ストレージ", storage_healthy))
             except:
                 services_status.append(("ストレージ", False))
-            
+
             #  全体の健康状態を判定
             healthy_services = sum(1 for _, healthy in services_status if healthy)
             total_services = len(services_status)
             health_percentage = (healthy_services / total_services) * 100
-            
+
             if health_percentage == 100:
                 status = HealthStatus.HEALTHY
-                message = f"[OK] Supabaseサービス全て正常 ({healthy_services}/{total_services})"
+                message = f"[OK] Supabase サービス全て正常 ({healthy_services}/{total_services})"
             elif health_percentage >= 50:
                 status = HealthStatus.WARNING
                 message = f"[WARN] 一部サービスに問題 ({healthy_services}/{total_services})"
             else:
                 status = HealthStatus.CRITICAL
-                message = f" Supabaseサービスに深刻な問題 ({healthy_services}/{total_services})"
-            
+                message = f" Supabase サービスに深刻な問題 ({healthy_services}/{total_services})"
+
             return HealthMetric(
-                name="Supabaseサービス",
+                name="Supabase サービス",
                 value=health_percentage,
                 unit="%",
                 status=status,
@@ -410,63 +410,63 @@ class SystemHealthMonitor:
                 timestamp=datetime.now(),
                 message=message
             )
-            
+
         except Exception as e:
             return HealthMetric(
-                name="Supabaseサービス",
+                name="Supabase サービス",
                 value=0,
                 unit="%",
                 status=HealthStatus.CRITICAL,
                 threshold_warning=80,
                 threshold_critical=50,
                 timestamp=datetime.now(),
-                message=f" Supabaseサービスチェック失敗: {str(e)}"
+                message=f" Supabase サービスチェック失敗: {str(e)}"
             )
-    
+
     def get_overall_health_status(self, metrics: Dict[str, HealthMetric]) -> HealthStatus:
         """総合健康状態判定（総合診断）"""
-        
+
         # [CRITICAL] 一つでもCRITICALがあれば全体もCRITICAL
         if any(metric.status == HealthStatus.CRITICAL for metric in metrics.values()):
             return HealthStatus.CRITICAL
-        
-        # [WARN] 一つでもWARNINGがあれば全体もWARNING  
+
+        # [WARN] 一つでもWARNINGがあれば全体もWARNING
         if any(metric.status == HealthStatus.WARNING for metric in metrics.values()):
             return HealthStatus.WARNING
-        
+
         # [OK] 全てHEALTHYなら全体もHEALTHY
         return HealthStatus.HEALTHY
 
 #  使用例：ヘルスチェック実行デモ
 def demo_health_monitoring():
     """ヘルスモニタリングのデモ実行"""
-    
+
     print(" システム健康診断を開始します...")
     print("=" * 50)
-    
+
     monitor = SystemHealthMonitor()
-    
+
     #  全体の健康チェック実行
     health_metrics = monitor.check_system_health()
     overall_status = monitor.get_overall_health_status(health_metrics)
-    
+
     #  結果表示
     print(f" 総合健康状態: {overall_status.value.upper()}")
     print("-" * 50)
-    
+
     for metric_name, metric in health_metrics.items():
         status_emoji = {
             HealthStatus.HEALTHY: "[OK]",
-            HealthStatus.WARNING: "[WARN]", 
+            HealthStatus.WARNING: "[WARN]",
             HealthStatus.CRITICAL: "[CRITICAL]",
             HealthStatus.UNKNOWN: "UNKNOWN"
         }
-        
+
         print(f"{status_emoji[metric.status]} {metric.name}: {metric.value:.1f}{metric.unit}")
         print(f"   {metric.message}")
         print(f"   警告レベル: {metric.threshold_warning}{metric.unit}, 危険レベル: {metric.threshold_critical}{metric.unit}")
         print()
-    
+
     return overall_status, health_metrics
 
 if __name__ == "__main__":
@@ -479,14 +479,14 @@ if __name__ == "__main__":
 
 | 監視項目 | 正常値 | 警告値 | 危険値 | 対処法 |
 |:---------|:-------|:-------|:-------|:-------|
-| **CPU使用率**| 0〜70% | 70〜85% | 85%以上 | プロセス最適化・サーバー増強 |
+| **CPU 使用率**| 0〜70% | 70〜85% | 85%以上 | プロセス最適化・サーバー増強 |
 | **メモリ使用率**| 0〜75% | 75〜90% | 90%以上 | メモリリーク調査・メモリ増設 |
 | **ディスク使用率**| 0〜80% | 80〜95% | 95%以上 | ファイル削除・ストレージ拡張 |
-| **API応答時間**| 0〜2秒 | 2〜5秒 | 5秒以上 | クエリ最適化・CDN導入 |
+| **API 応答時間**| 0〜2秒 | 2〜5秒 | 5秒以上 | クエリ最適化・CDN導入 |
 
-### AI運用メトリクス（RAG/埋め込み/推論の監視）
+### AI 運用メトリクス（RAG/埋め込み/推論の監視）
 
-AIを組み込む場合は、通常のインフラ指標に加えて **AI特有の運用指標**が必要です。  
+AI を組み込む場合は、通常のインフラ指標に加えて **AI 特有の運用指標**が必要です。
 以下は最小セットの例です。
 
 | 指標 | 目的 | 例 |
@@ -501,7 +501,7 @@ AIを組み込む場合は、通常のインフラ指標に加えて **AI特有�
 
 ### Advisor（Security/Performance/Index）の使い方
 
-SupabaseのAdvisor系機能は便利ですが、**誤検知や環境依存**があります。  
+Supabase のAdvisor系機能は便利ですが、**誤検知や環境依存**があります。
 以下のルールで取り込みます。
 
 - **Security Advisor**: 重大度が高いものから対応。例外が必要なら根拠を記録
@@ -525,23 +525,23 @@ import psutil
 
 class HealthDashboard:
     """健康監視ダッシュボード（ナースステーション監視画面）"""
-    
+
     def __init__(self):
         self.monitor = SystemHealthMonitor()
         self.connected_clients: List[WebSocket] = []
         self.is_monitoring = False
-        
+
     async def start_real_time_monitoring(self):
         """リアルタイム監視開始（24時間監視体制）"""
-        
+
         self.is_monitoring = True
-        
+
         while self.is_monitoring:
             try:
                 #  健康状態チェック実行
                 health_metrics = self.monitor.check_system_health()
                 overall_status = self.monitor.get_overall_health_status(health_metrics)
-                
+
                 #  接続中のクライアントに結果を送信
                 dashboard_data = {
                     "timestamp": datetime.now().isoformat(),
@@ -559,28 +559,28 @@ class HealthDashboard:
                         for name, metric in health_metrics.items()
                     }
                 }
-                
-                #  WebSocketで全クライアントに送信
+
+                #  WebSocket で全クライアントに送信
                 await self._broadcast_to_clients(dashboard_data)
-                
+
                 # [CRITICAL] クリティカルな状態の場合は即座に再チェック
                 if overall_status == HealthStatus.CRITICAL:
                     await asyncio.sleep(10)  # 10秒後に再チェック
                 else:
                     await asyncio.sleep(60)  # 通常は1分間隔
-                    
+
             except Exception as e:
                 print(f"[NG] 監視エラー: {e}")
                 await asyncio.sleep(30)  # エラー時は30秒待機
-    
+
     async def _broadcast_to_clients(self, data: Dict[str, Any]):
         """接続中の全クライアントにデータ送信"""
-        
+
         if not self.connected_clients:
             return
-            
+
         disconnected_clients = []
-        
+
         for client in self.connected_clients:
             try:
                 await client.send_text(json.dumps(data))
@@ -590,22 +590,22 @@ class HealthDashboard:
             except Exception as e:
                 print(f"[WARN] クライアント送信エラー: {e}")
                 disconnected_clients.append(client)
-        
+
         #  切断されたクライアントを削除
         for client in disconnected_clients:
             self.connected_clients.remove(client)
-    
+
     async def connect_client(self, websocket: WebSocket):
         """新しいクライアント接続"""
-        
+
         await websocket.accept()
         self.connected_clients.append(websocket)
         print(f" 新しいクライアント接続: 現在{len(self.connected_clients)}台")
-        
+
         #  初回データ送信
         health_metrics = self.monitor.check_system_health()
         overall_status = self.monitor.get_overall_health_status(health_metrics)
-        
+
         initial_data = {
             "timestamp": datetime.now().isoformat(),
             "overall_status": overall_status.value,
@@ -622,12 +622,12 @@ class HealthDashboard:
                 for name, metric in health_metrics.items()
             }
         }
-        
+
         await websocket.send_text(json.dumps(initial_data))
-    
+
     def disconnect_client(self, websocket: WebSocket):
         """クライアント切断"""
-        
+
         if websocket in self.connected_clients:
             self.connected_clients.remove(websocket)
             print(f" クライアント切断: 現在{len(self.connected_clients)}台")
@@ -647,7 +647,7 @@ async def startup_event():
 @app.get("/", response_class=HTMLResponse)
 async def get_dashboard():
     """ダッシュボードページ表示"""
-    
+
     #  シンプルなダッシュボードHTML
     html_content = """
     <!DOCTYPE html>
@@ -724,62 +724,62 @@ async def get_dashboard():
                 <h1> システム健康監視ダッシュボード</h1>
                 <p>リアルタイム監視システム - 24時間365日稼働</p>
             </div>
-            
+
             <div class="overall-status" id="overall-status">
                  監視システム起動中...
             </div>
-            
+
             <div class="metrics-grid" id="metrics-grid">
                 <!-- メトリクスカードがここに動的に追加されます -->
             </div>
-            
+
             <div class="timestamp" id="timestamp">
                 最終更新: 接続中...
             </div>
         </div>
 
         <script>
-            //  WebSocket接続
+            //  WebSocket 接続
             const ws = new WebSocket(`ws://${window.location.host}/ws`);
-            
+
             ws.onmessage = function(event) {
                 const data = JSON.parse(event.data);
                 updateDashboard(data);
             };
-            
+
             ws.onopen = function() {
                 console.log('[OK] ダッシュボード接続成功');
             };
-            
+
             ws.onerror = function(error) {
                 console.error('[NG] WebSocket エラー:', error);
             };
-            
+
             ws.onclose = function() {
                 console.log(' ダッシュボード接続終了');
                 setTimeout(() => location.reload(), 5000); // 5秒後に再接続
             };
-            
+
             function updateDashboard(data) {
                 //  総合ステータス更新
                 const overallStatus = document.getElementById('overall-status');
                 const statusEmoji = {
                     'healthy': '[OK]',
-                    'warning': '[WARN]', 
+                    'warning': '[WARN]',
                     'critical': '[CRITICAL]',
                     'unknown': 'UNKNOWN'
                 };
-                
+
                 overallStatus.innerHTML = `
-                    ${statusEmoji[data.overall_status]} 
+                    ${statusEmoji[data.overall_status]}
                     システム総合状態: ${data.overall_status.toUpperCase()}
                 `;
                 overallStatus.className = `overall-status status-${data.overall_status}`;
-                
+
                 //  メトリクス更新
                 const metricsGrid = document.getElementById('metrics-grid');
                 metricsGrid.innerHTML = '';
-                
+
                 Object.entries(data.metrics).forEach(([key, metric]) => {
                     const card = document.createElement('div');
                     card.className = 'metric-card';
@@ -790,13 +790,13 @@ async def get_dashboard():
                         </div>
                         <div class="metric-message">${metric.message}</div>
                         <div style="font-size: 0.8em; margin-top: 10px; opacity: 0.6;">
-                            警告: ${metric.threshold_warning}${metric.unit} / 
+                            警告: ${metric.threshold_warning}${metric.unit} /
                             危険: ${metric.threshold_critical}${metric.unit}
                         </div>
                     `;
                     metricsGrid.appendChild(card);
                 });
-                
+
                 //  タイムスタンプ更新
                 const timestamp = document.getElementById('timestamp');
                 const updateTime = new Date(data.timestamp).toLocaleString('ja-JP');
@@ -806,15 +806,15 @@ async def get_dashboard():
     </body>
     </html>
     """
-    
+
     return HTMLResponse(content=html_content)
 
 @app.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):
-    """WebSocket接続エンドポイント"""
-    
+    """WebSocket 接続エンドポイント"""
+
     await dashboard.connect_client(websocket)
-    
+
     try:
         # 接続維持（クライアントが切断するまで待機）
         while True:
@@ -824,11 +824,11 @@ async def websocket_endpoint(websocket: WebSocket):
 
 @app.get("/api/health")
 async def get_health_status():
-    """健康状態API（外部監視システム用）"""
-    
+    """健康状態 API（外部監視システム用）"""
+
     health_metrics = dashboard.monitor.check_system_health()
     overall_status = dashboard.monitor.get_overall_health_status(health_metrics)
-    
+
     return {
         "status": overall_status.value,
         "timestamp": datetime.now().isoformat(),
@@ -850,7 +850,7 @@ async def get_health_status():
 
 | 機能 | 病院の例 | システムダッシュボード | 利点 |
 |:-----|:--------|:---------------------|:-----|
-| **リアルタイム表示**| ベッドサイドモニター | WebSocketでライブ更新 | 即座に状況把握 |
+| **リアルタイム表示**| ベッドサイドモニター | WebSocket でライブ更新 | 即座に状況把握 |
 | **色分け表示**| 緑・黄・赤のランプ | ステータス色でわかりやすく | 直感的な理解 |
 | **複数画面対応**| 複数のナースステーション | 複数ブラウザで同時監視 | チーム全体で共有 |
 | **履歴記録**| 患者カルテ | メトリクス履歴保存 | 傾向分析が可能 |
@@ -915,7 +915,7 @@ class AlertRule:
 
 class AlertManager:
     """アラート管理システム（病院の緊急通報指令センター）"""
-    
+
     def __init__(self):
         #  メール設定
         self.smtp_config = {
@@ -925,28 +925,28 @@ class AlertManager:
             'password': 'your-app-password',
             'from_email': 'system-monitor@yourcompany.com'
         }
-        
+
         #  Slack設定
         self.slack_webhook_url = "https://hooks.slack.com/services/YOUR/SLACK/WEBHOOK"
-        
+
         #  SMS設定（Twilio例）
         self.sms_config = {
             'account_sid': 'your-twilio-account-sid',
             'auth_token': 'your-twilio-auth-token',
             'from_number': '+1234567890'
         }
-        
+
         #  Discord設定
         self.discord_webhook_url = "https://discord.com/api/webhooks/YOUR/DISCORD/WEBHOOK"
-        
+
         #  アラート履歴管理
         self.active_alerts: Dict[str, Dict] = {}  # 現在のアクティブアラート
         self.alert_history: List[Dict] = []       # アラート履歴
-        
+
         #  アラートルール設定
         self.alert_rules = [
             AlertRule(
-                name="高CPU使用率",
+                name="高 CPU 使用率",
                 condition="cpu_usage >= 85",
                 level=AlertLevel.CRITICAL,
                 channels=[NotificationChannel.SLACK, NotificationChannel.EMAIL],
@@ -969,7 +969,7 @@ class AlertManager:
                 cooldown_minutes=5
             ),
             AlertRule(
-                name="API応答遅延",
+                name="API 応答遅延",
                 condition="response_time >= 5000",
                 level=AlertLevel.WARNING,
                 channels=[NotificationChannel.SLACK],
@@ -991,29 +991,29 @@ class AlertManager:
                 cooldown_minutes=0  # 緊急時は連続通知許可
             )
         ]
-    
+
     async def process_health_metrics(self, health_metrics: Dict[str, Any], overall_status: str):
         """健康メトリクスを評価してアラート発動判定"""
-        
+
         print(f" アラート評価開始: 総合ステータス = {overall_status}")
-        
+
         #  各アラートルールを評価
         for rule in self.alert_rules:
             should_alert = self._evaluate_alert_condition(rule, health_metrics, overall_status)
-            
+
             if should_alert:
                 await self._trigger_alert(rule, health_metrics, overall_status)
             else:
                 # [OK] 条件が解消された場合の自動解決
                 await self._check_auto_resolve(rule, health_metrics)
-    
+
     def _evaluate_alert_condition(self, rule: AlertRule, metrics: Dict[str, Any], overall_status: str) -> bool:
         """アラート条件評価（症状の重篤度判定）"""
-        
+
         try:
             #  条件文字列をPython式として評価
             # 安全性のため、限定された変数のみ使用
-            
+
             evaluation_context = {
                 'overall_status': overall_status,
                 'cpu_usage': metrics.get('cpu', {}).get('value', 0),
@@ -1022,31 +1022,31 @@ class AlertManager:
                 'response_time': metrics.get('response_time', {}).get('value', 0),
                 'database_connection': metrics.get('database', {}).get('status') == 'healthy'
             }
-            
+
             #  条件を安全に評価
             result = eval(rule.condition, {"__builtins__": {}}, evaluation_context)
-            
+
             if result:
                 print(f"[CRITICAL] アラート条件成立: {rule.name} - {rule.condition}")
-            
+
             return result
-            
+
         except Exception as e:
             print(f"[NG] アラート条件評価エラー: {rule.name} - {e}")
             return False
-    
+
     async def _trigger_alert(self, rule: AlertRule, metrics: Dict[str, Any], overall_status: str):
         """アラート発動（緊急通報実行）"""
-        
+
         alert_id = f"{rule.name}_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
-        
+
         #  クールダウンチェック（連続通知防止）
         if self._is_in_cooldown(rule):
             print(f" クールダウン中のためスキップ: {rule.name}")
             return
-        
+
         print(f"[CRITICAL] アラート発動: {rule.name} (レベル: {rule.level.value})")
-        
+
         #  アラート詳細情報作成
         alert_data = {
             'id': alert_id,
@@ -1058,70 +1058,70 @@ class AlertManager:
             'overall_status': overall_status,
             'message': self._generate_alert_message(rule, metrics, overall_status)
         }
-        
+
         #  アクティブアラートに追加
         self.active_alerts[alert_id] = alert_data
         self.alert_history.append(alert_data)
-        
+
         #  各チャネルに通知送信
         notification_tasks = []
         for channel in rule.channels:
             if channel in rule.recipients:
                 task = self._send_notification(channel, rule, alert_data)
                 notification_tasks.append(task)
-        
+
         #  並行実行で高速通知
         if notification_tasks:
             await asyncio.gather(*notification_tasks, return_exceptions=True)
-    
+
     def _generate_alert_message(self, rule: AlertRule, metrics: Dict[str, Any], overall_status: str) -> str:
         """アラートメッセージ生成（症状説明書作成）"""
-        
+
         #  レベル別の絵文字
         level_emoji = {
             AlertLevel.INFO: "",
-            AlertLevel.WARNING: "[WARN]", 
+            AlertLevel.WARNING: "[WARN]",
             AlertLevel.CRITICAL: "[CRITICAL]",
             AlertLevel.EMERGENCY: "[CRITICAL]"
         }
-        
+
         #  基本メッセージ
         message = f"{level_emoji[rule.level]} **{rule.name}**\n"
         message += f"**レベル**: {rule.level.value.upper()}\n"
         message += f"**発生時刻**: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n"
         message += f"**総合ステータス**: {overall_status}\n\n"
-        
+
         #  主要メトリクス情報
         message += "**現在の状況**:\n"
         for name, metric in metrics.items():
             if isinstance(metric, dict) and 'value' in metric:
                 status_emoji = {"healthy": "[OK]", "warning": "[WARN]", "critical": "[CRITICAL]"}.get(metric.get('status', 'unknown'), "UNKNOWN")
                 message += f"• {metric.get('name', name)}: {metric['value']:.1f}{metric.get('unit', '')} {status_emoji}\n"
-        
+
         #  対処推奨事項
         message += f"\n**推奨対処**: {self._get_recommended_action(rule, metrics)}\n"
-        
+
         return message
-    
+
     def _get_recommended_action(self, rule: AlertRule, metrics: Dict[str, Any]) -> str:
         """推奨対処法提案（治療方針決定）"""
-        
+
         #  ルール別の対処法ガイド
         action_guide = {
-            "高CPU使用率": "プロセス使用率確認、不要プロセス停止、サーバースケールアップ検討",
-            "メモリ不足": "メモリリーク調査、プロセス再起動、メモリ増設検討", 
-            "API応答遅延": "データベースクエリ最適化、CDN設定確認、負荷分散検討",
+            "高 CPU 使用率": "プロセス使用率確認、不要プロセス停止、サーバースケールアップ検討",
+            "メモリ不足": "メモリリーク調査、プロセス再起動、メモリ増設検討",
+            "API 応答遅延": "データベースクエリ最適化、CDN設定確認、負荷分散検討",
             "システム完全停止": "即座にシステム再起動、障害原因調査、緊急対応チーム招集"
         }
-        
+
         return action_guide.get(rule.name, "システム管理者に連絡してください")
-    
+
     async def _send_notification(self, channel: NotificationChannel, rule: AlertRule, alert_data: Dict[str, Any]):
         """通知送信（各種通信手段での緊急連絡）"""
-        
+
         try:
             recipients = rule.recipients.get(channel.value, [])
-            
+
             if channel == NotificationChannel.EMAIL:
                 await self._send_email_alert(recipients, alert_data)
             elif channel == NotificationChannel.SLACK:
@@ -1130,25 +1130,25 @@ class AlertManager:
                 await self._send_sms_alert(recipients, alert_data)
             elif channel == NotificationChannel.DISCORD:
                 await self._send_discord_alert(recipients, alert_data)
-                
+
             print(f"[OK] {channel.value} 通知送信完了: {len(recipients)}件")
-            
+
         except Exception as e:
             print(f"[NG] {channel.value} 通知送信失敗: {e}")
-    
+
     async def _send_email_alert(self, recipients: List[str], alert_data: Dict[str, Any]):
         """メール通知送信（電子メール緊急連絡）"""
-        
+
         if not recipients:
             return
-            
+
         try:
             #  メール内容構築
             msg = MIMEMultipart()
             msg['From'] = self.smtp_config['from_email']
             msg['To'] = ', '.join(recipients)
             msg['Subject'] = f"[CRITICAL] システムアラート: {alert_data['rule_name']} ({alert_data['level'].upper()})"
-            
+
             #  HTML形式のメール本文
             html_body = f"""
             <html>
@@ -1169,33 +1169,33 @@ class AlertManager:
             </body>
             </html>
             """
-            
+
             msg.attach(MIMEText(html_body, 'html', 'utf-8'))
-            
+
             #  SMTP送信
             with smtplib.SMTP(self.smtp_config['host'], self.smtp_config['port']) as server:
                 server.starttls()
                 server.login(self.smtp_config['username'], self.smtp_config['password'])
                 server.send_message(msg)
-                
+
         except Exception as e:
             print(f"[NG] メール送信エラー: {e}")
-    
+
     async def _send_slack_alert(self, channels: List[str], alert_data: Dict[str, Any]):
         """Slack通知送信（チャット緊急連絡）"""
-        
+
         if not channels or not self.slack_webhook_url:
             return
-            
+
         try:
             #  レベル別の色設定
             color_map = {
                 "info": "#36a64f",      # 緑
-                "warning": "#ff9800",   # オレンジ  
+                "warning": "#ff9800",   # オレンジ
                 "critical": "#d32f2f",  # 赤
                 "emergency": "#9c27b0"  # 紫
             }
-            
+
             #  Slack メッセージ構築
             slack_payload = {
                 "text": f"[CRITICAL] システムアラート: {alert_data['rule_name']}",
@@ -1214,7 +1214,7 @@ class AlertManager:
                     }
                 ]
             }
-            
+
             #  Webhook送信
             async with aiohttp.ClientSession() as session:
                 async with session.post(self.slack_webhook_url, json=slack_payload) as response:
@@ -1222,58 +1222,58 @@ class AlertManager:
                         print(f"[OK] Slack通知送信成功")
                     else:
                         print(f"[NG] Slack通知送信失敗: {response.status}")
-                        
+
         except Exception as e:
             print(f"[NG] Slack通知エラー: {e}")
-    
+
     def _is_in_cooldown(self, rule: AlertRule) -> bool:
         """クールダウン期間チェック（連続通知防止）"""
-        
+
         if rule.cooldown_minutes == 0:
             return False  # 緊急時はクールダウンなし
-            
+
         #  同じルールの最近のアラートをチェック
         cutoff_time = datetime.now() - timedelta(minutes=rule.cooldown_minutes)
-        
+
         for alert in reversed(self.alert_history):  # 新しい順でチェック
             alert_time = datetime.fromisoformat(alert['timestamp'])
             if alert_time < cutoff_time:
                 break  # 十分古いので以降はチェック不要
-                
+
             if alert['rule_name'] == rule.name:
                 return True  # クールダウン期間内に同じアラートあり
-        
+
         return False
-    
+
     async def _check_auto_resolve(self, rule: AlertRule, metrics: Dict[str, Any]):
         """自動解決チェック（症状改善確認）"""
-        
+
         #  該当するアクティブアラートがあるかチェック
         alerts_to_resolve = []
-        
+
         for alert_id, alert_data in self.active_alerts.items():
             if alert_data['rule_name'] == rule.name:
                 #  自動解決時間経過チェック
                 alert_time = datetime.fromisoformat(alert_data['timestamp'])
                 if datetime.now() - alert_time > timedelta(minutes=rule.auto_resolve_minutes):
                     alerts_to_resolve.append(alert_id)
-        
+
         # [OK] 解決済みアラートを削除
         for alert_id in alerts_to_resolve:
             resolved_alert = self.active_alerts.pop(alert_id)
             print(f"[OK] アラート自動解決: {resolved_alert['rule_name']}")
-            
+
             #  解決通知送信（オプション）
             await self._send_resolution_notification(resolved_alert)
-    
+
     async def _send_resolution_notification(self, alert_data: Dict[str, Any]):
         """解決通知送信（回復報告）"""
-        
+
         resolution_message = f"[OK] **アラート解決**: {alert_data['rule_name']}\n"
         resolution_message += f"**解決時刻**: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n"
         resolution_message += f"**発生からの経過時間**: 約{rule.auto_resolve_minutes}分\n"
         resolution_message += "システムは正常な状態に戻りました。"
-        
+
         #  簡易Slack通知（解決報告）
         if self.slack_webhook_url:
             payload = {
@@ -1285,7 +1285,7 @@ class AlertManager:
                     }
                 ]
             }
-            
+
             try:
                 async with aiohttp.ClientSession() as session:
                     await session.post(self.slack_webhook_url, json=payload)
@@ -1313,7 +1313,7 @@ class AlertManager:
     strategy:
       matrix: ${{ fromJson(needs.detect-changes.outputs.test-matrix) }}
       fail-fast: false
-    
+
     services:
       postgres:
         image: postgres:15
@@ -1327,7 +1327,7 @@ class AlertManager:
           --health-retries 5
         ports:
           - 5432:5432
-      
+
       redis:
         image: redis:7
         options: >-
@@ -1337,26 +1337,26 @@ class AlertManager:
           --health-retries 5
         ports:
           - 6379:6379
-    
+
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v6
         with:
           python-version: ${{ matrix.python-version }}
-      
+
       - name: Cache dependencies
         uses: actions/cache@v4
         with:
           path: ~/.cache/pip
           key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements*.txt') }}
-      
+
       - name: Install dependencies
         run: |
           pip install -r requirements.txt
           pip install -r requirements-test.txt
-      
+
       - name: Run unit tests
         env:
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/test_db
@@ -1364,7 +1364,7 @@ class AlertManager:
           SECRET_KEY: test-secret-key-for-ci
         run: |
           pytest tests/unit/ -v --junitxml=junit-unit.xml --cov=app --cov-report=xml:coverage-unit.xml
-      
+
       - name: Run integration tests
         env:
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/test_db
@@ -1372,7 +1372,7 @@ class AlertManager:
           SECRET_KEY: test-secret-key-for-ci
         run: |
           pytest tests/integration/ -v --junitxml=junit-integration.xml --cov=app --cov-append --cov-report=xml:coverage-integration.xml
-      
+
       - name: Upload test results
         uses: actions/upload-artifact@v4
         if: always()
@@ -1389,23 +1389,23 @@ class AlertManager:
     if: needs.detect-changes.outputs.backend-changed == 'true' && github.ref == 'refs/heads/main'
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Build application
         run: |
           docker build -t app:test .
-      
+
       - name: Start test environment
         run: |
           docker compose -f docker-compose.test.yml up -d
           sleep 30  # アプリケーション起動待機
-      
+
       - name: Run load tests
         run: |
           pip install locust
           locust -f tests/performance/locustfile.py --host=http://localhost:8000 \
                  --users=100 --spawn-rate=10 --run-time=300s --headless \
                  --html=performance-report.html --csv=performance
-      
+
       - name: Upload performance results
         uses: actions/upload-artifact@v4
         with:
@@ -1419,7 +1419,7 @@ class AlertManager:
     runs-on: ubuntu-latest
     needs: detect-changes
     if: needs.detect-changes.outputs.database-changed == 'true'
-    
+
     services:
       postgres:
         image: postgres:15
@@ -1428,27 +1428,27 @@ class AlertManager:
           POSTGRES_DB: migration_test
         ports:
           - 5432:5432
-    
+
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      
+
       - name: Setup Supabase CLI
         uses: supabase/setup-cli@v1
         with:
           version: latest
-      
+
       - name: Test migration rollback/forward
         run: |
           ## ベースブランチからのマイグレーション実行
           git checkout ${{ github.base_ref || 'main' }}
           supabase db reset --db-url postgresql://postgres:postgres@localhost:5432/migration_test
-          
+
           ## 新しいマイグレーション適用
           git checkout ${{ github.sha }}
           supabase db push --db-url postgresql://postgres:postgres@localhost:5432/migration_test
-          
+
           ## ロールバックテスト
           git checkout ${{ github.base_ref || 'main' }}
           supabase db push --db-url postgresql://postgres:postgres@localhost:5432/migration_test
@@ -1461,20 +1461,20 @@ class AlertManager:
     outputs:
       image-digest: ${{ steps.build.outputs.digest }}
       image-tag: ${{ steps.meta.outputs.tags }}
-    
+
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
-      
+
       - name: Log in to Container Registry
         uses: docker/login-action@v3
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      
+
       - name: Extract metadata
         id: meta
         uses: docker/metadata-action@v5
@@ -1487,7 +1487,7 @@ class AlertManager:
             type=raw,value=latest,enable={{is_default_branch}}
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
-      
+
       - name: Build and push
         id: build
         uses: docker/build-push-action@v5
@@ -1515,7 +1515,7 @@ class AlertManager:
           image-ref: ${{ needs.build-and-push.outputs.image-tag }}
           format: 'sarif'
           output: 'trivy-image-results.sarif'
-      
+
       - name: Upload Trivy scan results
         uses: github/codeql-action/upload-sarif@v4
         with:
@@ -1529,11 +1529,11 @@ class AlertManager:
     environment: development
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Deploy to development
         run: |
           echo "Deploying to development environment"
-          ## Kubernetesデプロイメント、Terraformなど
+          ## Kubernetes デプロイメント、Terraformなど
 
   ## ステージング環境デプロイ
   deploy-staging:
@@ -1543,11 +1543,11 @@ class AlertManager:
     environment: staging
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Deploy to staging
         run: |
           echo "Deploying to staging environment"
-          
+
       - name: Run smoke tests
         run: |
           ## スモークテスト実行
@@ -1561,11 +1561,11 @@ class AlertManager:
     environment: production
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Deploy to production
         run: |
           echo "Deploying to production environment"
-          
+
       - name: Post-deployment verification
         run: |
           ## 本番環境検証
@@ -1664,24 +1664,24 @@ def sample_organization_data():
 
 ### 8.3.1 Branching/Preview環境の活用（安全な検証）
 
-Supabase Cloud の **Branching/Preview**を使うと、  
-ブランチごとに **独立環境 + 独立API資格情報**を用意して検証できます。
+Supabase Cloud の **Branching/Preview**を使うと、
+ブランチごとに **独立環境 + 独立 API 資格情報**を用意して検証できます。
 
 **運用のポイント**:
-- **本番データは複製されない前提**で、seedデータで初期化する  
+- **本番データは複製されない前提**で、seedデータで初期化する
   （仕様は変更される可能性があるため、必ず公式ドキュメントで確認）
 - RAGの **回帰テスト用クエリセット**を用意する
-- RLSの **権限制御回帰**を自動化する
+- RLS の **権限制御回帰**を自動化する
 - コスト閾値（token / cost）もテストで確認する
 
 **推奨フロー**:
-1. Branchingで環境作成（GitHub連携 or ダッシュボード操作）
+1. Branchingで環境作成（GitHub 連携 or ダッシュボード操作）
 2. seed投入（最小データ + テスト専用）
 3. 回帰テスト実行
 4. 問題なければ本番へ反映
 
 **作成方法の例**:
-- **GitHub連携**: PR作成時に自動でPreview環境が生成される
+- **GitHub 連携**: PR作成時に自動でPreview環境が生成される
 - **ダッシュボード**: Studioから手動でBranchを作成し検証する
 
 ---
@@ -1703,12 +1703,12 @@ from app.core.config import settings
 
 class MigrationManager:
     """データベースマイグレーション管理"""
-    
+
     def __init__(self, database_url: str):
         self.engine = create_async_engine(database_url)
         self.migrations_dir = Path("migrations")
         self.logger = logging.getLogger(__name__)
-    
+
     async def create_migration_table(self):
         """マイグレーション管理テーブル作成"""
         async with self.engine.begin() as conn:
@@ -1723,44 +1723,44 @@ class MigrationManager:
                     error_message TEXT
                 )
             """))
-    
+
     async def get_applied_migrations(self) -> List[str]:
         """適用済みマイグレーション取得"""
         async with self.engine.begin() as conn:
             result = await conn.execute(text("""
-                SELECT version FROM schema_migrations 
-                WHERE success = TRUE 
+                SELECT version FROM schema_migrations
+                WHERE success = TRUE
                 ORDER BY version
             """))
             return [row[0] for row in result.fetchall()]
-    
+
     async def get_pending_migrations(self) -> List[Dict[str, Any]]:
         """未適用マイグレーション取得"""
         applied = set(await self.get_applied_migrations())
         all_migrations = self._discover_migrations()
-        
+
         pending = []
         for migration in all_migrations:
             if migration["version"] not in applied:
                 pending.append(migration)
-        
+
         return sorted(pending, key=lambda x: x["version"])
-    
+
     def _discover_migrations(self) -> List[Dict[str, Any]]:
         """マイグレーションファイル発見"""
         migrations = []
-        
+
         if not self.migrations_dir.exists():
             return migrations
-        
+
         for file_path in self.migrations_dir.glob("*.sql"):
             ## ファイル名からバージョン抽出 (例: 001_initial_schema.sql)
             filename = file_path.name
             version = filename.split("_")[0]
-            
+
             with open(file_path, 'r', encoding='utf-8') as f:
                 content = f.read()
-            
+
             migrations.append({
                 "version": version,
                 "filename": filename,
@@ -1768,31 +1768,31 @@ class MigrationManager:
                 "content": content,
                 "checksum": self._calculate_checksum(content)
             })
-        
+
         return migrations
-    
+
     def _calculate_checksum(self, content: str) -> str:
         """チェックサム計算"""
         import hashlib
         return hashlib.sha256(content.encode()).hexdigest()
-    
+
     async def apply_migration(self, migration: Dict[str, Any]) -> bool:
         """マイグレーション適用"""
         start_time = datetime.now()
         success = False
         error_message = None
-        
+
         try:
             self.logger.info(f"Applying migration {migration['version']}: {migration['filename']}")
-            
+
             async with self.engine.begin() as conn:
                 ## マイグレーション実行
                 await conn.execute(text(migration["content"]))
-                
+
                 ## 実行記録
                 execution_time = int((datetime.now() - start_time).total_seconds() * 1000)
                 await conn.execute(text("""
-                    INSERT INTO schema_migrations 
+                    INSERT INTO schema_migrations
                     (version, filename, checksum, execution_time_ms, success)
                     VALUES (:version, :filename, :checksum, :execution_time, :success)
                 """), {
@@ -1802,19 +1802,19 @@ class MigrationManager:
                     "execution_time": execution_time,
                     "success": True
                 })
-                
+
                 success = True
                 self.logger.info(f"Migration {migration['version']} applied successfully")
-                
+
         except Exception as e:
             error_message = str(e)
             self.logger.error(f"Migration {migration['version']} failed: {error_message}")
-            
+
             ## エラー記録
             try:
                 async with self.engine.begin() as conn:
                     await conn.execute(text("""
-                        INSERT INTO schema_migrations 
+                        INSERT INTO schema_migrations
                         (version, filename, checksum, success, error_message)
                         VALUES (:version, :filename, :checksum, :success, :error_message)
                     """), {
@@ -1826,30 +1826,30 @@ class MigrationManager:
                     })
             except:
                 pass  # エラー記録失敗は無視
-        
+
         return success
-    
+
     async def migrate(self, target_version: Optional[str] = None) -> Dict[str, Any]:
         """マイグレーション実行"""
         await self.create_migration_table()
-        
+
         pending_migrations = await self.get_pending_migrations()
-        
+
         if target_version:
             ## 指定バージョンまでのマイグレーション
             pending_migrations = [
-                m for m in pending_migrations 
+                m for m in pending_migrations
                 if m["version"] <= target_version
             ]
-        
+
         if not pending_migrations:
             self.logger.info("No pending migrations")
             return {"applied": 0, "failed": 0, "migrations": []}
-        
+
         applied = 0
         failed = 0
         results = []
-        
+
         for migration in pending_migrations:
             success = await self.apply_migration(migration)
             results.append({
@@ -1857,90 +1857,90 @@ class MigrationManager:
                 "filename": migration["filename"],
                 "success": success
             })
-            
+
             if success:
                 applied += 1
             else:
                 failed += 1
                 ## 失敗時は停止
                 break
-        
+
         return {
             "applied": applied,
             "failed": failed,
             "migrations": results
         }
-    
+
     async def rollback(self, target_version: str) -> Dict[str, Any]:
         """ロールバック実行"""
         ## ロールバック用マイグレーション探索
         rollback_dir = self.migrations_dir / "rollback"
         if not rollback_dir.exists():
             raise ValueError("Rollback directory not found")
-        
+
         applied_migrations = await self.get_applied_migrations()
         rollback_migrations = []
-        
+
         for version in reversed(applied_migrations):
             if version <= target_version:
                 break
-            
+
             rollback_file = rollback_dir / f"{version}_rollback.sql"
             if rollback_file.exists():
                 with open(rollback_file, 'r', encoding='utf-8') as f:
                     content = f.read()
-                
+
                 rollback_migrations.append({
                     "version": version,
                     "filename": rollback_file.name,
                     "content": content
                 })
-        
+
         ## ロールバック実行
         rolled_back = 0
         for migration in rollback_migrations:
             try:
                 async with self.engine.begin() as conn:
                     await conn.execute(text(migration["content"]))
-                    
+
                     ## マイグレーション記録削除
                     await conn.execute(text("""
-                        DELETE FROM schema_migrations 
+                        DELETE FROM schema_migrations
                         WHERE version = :version
                     """), {"version": migration["version"]})
-                
+
                 rolled_back += 1
                 self.logger.info(f"Rolled back migration {migration['version']}")
-                
+
             except Exception as e:
                 self.logger.error(f"Rollback failed for {migration['version']}: {e}")
                 break
-        
+
         return {"rolled_back": rolled_back}
 
 ## マイグレーション生成
 class MigrationGenerator:
     """マイグレーション生成"""
-    
+
     def __init__(self, migrations_dir: Path):
         self.migrations_dir = migrations_dir
         self.migrations_dir.mkdir(exist_ok=True)
-    
+
     def generate_migration(self, name: str, content: str = None) -> Path:
         """新しいマイグレーション生成"""
         ## バージョン番号生成
         existing_versions = [
-            int(f.name.split("_")[0]) 
+            int(f.name.split("_")[0])
             for f in self.migrations_dir.glob("*.sql")
             if f.name.split("_")[0].isdigit()
         ]
-        
+
         next_version = str(max(existing_versions, default=0) + 1).zfill(3)
-        
+
         ## ファイル名生成
         filename = f"{next_version}_{name}.sql"
         file_path = self.migrations_dir / filename
-        
+
         ## テンプレート内容
         if content is None:
             content = f"""-- Migration: {name}
@@ -1958,22 +1958,22 @@ BEGIN;
 
 COMMIT;
 """
-        
+
         ## ファイル作成
         with open(file_path, 'w', encoding='utf-8') as f:
             f.write(content)
-        
+
         print(f"Generated migration: {file_path}")
         return file_path
-    
+
     def generate_rollback(self, version: str, content: str) -> Path:
         """ロールバック用マイグレーション生成"""
         rollback_dir = self.migrations_dir / "rollback"
         rollback_dir.mkdir(exist_ok=True)
-        
+
         filename = f"{version}_rollback.sql"
         file_path = rollback_dir / filename
-        
+
         rollback_content = f"""-- Rollback Migration: {version}
 -- Created: {datetime.now().isoformat()}
 
@@ -1984,10 +1984,10 @@ BEGIN;
 
 COMMIT;
 """
-        
+
         with open(file_path, 'w', encoding='utf-8') as f:
             f.write(rollback_content)
-        
+
         print(f"Generated rollback: {file_path}")
         return file_path
 
@@ -1996,11 +1996,11 @@ async def migrate_command(target_version: str = None):
     """マイグレーション実行コマンド"""
     manager = MigrationManager(settings.database_url)
     result = await manager.migrate(target_version)
-    
+
     print(f"Applied: {result['applied']} migrations")
     if result['failed'] > 0:
         print(f"Failed: {result['failed']} migrations")
-    
+
     for migration in result['migrations']:
         status = "✓" if migration['success'] else "✗"
         print(f"{status} {migration['version']}: {migration['filename']}")
@@ -2009,7 +2009,7 @@ async def rollback_command(target_version: str):
     """ロールバック実行コマンド"""
     manager = MigrationManager(settings.database_url)
     result = await manager.rollback(target_version)
-    
+
     print(f"Rolled back: {result['rolled_back']} migrations")
 
 def generate_command(name: str):
@@ -2019,13 +2019,13 @@ def generate_command(name: str):
 
 if __name__ == "__main__":
     import sys
-    
+
     if len(sys.argv) < 2:
         print("Usage: python migration_manager.py [migrate|rollback|generate] [args...]")
         sys.exit(1)
-    
+
     command = sys.argv[1]
-    
+
     if command == "migrate":
         target = sys.argv[2] if len(sys.argv) > 2 else None
         asyncio.run(migrate_command(target))
@@ -2052,7 +2052,7 @@ if __name__ == "__main__":
 
 ### 8.4.1 S3互換Storageを前提とした外部連携
 
-Supabase Storage は **S3互換プロトコル**を前提に外部ツールと連携できます。  
+Supabase Storage は **S3互換プロトコル**を前提に外部ツールと連携できます。
 バックアップや移行では **S3互換のツール**を利用すると運用が簡潔です。
 
 **活用例**:
@@ -2080,7 +2080,7 @@ from app.core.config import settings
 
 class BackupManager:
     """包括的バックアップ管理システム"""
-    
+
     def __init__(self):
         self.logger = logging.getLogger(__name__)
         self.s3_client = boto3.client('s3') if hasattr(settings, 'AWS_ACCESS_KEY_ID') else None
@@ -2103,14 +2103,14 @@ class BackupManager:
                 "retention_days": 90
             }
         }
-    
+
     async def create_database_backup(self, backup_name: str = None) -> Dict[str, Any]:
         """データベースバックアップ作成"""
         if not backup_name:
             backup_name = f"db_backup_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
-        
+
         backup_file = Path(f"/tmp/{backup_name}.sql")
-        
+
         try:
             ## pg_dumpでバックアップ作成
             cmd = [
@@ -2125,9 +2125,9 @@ class BackupManager:
                 "--format", "custom",
                 "--compress", "9"
             ]
-            
+
             env = {"PGPASSWORD": settings.POSTGRES_PASSWORD}
-            
+
             result = subprocess.run(
                 cmd,
                 env=env,
@@ -2135,18 +2135,18 @@ class BackupManager:
                 text=True,
                 timeout=3600  # 1時間タイムアウト
             )
-            
+
             if result.returncode != 0:
                 raise Exception(f"pg_dump failed: {result.stderr}")
-            
+
             ## バックアップファイル情報取得
             file_size = backup_file.stat().st_size
-            
+
             ## S3アップロード
             s3_key = None
             if self.s3_client:
                 s3_key = await self._upload_to_s3(backup_file, f"database/{backup_name}.sql")
-            
+
             ## メタデータ保存
             metadata = {
                 "backup_name": backup_name,
@@ -2159,19 +2159,19 @@ class BackupManager:
                 "format": "custom",
                 "compressed": True
             }
-            
+
             await self._save_backup_metadata(metadata)
-            
+
             self.logger.info(f"Database backup created: {backup_name}")
             return metadata
-            
+
         except Exception as e:
             self.logger.error(f"Database backup failed: {e}")
             ## クリーンアップ
             if backup_file.exists():
                 backup_file.unlink()
             raise
-    
+
     async def restore_database_backup(self, backup_name: str, target_db: str = None) -> bool:
         """データベースバックアップ復元"""
         try:
@@ -2179,24 +2179,24 @@ class BackupManager:
             metadata = await self._get_backup_metadata(backup_name)
             if not metadata:
                 raise ValueError(f"Backup not found: {backup_name}")
-            
+
             ## S3からダウンロード（必要に応じて）
             backup_file = Path(metadata["local_path"])
             if not backup_file.exists() and metadata.get("s3_key"):
                 backup_file = await self._download_from_s3(metadata["s3_key"])
-            
+
             if not backup_file.exists():
                 raise FileNotFoundError(f"Backup file not found: {backup_file}")
-            
+
             ## 復元実行
             target_database = target_db or settings.POSTGRES_DB
-            
+
             ## 既存接続を切断
             await self._terminate_database_connections(target_database)
-            
+
             ## データベース再作成
             await self._recreate_database(target_database)
-            
+
             ## pg_restore で復元
             cmd = [
                 "pg_restore",
@@ -2210,9 +2210,9 @@ class BackupManager:
                 "--if-exists",
                 str(backup_file)
             ]
-            
+
             env = {"PGPASSWORD": settings.POSTGRES_PASSWORD}
-            
+
             result = subprocess.run(
                 cmd,
                 env=env,
@@ -2220,48 +2220,48 @@ class BackupManager:
                 text=True,
                 timeout=3600
             )
-            
+
             if result.returncode != 0:
                 ## 一部のエラーは無視（clean時の存在しないオブジェクト等）
                 if "does not exist" not in result.stderr:
                     raise Exception(f"pg_restore failed: {result.stderr}")
-            
+
             self.logger.info(f"Database restored from backup: {backup_name}")
             return True
-            
+
         except Exception as e:
             self.logger.error(f"Database restore failed: {e}")
             return False
-    
+
     async def create_file_backup(self, paths: List[str] = None) -> Dict[str, Any]:
         """ファイルバックアップ作成"""
         if not paths:
             paths = self.backup_config["files"]["paths"]
-        
+
         backup_name = f"files_backup_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
         backup_file = Path(f"/tmp/{backup_name}.tar.gz")
-        
+
         try:
             ## tar.gz でアーカイブ作成
             cmd = ["tar", "-czf", str(backup_file)] + paths
-            
+
             result = subprocess.run(
                 cmd,
                 capture_output=True,
                 text=True,
                 timeout=1800  # 30分タイムアウト
             )
-            
+
             if result.returncode != 0:
                 raise Exception(f"tar failed: {result.stderr}")
-            
+
             file_size = backup_file.stat().st_size
-            
+
             ## S3アップロード
             s3_key = None
             if self.s3_client:
                 s3_key = await self._upload_to_s3(backup_file, f"files/{backup_name}.tar.gz")
-            
+
             metadata = {
                 "backup_name": backup_name,
                 "backup_type": "files",
@@ -2273,114 +2273,114 @@ class BackupManager:
                 "format": "tar.gz",
                 "compressed": True
             }
-            
+
             await self._save_backup_metadata(metadata)
-            
+
             self.logger.info(f"File backup created: {backup_name}")
             return metadata
-            
+
         except Exception as e:
             self.logger.error(f"File backup failed: {e}")
             if backup_file.exists():
                 backup_file.unlink()
             raise
-    
+
     async def cleanup_old_backups(self):
         """古いバックアップクリーンアップ"""
         try:
             all_backups = await self._list_all_backups()
-            
+
             for backup in all_backups:
                 created_at = datetime.fromisoformat(backup["created_at"])
                 backup_type = backup["backup_type"]
-                
+
                 retention_days = self.backup_config.get(backup_type, {}).get("retention_days", 30)
                 cutoff_date = datetime.now() - timedelta(days=retention_days)
-                
+
                 if created_at < cutoff_date:
                     await self._delete_backup(backup)
                     self.logger.info(f"Deleted old backup: {backup['backup_name']}")
-            
+
         except Exception as e:
             self.logger.error(f"Backup cleanup failed: {e}")
-    
+
     async def _upload_to_s3(self, file_path: Path, s3_key: str) -> str:
         """S3アップロード"""
         try:
             bucket_name = settings.S3_BACKUP_BUCKET
-            
+
             with open(file_path, 'rb') as f:
                 self.s3_client.upload_fileobj(f, bucket_name, s3_key)
-            
+
             return s3_key
-            
+
         except Exception as e:
             self.logger.error(f"S3 upload failed: {e}")
             return None
-    
+
     async def _download_from_s3(self, s3_key: str) -> Path:
         """S3ダウンロード"""
         local_file = Path(f"/tmp/{Path(s3_key).name}")
-        
+
         bucket_name = settings.S3_BACKUP_BUCKET
         self.s3_client.download_file(bucket_name, s3_key, str(local_file))
-        
+
         return local_file
-    
+
     async def _save_backup_metadata(self, metadata: Dict[str, Any]):
         """バックアップメタデータ保存"""
         ## データベースまたはファイルに保存
         metadata_file = Path(f"/app/backups/metadata/{metadata['backup_name']}.json")
         metadata_file.parent.mkdir(parents=True, exist_ok=True)
-        
+
         with open(metadata_file, 'w') as f:
             json.dump(metadata, f, indent=2)
-    
+
     async def _get_backup_metadata(self, backup_name: str) -> Optional[Dict[str, Any]]:
         """バックアップメタデータ取得"""
         metadata_file = Path(f"/app/backups/metadata/{backup_name}.json")
-        
+
         if not metadata_file.exists():
             return None
-        
+
         with open(metadata_file, 'r') as f:
             return json.load(f)
-    
+
     async def _list_all_backups(self) -> List[Dict[str, Any]]:
         """全バックアップ一覧取得"""
         metadata_dir = Path("/app/backups/metadata")
         if not metadata_dir.exists():
             return []
-        
+
         backups = []
         for metadata_file in metadata_dir.glob("*.json"):
             with open(metadata_file, 'r') as f:
                 backups.append(json.load(f))
-        
+
         return backups
-    
+
     async def _delete_backup(self, backup: Dict[str, Any]):
         """バックアップ削除"""
         ## ローカルファイル削除
         local_path = Path(backup["local_path"])
         if local_path.exists():
             local_path.unlink()
-        
+
         ## S3から削除
         if backup.get("s3_key") and self.s3_client:
             bucket_name = settings.S3_BACKUP_BUCKET
             self.s3_client.delete_object(Bucket=bucket_name, Key=backup["s3_key"])
-        
+
         ## メタデータ削除
         metadata_file = Path(f"/app/backups/metadata/{backup['backup_name']}.json")
         if metadata_file.exists():
             metadata_file.unlink()
-    
+
     async def _terminate_database_connections(self, database_name: str):
         """データベース接続終了"""
-        ## 実装省略（PostgreSQL固有のクエリ実行）
+        ## 実装省略（PostgreSQL 固有のクエリ実行）
         pass
-    
+
     async def _recreate_database(self, database_name: str):
         """データベース再作成"""
         ## 実装省略（DROP/CREATE DATABASE）
@@ -2389,35 +2389,35 @@ class BackupManager:
 ## ディザスタリカバリ計画
 class DisasterRecoveryPlan:
     """ディザスタリカバリ計画実行"""
-    
+
     def __init__(self):
         self.backup_manager = BackupManager()
         self.logger = logging.getLogger(__name__)
-        
+
         self.recovery_procedures = {
             "database_corruption": self._recover_from_database_corruption,
             "application_failure": self._recover_from_application_failure,
             "infrastructure_failure": self._recover_from_infrastructure_failure,
             "security_breach": self._recover_from_security_breach
         }
-    
+
     async def execute_recovery(self, incident_type: str, **kwargs) -> Dict[str, Any]:
         """災害復旧実行"""
         if incident_type not in self.recovery_procedures:
             raise ValueError(f"Unknown incident type: {incident_type}")
-        
+
         self.logger.info(f"Starting disaster recovery for: {incident_type}")
-        
+
         recovery_procedure = self.recovery_procedures[incident_type]
         result = await recovery_procedure(**kwargs)
-        
+
         self.logger.info(f"Disaster recovery completed for: {incident_type}")
         return result
-    
+
     async def _recover_from_database_corruption(self, backup_name: str = None) -> Dict[str, Any]:
         """データベース破損からの復旧"""
         steps = []
-        
+
         try:
             ## 1. 最新バックアップ特定
             if not backup_name:
@@ -2425,36 +2425,36 @@ class DisasterRecoveryPlan:
                 db_backups = [b for b in backups if b["backup_type"] == "database"]
                 if not db_backups:
                     raise Exception("No database backups found")
-                
+
                 latest_backup = max(db_backups, key=lambda x: x["created_at"])
                 backup_name = latest_backup["backup_name"]
-            
+
             steps.append(f"Selected backup: {backup_name}")
-            
+
             ## 2. アプリケーション停止
             await self._stop_application()
             steps.append("Application stopped")
-            
+
             ## 3. データベース復元
             success = await self.backup_manager.restore_database_backup(backup_name)
             if not success:
                 raise Exception("Database restore failed")
             steps.append("Database restored")
-            
+
             ## 4. アプリケーション再起動
             await self._start_application()
             steps.append("Application restarted")
-            
+
             ## 5. 整合性チェック
             integrity_check = await self._verify_database_integrity()
             steps.append(f"Integrity check: {integrity_check}")
-            
+
             return {
                 "status": "success",
                 "steps": steps,
                 "backup_used": backup_name
             }
-            
+
         except Exception as e:
             self.logger.error(f"Database recovery failed: {e}")
             return {
@@ -2462,32 +2462,32 @@ class DisasterRecoveryPlan:
                 "steps": steps,
                 "error": str(e)
             }
-    
+
     async def _recover_from_application_failure(self) -> Dict[str, Any]:
         """アプリケーション障害からの復旧"""
         ## 実装省略
         return {"status": "success", "steps": ["Application recovery completed"]}
-    
+
     async def _recover_from_infrastructure_failure(self) -> Dict[str, Any]:
         """インフラ障害からの復旧"""
         ## 実装省略
         return {"status": "success", "steps": ["Infrastructure recovery completed"]}
-    
+
     async def _recover_from_security_breach(self) -> Dict[str, Any]:
         """セキュリティ侵害からの復旧"""
         ## 実装省略
         return {"status": "success", "steps": ["Security breach recovery completed"]}
-    
+
     async def _stop_application(self):
         """アプリケーション停止"""
         ## Kubernetes、Docker Compose等での停止処理
         pass
-    
+
     async def _start_application(self):
         """アプリケーション開始"""
         ## Kubernetes、Docker Compose等での開始処理
         pass
-    
+
     async def _verify_database_integrity(self) -> bool:
         """データベース整合性検証"""
         ## データベース固有の整合性チェック
@@ -2497,17 +2497,17 @@ class DisasterRecoveryPlan:
 async def scheduled_backup():
     """定期バックアップ実行"""
     backup_manager = BackupManager()
-    
+
     try:
         ## データベースバックアップ
         await backup_manager.create_database_backup()
-        
+
         ## ファイルバックアップ
         await backup_manager.create_file_backup()
-        
+
         ## 古いバックアップクリーンアップ
         await backup_manager.cleanup_old_backups()
-        
+
     except Exception as e:
         logging.error(f"Scheduled backup failed: {e}")
 
@@ -2570,18 +2570,18 @@ class Alert:
 
 class ComprehensiveMonitor:
     """包括的監視システム"""
-    
+
     def __init__(self):
         self.metrics_history: List[MonitoringMetric] = []
         self.active_alerts: Dict[str, Alert] = {}
         self.alert_handlers: List[Callable[[Alert], None]] = []
         self.monitoring_config = self._load_monitoring_config()
         self.logger = logging.getLogger(__name__)
-        
+
         ## 監視間隔
         self.collection_interval = 30  # 30秒
         self.health_check_interval = 60  # 1分
-        
+
     def _load_monitoring_config(self) -> Dict[str, Any]:
         """監視設定読み込み"""
         return {
@@ -2610,25 +2610,25 @@ class ComprehensiveMonitor:
                 "disk_usage_critical": 95.0
             }
         }
-    
+
     async def start_monitoring(self):
         """監視開始"""
         self.logger.info("Starting comprehensive monitoring")
-        
+
         ## 並行タスク開始
         tasks = [
             asyncio.create_task(self._collect_metrics_loop()),
             asyncio.create_task(self._health_check_loop()),
             asyncio.create_task(self._alert_processor_loop())
         ]
-        
+
         try:
             await asyncio.gather(*tasks)
         except KeyboardInterrupt:
             self.logger.info("Monitoring stopped")
             for task in tasks:
                 task.cancel()
-    
+
     async def _collect_metrics_loop(self):
         """メトリクス収集ループ"""
         while True:
@@ -2638,46 +2638,46 @@ class ComprehensiveMonitor:
             except Exception as e:
                 self.logger.error(f"Metrics collection error: {e}")
                 await asyncio.sleep(5)
-    
+
     async def _collect_all_metrics(self):
         """全メトリクス収集"""
         now = datetime.now()
-        
+
         ## アプリケーションメトリクス
         app_metrics = await self._collect_application_metrics()
-        
+
         ## インフラストラクチャメトリクス
         infra_metrics = await self._collect_infrastructure_metrics()
-        
+
         ## データベースメトリクス
         db_metrics = await self._collect_database_metrics()
-        
+
         ## 外部サービスメトリクス
         external_metrics = await self._collect_external_service_metrics()
-        
+
         ## 全メトリクスを履歴に追加
         all_metrics = app_metrics + infra_metrics + db_metrics + external_metrics
         self.metrics_history.extend(all_metrics)
-        
+
         ## 履歴サイズ制限
         max_history = 10000
         if len(self.metrics_history) > max_history:
             self.metrics_history = self.metrics_history[-max_history:]
-        
+
         ## アラートチェック
         for metric in all_metrics:
             await self._check_metric_thresholds(metric)
-    
+
     async def _collect_application_metrics(self) -> List[MonitoringMetric]:
         """アプリケーションメトリクス収集"""
         metrics = []
         now = datetime.now()
-        
+
         ## メモリ使用量
         process = psutil.Process()
         memory_info = process.memory_info()
         memory_percent = process.memory_percent()
-        
+
         metrics.append(MonitoringMetric(
             name="app_memory_usage_percent",
             value=memory_percent,
@@ -2687,10 +2687,10 @@ class ComprehensiveMonitor:
             threshold_warning=self.monitoring_config["application"]["memory_usage_warning"],
             threshold_critical=self.monitoring_config["application"]["memory_usage_critical"]
         ))
-        
-        ## CPU使用量
+
+        ## CPU 使用量
         cpu_percent = process.cpu_percent()
-        
+
         metrics.append(MonitoringMetric(
             name="app_cpu_usage_percent",
             value=cpu_percent,
@@ -2698,7 +2698,7 @@ class ComprehensiveMonitor:
             target=MonitoringTarget.APPLICATION,
             labels={"component": "application"}
         ))
-        
+
         ## ファイルディスクリプタ数
         try:
             fd_count = process.num_fds()
@@ -2710,17 +2710,17 @@ class ComprehensiveMonitor:
                 labels={"component": "application"}
             ))
         except AttributeError:
-            ## Windowsでは利用不可
+            ## Windows では利用不可
             pass
-        
+
         return metrics
-    
+
     async def _collect_infrastructure_metrics(self) -> List[MonitoringMetric]:
         """インフラストラクチャメトリクス収集"""
         metrics = []
         now = datetime.now()
-        
-        ## システムCPU使用量
+
+        ## システム CPU 使用量
         cpu_percent = psutil.cpu_percent(interval=1)
         metrics.append(MonitoringMetric(
             name="system_cpu_usage_percent",
@@ -2731,7 +2731,7 @@ class ComprehensiveMonitor:
             threshold_warning=self.monitoring_config["infrastructure"]["cpu_usage_warning"],
             threshold_critical=self.monitoring_config["infrastructure"]["cpu_usage_critical"]
         ))
-        
+
         ## システムメモリ使用量
         memory = psutil.virtual_memory()
         metrics.append(MonitoringMetric(
@@ -2743,7 +2743,7 @@ class ComprehensiveMonitor:
             threshold_warning=self.monitoring_config["infrastructure"]["memory_usage_warning"],
             threshold_critical=self.monitoring_config["infrastructure"]["memory_usage_critical"]
         ))
-        
+
         ## ディスク使用量
         disk = psutil.disk_usage('/')
         disk_percent = (disk.used / disk.total) * 100
@@ -2756,7 +2756,7 @@ class ComprehensiveMonitor:
             threshold_warning=self.monitoring_config["infrastructure"]["disk_usage_warning"],
             threshold_critical=self.monitoring_config["infrastructure"]["disk_usage_critical"]
         ))
-        
+
         ## ネットワークI/O
         network = psutil.net_io_counters()
         metrics.extend([
@@ -2775,23 +2775,23 @@ class ComprehensiveMonitor:
                 labels={"component": "network", "direction": "received"}
             )
         ])
-        
+
         return metrics
-    
+
     async def _collect_database_metrics(self) -> List[MonitoringMetric]:
         """データベースメトリクス収集"""
         metrics = []
         now = datetime.now()
-        
+
         try:
             from app.core.database import engine
-            
+
             ## 接続プール情報
             pool = engine.pool
             if hasattr(pool, 'size'):
                 total_connections = pool.size()
                 checked_out = pool.checkedout()
-                
+
                 metrics.append(MonitoringMetric(
                     name="db_connections_active",
                     value=checked_out,
@@ -2801,7 +2801,7 @@ class ComprehensiveMonitor:
                     threshold_warning=self.monitoring_config["database"]["connection_count_warning"],
                     threshold_critical=self.monitoring_config["database"]["connection_count_critical"]
                 ))
-                
+
                 metrics.append(MonitoringMetric(
                     name="db_connections_total",
                     value=total_connections,
@@ -2809,7 +2809,7 @@ class ComprehensiveMonitor:
                     target=MonitoringTarget.DATABASE,
                     labels={"component": "connection_pool"}
                 ))
-            
+
             ## データベース固有メトリクス（PostgreSQL）
             async with engine.begin() as conn:
                 ## データベースサイズ
@@ -2817,7 +2817,7 @@ class ComprehensiveMonitor:
                     SELECT pg_database_size(current_database()) as size
                 """)
                 db_size = result.scalar()
-                
+
                 metrics.append(MonitoringMetric(
                     name="db_size_bytes",
                     value=db_size,
@@ -2825,14 +2825,14 @@ class ComprehensiveMonitor:
                     target=MonitoringTarget.DATABASE,
                     labels={"component": "storage"}
                 ))
-                
+
                 ## アクティブクエリ数
                 result = await conn.execute("""
-                    SELECT count(*) FROM pg_stat_activity 
+                    SELECT count(*) FROM pg_stat_activity
                     WHERE state = 'active' AND pid != pg_backend_pid()
                 """)
                 active_queries = result.scalar()
-                
+
                 metrics.append(MonitoringMetric(
                     name="db_active_queries",
                     value=active_queries,
@@ -2840,33 +2840,33 @@ class ComprehensiveMonitor:
                     target=MonitoringTarget.DATABASE,
                     labels={"component": "queries"}
                 ))
-        
+
         except Exception as e:
             self.logger.error(f"Database metrics collection failed: {e}")
-        
+
         return metrics
-    
+
     async def _collect_external_service_metrics(self) -> List[MonitoringMetric]:
         """外部サービスメトリクス収集"""
         metrics = []
         now = datetime.now()
-        
+
         ## 外部サービスのヘルスチェック
         external_services = [
             {"name": "supabase_api", "url": "https://api.supabase.io/health"},
             {"name": "stripe_api", "url": "https://status.stripe.com/api/v2/status.json"},
         ]
-        
+
         for service in external_services:
             try:
                 async with aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(total=10)) as session:
                     start_time = asyncio.get_event_loop().time()
                     async with session.get(service["url"]) as response:
                         end_time = asyncio.get_event_loop().time()
-                        
+
                         response_time = (end_time - start_time) * 1000  # ミリ秒
                         is_healthy = 200 <= response.status < 300
-                        
+
                         metrics.extend([
                             MonitoringMetric(
                                 name="external_service_response_time_ms",
@@ -2883,7 +2883,7 @@ class ComprehensiveMonitor:
                                 labels={"service": service["name"]}
                             )
                         ])
-                        
+
             except Exception as e:
                 self.logger.warning(f"External service check failed for {service['name']}: {e}")
                 metrics.append(MonitoringMetric(
@@ -2893,23 +2893,23 @@ class ComprehensiveMonitor:
                     target=MonitoringTarget.EXTERNAL_SERVICES,
                     labels={"service": service["name"]}
                 ))
-        
+
         return metrics
-    
+
     async def _check_metric_thresholds(self, metric: MonitoringMetric):
         """メトリクス閾値チェック"""
         alert_id = f"{metric.target.value}_{metric.name}_{hash(str(metric.labels))}"
-        
+
         ## 既存のアラートをチェック
         existing_alert = self.active_alerts.get(alert_id)
-        
+
         ## 閾値チェック
         severity = None
         if metric.threshold_critical and metric.value >= metric.threshold_critical:
             severity = AlertSeverity.CRITICAL
         elif metric.threshold_warning and metric.value >= metric.threshold_warning:
             severity = AlertSeverity.WARNING
-        
+
         if severity:
             if not existing_alert or existing_alert.severity != severity:
                 ## 新しいアラートまたは重要度変更
@@ -2922,7 +2922,7 @@ class ComprehensiveMonitor:
                     metric=metric,
                     created_at=datetime.now()
                 )
-                
+
                 self.active_alerts[alert_id] = alert
                 await self._trigger_alert(alert)
         else:
@@ -2931,21 +2931,21 @@ class ComprehensiveMonitor:
                 existing_alert.resolved_at = datetime.now()
                 await self._resolve_alert(existing_alert)
                 del self.active_alerts[alert_id]
-    
+
     async def _trigger_alert(self, alert: Alert):
         """アラート発火"""
         self.logger.warning(f"Alert triggered: {alert.title}")
-        
+
         for handler in self.alert_handlers:
             try:
                 await handler(alert)
             except Exception as e:
                 self.logger.error(f"Alert handler failed: {e}")
-    
+
     async def _resolve_alert(self, alert: Alert):
         """アラート解決"""
         self.logger.info(f"Alert resolved: {alert.title}")
-    
+
     async def _health_check_loop(self):
         """ヘルスチェックループ"""
         while True:
@@ -2955,7 +2955,7 @@ class ComprehensiveMonitor:
             except Exception as e:
                 self.logger.error(f"Health check error: {e}")
                 await asyncio.sleep(10)
-    
+
     async def _perform_health_checks(self):
         """ヘルスチェック実行"""
         ## アプリケーションヘルスチェック
@@ -2967,7 +2967,7 @@ class ComprehensiveMonitor:
                         await self._create_health_alert("application_health", "Application health check failed")
         except Exception as e:
             await self._create_health_alert("application_health", f"Application unreachable: {e}")
-        
+
         ## データベースヘルスチェック
         try:
             from app.core.database import engine
@@ -2975,11 +2975,11 @@ class ComprehensiveMonitor:
                 await conn.execute("SELECT 1")
         except Exception as e:
             await self._create_health_alert("database_health", f"Database unreachable: {e}")
-    
+
     async def _create_health_alert(self, component: str, message: str):
         """ヘルスチェックアラート作成"""
         alert_id = f"health_{component}"
-        
+
         if alert_id not in self.active_alerts:
             alert = Alert(
                 id=alert_id,
@@ -2990,51 +2990,51 @@ class ComprehensiveMonitor:
                 metric=None,
                 created_at=datetime.now()
             )
-            
+
             self.active_alerts[alert_id] = alert
             await self._trigger_alert(alert)
-    
+
     async def _alert_processor_loop(self):
         """アラート処理ループ"""
         while True:
             try:
                 ## アラート自動復旧チェック
                 await self._check_alert_auto_recovery()
-                
+
                 ## アラート集約処理
                 await self._aggregate_similar_alerts()
-                
+
                 await asyncio.sleep(30)
             except Exception as e:
                 self.logger.error(f"Alert processor error: {e}")
                 await asyncio.sleep(10)
-    
+
     async def _check_alert_auto_recovery(self):
         """アラート自動復旧チェック"""
         ## 実装省略
         pass
-    
+
     async def _aggregate_similar_alerts(self):
         """類似アラート集約"""
         ## 実装省略
         pass
-    
+
     def add_alert_handler(self, handler: Callable[[Alert], None]):
         """アラートハンドラー追加"""
         self.alert_handlers.append(handler)
-    
+
     def get_metrics_summary(self) -> Dict[str, Any]:
         """メトリクス要約取得"""
         if not self.metrics_history:
             return {}
-        
+
         ## 最新の各メトリクス取得
         latest_metrics = {}
         for metric in reversed(self.metrics_history):
             key = f"{metric.target.value}_{metric.name}"
             if key not in latest_metrics:
                 latest_metrics[key] = metric
-        
+
         ## サマリー生成
         summary = {
             "timestamp": datetime.now().isoformat(),
@@ -3042,7 +3042,7 @@ class ComprehensiveMonitor:
             "active_alerts": len(self.active_alerts),
             "targets": {}
         }
-        
+
         for target in MonitoringTarget:
             target_metrics = [m for m in latest_metrics.values() if m.target == target]
             summary["targets"][target.value] = {
@@ -3057,7 +3057,7 @@ class ComprehensiveMonitor:
                     for m in target_metrics
                 ]
             }
-        
+
         return summary
 ```
 
@@ -3122,7 +3122,7 @@ if echo "$LOGS" | grep -q "ENOSPC"; then
 fi
 
 if echo "$LOGS" | grep -q "docker: Error"; then
-    echo " Docker関連エラーを検出"
+    echo " Docker 関連エラーを検出"
     echo "対処法: Dockerfileの確認、イメージ更新"
 fi
 
@@ -3143,7 +3143,7 @@ echo "3. 段階的なワークフロー修正"
 echo "4. 必要に応じてワークフロー再実行"
 ```
 
-#### 一般的なCI/CD問題と解決策
+#### 一般的な CI/CD問題と解決策
 
 ```python
 ## ci_cd_troubleshooter.py
@@ -3153,7 +3153,7 @@ import json
 
 class CICDTroubleshooter:
     """CI/CD問題診断・解決支援"""
-    
+
     def __init__(self):
         self.error_patterns = {
             'dependency_issues': [
@@ -3187,7 +3187,7 @@ class CICDTroubleshooter:
                 r'Syntax error in.*yml'
             ]
         }
-        
+
         self.solutions = {
             'dependency_issues': [
                 "package.json/requirements.txtの依存関係を確認",
@@ -3220,11 +3220,11 @@ class CICDTroubleshooter:
                 "デフォルト値の動作を確認"
             ]
         }
-    
+
     def diagnose_failure(self, log_content: str) -> Dict[str, any]:
         """障害ログ診断"""
         detected_issues = []
-        
+
         for issue_type, patterns in self.error_patterns.items():
             for pattern in patterns:
                 if re.search(pattern, log_content, re.IGNORECASE):
@@ -3234,53 +3234,53 @@ class CICDTroubleshooter:
                         'solutions': self.solutions[issue_type]
                     })
                     break
-        
+
         return {
             'detected_issues': detected_issues,
             'recommendations': self._generate_recommendations(detected_issues)
         }
-    
+
     def _generate_recommendations(self, issues: List[Dict]) -> List[str]:
         """推奨アクション生成"""
         if not issues:
             return ["明確な問題パターンが検出されませんでした。ログの詳細確認が必要です。"]
-        
+
         recommendations = []
-        
+
         ## 優先度順での推奨事項
         priority_order = ['resource_issues', 'dependency_issues', 'configuration_issues', 'permission_issues', 'network_issues']
-        
+
         for issue_type in priority_order:
             for issue in issues:
                 if issue['type'] == issue_type:
                     recommendations.extend(issue['solutions'])
                     break
-        
+
         return list(dict.fromkeys(recommendations))  # 重複除去
 
 ## 使用例
 def analyze_ci_failure(log_file_path: str):
-    """CI失敗分析実行"""
+    """CI 失敗分析実行"""
     troubleshooter = CICDTroubleshooter()
-    
+
     try:
         with open(log_file_path, 'r', encoding='utf-8') as f:
             log_content = f.read()
-        
+
         diagnosis = troubleshooter.diagnose_failure(log_content)
-        
+
         print("CI/CD障害診断結果")
         print("=" * 50)
-        
+
         if diagnosis['detected_issues']:
             print("検出された問題:")
             for issue in diagnosis['detected_issues']:
                 print(f"  - {issue['type']}: {issue['pattern']}")
-        
+
         print("\n推奨アクション:")
         for i, rec in enumerate(diagnosis['recommendations'], 1):
             print(f"  {i}. {rec}")
-    
+
     except FileNotFoundError:
         print(f"ログファイルが見つかりません: {log_file_path}")
     except Exception as e:
@@ -3301,11 +3301,11 @@ import logging
 
 class MigrationTroubleshooter:
     """マイグレーション問題診断・解決"""
-    
+
     def __init__(self, database_url: str):
         self.engine = create_async_engine(database_url)
         self.logger = logging.getLogger(__name__)
-    
+
     async def diagnose_migration_failure(self, migration_version: str) -> Dict[str, any]:
         """マイグレーション失敗診断"""
         diagnosis = {
@@ -3314,7 +3314,7 @@ class MigrationTroubleshooter:
             'recommendations': [],
             'safety_checks': []
         }
-        
+
         ## 基本的な接続確認
         connection_status = await self._check_database_connection()
         if not connection_status['connected']:
@@ -3325,11 +3325,11 @@ class MigrationTroubleshooter:
             })
             diagnosis['recommendations'].append('데이터베이스 접속 정보 및 네트워크 확인')
             return diagnosis
-        
+
         ## マイグレーション状態確認
         migration_state = await self._check_migration_state(migration_version)
         diagnosis['migration_state'] = migration_state
-        
+
         ## ロック状態確認
         lock_info = await self._check_migration_locks()
         if lock_info['locked']:
@@ -3343,7 +3343,7 @@ class MigrationTroubleshooter:
                 '他のマイグレーションプロセスが実行中でないか確認',
                 '必要に応じてロックを手動解除'
             ])
-        
+
         ## 依存関係確認
         dependency_issues = await self._check_migration_dependencies(migration_version)
         if dependency_issues:
@@ -3353,7 +3353,7 @@ class MigrationTroubleshooter:
                 'details': dependency_issues
             })
             diagnosis['recommendations'].append('依存するマイグレーションを先に実行')
-        
+
         ## スキーマ競合確認
         schema_conflicts = await self._check_schema_conflicts(migration_version)
         if schema_conflicts:
@@ -3367,7 +3367,7 @@ class MigrationTroubleshooter:
                 '手動でのスキーマ調整を検討',
                 'マイグレーション内容の見直し'
             ])
-        
+
         ## 権限確認
         permission_issues = await self._check_database_permissions()
         if permission_issues:
@@ -3377,13 +3377,13 @@ class MigrationTroubleshooter:
                 'details': permission_issues
             })
             diagnosis['recommendations'].append('必要なデータベース権限を付与')
-        
+
         ## 安全性チェック
         safety_issues = await self._perform_safety_checks(migration_version)
         diagnosis['safety_checks'] = safety_issues
-        
+
         return diagnosis
-    
+
     async def _check_database_connection(self) -> Dict[str, any]:
         """データベース接続確認"""
         try:
@@ -3392,7 +3392,7 @@ class MigrationTroubleshooter:
             return {'connected': True, 'error': None}
         except Exception as e:
             return {'connected': False, 'error': str(e)}
-    
+
     async def _check_migration_state(self, version: str) -> Dict[str, any]:
         """マイグレーション状態確認"""
         try:
@@ -3400,10 +3400,10 @@ class MigrationTroubleshooter:
                 ## マイグレーション記録確認
                 result = await conn.execute(text("""
                     SELECT version, filename, executed_at, success, error_message
-                    FROM schema_migrations 
+                    FROM schema_migrations
                     WHERE version = :version
                 """), {'version': version})
-                
+
                 row = result.fetchone()
                 if row:
                     return {
@@ -3418,14 +3418,14 @@ class MigrationTroubleshooter:
                     return {'exists': False}
         except Exception as e:
             return {'exists': False, 'error': str(e)}
-    
+
     async def _check_migration_locks(self) -> Dict[str, any]:
         """マイグレーションロック確認"""
         try:
             async with self.engine.begin() as conn:
-                ## PostgreSQLのロック情報を確認
+                ## PostgreSQL のロック情報を確認
                 result = await conn.execute(text("""
-                    SELECT 
+                    SELECT
                         pg_locks.locktype,
                         pg_locks.mode,
                         pg_stat_activity.query,
@@ -3436,7 +3436,7 @@ class MigrationTroubleshooter:
                     WHERE pg_stat_activity.query LIKE '%schema_migrations%'
                     AND pg_stat_activity.state = 'active'
                 """))
-                
+
                 locks = result.fetchall()
                 return {
                     'locked': len(locks) > 0,
@@ -3450,7 +3450,7 @@ class MigrationTroubleshooter:
                 }
         except Exception as e:
             return {'locked': False, 'error': str(e)}
-    
+
     async def _check_migration_dependencies(self, version: str) -> List[str]:
         """マイグレーション依存関係確認"""
         try:
@@ -3458,54 +3458,54 @@ class MigrationTroubleshooter:
             ## 実装簡略化のため、基本的なバージョン順序チェックのみ
             async with self.engine.begin() as conn:
                 result = await conn.execute(text("""
-                    SELECT version FROM schema_migrations 
-                    WHERE success = TRUE 
+                    SELECT version FROM schema_migrations
+                    WHERE success = TRUE
                     ORDER BY version
                 """))
-                
+
                 applied_versions = [row[0] for row in result.fetchall()]
-                
+
                 ## 現在のバージョンより前のバージョンが全て適用されているか確認
                 missing_versions = []
                 for i in range(1, int(version)):
                     version_str = str(i).zfill(3)
                     if version_str not in applied_versions:
                         missing_versions.append(version_str)
-                
+
                 return missing_versions
         except Exception as e:
             self.logger.error(f"依存関係確認エラー: {e}")
             return []
-    
+
     async def _check_schema_conflicts(self, version: str) -> List[Dict[str, str]]:
         """スキーマ競合確認"""
         conflicts = []
-        
+
         try:
             ## マイグレーション内容を解析して潜在的な競合を検出
             ## 実際の実装では、マイグレーションファイルを解析する
             async with self.engine.begin() as conn:
                 ## 既存のテーブル・カラム・インデックスを確認
                 result = await conn.execute(text("""
-                    SELECT table_name, column_name 
-                    FROM information_schema.columns 
+                    SELECT table_name, column_name
+                    FROM information_schema.columns
                     WHERE table_schema = 'public'
                 """))
-                
+
                 existing_objects = result.fetchall()
-                
+
                 ## 簡単な例: 重複テーブル名チェック
                 ## 実際の実装では、マイグレーション内容との照合が必要
-                
+
         except Exception as e:
             self.logger.error(f"スキーマ競合確認エラー: {e}")
-        
+
         return conflicts
-    
+
     async def _check_database_permissions(self) -> List[str]:
         """データベース権限確認"""
         issues = []
-        
+
         try:
             async with self.engine.begin() as conn:
                 ## 基本的な操作権限確認
@@ -3514,22 +3514,22 @@ class MigrationTroubleshooter:
                     ("ALTER TABLE", "ALTER TABLE test_permissions ADD COLUMN test_col INT"),
                     ("DROP TABLE", "DROP TABLE test_permissions")
                 ]
-                
+
                 for operation, query in test_operations:
                     try:
                         await conn.execute(text(query))
                     except Exception as e:
                         issues.append(f"{operation}権限不足: {str(e)}")
-        
+
         except Exception as e:
             issues.append(f"権限確認中にエラー: {str(e)}")
-        
+
         return issues
-    
+
     async def _perform_safety_checks(self, version: str) -> List[Dict[str, any]]:
         """安全性チェック"""
         checks = []
-        
+
         ## バックアップ存在確認
         backup_check = await self._verify_backup_exists()
         checks.append({
@@ -3537,7 +3537,7 @@ class MigrationTroubleshooter:
             'passed': backup_check['exists'],
             'details': backup_check
         })
-        
+
         ## データ量確認
         data_size_check = await self._check_data_size()
         checks.append({
@@ -3545,14 +3545,14 @@ class MigrationTroubleshooter:
             'passed': data_size_check['safe'],
             'details': data_size_check
         })
-        
+
         return checks
-    
+
     async def _verify_backup_exists(self) -> Dict[str, any]:
         """バックアップ存在確認"""
         ## 実装省略 - 実際のバックアップストレージ確認
         return {'exists': True, 'latest_backup': 'backup_20240101_120000'}
-    
+
     async def _check_data_size(self) -> Dict[str, any]:
         """データサイズ確認"""
         try:
@@ -3561,10 +3561,10 @@ class MigrationTroubleshooter:
                     SELECT pg_size_pretty(pg_database_size(current_database())) as size,
                            pg_database_size(current_database()) as size_bytes
                 """))
-                
+
                 row = result.fetchone()
                 size_bytes = row[1] if row else 0
-                
+
                 ## 1GB以上の場合は注意喚起
                 return {
                     'safe': size_bytes < 1024 * 1024 * 1024,
@@ -3579,29 +3579,29 @@ class MigrationTroubleshooter:
 async def emergency_migration_recovery(database_url: str, failed_version: str):
     """緊急マイグレーション復旧"""
     troubleshooter = MigrationTroubleshooter(database_url)
-    
+
     print(f"マイグレーション復旧開始: version {failed_version}")
-    
+
     ## 診断実行
     diagnosis = await troubleshooter.diagnose_migration_failure(failed_version)
-    
+
     print("\n=== 診断結果 ===")
     for issue in diagnosis['issues_found']:
         print(f"[NG] {issue['type']}: {issue['description']}")
-    
+
     print("\n=== 推奨アクション ===")
     for i, rec in enumerate(diagnosis['recommendations'], 1):
         print(f"{i}. {rec}")
-    
+
     ## 自動復旧可能な問題の処理
     recovery_actions = []
-    
+
     for issue in diagnosis['issues_found']:
         if issue['type'] == 'migration_locked':
             recovery_actions.append('ロック解除')
         elif issue['type'] == 'dependency_issues':
             recovery_actions.append('依存マイグレーション実行')
-    
+
     if recovery_actions:
         print("\n=== 自動復旧アクション ===")
         for action in recovery_actions:
@@ -3611,14 +3611,14 @@ async def emergency_migration_recovery(database_url: str, failed_version: str):
 ## 使用例
 if __name__ == "__main__":
     import sys
-    
+
     if len(sys.argv) != 3:
         print("Usage: python migration_troubleshooter.py <database_url> <migration_version>")
         sys.exit(1)
-    
+
     database_url = sys.argv[1]
     migration_version = sys.argv[2]
-    
+
     asyncio.run(emergency_migration_recovery(database_url, migration_version))
 ```
 
@@ -3638,16 +3638,16 @@ import json
 
 class BackupTroubleshooter:
     """バックアップ問題診断・解決"""
-    
+
     def __init__(self):
         self.logger = logging.getLogger(__name__)
         self.s3_client = None
-        
+
         try:
             self.s3_client = boto3.client('s3')
         except Exception as e:
             self.logger.warning(f"S3クライアント初期化失敗: {e}")
-    
+
     def diagnose_backup_failure(self, backup_type: str, error_log: str) -> Dict[str, any]:
         """バックアップ失敗診断"""
         diagnosis = {
@@ -3656,7 +3656,7 @@ class BackupTroubleshooter:
             'recommendations': [],
             'recovery_steps': []
         }
-        
+
         ## エラーパターン分析
         error_patterns = {
             'disk_space': [
@@ -3690,27 +3690,27 @@ class BackupTroubleshooter:
                 'NoSuchBucket'
             ]
         }
-        
+
         detected_issues = []
         for issue_type, patterns in error_patterns.items():
             for pattern in patterns:
                 if pattern.lower() in error_log.lower():
                     detected_issues.append(issue_type)
                     break
-        
+
         ## 問題別対処法
         for issue_type in detected_issues:
             issue_info = self._get_issue_info(issue_type, backup_type)
             diagnosis['issues_found'].append(issue_info)
             diagnosis['recommendations'].extend(issue_info['solutions'])
             diagnosis['recovery_steps'].extend(issue_info['recovery_steps'])
-        
+
         ## 環境診断
         env_check = self._check_backup_environment(backup_type)
         diagnosis['environment_check'] = env_check
-        
+
         return diagnosis
-    
+
     def _get_issue_info(self, issue_type: str, backup_type: str) -> Dict[str, any]:
         """問題情報取得"""
         issue_database = {
@@ -3747,13 +3747,13 @@ class BackupTroubleshooter:
                 'solutions': [
                     'ネットワーク接続確認',
                     'ファイアウォール設定確認',
-                    'DNS設定確認',
+                    'DNS 設定確認',
                     'プロキシ設定確認'
                 ],
                 'recovery_steps': [
                     'ping でネットワーク疎通確認',
                     'telnet で特定ポート確認',
-                    'nslookup でDNS解決確認'
+                    'nslookup で DNS 解決確認'
                 ]
             },
             'database': {
@@ -3785,13 +3785,13 @@ class BackupTroubleshooter:
                 ]
             }
         }
-        
+
         return issue_database.get(issue_type, {
             'description': f'不明な問題: {issue_type}',
             'solutions': ['詳細調査が必要'],
             'recovery_steps': ['ログの詳細分析']
         })
-    
+
     def _check_backup_environment(self, backup_type: str) -> Dict[str, any]:
         """バックアップ環境確認"""
         checks = {
@@ -3800,15 +3800,15 @@ class BackupTroubleshooter:
             'connectivity': self._check_connectivity(backup_type),
             'permissions': self._check_permissions()
         }
-        
+
         return checks
-    
+
     def _check_disk_space(self) -> Dict[str, any]:
         """ディスク容量確認"""
         try:
             result = subprocess.run(['df', '-h'], capture_output=True, text=True)
             disk_usage = result.stdout
-            
+
             ## 使用率90%以上の警告
             warning_filesystems = []
             for line in disk_usage.split('\n')[1:]:
@@ -3824,7 +3824,7 @@ class BackupTroubleshooter:
                                     'usage': usage,
                                     'mount': parts[5]
                                 })
-            
+
             return {
                 'status': 'warning' if warning_filesystems else 'ok',
                 'disk_usage': disk_usage,
@@ -3832,7 +3832,7 @@ class BackupTroubleshooter:
             }
         except Exception as e:
             return {'status': 'error', 'error': str(e)}
-    
+
     def _check_dependencies(self, backup_type: str) -> Dict[str, any]:
         """依存関係確認"""
         dependencies = {
@@ -3840,22 +3840,22 @@ class BackupTroubleshooter:
             'files': ['tar', 'gzip'],
             's3': ['aws']
         }
-        
+
         required_tools = dependencies.get(backup_type, [])
         missing_tools = []
-        
+
         for tool in required_tools:
             try:
                 subprocess.run(['which', tool], check=True, capture_output=True)
             except subprocess.CalledProcessError:
                 missing_tools.append(tool)
-        
+
         return {
             'status': 'error' if missing_tools else 'ok',
             'missing_tools': missing_tools,
             'required_tools': required_tools
         }
-    
+
     def _check_connectivity(self, backup_type: str) -> Dict[str, any]:
         """接続性確認"""
         if self.s3_client:
@@ -3865,24 +3865,24 @@ class BackupTroubleshooter:
                 return {'status': 'ok', 'type': 's3'}
             except Exception as e:
                 return {'status': 'error', 'type': 's3', 'error': str(e)}
-        
+
         return {'status': 'skip', 'reason': 'connectivity check not applicable'}
-    
+
     def _check_permissions(self) -> Dict[str, any]:
         """権限確認"""
         backup_dirs = ['/var/backups', '/tmp', '/app/backups']
         permission_issues = []
-        
+
         for backup_dir in backup_dirs:
             if os.path.exists(backup_dir):
                 if not os.access(backup_dir, os.W_OK):
                     permission_issues.append(f'{backup_dir}: 書き込み権限なし')
-        
+
         return {
             'status': 'error' if permission_issues else 'ok',
             'issues': permission_issues
         }
-    
+
     def generate_recovery_script(self, diagnosis: Dict[str, any]) -> str:
         """復旧スクリプト生成"""
         script_lines = [
@@ -3893,10 +3893,10 @@ class BackupTroubleshooter:
             'echo "バックアップ復旧スクリプト開始"',
             ''
         ]
-        
+
         ## 環境チェック結果に基づく修正コマンド
         env_check = diagnosis.get('environment_check', {})
-        
+
         ## ディスク容量問題
         if env_check.get('disk_space', {}).get('status') == 'warning':
             script_lines.extend([
@@ -3907,7 +3907,7 @@ class BackupTroubleshooter:
                 'echo "ディスククリーンアップ完了"',
                 ''
             ])
-        
+
         ## 依存関係問題
         missing_tools = env_check.get('dependencies', {}).get('missing_tools', [])
         if missing_tools:
@@ -3915,15 +3915,15 @@ class BackupTroubleshooter:
                 '# 不足ツールのインストール',
                 'echo "必要なツールをインストール中..."'
             ])
-            
+
             for tool in missing_tools:
                 if tool in ['pg_dump', 'psql']:
                     script_lines.append('apt-get update && apt-get install -y postgresql-client')
                 elif tool == 'aws':
                     script_lines.append('pip install awscli')
-            
+
             script_lines.append('')
-        
+
         ## 権限問題
         permission_issues = env_check.get('permissions', {}).get('issues', [])
         if permission_issues:
@@ -3935,7 +3935,7 @@ class BackupTroubleshooter:
                 'chown $USER:$USER /var/backups',
                 ''
             ])
-        
+
         ## バックアップ再実行
         script_lines.extend([
             '# バックアップ再実行',
@@ -3967,55 +3967,55 @@ class BackupTroubleshooter:
             '',
             'echo "復旧スクリプト完了"'
         ])
-        
+
         return '\n'.join(script_lines)
 
 ## コマンドライン診断ツール
 def backup_diagnosis_cli():
-    """バックアップ診断CLI"""
+    """バックアップ診断 CLI"""
     import argparse
-    
+
     parser = argparse.ArgumentParser(description='バックアップ失敗診断ツール')
-    parser.add_argument('--type', required=True, choices=['database', 'files', 'application_data'], 
+    parser.add_argument('--type', required=True, choices=['database', 'files', 'application_data'],
                        help='バックアップタイプ')
     parser.add_argument('--log-file', required=True, help='エラーログファイルパス')
-    parser.add_argument('--generate-script', action='store_true', 
+    parser.add_argument('--generate-script', action='store_true',
                        help='復旧スクリプト生成')
-    
+
     args = parser.parse_args()
-    
+
     try:
         with open(args.log_file, 'r', encoding='utf-8') as f:
             error_log = f.read()
     except FileNotFoundError:
         print(f"エラー: ログファイルが見つかりません: {args.log_file}")
         return
-    
+
     troubleshooter = BackupTroubleshooter()
     diagnosis = troubleshooter.diagnose_backup_failure(args.type, error_log)
-    
+
     print("バックアップ失敗診断結果")
     print("=" * 50)
-    
+
     print(f"バックアップタイプ: {diagnosis['backup_type']}")
-    
+
     if diagnosis['issues_found']:
         print("\n検出された問題:")
         for issue in diagnosis['issues_found']:
             print(f"  [NG] {issue['description']}")
-    
+
     if diagnosis['recommendations']:
         print("\n推奨アクション:")
         for i, rec in enumerate(diagnosis['recommendations'], 1):
             print(f"  {i}. {rec}")
-    
+
     if args.generate_script:
         script = troubleshooter.generate_recovery_script(diagnosis)
         script_file = f"backup_recovery_{datetime.now().strftime('%Y%m%d_%H%M%S')}.sh"
-        
+
         with open(script_file, 'w') as f:
             f.write(script)
-        
+
         print(f"\n復旧スクリプトを生成しました: {script_file}")
         print("実行前にスクリプト内容を確認してください。")
 
@@ -4039,10 +4039,10 @@ import logging
 
 class MonitoringTroubleshooter:
     """監視システム問題診断"""
-    
+
     def __init__(self):
         self.logger = logging.getLogger(__name__)
-        
+
     async def diagnose_monitoring_issues(self) -> Dict[str, any]:
         """監視システム総合診断"""
         diagnosis = {
@@ -4052,7 +4052,7 @@ class MonitoringTroubleshooter:
             'critical_issues': [],
             'recommendations': []
         }
-        
+
         ## 各監視コンポーネント診断
         components = [
             ('metrics_collection', self._diagnose_metrics_collection),
@@ -4061,12 +4061,12 @@ class MonitoringTroubleshooter:
             ('dashboard_access', self._diagnose_dashboard_access),
             ('notification_delivery', self._diagnose_notification_delivery)
         ]
-        
+
         for component_name, diagnostic_func in components:
             try:
                 component_result = await diagnostic_func()
                 diagnosis['components'][component_name] = component_result
-                
+
                 if component_result['status'] == 'critical':
                     diagnosis['critical_issues'].extend(component_result['issues'])
             except Exception as e:
@@ -4074,49 +4074,49 @@ class MonitoringTroubleshooter:
                     'status': 'error',
                     'error': str(e)
                 }
-        
+
         ## 全体的な健全性評価
         diagnosis['overall_health'] = self._evaluate_overall_health(diagnosis['components'])
-        
+
         ## 総合推奨事項生成
         diagnosis['recommendations'] = self._generate_comprehensive_recommendations(diagnosis)
-        
+
         return diagnosis
-    
+
     async def _diagnose_metrics_collection(self) -> Dict[str, any]:
         """メトリクス収集診断"""
         issues = []
         status = 'healthy'
-        
+
         ## システムリソース確認
         try:
             cpu_percent = psutil.cpu_percent(interval=1)
             memory = psutil.virtual_memory()
             disk = psutil.disk_usage('/')
-            
+
             ## 閾値チェック
             if cpu_percent > 90:
-                issues.append(f'CPU使用率が高い: {cpu_percent:.1f}%')
+                issues.append(f'CPU 使用率が高い: {cpu_percent:.1f}%')
                 status = 'warning'
-            
+
             if memory.percent > 90:
                 issues.append(f'メモリ使用率が高い: {memory.percent:.1f}%')
                 status = 'critical'
-            
+
             if disk.percent > 95:
                 issues.append(f'ディスク使用率が危険レベル: {disk.percent:.1f}%')
                 status = 'critical'
-        
+
         except Exception as e:
             issues.append(f'システムメトリクス取得エラー: {str(e)}')
             status = 'error'
-        
+
         ## メトリクス収集プロセス確認
         monitoring_processes = self._check_monitoring_processes()
         if not monitoring_processes['running']:
             issues.extend(monitoring_processes['missing_processes'])
             status = 'critical'
-        
+
         return {
             'status': status,
             'issues': issues,
@@ -4127,7 +4127,7 @@ class MonitoringTroubleshooter:
             },
             'processes': monitoring_processes
         }
-    
+
     def _check_monitoring_processes(self) -> Dict[str, any]:
         """監視プロセス確認"""
         required_processes = [
@@ -4136,14 +4136,14 @@ class MonitoringTroubleshooter:
             'alertmanager',
             'node_exporter'
         ]
-        
+
         running_processes = []
         missing_processes = []
-        
+
         for proc in psutil.process_iter(['pid', 'name', 'cmdline']):
             process_name = proc.info['name']
             cmdline = ' '.join(proc.info['cmdline'] or [])
-            
+
             for required in required_processes:
                 if required in process_name or required in cmdline:
                     running_processes.append({
@@ -4154,35 +4154,35 @@ class MonitoringTroubleshooter:
                     if required in required_processes:
                         required_processes.remove(required)
                     break
-        
+
         missing_processes = [f'{proc}プロセスが動作していません' for proc in required_processes]
-        
+
         return {
             'running': len(missing_processes) == 0,
             'running_processes': running_processes,
             'missing_processes': missing_processes
         }
-    
+
     async def _diagnose_alerting_system(self) -> Dict[str, any]:
         """アラートシステム診断"""
         issues = []
         status = 'healthy'
-        
+
         ## Alertmanager健全性確認
         alertmanager_health = await self._check_alertmanager_health()
         if not alertmanager_health['healthy']:
             issues.append('Alertmanagerが応答しません')
             status = 'critical'
-        
+
         ## アラートルール設定確認
         alert_rules_check = await self._check_alert_rules()
         if alert_rules_check['errors']:
             issues.extend(alert_rules_check['errors'])
             status = 'warning'
-        
+
         ## 過去24時間のアラート統計
         alert_stats = await self._get_alert_statistics()
-        
+
         return {
             'status': status,
             'issues': issues,
@@ -4190,7 +4190,7 @@ class MonitoringTroubleshooter:
             'alert_rules': alert_rules_check,
             'statistics': alert_stats
         }
-    
+
     async def _check_alertmanager_health(self) -> Dict[str, any]:
         """Alertmanager健全性確認"""
         try:
@@ -4207,31 +4207,31 @@ class MonitoringTroubleshooter:
                 'healthy': False,
                 'error': str(e)
             }
-    
+
     async def _check_alert_rules(self) -> Dict[str, any]:
         """アラートルール確認"""
         try:
-            ## Prometheus API経由でルール確認
+            ## Prometheus API 経由でルール確認
             async with aiohttp.ClientSession() as session:
                 async with session.get('http://localhost:9090/api/v1/rules') as response:
                     if response.status == 200:
                         data = await response.json()
                         rules = data.get('data', {}).get('groups', [])
-                        
+
                         errors = []
                         total_rules = 0
                         active_alerts = 0
-                        
+
                         for group in rules:
                             for rule in group.get('rules', []):
                                 total_rules += 1
                                 if rule.get('type') == 'alerting' and rule.get('alerts'):
                                     active_alerts += len(rule['alerts'])
-                                
+
                                 ## ルール健全性チェック
                                 if rule.get('health') != 'ok':
                                     errors.append(f"ルール '{rule.get('name')}' に問題: {rule.get('lastError')}")
-                        
+
                         return {
                             'errors': errors,
                             'total_rules': total_rules,
@@ -4249,14 +4249,14 @@ class MonitoringTroubleshooter:
                 'total_rules': 0,
                 'active_alerts': 0
             }
-    
+
     async def _get_alert_statistics(self) -> Dict[str, any]:
         """アラート統計取得"""
         try:
             ## 過去24時間のアラート数を取得
             end_time = datetime.now()
             start_time = end_time - timedelta(hours=24)
-            
+
             ## 実装簡略化 - 実際は時系列データベースから取得
             return {
                 'last_24h_alerts': 15,
@@ -4268,31 +4268,31 @@ class MonitoringTroubleshooter:
             return {
                 'error': str(e)
             }
-    
+
     async def _diagnose_log_aggregation(self) -> Dict[str, any]:
         """ログ集約診断"""
         issues = []
         status = 'healthy'
-        
+
         ## ログファイル確認
         log_files_check = self._check_log_files()
         if log_files_check['issues']:
             issues.extend(log_files_check['issues'])
             status = 'warning'
-        
+
         ## ログ転送確認
         log_forwarding_check = await self._check_log_forwarding()
         if not log_forwarding_check['working']:
             issues.append('ログ転送が動作していません')
             status = 'critical'
-        
+
         return {
             'status': status,
             'issues': issues,
             'log_files': log_files_check,
             'log_forwarding': log_forwarding_check
         }
-    
+
     def _check_log_files(self) -> Dict[str, any]:
         """ログファイル確認"""
         log_paths = [
@@ -4301,25 +4301,25 @@ class MonitoringTroubleshooter:
             '/var/log/nginx/error.log',
             '/app/logs/app.log'
         ]
-        
+
         issues = []
         log_status = []
-        
+
         for log_path in log_paths:
             try:
                 if os.path.exists(log_path):
                     stat = os.stat(log_path)
                     size_mb = stat.st_size / (1024 * 1024)
                     last_modified = datetime.fromtimestamp(stat.st_mtime)
-                    
+
                     ## 過去1時間以内に更新されているか
                     if datetime.now() - last_modified > timedelta(hours=1):
                         issues.append(f'{log_path} が1時間以上更新されていません')
-                    
+
                     ## ファイルサイズが異常に大きくないか
                     if size_mb > 1000:  # 1GB
                         issues.append(f'{log_path} のサイズが大きすぎます: {size_mb:.1f}MB')
-                    
+
                     log_status.append({
                         'path': log_path,
                         'size_mb': size_mb,
@@ -4333,17 +4333,17 @@ class MonitoringTroubleshooter:
                     })
             except Exception as e:
                 issues.append(f'{log_path} 確認エラー: {str(e)}')
-        
+
         return {
             'issues': issues,
             'log_status': log_status
         }
-    
+
     async def _check_log_forwarding(self) -> Dict[str, any]:
         """ログ転送確認"""
         ## ログ転送サービス（Fluent Bit, Filebeat等）の確認
         log_forwarders = ['fluent-bit', 'filebeat', 'fluentd']
-        
+
         for forwarder in log_forwarders:
             for proc in psutil.process_iter(['pid', 'name']):
                 if forwarder in proc.info['name']:
@@ -4352,12 +4352,12 @@ class MonitoringTroubleshooter:
                         'forwarder': forwarder,
                         'pid': proc.info['pid']
                     }
-        
+
         return {
             'working': False,
             'error': 'ログ転送プロセスが見つかりません'
         }
-    
+
     async def _diagnose_dashboard_access(self) -> Dict[str, any]:
         """ダッシュボードアクセス診断"""
         dashboards = [
@@ -4365,10 +4365,10 @@ class MonitoringTroubleshooter:
             {'name': 'Prometheus', 'url': 'http://localhost:9090'},
             {'name': 'Alertmanager', 'url': 'http://localhost:9093'}
         ]
-        
+
         issues = []
         dashboard_status = []
-        
+
         for dashboard in dashboards:
             try:
                 async with aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(total=10)) as session:
@@ -4376,11 +4376,11 @@ class MonitoringTroubleshooter:
                     async with session.get(dashboard['url']) as response:
                         end_time = asyncio.get_event_loop().time()
                         response_time = (end_time - start_time) * 1000
-                        
+
                         accessible = response.status < 400
                         if not accessible:
                             issues.append(f"{dashboard['name']} にアクセスできません: {response.status}")
-                        
+
                         dashboard_status.append({
                             'name': dashboard['name'],
                             'url': dashboard['url'],
@@ -4396,15 +4396,15 @@ class MonitoringTroubleshooter:
                     'accessible': False,
                     'error': str(e)
                 })
-        
+
         status = 'critical' if issues else 'healthy'
-        
+
         return {
             'status': status,
             'issues': issues,
             'dashboards': dashboard_status
         }
-    
+
     async def _diagnose_notification_delivery(self) -> Dict[str, any]:
         """通知配信診断"""
         ## 通知チャネル確認
@@ -4413,15 +4413,15 @@ class MonitoringTroubleshooter:
             'slack': self._test_slack_delivery,
             'sms': self._test_sms_delivery
         }
-        
+
         issues = []
         channel_status = {}
-        
+
         for channel_name, test_func in notification_channels.items():
             try:
                 result = await test_func()
                 channel_status[channel_name] = result
-                
+
                 if not result.get('working', False):
                     issues.append(f'{channel_name} 通知が動作していません')
             except Exception as e:
@@ -4430,15 +4430,15 @@ class MonitoringTroubleshooter:
                     'error': str(e)
                 }
                 issues.append(f'{channel_name} 通知テストエラー: {str(e)}')
-        
+
         status = 'critical' if issues else 'healthy'
-        
+
         return {
             'status': status,
             'issues': issues,
             'channels': channel_status
         }
-    
+
     async def _test_email_delivery(self) -> Dict[str, any]:
         """メール配信テスト"""
         ## 実装簡略化 - 実際はSMTPサーバー接続テスト
@@ -4446,7 +4446,7 @@ class MonitoringTroubleshooter:
             'working': True,
             'test_result': 'SMTP接続確認済み'
         }
-    
+
     async def _test_slack_delivery(self) -> Dict[str, any]:
         """Slack配信テスト"""
         ## 実装簡略化 - 実際はSlack Webhook テスト
@@ -4454,20 +4454,20 @@ class MonitoringTroubleshooter:
             'working': True,
             'test_result': 'Slack Webhook接続確認済み'
         }
-    
+
     async def _test_sms_delivery(self) -> Dict[str, any]:
         """SMS配信テスト"""
         ## 実装簡略化 - 実際はSMS API テスト
         return {
             'working': False,
-            'test_result': 'SMS API未設定'
+            'test_result': 'SMS API 未設定'
         }
-    
+
     def _evaluate_overall_health(self, components: Dict[str, any]) -> str:
         """全体的な健全性評価"""
         critical_count = sum(1 for comp in components.values() if comp.get('status') == 'critical')
         warning_count = sum(1 for comp in components.values() if comp.get('status') == 'warning')
-        
+
         if critical_count > 0:
             return 'critical'
         elif warning_count > 2:
@@ -4476,88 +4476,88 @@ class MonitoringTroubleshooter:
             return 'warning'
         else:
             return 'healthy'
-    
+
     def _generate_comprehensive_recommendations(self, diagnosis: Dict[str, any]) -> List[str]:
         """総合推奨事項生成"""
         recommendations = []
-        
+
         overall_health = diagnosis['overall_health']
-        
+
         if overall_health == 'critical':
             recommendations.extend([
                 '緊急対応が必要です',
                 '監視システムの重要なコンポーネントに障害があります',
                 '運用チームに即座に連絡してください'
             ])
-        
+
         ## コンポーネント別推奨事項
         components = diagnosis['components']
-        
+
         if components.get('metrics_collection', {}).get('status') in ['critical', 'warning']:
             recommendations.extend([
                 'システムリソースの確認と最適化',
                 '監視プロセスの再起動を検討',
                 'メトリクス収集間隔の調整'
             ])
-        
+
         if components.get('alerting_system', {}).get('status') in ['critical', 'warning']:
             recommendations.extend([
                 'アラートルールの見直し',
                 'Alertmanager設定の確認',
                 'アラート通知の動作確認'
             ])
-        
+
         if components.get('log_aggregation', {}).get('status') in ['critical', 'warning']:
             recommendations.extend([
                 'ログローテーション設定の確認',
                 'ログ転送サービスの再起動',
                 'ディスク容量の確保'
             ])
-        
+
         if not recommendations:
             recommendations.append('監視システムは正常に動作しています')
-        
+
         return recommendations
 
 ## 監視システム診断実行
 async def run_monitoring_diagnosis():
     """監視システム診断実行"""
     troubleshooter = MonitoringTroubleshooter()
-    
+
     print("監視システム診断を開始します...")
-    
+
     diagnosis = await troubleshooter.diagnose_monitoring_issues()
-    
+
     print("\n" + "=" * 60)
     print("監視システム診断結果")
     print("=" * 60)
-    
+
     print(f"全体的な健全性: {diagnosis['overall_health']}")
     print(f"診断実行時刻: {diagnosis['timestamp']}")
-    
+
     print("\nコンポーネント別状況:")
     for component_name, component_info in diagnosis['components'].items():
         status = component_info.get('status', 'unknown')
         print(f"  {component_name}: {status}")
-        
+
         if component_info.get('issues'):
             for issue in component_info['issues']:
                 print(f"    [WARN] {issue}")
-    
+
     if diagnosis['critical_issues']:
         print("\n[CRITICAL] 重要な問題:")
         for issue in diagnosis['critical_issues']:
             print(f"  [NG] {issue}")
-    
+
     print("\n 推奨アクション:")
     for i, rec in enumerate(diagnosis['recommendations'], 1):
         print(f"  {i}. {rec}")
-    
+
     ## 詳細レポート保存
     report_file = f"monitoring_diagnosis_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
     with open(report_file, 'w', encoding='utf-8') as f:
         json.dump(diagnosis, f, indent=2, ensure_ascii=False, default=str)
-    
+
     print(f"\n詳細レポートを保存しました: {report_file}")
 
 if __name__ == "__main__":
@@ -4584,7 +4584,7 @@ groups:
       summary: "GitHub Actions ワークフローが失敗しました"
       description: "Repository {{ $labels.repository }} のワークフロー {{ $labels.workflow_name }} が失敗しました"
       runbook_url: "https://docs.company.com/runbooks/github-actions-failure"
-  
+
   ## バックアップ監視
   - alert: BackupJobFailed
     expr: |
@@ -4598,7 +4598,7 @@ groups:
     annotations:
       summary: "バックアップが24時間以上実行されていません"
       description: "{{ $labels.backup_type }} バックアップが {{ $value | humanizeDuration }} 実行されていません"
-  
+
   - alert: BackupStorageSpaceLow
     expr: backup_storage_available_bytes / backup_storage_total_bytes < 0.1
     for: 15m
@@ -4608,7 +4608,7 @@ groups:
     annotations:
       summary: "バックアップストレージ容量が不足しています"
       description: "バックアップストレージの残り容量が {{ $value | humanizePercentage }} です"
-  
+
   ## データベースマイグレーション監視
   - alert: MigrationStuck
     expr: migration_in_progress_duration_seconds > 3600  # 1時間
@@ -4619,7 +4619,7 @@ groups:
     annotations:
       summary: "マイグレーションが1時間以上進行中です"
       description: "Migration version {{ $labels.version }} が {{ $value | humanizeDuration }} 実行されています"
-  
+
   ## システムリソース監視
   - alert: SystemResourceExhaustion
     expr: |
@@ -4637,7 +4637,7 @@ groups:
     annotations:
       summary: "システムリソースが枯渇しています"
       description: "{{ $labels.instance }} でリソース枯渇が検出されました"
-  
+
   ## アプリケーション健全性監視
   - alert: ApplicationUnhealthy
     expr: up{job="app"} == 0
@@ -4648,7 +4648,7 @@ groups:
     annotations:
       summary: "アプリケーションが応答していません"
       description: "{{ $labels.instance }} のアプリケーションが応答していません"
-  
+
   - alert: ApplicationHighErrorRate
     expr: |
       (
@@ -4662,7 +4662,7 @@ groups:
     annotations:
       summary: "アプリケーションのエラー率が高くなっています"
       description: "{{ $labels.service }} のエラー率が {{ $value | humanizePercentage }} です"
-  
+
   ## Edge Functions監視
   - alert: EdgeFunctionColdStartHigh
     expr: supabase_edge_function_cold_start_duration_ms > 5000
@@ -4673,7 +4673,7 @@ groups:
     annotations:
       summary: "Edge Function のコールドスタート時間が長くなっています"
       description: "Function {{ $labels.function_name }} のコールドスタート時間が {{ $value }}ms です"
-  
+
   - alert: EdgeFunctionTimeoutHigh
     expr: rate(supabase_edge_function_timeouts_total[5m]) > 0.01
     for: 3m
@@ -4683,7 +4683,7 @@ groups:
     annotations:
       summary: "Edge Function でタイムアウトが頻発しています"
       description: "Function {{ $labels.function_name }} でタイムアウトが発生しています"
-  
+
   ## データベース接続監視
   - alert: DatabaseConnectionPoolExhausted
     expr: database_active_connections / database_max_connections > 0.9
@@ -4694,7 +4694,7 @@ groups:
     annotations:
       summary: "データベース接続プールが枯渇しています"
       description: "アクティブ接続数が最大接続数の90%を超えています"
-  
+
   - alert: DatabaseQuerySlow
     expr: histogram_quantile(0.95, database_query_duration_seconds) > 2
     for: 5m
@@ -4717,7 +4717,7 @@ groups:
     annotations:
       summary: "異常なログイン試行が検出されました"
       description: "{{ $labels.source_ip }} から {{ $value }} 回/分のログイン失敗が発生しています"
-  
+
   - alert: UnauthorizedAPIAccess
     expr: rate(http_requests_total{status="401"}[5m]) > 5
     for: 2m
@@ -4725,7 +4725,7 @@ groups:
       severity: warning
       component: security
     annotations:
-      summary: "未認証のAPIアクセスが増加しています"
+      summary: "未認証の API アクセスが増加しています"
       description: "未認証アクセスが {{ $value }} 回/分 発生しています"
 ```
 
@@ -4753,11 +4753,11 @@ class ChecklistItem:
 
 class OperationalChecklistAutomator:
     """運用チェックリスト自動化"""
-    
+
     def __init__(self):
         self.checklist_items = self._initialize_checklist()
         self.execution_history = []
-    
+
     def _initialize_checklist(self) -> List[ChecklistItem]:
         """チェックリスト初期化"""
         return [
@@ -4847,7 +4847,7 @@ class OperationalChecklistAutomator:
                 ]
             )
         ]
-    
+
     async def run_automated_checks(self, frequency: str = "daily") -> Dict[str, Any]:
         """自動チェック実行"""
         execution_report = {
@@ -4863,19 +4863,19 @@ class OperationalChecklistAutomator:
             'failed_checks': [],
             'remediation_required': []
         }
-        
+
         ## 頻度に基づくフィルタリング
         relevant_checks = [
-            item for item in self.checklist_items 
+            item for item in self.checklist_items
             if item.frequency == frequency or frequency == "all"
         ]
-        
+
         for check_item in relevant_checks:
             try:
                 print(f"実行中: {check_item.name}")
-                
+
                 result = await check_item.check_function()
-                
+
                 check_result = {
                     'id': check_item.id,
                     'name': check_item.name,
@@ -4886,10 +4886,10 @@ class OperationalChecklistAutomator:
                     'details': result.get('details', {}),
                     'execution_time': datetime.now()
                 }
-                
+
                 execution_report['checks_run'].append(check_result)
                 execution_report['summary']['total'] += 1
-                
+
                 if result['status'] == 'passed':
                     execution_report['summary']['passed'] += 1
                 elif result['status'] == 'warning':
@@ -4897,7 +4897,7 @@ class OperationalChecklistAutomator:
                 else:  # failed
                     execution_report['summary']['failed'] += 1
                     execution_report['failed_checks'].append(check_result)
-                    
+
                     ## 修復アクション追加
                     execution_report['remediation_required'].append({
                         'check_id': check_item.id,
@@ -4906,7 +4906,7 @@ class OperationalChecklistAutomator:
                         'remediation_steps': check_item.remediation_steps,
                         'documentation_url': check_item.documentation_url
                     })
-                
+
             except Exception as e:
                 error_result = {
                     'id': check_item.id,
@@ -4917,31 +4917,31 @@ class OperationalChecklistAutomator:
                     'message': f'チェック実行エラー: {str(e)}',
                     'execution_time': datetime.now()
                 }
-                
+
                 execution_report['checks_run'].append(error_result)
                 execution_report['summary']['total'] += 1
                 execution_report['summary']['failed'] += 1
                 execution_report['failed_checks'].append(error_result)
-        
+
         ## 実行履歴に追加
         self.execution_history.append(execution_report)
-        
+
         ## レポート保存
         await self._save_execution_report(execution_report)
-        
+
         return execution_report
-    
+
     async def _check_backup_status(self) -> Dict[str, Any]:
         """バックアップ状態確認"""
-        ## 実装簡略化 - 実際はバックアップシステムAPI呼び出し
+        ## 実装簡略化 - 実際はバックアップシステム API 呼び出し
         try:
             ## バックアップログ確認（例）
             last_backup_time = datetime.now()  # 実際はログから取得
             backup_size_gb = 15.5  # 実際はバックアップファイルサイズ
-            
+
             ## 24時間以内のバックアップ確認
             hours_since_backup = (datetime.now() - last_backup_time).total_seconds() / 3600
-            
+
             if hours_since_backup > 24:
                 return {
                     'status': 'failed',
@@ -4975,27 +4975,27 @@ class OperationalChecklistAutomator:
                 'status': 'failed',
                 'message': f'バックアップ状態確認エラー: {str(e)}'
             }
-    
+
     async def _check_ssl_certificates(self) -> Dict[str, Any]:
         """SSL証明書確認"""
         import ssl
         import socket
         from datetime import datetime
-        
+
         domains = ['example.com', 'api.example.com']  # 実際のドメインリスト
         certificate_issues = []
-        
+
         for domain in domains:
             try:
                 context = ssl.create_default_context()
                 with socket.create_connection((domain, 443), timeout=10) as sock:
                     with context.wrap_socket(sock, server_hostname=domain) as ssock:
                         cert = ssock.getpeercert()
-                        
+
                         ## 有効期限確認
                         not_after = datetime.strptime(cert['notAfter'], '%b %d %H:%M:%S %Y %Z')
                         days_until_expiry = (not_after - datetime.now()).days
-                        
+
                         if days_until_expiry < 7:
                             certificate_issues.append({
                                 'domain': domain,
@@ -5016,7 +5016,7 @@ class OperationalChecklistAutomator:
                     'error': str(e),
                     'severity': 'error'
                 })
-        
+
         if certificate_issues:
             critical_issues = [issue for issue in certificate_issues if issue.get('severity') == 'critical']
             if critical_issues:
@@ -5036,7 +5036,7 @@ class OperationalChecklistAutomator:
                 'status': 'passed',
                 'message': 'すべてのSSL証明書は有効です'
             }
-    
+
     async def _check_database_performance(self) -> Dict[str, Any]:
         """データベースパフォーマンス確認"""
         ## 実装簡略化 - 実際はデータベース監視メトリクス取得
@@ -5045,18 +5045,18 @@ class OperationalChecklistAutomator:
             avg_query_time_ms = 150  # 実際は監視システムから取得
             active_connections = 25
             max_connections = 100
-            
+
             performance_issues = []
-            
+
             if avg_query_time_ms > 1000:
                 performance_issues.append('平均クエリ時間が1秒を超えています')
             elif avg_query_time_ms > 500:
                 performance_issues.append('平均クエリ時間が500msを超えています')
-            
+
             connection_usage = (active_connections / max_connections) * 100
             if connection_usage > 80:
                 performance_issues.append(f'データベース接続使用率が{connection_usage:.1f}%です')
-            
+
             if performance_issues:
                 return {
                     'status': 'warning' if avg_query_time_ms < 1000 and connection_usage < 90 else 'failed',
@@ -5082,7 +5082,7 @@ class OperationalChecklistAutomator:
                 'status': 'failed',
                 'message': f'データベースパフォーマンス確認エラー: {str(e)}'
             }
-    
+
     async def _analyze_error_logs(self) -> Dict[str, Any]:
         """エラーログ分析"""
         ## 実装簡略化 - 実際はログ集約システムからデータ取得
@@ -5094,15 +5094,15 @@ class OperationalChecklistAutomator:
                 'api_timeout': 3,
                 'validation_error': 25
             }
-            
+
             total_errors = sum(error_counts.values())
-            
+
             ## 異常な増加の検出
             concerning_errors = []
             for error_type, count in error_counts.items():
                 if count > 20:  # 閾値
                     concerning_errors.append(f'{error_type}: {count}回')
-            
+
             if concerning_errors:
                 return {
                     'status': 'warning',
@@ -5127,7 +5127,7 @@ class OperationalChecklistAutomator:
                 'status': 'failed',
                 'message': f'エラーログ分析エラー: {str(e)}'
             }
-    
+
     async def _check_security_updates(self) -> Dict[str, Any]:
         """セキュリティ更新確認"""
         ## 実装簡略化 - 実際はパッケージマネージャーやCVEデータベース確認
@@ -5139,7 +5139,7 @@ class OperationalChecklistAutomator:
                 'medium': 12,
                 'low': 8
             }
-            
+
             if available_updates['critical'] > 0:
                 return {
                     'status': 'failed',
@@ -5169,7 +5169,7 @@ class OperationalChecklistAutomator:
                 'status': 'failed',
                 'message': f'セキュリティ更新確認エラー: {str(e)}'
             }
-    
+
     async def _check_capacity_trends(self) -> Dict[str, Any]:
         """キャパシティトレンド確認"""
         ## 実装簡略化 - 実際は監視システムから過去データ取得
@@ -5183,18 +5183,18 @@ class OperationalChecklistAutomator:
                 'predicted_memory_30d': 85.2,
                 'predicted_disk_30d': 65.0
             }
-            
+
             capacity_warnings = []
-            
+
             if capacity_metrics['predicted_cpu_30d'] > 80:
-                capacity_warnings.append('30日後にCPU使用率が80%を超える可能性があります')
-            
+                capacity_warnings.append('30日後に CPU 使用率が80%を超える可能性があります')
+
             if capacity_metrics['predicted_memory_30d'] > 85:
                 capacity_warnings.append('30日後にメモリ使用率が85%を超える可能性があります')
-            
+
             if capacity_metrics['predicted_disk_30d'] > 80:
                 capacity_warnings.append('30日後にディスク使用率が80%を超える可能性があります')
-            
+
             if capacity_warnings:
                 return {
                     'status': 'warning',
@@ -5215,88 +5215,88 @@ class OperationalChecklistAutomator:
                 'status': 'failed',
                 'message': f'キャパシティトレンド確認エラー: {str(e)}'
             }
-    
+
     async def _save_execution_report(self, report: Dict[str, Any]):
         """実行レポート保存"""
         timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
         filename = f"operational_checklist_report_{timestamp}.json"
-        
+
         with open(filename, 'w', encoding='utf-8') as f:
             json.dump(report, f, indent=2, ensure_ascii=False, default=str)
-        
+
         print(f"チェックリスト実行レポートを保存しました: {filename}")
-    
+
     def generate_remediation_plan(self, execution_report: Dict[str, Any]) -> str:
         """修復計画生成"""
         if not execution_report['remediation_required']:
             return "修復が必要な項目はありません。"
-        
+
         plan = ["# 運用チェックリスト修復計画\n"]
         plan.append(f"生成日時: {datetime.now().isoformat()}\n")
         plan.append(f"実行頻度: {execution_report['frequency']}\n")
-        
+
         ## 優先度別でソート
         priority_order = {'critical': 0, 'high': 1, 'medium': 2, 'low': 3}
         sorted_items = sorted(
             execution_report['remediation_required'],
             key=lambda x: priority_order.get(x['priority'], 4)
         )
-        
+
         current_priority = None
         for item in sorted_items:
             if item['priority'] != current_priority:
                 current_priority = item['priority']
                 plan.append(f"\n## {current_priority.upper()} 優先度\n")
-            
+
             plan.append(f"### {item['check_name']}\n")
             plan.append(f"**チェックID**: {item['check_id']}\n")
             plan.append("**修復手順**:\n")
-            
+
             for i, step in enumerate(item['remediation_steps'], 1):
                 plan.append(f"{i}. {step}\n")
-            
+
             if item['documentation_url']:
                 plan.append(f"**参考資料**: {item['documentation_url']}\n")
-            
+
             plan.append("---\n")
-        
+
         return ''.join(plan)
 
 ## 使用例
 async def run_daily_checklist():
     """日次チェックリスト実行"""
     automator = OperationalChecklistAutomator()
-    
+
     print("日次運用チェックリストを実行中...\n")
-    
+
     ## 日次チェック実行
     report = await automator.run_automated_checks("daily")
-    
+
     ## 結果表示
     print("\n" + "=" * 60)
     print("日次チェックリスト実行結果")
     print("=" * 60)
-    
+
     summary = report['summary']
     print(f"実行時刻: {report['execution_time']}")
     print(f"合計チェック数: {summary['total']}")
     print(f"成功: {summary['passed']}, 警告: {summary['warnings']}, 失敗: {summary['failed']}")
-    
+
     if report['failed_checks']:
         print("\n[WARN] 失敗したチェック:")
         for check in report['failed_checks']:
             print(f"  [NG] {check['name']}: {check['message']}")
-    
+
     if report['remediation_required']:
         print("\n 修復が必要な項目があります")
-        
+
         ## 修復計画生成
         remediation_plan = automator.generate_remediation_plan(report)
         plan_filename = f"remediation_plan_{datetime.now().strftime('%Y%m%d_%H%M%S')}.md"
-        
+
         with open(plan_filename, 'w', encoding='utf-8') as f:
             f.write(remediation_plan)
-        
+
         print(f"修復計画を生成しました: {plan_filename}")
     else:
         print("\n[OK] すべてのチェックが正常に完了しました")
@@ -5327,9 +5327,9 @@ import logging
 
 async def diagnose_performance():
     """パフォーマンス診断実行"""
-    
+
     supabase = create_client(url, key)
-    
+
     ## 1. 基本接続テスト
     start_time = time.time()
     try:
@@ -5339,10 +5339,10 @@ async def diagnose_performance():
     except Exception as e:
         print(f"接続エラー: {e}")
         return
-    
+
     ## 2. データベースメトリクス取得
     metrics_query = """
-    SELECT 
+    SELECT
         schemaname,
         tablename,
         n_tup_ins as inserts,
@@ -5350,25 +5350,25 @@ async def diagnose_performance():
         n_tup_del as deletes,
         n_live_tup as live_tuples,
         n_dead_tup as dead_tuples
-    FROM pg_stat_user_tables 
+    FROM pg_stat_user_tables
     ORDER BY n_live_tup DESC;
     """
-    
+
     start_time = time.time()
     result = await supabase.rpc('execute_sql', {'query': metrics_query}).execute()
     query_time = time.time() - start_time
-    
+
     print(f"メトリクス取得時間: {query_time:.3f}秒")
-    
+
     ## 3. 接続プール状態確認
     pool_query = """
-    SELECT 
+    SELECT
         count(*) as total_connections,
         count(*) FILTER (WHERE state = 'active') as active_connections,
         count(*) FILTER (WHERE state = 'idle') as idle_connections
     FROM pg_stat_activity;
     """
-    
+
     pool_result = await supabase.rpc('execute_sql', {'query': pool_query}).execute()
     print("接続プール状態:", pool_result.data)
 
@@ -5383,53 +5383,53 @@ class PerformanceOptimizer:
     def __init__(self, supabase_client):
         self.client = supabase_client
         self.logger = logging.getLogger(__name__)
-    
+
     async def optimize_queries(self):
         """クエリ最適化実行"""
-        
+
         ## 1. インデックス分析
         index_analysis = """
-        SELECT 
+        SELECT
             t.tablename,
             indexname,
             idx_stat.idx_scan as index_scans,
             idx_stat.idx_tup_read as tuples_read,
             idx_stat.idx_tup_fetch as tuples_fetched
         FROM pg_tables t
-        LEFT JOIN pg_stat_user_indexes idx_stat 
+        LEFT JOIN pg_stat_user_indexes idx_stat
             ON t.tablename = idx_stat.relname
         WHERE t.schemaname = 'public'
         ORDER BY idx_stat.idx_scan DESC;
         """
-        
-        result = await self.client.rpc('execute_sql', 
+
+        result = await self.client.rpc('execute_sql',
                                      {'query': index_analysis}).execute()
-        
+
         ## 2. 低使用インデックスの特定
         unused_indexes = [
-            idx for idx in result.data 
+            idx for idx in result.data
             if idx['index_scans'] < 10
         ]
-        
+
         if unused_indexes:
             self.logger.warning(f"低使用インデックス: {len(unused_indexes)}個")
-            
+
         return {
             "analyzed_indexes": len(result.data),
             "unused_indexes": unused_indexes,
             "optimization_recommendations": self._generate_recommendations(result.data)
         }
-    
+
     def _generate_recommendations(self, index_data):
         """最適化推奨事項生成"""
         recommendations = []
-        
+
         for idx in index_data:
             if idx['index_scans'] == 0:
                 recommendations.append(f"インデックス削除検討: {idx['indexname']}")
             elif idx['tuples_read'] > idx['tuples_fetched'] * 10:
                 recommendations.append(f"インデックス効率改善: {idx['indexname']}")
-        
+
         return recommendations
 ```
 
@@ -5450,24 +5450,24 @@ class BackupDiagnostics:
     def __init__(self, project_ref, password):
         self.project_ref = project_ref
         self.password = password
-        
+
     def diagnose_backup_issues(self):
         """バックアップ問題診断"""
-        
+
         results = {
             "timestamp": datetime.now().isoformat(),
             "checks": [],
             "recommendations": []
         }
-        
+
         ## 1. 接続テスト
         try:
             connection_result = subprocess.run([
-                'psql', 
+                'psql',
                 f'postgresql://postgres:{self.password}@db.{self.project_ref}.supabase.co:5432/postgres',
                 '-c', 'SELECT version();'
             ], capture_output=True, text=True, timeout=30)
-            
+
             if connection_result.returncode == 0:
                 results["checks"].append({
                     "name": "データベース接続",
@@ -5476,18 +5476,18 @@ class BackupDiagnostics:
                 })
             else:
                 results["checks"].append({
-                    "name": "データベース接続", 
+                    "name": "データベース接続",
                     "status": "failed",
                     "details": connection_result.stderr
                 })
-                
+
         except subprocess.TimeoutExpired:
             results["checks"].append({
                 "name": "データベース接続",
-                "status": "failed", 
+                "status": "failed",
                 "details": "接続タイムアウト"
             })
-        
+
         ## 2. ディスク容量チェック
         disk_result = subprocess.run(['df', '-h'], capture_output=True, text=True)
         results["checks"].append({
@@ -5495,52 +5495,52 @@ class BackupDiagnostics:
             "status": "info",
             "details": disk_result.stdout
         })
-        
+
         ## 3. バックアップサイズ予測
         size_query = """
-        SELECT 
+        SELECT
             schemaname,
             tablename,
             pg_size_pretty(pg_total_relation_size(schemaname||'.'||tablename)) as size
-        FROM pg_tables 
+        FROM pg_tables
         WHERE schemaname IN ('public', 'auth')
         ORDER BY pg_total_relation_size(schemaname||'.'||tablename) DESC;
         """
-        
+
         try:
             size_result = subprocess.run([
                 'psql',
                 f'postgresql://postgres:{self.password}@db.{self.project_ref}.supabase.co:5432/postgres',
                 '-c', size_query
             ], capture_output=True, text=True)
-            
+
             results["checks"].append({
                 "name": "データサイズ分析",
                 "status": "success",
                 "details": size_result.stdout
             })
-            
+
         except Exception as e:
             results["checks"].append({
                 "name": "データサイズ分析",
-                "status": "failed", 
+                "status": "failed",
                 "details": str(e)
             })
-        
+
         return results
-    
+
     def test_backup_restore_cycle(self):
         """バックアップ・リストアサイクルテスト"""
-        
+
         test_db = f"test_backup_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
-        
+
         try:
             ## 1. テストデータベース作成
             create_result = subprocess.run([
                 'createdb',
                 f'postgresql://postgres:{self.password}@db.{self.project_ref}.supabase.co:5432/{test_db}'
             ], capture_output=True, text=True)
-            
+
             ## 2. 小規模バックアップテスト
             backup_result = subprocess.run([
                 'pg_dump',
@@ -5549,25 +5549,25 @@ class BackupDiagnostics:
                 '--table=test_table',
                 '--file=test_backup.sql'
             ], capture_output=True, text=True)
-            
+
             ## 3. リストアテスト
             restore_result = subprocess.run([
                 'psql',
                 f'postgresql://postgres:{self.password}@db.{self.project_ref}.supabase.co:5432/{test_db}',
                 '--file=test_backup.sql'
             ], capture_output=True, text=True)
-            
+
             return {
                 "backup_success": backup_result.returncode == 0,
                 "restore_success": restore_result.returncode == 0,
                 "backup_error": backup_result.stderr if backup_result.returncode != 0 else None,
                 "restore_error": restore_result.stderr if restore_result.returncode != 0 else None
             }
-            
+
         finally:
             ## クリーンアップ
             subprocess.run([
-                'dropdb', 
+                'dropdb',
                 f'postgresql://postgres:{self.password}@db.{self.project_ref}.supabase.co:5432/{test_db}'
             ], capture_output=True)
 ```
@@ -5591,39 +5591,39 @@ class MetricsCollector:
     def __init__(self, supabase_client):
         self.client = supabase_client
         self.metrics_table = "system_metrics"
-        
+
     async def verify_metrics_collection(self):
         """メトリクス収集検証"""
-        
+
         verification_results = {
             "timestamp": datetime.now().isoformat(),
             "collection_status": {},
             "data_quality": {},
             "recommendations": []
         }
-        
+
         ## 1. メトリクステーブル存在確認
         try:
             table_check = await self.client.table(self.metrics_table)\
                 .select('*')\
                 .limit(1)\
                 .execute()
-                
+
             verification_results["collection_status"]["table_exists"] = True
-            
+
         except Exception as e:
             verification_results["collection_status"]["table_exists"] = False
             verification_results["recommendations"].append(
                 "メトリクステーブルが存在しません。作成してください。"
             )
             return verification_results
-        
+
         ## 2. 最新データ確認
         recent_data = await self.client.table(self.metrics_table)\
             .select('*')\
             .gte('collected_at', (datetime.now() - timedelta(hours=1)).isoformat())\
             .execute()
-            
+
         if not recent_data.data:
             verification_results["data_quality"]["recent_data"] = False
             verification_results["recommendations"].append(
@@ -5632,11 +5632,11 @@ class MetricsCollector:
         else:
             verification_results["data_quality"]["recent_data"] = True
             verification_results["data_quality"]["record_count"] = len(recent_data.data)
-        
+
         ## 3. データ完全性チェック
         required_fields = ['cpu_usage', 'memory_usage', 'response_time', 'error_rate']
         incomplete_records = []
-        
+
         for record in recent_data.data[:10]:  # 最新10件をチェック
             missing_fields = [field for field in required_fields if not record.get(field)]
             if missing_fields:
@@ -5644,20 +5644,20 @@ class MetricsCollector:
                     "record_id": record.get('id'),
                     "missing_fields": missing_fields
                 })
-        
+
         if incomplete_records:
             verification_results["data_quality"]["incomplete_records"] = incomplete_records
             verification_results["recommendations"].append(
                 "データフィールドが不完全なレコードがあります"
             )
-        
+
         return verification_results
-    
+
     async def repair_metrics_collection(self):
         """メトリクス収集修復"""
-        
+
         repair_actions = []
-        
+
         ## 1. メトリクステーブル再作成
         create_table_sql = """
         CREATE TABLE IF NOT EXISTS system_metrics (
@@ -5672,25 +5672,25 @@ class MetricsCollector:
             query_performance JSONB
         );
         """
-        
+
         try:
             await self.client.rpc('execute_sql', {'query': create_table_sql}).execute()
             repair_actions.append("メトリクステーブル作成完了")
         except Exception as e:
             repair_actions.append(f"テーブル作成エラー: {e}")
-        
+
         ## 2. インデックス作成
         index_sql = """
-        CREATE INDEX IF NOT EXISTS idx_metrics_collected_at 
+        CREATE INDEX IF NOT EXISTS idx_metrics_collected_at
         ON system_metrics(collected_at);
         """
-        
+
         try:
             await self.client.rpc('execute_sql', {'query': index_sql}).execute()
             repair_actions.append("インデックス作成完了")
         except Exception as e:
             repair_actions.append(f"インデックス作成エラー: {e}")
-        
+
         return repair_actions
 ```
 
@@ -5712,16 +5712,16 @@ class AutoScalingMonitor:
             "connection_threshold": 90.0,
             "response_time_threshold": 1000.0  # ms
         }
-    
+
     async def monitor_scaling_triggers(self):
         """スケーリングトリガー監視"""
-        
+
         ## 現在のメトリクス取得
         current_metrics = await self._get_current_metrics()
-        
+
         scaling_recommendations = []
-        
-        ## CPU使用率チェック
+
+        ## CPU 使用率チェック
         if current_metrics['cpu_usage'] > self.thresholds['cpu_threshold']:
             scaling_recommendations.append({
                 "metric": "CPU",
@@ -5730,69 +5730,69 @@ class AutoScalingMonitor:
                 "action": "compute_scaling_up",
                 "priority": "high"
             })
-        
+
         ## メモリ使用率チェック
         if current_metrics['memory_usage'] > self.thresholds['memory_threshold']:
             scaling_recommendations.append({
                 "metric": "Memory",
-                "current": current_metrics['memory_usage'], 
+                "current": current_metrics['memory_usage'],
                 "threshold": self.thresholds['memory_threshold'],
                 "action": "memory_scaling_up",
                 "priority": "high"
             })
-        
+
         ## 接続数チェック
-        connection_usage = (current_metrics['active_connections'] / 
+        connection_usage = (current_metrics['active_connections'] /
                           current_metrics['max_connections']) * 100
-        
+
         if connection_usage > self.thresholds['connection_threshold']:
             scaling_recommendations.append({
                 "metric": "Connections",
                 "current": connection_usage,
-                "threshold": self.thresholds['connection_threshold'], 
+                "threshold": self.thresholds['connection_threshold'],
                 "action": "connection_pool_scaling",
                 "priority": "critical"
             })
-        
+
         return {
             "timestamp": datetime.now().isoformat(),
             "current_metrics": current_metrics,
             "scaling_needed": len(scaling_recommendations) > 0,
             "recommendations": scaling_recommendations
         }
-    
+
     async def _get_current_metrics(self):
         """現在のシステムメトリクス取得"""
-        
+
         metrics_query = """
-        SELECT 
-            -- CPU メトリクス（PostgreSQL統計から推定）
+        SELECT
+            -- CPU メトリクス（PostgreSQL 統計から推定）
             (SELECT ROUND(
                 (sum(total_time) / sum(calls)) * 100 / 1000, 2
             ) FROM pg_stat_statements) as cpu_usage,
-            
+
             -- メモリ使用率
             (SELECT ROUND(
-                (sum(shared_blks_hit) + sum(shared_blks_read)) * 8192.0 / 
+                (sum(shared_blks_hit) + sum(shared_blks_read)) * 8192.0 /
                 (1024*1024*1024), 2
             ) FROM pg_stat_database) as memory_usage_gb,
-            
+
             -- 接続数
             (SELECT count(*) FROM pg_stat_activity WHERE state = 'active') as active_connections,
             (SELECT setting::int FROM pg_settings WHERE name = 'max_connections') as max_connections,
-            
+
             -- 平均レスポンス時間
             (SELECT ROUND(avg(mean_time), 2) FROM pg_stat_statements) as avg_response_time
         """
-        
+
         result = await self.client.rpc('execute_sql', {'query': metrics_query}).execute()
-        
+
         if result.data:
             return result.data[0]
         else:
             return {
                 "cpu_usage": 0,
-                "memory_usage": 0, 
+                "memory_usage": 0,
                 "active_connections": 0,
                 "max_connections": 100,
                 "avg_response_time": 0
@@ -5807,48 +5807,48 @@ class AutoScalingMonitor:
 class EmergencyResponse:
     def __init__(self, supabase_client):
         self.client = supabase_client
-        
+
     async def execute_emergency_procedures(self, incident_type):
         """緊急対応手順実行"""
-        
+
         procedures = {
             "database_deadlock": self._handle_database_deadlock,
             "connection_exhaustion": self._handle_connection_exhaustion,
             "memory_leak": self._handle_memory_leak,
             "performance_degradation": self._handle_performance_degradation
         }
-        
+
         if incident_type in procedures:
             return await procedures[incident_type]()
         else:
             return {"error": f"Unknown incident type: {incident_type}"}
-    
+
     async def _handle_database_deadlock(self):
         """デッドロック対応"""
-        
+
         ## 1. アクティブなクエリ確認
         active_queries = """
-        SELECT 
+        SELECT
             pid,
             usename,
             application_name,
             state,
             query_start,
             query
-        FROM pg_stat_activity 
+        FROM pg_stat_activity
         WHERE state = 'active'
         AND query NOT LIKE '%pg_stat_activity%'
         ORDER BY query_start;
         """
-        
+
         result = await self.client.rpc('execute_sql', {'query': active_queries}).execute()
-        
+
         ## 2. 長時間実行クエリの特定
         long_queries = [
-            query for query in result.data 
+            query for query in result.data
             if (datetime.now() - datetime.fromisoformat(query['query_start'].replace('Z', '+00:00'))).seconds > 300
         ]
-        
+
         ## 3. 必要に応じてクエリ終了
         killed_queries = []
         for query in long_queries:
@@ -5858,37 +5858,37 @@ class EmergencyResponse:
                 killed_queries.append(query['pid'])
             except Exception as e:
                 print(f"Failed to kill query {query['pid']}: {e}")
-        
+
         return {
             "incident": "database_deadlock",
             "active_queries": len(result.data),
             "long_queries_found": len(long_queries),
             "queries_terminated": killed_queries
         }
-    
+
     async def _handle_connection_exhaustion(self):
         """接続枯渇対応"""
-        
+
         ## 1. アイドル接続の終了
         idle_connections_query = """
         SELECT pg_terminate_backend(pid)
-        FROM pg_stat_activity 
+        FROM pg_stat_activity
         WHERE state = 'idle'
         AND state_change < now() - interval '5 minutes'
         AND usename != 'postgres';
         """
-        
+
         await self.client.rpc('execute_sql', {'query': idle_connections_query}).execute()
-        
+
         ## 2. 接続プール設定確認
         pool_settings = """
-        SELECT name, setting, unit, context 
-        FROM pg_settings 
+        SELECT name, setting, unit, context
+        FROM pg_settings
         WHERE name IN ('max_connections', 'shared_buffers', 'work_mem');
         """
-        
+
         settings_result = await self.client.rpc('execute_sql', {'query': pool_settings}).execute()
-        
+
         return {
             "incident": "connection_exhaustion",
             "idle_connections_terminated": True,
@@ -5900,11 +5900,11 @@ class EmergencyResponse:
 
 ## まとめ
 
-第8章では、Supabaseアプリケーションの包括的な運用自動化を実装しました。
+第8章では、Supabase アプリケーションの包括的な運用自動化を実装しました。
 
 **実装した自動化機能**:
 
-- **CI/CD**: 高度なGitHub Actions、セキュリティスキャン、段階的デプロイ
+- **CI/CD**: 高度な GitHub Actions、セキュリティスキャン、段階的デプロイ
 - **マイグレーション**: 自動マイグレーション管理、ロールバック機能
 - **バックアップ**: 自動バックアップ、災害復旧計画
 - **監視**: リアルタイム監視、アラート、メトリクス収集

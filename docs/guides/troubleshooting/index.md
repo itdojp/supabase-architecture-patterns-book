@@ -3,13 +3,13 @@ layout: book
 order: 17
 title: "統合トラブルシューティング・FAQ "
 ---
-# 統合トラブルシューティング・FAQ 
+# 統合トラブルシューティング・FAQ
 
 ---
-**目次に戻る**: [はじめに]({{ '/introduction/' | relative_url }})  
-**用途**: 学習・開発中の問題迅速解決・エラー対応  
-**対象**: 全レベル（問題解決・デバッグスキル向上）  
-**利用方法**: 問題発生時の即座参照・段階的解決  
+**目次に戻る**: [はじめに]({{ '/introduction/' | relative_url }})
+**用途**: 学習・開発中の問題迅速解決・エラー対応
+**対象**: 全レベル（問題解決・デバッグスキル向上）
+**利用方法**: 問題発生時の即座参照・段階的解決
 ---
 
 ## [CRITICAL] 緊急時対応フローチャート
@@ -17,23 +17,23 @@ title: "統合トラブルシューティング・FAQ "
 ### **症状別診断システム**
 
 ```text
- Supabase障害診断フローチャート
+ Supabase 障害診断フローチャート
 
  症状: アプリが動かない
 ├──  接続エラー → [A. 接続問題](#一般的な問題と解決策)
-├──  認証エラー → [B. 認証問題](#接続・認証問題)  
+├──  認証エラー → [B. 認証問題](#接続・認証問題)
 ├──  データエラー → [C. データベース問題](#row-level-security-rls-問題)
 ├──  速度問題 → [D. パフォーマンス問題](#パフォーマンス問題)
 └──  開発エラー → [E. 開発環境問題](#開発環境問題)
 
  重症度判定:
 [OK] 軽微（自己解決可能）
-[WARN] 中度（1〜2時間で解決）  
+[WARN] 中度（1〜2時間で解決）
 [CRITICAL] 重大（即座対応必要）
 [CRITICAL] 緊急（業務停止レベル）
 ```
 
-> **Supabase実践アーキテクチャパターン**1.0版 | 株式会社アイティードゥ | 2025年6月2日
+> **Supabase 実践アーキテクチャパターン**1.0版 | 株式会社アイティードゥ | 2025年6月2日
 
 ## 目次
 
@@ -51,7 +51,7 @@ title: "統合トラブルシューティング・FAQ "
 
 ## 一般的な問題と解決策
 
-### 問題: Supabaseに接続できない
+### 問題: Supabase に接続できない
 
 **症状**:
 - 接続タイムアウト
@@ -63,7 +63,7 @@ title: "統合トラブルシューティング・FAQ "
    ```javascript
    // ✗ 間違い
    const supabase = createClient('wrong-url', 'wrong-key')
-   
+
    // ✓ 正しい
    const supabase = createClient(
      'https://your-project.supabase.co',
@@ -79,7 +79,7 @@ title: "統合トラブルシューティング・FAQ "
    ```
 
 3. **CORS設定の問題**
-   - Supabaseダッシュボード → Settings → API → CORS Origins
+   - Supabase ダッシュボード → Settings → API → CORS Origins
    - 開発環境: `http://localhost:3000`
    - 本番環境: `https://yourdomain.com`
 
@@ -100,8 +100,8 @@ curl -H "apikey: YOUR_PUBLISHABLE_KEY" \
 1. **テーブル作成確認**
    ```sql
    -- SQL Editor でテーブル存在確認
-   SELECT table_name 
-   FROM information_schema.tables 
+   SELECT table_name
+   FROM information_schema.tables
    WHERE table_schema = 'public';
    ```
 
@@ -113,7 +113,7 @@ curl -H "apikey: YOUR_PUBLISHABLE_KEY" \
 
 3. **マイグレーション実行**
    ```bash
-   # Supabase CLI使用時
+   # Supabase CLI 使用時
    supabase db reset
    supabase migration up
    ```
@@ -122,7 +122,7 @@ curl -H "apikey: YOUR_PUBLISHABLE_KEY" \
 
 ## 接続・認証問題
 
-### 問題: JWTトークンエラー
+### 問題: JWT トークンエラー
 
 **症状**:
 - `Invalid JWT token`
@@ -172,12 +172,12 @@ curl -H "apikey: YOUR_PUBLISHABLE_KEY" \
 
 2. **メールテンプレート確認**
    - Dashboard → Authentication → Email Templates
-   - 正しいリダイレクトURLを設定
+   - 正しいリダイレクト URL を設定
 
 3. **開発環境でのメール確認スキップ**
    ```sql
    -- 開発時のみ使用
-   UPDATE auth.users SET email_confirmed_at = NOW() 
+   UPDATE auth.users SET email_confirmed_at = NOW()
    WHERE email = 'test@example.com';
    ```
 
@@ -193,19 +193,19 @@ curl -H "apikey: YOUR_PUBLISHABLE_KEY" \
 
 **解決策**:
 
-1. **RLS状態確認**
+1. **RLS 状態確認**
    ```sql
-   -- テーブルのRLS状態確認
-   SELECT schemaname, tablename, rowsecurity 
-   FROM pg_tables 
+   -- テーブルの RLS 状態確認
+   SELECT schemaname, tablename, rowsecurity
+   FROM pg_tables
    WHERE tablename = 'your_table';
    ```
 
 2. **ポリシー一覧確認**
    ```sql
    -- 適用されているポリシー確認
-   SELECT schemaname, tablename, policyname, cmd, qual 
-   FROM pg_policies 
+   SELECT schemaname, tablename, policyname, cmd, qual
+   FROM pg_policies
    WHERE tablename = 'your_table';
    ```
 
@@ -219,7 +219,7 @@ curl -H "apikey: YOUR_PUBLISHABLE_KEY" \
 4. **デバッグポリシー作成**
    ```sql
    -- 一時的にすべて許可するポリシー
-   CREATE POLICY "debug_allow_all" ON your_table 
+   CREATE POLICY "debug_allow_all" ON your_table
    FOR ALL USING (true);
    ```
 
@@ -240,14 +240,14 @@ curl -H "apikey: YOUR_PUBLISHABLE_KEY" \
    ```sql
    -- ポリシー条件を個別にテスト
    SELECT auth.uid() = user_id as has_access
-   FROM your_table 
+   FROM your_table
    WHERE id = 'specific-record-id';
    ```
 
 3. **段階的ポリシー作成**
    ```sql
    -- シンプルなポリシーから始める
-   CREATE POLICY "simple_test" ON your_table 
+   CREATE POLICY "simple_test" ON your_table
    FOR SELECT USING (auth.uid() IS NOT NULL);
    ```
 
@@ -266,7 +266,7 @@ curl -H "apikey: YOUR_PUBLISHABLE_KEY" \
 1. **クエリプラン確認**
    ```sql
    -- 実行計画確認
-   EXPLAIN ANALYZE SELECT * FROM your_table 
+   EXPLAIN ANALYZE SELECT * FROM your_table
    WHERE column = 'value';
    ```
 
@@ -274,11 +274,11 @@ curl -H "apikey: YOUR_PUBLISHABLE_KEY" \
    ```sql
    -- pg_stat_statements拡張を有効化
    CREATE EXTENSION IF NOT EXISTS pg_stat_statements;
-   
+
    -- スロークエリ一覧
-   SELECT query, calls, total_time, mean_time 
-   FROM pg_stat_statements 
-   ORDER BY mean_time DESC 
+   SELECT query, calls, total_time, mean_time
+   FROM pg_stat_statements
+   ORDER BY mean_time DESC
    LIMIT 10;
    ```
 
@@ -288,7 +288,7 @@ curl -H "apikey: YOUR_PUBLISHABLE_KEY" \
    ```sql
    -- よく使用されるカラムにインデックス
    CREATE INDEX idx_your_table_column ON your_table(column);
-   
+
    -- 複合インデックス
    CREATE INDEX idx_your_table_multi ON your_table(col1, col2);
    ```
@@ -299,7 +299,7 @@ curl -H "apikey: YOUR_PUBLISHABLE_KEY" \
    const { data } = await supabase
      .from('posts')
      .select('*')
-   
+
    // ✓ 効率的
    const { data } = await supabase
      .from('posts')
@@ -326,7 +326,7 @@ curl -H "apikey: YOUR_PUBLISHABLE_KEY" \
    ```javascript
    // 接続プール使用
    const { createClient } = require('@supabase/supabase-js')
-   
+
    const supabase = createClient(
      process.env.SUPABASE_URL,
      process.env.SUPABASE_SECRET_KEY,
@@ -361,7 +361,7 @@ curl -H "apikey: YOUR_PUBLISHABLE_KEY" \
 
 **症状**:
 - データ変更が即座に反映されない
-- WebSocket接続エラー
+- WebSocket 接続エラー
 
 **解決策**:
 
@@ -402,14 +402,14 @@ curl -H "apikey: YOUR_PUBLISHABLE_KEY" \
      .subscribe()
    ```
 
-### 問題: WebSocket接続が切断される
+### 問題: WebSocket 接続が切断される
 
 **解決策**:
 
 1. **接続監視と再接続**
    ```javascript
    let subscription = null
-   
+
    function setupSubscription() {
      subscription = supabase
        .channel('my-channel')
@@ -421,7 +421,7 @@ curl -H "apikey: YOUR_PUBLISHABLE_KEY" \
          }
        })
    }
-   
+
    setupSubscription()
    ```
 
@@ -473,7 +473,7 @@ curl -H "apikey: YOUR_PUBLISHABLE_KEY" \
 
 3. **権限確認**
    ```bash
-   # Supabase CLIでデプロイ
+   # Supabase CLI でデプロイ
    supabase functions deploy your-function --verify-jwt false
    ```
 
@@ -523,7 +523,7 @@ curl -H "apikey: YOUR_PUBLISHABLE_KEY" \
    # Vercel
    vercel env add NEXT_PUBLIC_SUPABASE_URL
    vercel env add NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
-   
+
    # Netlify
    netlify env:set NEXT_PUBLIC_SUPABASE_URL "your-url"
    ```
@@ -547,9 +547,9 @@ curl -H "apikey: YOUR_PUBLISHABLE_KEY" \
    - Dashboard → Settings → API → CORS Origins
    - 本番ドメインを追加
 
-2. **RLS設定確認**
+2. **RLS 設定確認**
    ```sql
-   -- 本番環境でのRLS確認
+   -- 本番環境での RLS 確認
    SELECT * FROM pg_policies WHERE tablename = 'your_table';
    ```
 
@@ -559,7 +559,7 @@ curl -H "apikey: YOUR_PUBLISHABLE_KEY" \
 
 ### 認証関連
 - `PGRST301`: JWT token invalid
-- `PGRST302`: JWT token expired  
+- `PGRST302`: JWT token expired
 - `42501`: Permission denied
 
 ### データベース関連
@@ -570,7 +570,7 @@ curl -H "apikey: YOUR_PUBLISHABLE_KEY" \
 
 ### リアルタイム関連
 - `REALTIME_SUBSCRIPTION_ERROR`: サブスクリプション失敗
-- `REALTIME_CONNECTION_FAILED`: WebSocket接続失敗
+- `REALTIME_CONNECTION_FAILED`: WebSocket 接続失敗
 
 ---
 
@@ -616,7 +616,7 @@ diagnoseConnection()
 ```sql
 -- performance-check.sql
 -- 1. データベース統計
-SELECT 
+SELECT
   schemaname,
   tablename,
   n_tup_ins as inserts,
@@ -627,7 +627,7 @@ FROM pg_stat_user_tables
 ORDER BY pg_total_relation_size(schemaname||'.'||tablename) DESC;
 
 -- 2. インデックス使用状況
-SELECT 
+SELECT
   schemaname,
   tablename,
   indexname,
@@ -638,7 +638,7 @@ FROM pg_stat_user_indexes
 ORDER BY idx_scan DESC;
 
 -- 3. 未使用インデックス
-SELECT 
+SELECT
   schemaname,
   tablename,
   indexname,
@@ -647,17 +647,17 @@ FROM pg_stat_user_indexes
 WHERE idx_scan = 0;
 ```
 
-### 3. RLS診断
+### 3. RLS 診断
 
 ```sql
 -- rls-check.sql
--- 1. RLS有効テーブル一覧
+-- 1. RLS 有効テーブル一覧
 SELECT schemaname, tablename, rowsecurity
 FROM pg_tables
 WHERE rowsecurity = true;
 
 -- 2. ポリシー一覧
-SELECT 
+SELECT
   schemaname,
   tablename,
   policyname,
@@ -669,7 +669,7 @@ FROM pg_policies
 ORDER BY schemaname, tablename;
 
 -- 3. 現在のユーザー権限確認
-SELECT 
+SELECT
   current_user,
   session_user,
   current_setting('role'),
@@ -684,7 +684,7 @@ SELECT
 
 echo "=== Supabase Health Check ==="
 
-# 1. API接続確認
+# 1. API 接続確認
 echo "1. Testing API connection..."
 curl -s -o /dev/null -w "%{http_code}" \
   -H "apikey: $SUPABASE_PUBLISHABLE_KEY" \
@@ -709,7 +709,7 @@ echo "=== Health Check Complete ==="
 ## よくある質問 (FAQ)
 
 ### Q: データが突然見えなくなった
-**A**: RLSポリシーの変更が原因の可能性が高いです。ポリシーを確認し、必要に応じて管理者権限でデータアクセスをテストしてください。
+**A**: RLS ポリシーの変更が原因の可能性が高いです。ポリシーを確認し、必要に応じて管理者権限でデータアクセスをテストしてください。
 
 ### Q: Edge Functionが遅い
 **A**: 冷機動（Cold Start）が原因の可能性があります。関数の初期化処理を最適化し、定期的なpingを検討してください。

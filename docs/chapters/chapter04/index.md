@@ -1,29 +1,29 @@
 ---
 layout: book
 order: 6
-title: "第4章：パターン2 - Edge Functions活用"
+title: "第4章：パターン2 - Edge Functions 活用"
 ---
-# 第4章：パターン2 - Edge Functions活用
+# 第4章：パターン2 - Edge Functions 活用
 
 ---
-**目次に戻る**: [はじめに]({{ '/introduction/' | relative_url }})  
-**前の章**: [第3章：パターン1 - クライアントサイド実装]({{ '/chapters/chapter03/' | relative_url }})  
-**次の章**: [第5-1章：パターン3 - 独立APIサーバー]({{ '/chapters/chapter05-1/' | relative_url }})  
-**アーキテクチャ**: Edge Functions（サーバーレス関数）  
-**学習レベル**:  基礎 |  応用 |  発展  
-**推定学習時間**: 4〜6時間  
+**目次に戻る**: [はじめに]({{ '/introduction/' | relative_url }})
+**前の章**: [第3章：パターン1 - クライアントサイド実装]({{ '/chapters/chapter03/' | relative_url }})
+**次の章**: [第5-1章：パターン3 - 独立 API サーバー]({{ '/chapters/chapter05-1/' | relative_url }})
+**アーキテクチャ**: Edge Functions（サーバーレス関数）
+**学習レベル**:  基礎 |  応用 |  発展
+**推定学習時間**: 4〜6時間
 **難易度**: 中級（JavaScript/TypeScript知識必要）
 ---
 
 ## この章で扱う構成
 - 構成: Edge Functions（サーバーレス実装）
-- 推奨用途: 軽量API・外部連携・低レイテンシ処理
+- 推奨用途: 軽量 API・外部連携・低レイテンシ処理
 - 非推奨用途: 長時間バッチや重い計算を前提とするケース
 
 ## **前章の復習**（第3章からの継続）
 
 第3章で学んだ**クライアントサイド実装**を振り返りましょう：
-- [OK] **Python Flet**: デスクトップアプリ的なUI開発
+- [OK] **Python Flet**: デスクトップアプリ的な UI 開発
 - [OK] **Supabase Client**: データベースとの直接通信
 - [OK] **リアルタイム**: データ変更の即座反映
 - [OK] **適用場面**: 個人・小規模チーム（〜5,000人）の迅速開発
@@ -34,11 +34,11 @@ title: "第4章：パターン2 - Edge Functions活用"
 
 ## この章で学ぶこと（初心者向け）
 
-この章では、**「コンビニ弁当」**的なアプローチでSupabaseを使った本格的なECサイトを作ります。
+この章では、**「コンビニ弁当」**的なアプローチで Supabase を使った本格的なECサイトを作ります。
 
 - **初心者**: サーバーレス関数がどのように動くかがわかる
-- **中級者**: 複雑なビジネスロジックをサーバーサイドで処理する方法がわかる  
-- **上級者**: 外部API連携とトランザクション処理の設計パターンが理解できる
+- **中級者**: 複雑なビジネスロジックをサーバーサイドで処理する方法がわかる
+- **上級者**: 外部 API 連携とトランザクション処理の設計パターンが理解できる
 
 ## まずは身近な例から：「オンラインショップ」
 
@@ -62,7 +62,7 @@ title: "第4章：パターン2 - Edge Functions活用"
 |:-----|:------------------|:---------------|:-------|
 |  **決済処理**| [NG] 危険 | [OK] 安全 | カード情報は絶対にクライアントで扱えない |
 |  **在庫管理**| [NG] 不正確 | [OK] 正確 | 複数人が同時注文すると売り越しリスク |
-|  **メール送信**| [NG] 不可能 | [OK] 可能 | 外部API連携はサーバーでのみ可能 |
+|  **メール送信**| [NG] 不可能 | [OK] 可能 | 外部 API 連携はサーバーでのみ可能 |
 |  **複雑な計算**| [WARN] 改ざんリスク | [OK] 安全 | 税計算・割引計算は改ざんされる可能性 |
 
 ### パターン2（Edge Functions）なら...
@@ -71,12 +71,12 @@ title: "第4章：パターン2 - Edge Functions活用"
 flowchart TD
     A[ お客さんのアプリ] --> B[ 注文ボタン]
     B --> C[ Edge Function<br/>注文処理サーバー]
-    
-    C --> D[ 決済API<br/>Stripe]
+
+    C --> D[ 決済 API<br/>Stripe]
     C --> E[ 在庫チェック<br/>PostgreSQL]
     C --> F[ メール送信<br/>SendGrid]
     C --> G[ 売上記録<br/>PostgreSQL]
-    
+
     D --> H[OK 処理完了]
     E --> H
     F --> H
@@ -114,7 +114,7 @@ flowchart TD
 |  **決済処理**| クレジットカード決済 | Stripe API との安全な連携 |
 |  **在庫管理**| 注文時の在庫減算・売り越し防止 | PostgreSQL トランザクション処理 |
 |  **通知システム**| 注文確認・配送通知メール | SendGrid API でのメール自動送信 |
-|  **売上分析**| 日次・月次の売上集計 | SQL集計クエリとリアルタイム更新 |
+|  **売上分析**| 日次・月次の売上集計 | SQL 集計クエリとリアルタイム更新 |
 
 ### 使用技術（初心者向け説明）
 
@@ -143,13 +143,13 @@ flowchart TD
 │   └──  process-order/           # ← 注文処理の関数
 │       ├──  index.ts             # ← メイン処理（ここが一番重要！）
 │       ├──  handlers/            # ← 各種処理ハンドラ
-│       ├──  services/            # ← 外部API連携
+│       ├──  services/            # ← 外部 API 連携
 │       └──  utils/               # ← ユーティリティ
 ├──  client/                      # ← フロントエンド
 │   ├──  order-client.ts          # ← 注文画面のロジック
 │   └──  package.json             # ← 必要なライブラリ一覧
 └──  database/                    # ← データベース設定
-    └──  order_functions.sql      # ← カスタムSQL関数
+    └──  order_functions.sql      # ← カスタム SQL 関数
 ```
 
 > **重要**: これらのコードは実際に動作する完全なECサイトです！
@@ -202,7 +202,7 @@ serve(async (req: Request): Promise<Response> => {
       throw new Error('認証ヘッダーが必要です')
     }
 
-    // 2. Supabaseに接続
+    // 2. Supabase に接続
     const supabase = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
       Deno.env.get('SUPABASE_SECRET_KEY') ?? ''
@@ -259,7 +259,7 @@ serve(async (req: Request): Promise<Response> => {
 
 | コード部分 | 何をしているか | 身近な例 |
 |:----------|:-------------|:---------|
-| `serve()` | HTTPリクエストを受け取る | コンビニの店員がお客さんの注文を聞く |
+| `serve()` | HTTP リクエストを受け取る | コンビニの店員がお客さんの注文を聞く |
 | `interface OrderRequest` | 注文データの形を決める | 注文用紙の書式を決める |
 | 認証チェック | 誰が注文しているかを確認 | 会員カードの確認 |
 | `switch (action)` | 要求に応じて処理を分岐 | 「購入」「返品」「問い合わせ」で対応を変える |
@@ -278,11 +278,11 @@ async function createOrder(supabase: any, userId: string, orderData: any) {
     p_items: orderData.items,
     p_shipping_address: orderData.shipping_address
   })
-  
+
   if (error) {
     throw new Error(`注文作成エラー: ${error.message}`)
   }
-  
+
   // 2. 在庫チェック・更新
   for (const item of orderData.items) {
     const { data: product } = await supabase
@@ -290,20 +290,20 @@ async function createOrder(supabase: any, userId: string, orderData: any) {
       .select('stock_quantity')
       .eq('id', item.product_id)
       .single()
-    
+
     if (product.stock_quantity < item.quantity) {
       throw new Error(`商品ID ${item.product_id} の在庫が不足しています`)
     }
-    
+
     // 在庫減算
     await supabase
       .from('products')
-      .update({ 
-        stock_quantity: product.stock_quantity - item.quantity 
+      .update({
+        stock_quantity: product.stock_quantity - item.quantity
       })
       .eq('id', item.product_id)
   }
-  
+
   // 3. 注文レコード作成
   const { data: newOrder } = await supabase
     .from('orders')
@@ -316,7 +316,7 @@ async function createOrder(supabase: any, userId: string, orderData: any) {
     })
     .select()
     .single()
-  
+
   return { success: true, order_id: newOrder.id }
 }
 ```
@@ -332,13 +332,13 @@ async function createOrder(supabase: any, userId: string, orderData: any) {
 
 ### Step 3: 決済処理との連携（processPayment）
 
-Stripe APIとの連携部分を見てみましょう：
+Stripe API との連携部分を見てみましょう：
 
 ```typescript
 // 決済処理（簡略化版）
 async function processPayment(supabase: any, orderId: string, paymentData: any) {
   try {
-    // 1. Stripe APIに決済リクエスト送信
+    // 1. Stripe API に決済リクエスト送信
     const stripeResponse = await fetch('https://api.stripe.com/v1/payment_intents', {
       method: 'POST',
       headers: {
@@ -352,36 +352,36 @@ async function processPayment(supabase: any, orderId: string, paymentData: any) 
         confirm: 'true'
       })
     })
-    
+
     const paymentResult = await stripeResponse.json()
-    
+
     // 2. 決済成功時の処理
     if (paymentResult.status === 'succeeded') {
       // 注文ステータスを「支払い完了」に更新
       await supabase
         .from('orders')
-        .update({ 
+        .update({
           status: 'paid',
           payment_id: paymentResult.id,
           paid_at: new Date().toISOString()
         })
         .eq('id', orderId)
-      
+
       // 3. 注文確認メール送信
       await sendOrderConfirmationEmail(orderId)
-      
+
       return { success: true, payment_id: paymentResult.id }
     } else {
       throw new Error('決済に失敗しました')
     }
-    
+
   } catch (error) {
     // 決済失敗時は注文をキャンセル
     await supabase
       .from('orders')
       .update({ status: 'cancelled' })
       .eq('id', orderId)
-    
+
     throw error
   }
 }
@@ -391,7 +391,7 @@ async function processPayment(supabase: any, orderId: string, paymentData: any) 
 
 | 処理 | 何をしているか | 身近な例 |
 |:-----|:-------------|:---------|
-| **Stripe API呼び出し**| 外部の決済システムに依頼 | コンビニでクレジットカード端末を操作 |
+| **Stripe API 呼び出し**| 外部の決済システムに依頼 | コンビニでクレジットカード端末を操作 |
 | **決済確認**| 支払いが成功したかチェック | 「カードが通りました」の確認 |
 | **ステータス更新**| 注文状況を「支払い完了」に変更 | レシートに「支払い済み」のスタンプ |
 | **エラー処理**| 決済失敗時は注文をキャンセル | カードエラーの場合は購入をキャンセル |
@@ -415,12 +415,12 @@ graph TB
     Client[Flet Frontend] --> Kong[Kong Gateway]
     Kong --> PostgREST[PostgREST API]
     Kong --> EdgeFunctions[Edge Functions]
-    
+
     EdgeFunctions --> PostgreSQL[(PostgreSQL)]
     EdgeFunctions --> Stripe[Stripe API]
     EdgeFunctions --> SendGrid[SendGrid API]
     EdgeFunctions --> Redis[(Redis Cache)]
-    
+
     PostgreSQL --> Realtime[Realtime Server]
     Realtime --> Client
 ```
@@ -448,7 +448,7 @@ ecommerce-platform/
 │   │   ├── inventory-management/
 │   │   │   └── index.ts           # 在庫管理
 │   │   └── _shared/               # 共通ライブラリ
-│   │       ├── database.ts        # DB接続
+│   │       ├── database.ts        # DB 接続
 │   │       ├── auth.ts            # 認証ヘルパー
 │   │       ├── validation.ts      # バリデーション
 │   │       └── errors.ts          # エラーハンドリング
@@ -506,7 +506,7 @@ export class DatabaseConnection {
   public async withTransaction<T>(
     operation: (client: any) => Promise<T>
   ): Promise<T> {
-    // PostgreSQLトランザクション開始
+    // PostgreSQL トランザクション開始
     const { data: startResult, error: startError } = await this.client
       .rpc('begin_transaction')
 
@@ -516,15 +516,15 @@ export class DatabaseConnection {
 
     try {
       const result = await operation(this.client)
-      
+
       // コミット
       const { error: commitError } = await this.client
         .rpc('commit_transaction')
-      
+
       if (commitError) {
         throw new Error(`Transaction commit failed: ${commitError.message}`)
       }
-      
+
       return result
     } catch (error) {
       // ロールバック
@@ -540,7 +540,7 @@ export function initDatabase(): DatabaseConnection {
     url: Deno.env.get('SUPABASE_URL')!,
     serviceKey: Deno.env.get('SUPABASE_SECRET_KEY')!
   }
-  
+
   return DatabaseConnection.getInstance(config)
 }
 ```
@@ -569,16 +569,16 @@ export class AuthService {
 
   public async validateRequest(request: Request): Promise<AuthContext> {
     const authHeader = request.headers.get('Authorization')
-    
+
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
       return { user: null, isAuthenticated: false }
     }
 
     const token = authHeader.substring(7)
-    
+
     try {
       const payload = await verify(token, this.jwtSecret, 'HS256')
-      
+
       return {
         user: {
           id: payload.sub as string,
@@ -602,7 +602,7 @@ export class AuthService {
 
   public requireRole(authContext: AuthContext, requiredRole: string): void {
     this.requireAuth(authContext)
-    
+
     if (authContext.user!.role !== requiredRole) {
       throw new Error(`Role ${requiredRole} required`)
     }
@@ -773,7 +773,7 @@ export async function validateOrderRequest(orderRequest: OrderRequest): Promise<
     await new Validator<number>()
       .addRule(ValidationRules.positiveNumber('Product ID must be positive'))
       .validate(item.product_id)
-    
+
     await new Validator<number>()
       .addRule(ValidationRules.inRange(1, 100))
       .validate(item.quantity)
@@ -786,7 +786,7 @@ export async function validateOrderRequest(orderRequest: OrderRequest): Promise<
 
 async function validateAddress(address: Address, type: string): Promise<void> {
   const requiredFields = ['street', 'city', 'state', 'postal_code', 'country']
-  
+
   for (const field of requiredFields) {
     await new Validator<string>()
       .addRule(ValidationRules.required(`${type} ${field} is required`))
@@ -798,7 +798,7 @@ async function validateAddress(address: Address, type: string): Promise<void> {
 
 ---
 
-## 4.2 トランザクション処理と外部API連携
+## 4.2 トランザクション処理と外部 API 連携
 
 ### 注文処理メイン関数
 
@@ -829,7 +829,7 @@ serve(async (req: Request) => {
 
     // データベース初期化
     const db = initDatabase()
-    
+
     // 注文処理実行
     const orderProcessor = new OrderProcessor(db, authContext.user!)
     const result = await orderProcessor.processOrder(orderRequest)
@@ -877,11 +877,11 @@ export class OrderProcessor {
       // 1. 在庫確認・予約
       const inventoryReservation = await this.inventoryService
         .reserveInventory(orderRequest.cart_items)
-      
+
       try {
         // 2. 注文作成
         const order = await this.createOrder(orderRequest, inventoryReservation.total_amount)
-        
+
         // 3. 決済処理開始
         const paymentResult = await this.paymentService.createPaymentIntent({
           amount: order.total_amount,
@@ -898,7 +898,7 @@ export class OrderProcessor {
         if (!paymentResult.requires_action) {
           await this.inventoryService.confirmReservation(inventoryReservation.reservation_id)
           await this.updateOrderStatus(order.id!, OrderStatus.CONFIRMED)
-          
+
           // 6. 確認通知送信
           await this.notificationService.sendOrderConfirmation(order, this.user.email)
         }
@@ -918,11 +918,11 @@ export class OrderProcessor {
   }
 
   private async createOrder(
-    orderRequest: OrderRequest, 
+    orderRequest: OrderRequest,
     calculatedTotal: number
   ): Promise<Order> {
     const client = this.db.getClient()
-    
+
     // 注文計算
     const taxAmount = Math.round(calculatedTotal * 0.1) // 10%税金
     const shippingAmount = calculatedTotal > 5000 ? 0 : 500 // 5000円以上で送料無料
@@ -1014,7 +1014,7 @@ export class OrderProcessor {
     paymentIntentId: string
   ): Promise<void> {
     const client = this.db.getClient()
-    
+
     const { error } = await client
       .from('orders')
       .update({
@@ -1033,7 +1033,7 @@ export class OrderProcessor {
     status: OrderStatus
   ): Promise<void> {
     const client = this.db.getClient()
-    
+
     const { error } = await client
       .from('orders')
       .update({
@@ -1143,7 +1143,7 @@ export class InventoryService {
 
   public async confirmReservation(reservationId: string): Promise<void> {
     const client = this.db.getClient()
-    
+
     // 予約確定
     const { error } = await client
       .from('inventory_reservations')
@@ -1160,7 +1160,7 @@ export class InventoryService {
 
   public async releaseReservation(reservationId: string): Promise<void> {
     const client = this.db.getClient()
-    
+
     // 予約されたアイテム取得
     const { data: reservations, error: getError } = await client
       .from('inventory_reservations')
@@ -1199,7 +1199,7 @@ export class InventoryService {
   // 期限切れ予約の自動クリーンアップ
   public async cleanupExpiredReservations(): Promise<void> {
     const client = this.db.getClient()
-    
+
     const { data: expiredReservations, error: getError } = await client
       .from('inventory_reservations')
       .select('reservation_id')
@@ -1284,7 +1284,7 @@ export class PaymentService {
 
     } catch (error) {
       console.error('Stripe payment error:', error)
-      
+
       if (error instanceof Stripe.errors.StripeCardError) {
         throw new Error(`Card error: ${error.message}`)
       } else if (error instanceof Stripe.errors.StripeInvalidRequestError) {
@@ -1333,7 +1333,7 @@ export class PaymentService {
   }
 
   public async refundPayment(
-    paymentIntentId: string, 
+    paymentIntentId: string,
     amount?: number,
     reason?: string
   ): Promise<Stripe.Refund> {
@@ -1521,9 +1521,9 @@ async function handlePaymentRequiresAction(
 
 ---
 
-### 4.2.4 Edge FunctionsでのAI推論（内蔵AI API）
+### 4.2.4 Edge Functionsでの AI 推論（内蔵 AI API）
 
-Supabase Edge Functionsには **内蔵AI API**があり、外部依存なしで推論が実行できます。  
+Supabase Edge Functionsには **内蔵 AI API**があり、外部依存なしで推論が実行できます。
 **埋め込み生成・チャット・分類**などの処理を、エッジで完結させる構成が取れます。
 
 ```typescript
@@ -1536,11 +1536,11 @@ const embedding = await session.run('search query')
 
 **補足**:
 - 低レイテンシで実行できるため **RAGの前処理**に有効
-- 外部APIを使わないため **鍵管理やコスト見積り**が容易
+- 外部 API を使わないため **鍵管理やコスト見積り**が容易
 
 ### 4.2.5 外部LLM連携（Ollama/Llamafile など）
 
-外部LLMを使う場合は **Edge Functionsをゲートウェイ**にして  
+外部LLMを使う場合は **Edge Functionsをゲートウェイ**にして
 **認証・レート制限・監査ログ**を一箇所に集約します。
 
 **典型構成**:
@@ -1548,10 +1548,10 @@ const embedding = await session.run('search query')
 2. Edge Function → 外部LLM（Ollama / Llamafile / OpenAI など）
 3. Edge Function → DB（プロンプト/出力/コスト/モデルを記録）
 
-### 4.2.6 AIゲートウェイ・パターン（監査と安全性）
+### 4.2.6 AI ゲートウェイ・パターン（監査と安全性）
 
-AIアプリでは「**誰が何に対して、どのモデルで何を生成したか**」が重要です。  
-Edge Functionsを **AIゲートウェイ**として設計し、次を必ず記録します：
+AI アプリでは「**誰が何に対して、どのモデルで何を生成したか**」が重要です。
+Edge Functionsを **AI ゲートウェイ**として設計し、次を必ず記録します：
 
 - リクエスト元（tenant_id / user_id）
 - 参照したドキュメントID（RAGのretrievalログ）
@@ -1631,7 +1631,7 @@ Deno.serve(async (req) => {
 
 ### 4.2.7 自動埋め込み生成（後章への接続）
 
-埋め込み生成は **Edge Functions + キュー + トリガ**で自動化できます。  
+埋め込み生成は **Edge Functions + キュー + トリガ**で自動化できます。
 詳しい構成は **第5-4章（RAG/ベクトル検索アーキテクチャ）**で扱います。
 
 ---
@@ -1640,7 +1640,7 @@ Deno.serve(async (req) => {
 
 ### 4.3.1 ファイルストレージ（/tmp と /s3 の使い分け）
 
-Edge Functions には **永続ストレージ**と**一時ストレージ**の2種類があります。  
+Edge Functions には **永続ストレージ**と**一時ストレージ**の2種類があります。
 用途に応じて使い分けると、安全性とコストの両面で有利です。
 
 **永続ストレージ（S3互換）**:
@@ -1704,7 +1704,7 @@ export class PerformanceMonitor {
     } catch (error) {
       const executionTime = Date.now() - startTime
       const memoryUsed = this.getMemoryUsage() - startMemory
-      
+
       this.logMetrics(name, executionTime, memoryUsed, false)
       throw error
     }
@@ -1937,7 +1937,7 @@ export async function healthCheck(): Promise<{ status: string; checks: any[] }> 
   }
 
   const allHealthy = checks.every(check => check.status === 'healthy')
-  
+
   return {
     status: allHealthy ? 'healthy' : 'unhealthy',
     checks
@@ -1947,15 +1947,15 @@ export async function healthCheck(): Promise<{ status: string; checks: any[] }> 
 
 ### 実務レビューゲート: Edge Functions運用境界
 
-Edge Functions は Deno 互換のサーバーサイド TypeScript 実行環境です。公開API化しやすい一方で、Secrets と JWT 検証の扱いを誤ると RLS 迂回やWebhookなりすましにつながります。
+Edge Functions は Deno 互換のサーバーサイド TypeScript 実行環境です。公開 API 化しやすい一方で、Secrets と JWT 検証の扱いを誤ると RLS 迂回やWebhookなりすましにつながります。
 
-- **Secrets分離**: ユーザー操作は publishable key + ユーザーJWTで RLS を通し、管理操作だけ secret key / legacy `service_role` を使います。ログにはAPIキー全文、JWT、Webhook署名、外部APIキーを出しません。
+- **Secrets分離**: ユーザー操作は publishable key + ユーザーJWT で RLS を通し、管理操作だけ secret key / legacy `service_role` を使います。ログには API キー全文、JWT、Webhook署名、外部 API キーを出しません。
 - **環境変数の整合**: 本書のサンプルでは `SUPABASE_URL`、`SUPABASE_PUBLISHABLE_KEY`、`SUPABASE_SECRET_KEY` を標準名にします。legacy `SUPABASE_ANON_KEY` / `SUPABASE_SERVICE_ROLE_KEY` や hosted Edge Functions のデフォルトSecretsを使う場合は、章内の変数名とSecrets登録名の対応をPRに明記します。
-- **JWT検証**: 認証済みユーザー向け関数は Supabase のJWT検証を有効にしたままデプロイします。`--no-verify-jwt` は公開Webhook、独自APIキー検証、または publishable/secret key 互換制約により必要な関数だけに限定します。
+- **JWT 検証**: 認証済みユーザー向け関数は Supabase の JWT 検証を有効にしたままデプロイします。`--no-verify-jwt` は公開Webhook、独自 API キー検証、または publishable/secret key 互換制約により必要な関数だけに限定します。
 - **公開Webhook**: Stripe等のWebhookでは `--no-verify-jwt` を使う代わりに、関数内部で署名検証、リプレイ対策、冪等性キー、レート制限、監査ログを確認します。
 - **CI/CD**: `supabase functions serve`、`supabase db reset`、型生成、関数単体テスト、Secrets未混入チェックをPR単位で再実行可能にします。
 
-### デプロイとCI/CD
+### デプロイと CI/CD
 
 ```bash
 #!/bin/bash
@@ -1981,7 +1981,7 @@ supabase --version || {
 }
 
 # プロジェクトリンク
-echo " Supabaseプロジェクトにリンク"
+echo " Supabase プロジェクトにリンク"
 supabase link --project-ref $SUPABASE_PROJECT_ID
 
 # 型生成
@@ -2001,11 +2001,11 @@ functions=(
 
 for func in "${functions[@]}"; do
     echo " 関数デプロイ: $func"
-    # 認証済みユーザー向け関数ではSupabase側のJWT検証を有効にする
+    # 認証済みユーザー向け関数では Supabase 側の JWT 検証を有効にする
     supabase functions deploy "$func"
 done
 
-# 公開WebhookはJWT検証を外す代わりに、関数内部でStripe署名と冪等性を検証する
+# 公開Webhookは JWT 検証を外す代わりに、関数内部でStripe署名と冪等性を検証する
 echo " 関数デプロイ: webhook-stripe"
 supabase functions deploy webhook-stripe --no-verify-jwt
 
@@ -2015,10 +2015,10 @@ sleep 10 # デプロイ完了待機
 
 for func in "${functions[@]}"; do
     health_url="https://$SUPABASE_PROJECT_ID.supabase.co/functions/v1/$func/health"
-    
+
     echo "チェック中: $func"
     response=$(curl -s -o /dev/null -w "%{http_code}" "$health_url" || echo "000")
-    
+
     if [ "$response" = "200" ]; then
         echo "[OK] $func: Healthy"
     else
@@ -2085,7 +2085,7 @@ export class CostOptimizer {
   public static warmup(): void {
     // 重要な依存関係を事前ロード
     initDatabase()
-    
+
     // 外部サービス接続テスト
     this.testExternalConnections()
   }
@@ -2109,7 +2109,7 @@ export async function optimizedHandler(request: Request): Promise<Response> {
   CostOptimizer.warmup()
 
   const cacheKey = `${request.method}:${request.url}`
-  
+
   // キャッシュチェック
   const cached = CostOptimizer.getCachedResponse(cacheKey)
   if (cached) {
@@ -2182,24 +2182,24 @@ serve(async (req: Request) => {
     // 必ず Response を返す
     return new Response(
       JSON.stringify({ success: true }),
-      { 
+      {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
-        status: 200 
+        status: 200
       }
     )
   } catch (error) {
     return new Response(
       JSON.stringify({ error: error.message }),
-      { 
+      {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
-        status: 500 
+        status: 500
       }
     )
   }
 })
 ```
 
-#### 問題2: JWT認証エラー
+#### 問題2: JWT 認証エラー
 
 **症状**:
 - `Invalid JWT` エラー
@@ -2213,20 +2213,20 @@ import { verify } from 'https://deno.land/x/djwt@v3.0.1/mod.ts'
 
 export async function debugAuth(request: Request) {
   const authHeader = request.headers.get('Authorization')
-  
+
   console.log('Auth Header:', authHeader)
-  
+
   if (!authHeader) {
     console.log('No Authorization header found')
     return null
   }
-  
+
   const token = authHeader.replace('Bearer ', '')
   console.log('Token (first 20 chars):', token.substring(0, 20) + '...')
-  
+
   const jwtSecret = Deno.env.get('SUPABASE_JWT_SECRET')
   console.log('JWT Secret configured:', !!jwtSecret)
-  
+
   try {
     const payload = await verify(token, jwtSecret!, 'HS256')
     console.log('JWT Payload:', JSON.stringify(payload, null, 2))
@@ -2240,14 +2240,14 @@ export async function debugAuth(request: Request) {
 // 使用例
 serve(async (req: Request) => {
   const authPayload = await debugAuth(req)
-  
+
   if (!authPayload) {
     return new Response(
       JSON.stringify({ error: 'Authentication failed' }),
       { status: 401, headers: corsHeaders }
     )
   }
-  
+
   // 処理続行...
 })
 ```
@@ -2269,23 +2269,23 @@ class AuthService {
 
   async validateRequest(request: Request): Promise<AuthContext> {
     const authHeader = request.headers.get('Authorization')
-    
+
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
       return { user: null, isAuthenticated: false }
     }
 
     const token = authHeader.substring(7)
-    
+
     try {
       const payload = await verify(token, this.jwtSecret, 'HS256')
-      
+
       // トークンの有効期限チェック
       const now = Math.floor(Date.now() / 1000)
       if (payload.exp && payload.exp < now) {
         console.warn('Token expired')
         return { user: null, isAuthenticated: false }
       }
-      
+
       return {
         user: {
           id: payload.sub as string,
@@ -2318,26 +2318,26 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.0'
 export async function diagnosticDatabaseConnection() {
   const url = Deno.env.get('SUPABASE_URL')
   const serviceKey = Deno.env.get('SUPABASE_SECRET_KEY')
-  
+
   console.log('Database URL configured:', !!url)
   console.log('Service Key configured:', !!serviceKey)
-  
+
   if (!url || !serviceKey) {
     throw new Error('Database configuration missing')
   }
-  
+
   const client = createClient(url, serviceKey)
-  
+
   try {
     // 簡単な接続テスト
     const { data, error } = await client
       .from('_test_connection')
       .select('1')
       .limit(1)
-    
+
     if (error) {
       console.error('Database connection test failed:', error)
-      
+
       // 具体的なエラー分析
       if (error.message.includes('permission denied')) {
         console.error('RLS policy or permission issue')
@@ -2346,13 +2346,13 @@ export async function diagnosticDatabaseConnection() {
       } else if (error.message.includes('too many connections')) {
         console.error('Connection pool exhausted')
       }
-      
+
       throw error
     }
-    
+
     console.log('Database connection successful')
     return client
-    
+
   } catch (error) {
     console.error('Database diagnostics failed:', error)
     throw error
@@ -2364,41 +2364,41 @@ class DatabasePool {
   private static instance: DatabasePool
   private clients: Map<string, any> = new Map()
   private maxConnections = 5
-  
+
   static getInstance(): DatabasePool {
     if (!DatabasePool.instance) {
       DatabasePool.instance = new DatabasePool()
     }
     return DatabasePool.instance
   }
-  
+
   getClient(): any {
     const clientId = crypto.randomUUID()
-    
+
     if (this.clients.size >= this.maxConnections) {
       // 最も古いクライアントを削除
       const oldestId = this.clients.keys().next().value
       this.clients.delete(oldestId)
     }
-    
+
     const client = createClient(
       Deno.env.get('SUPABASE_URL')!,
       Deno.env.get('SUPABASE_SECRET_KEY')!
     )
-    
+
     this.clients.set(clientId, client)
     return client
   }
 }
 ```
 
-### 外部API連携の問題
+### 外部 API 連携の問題
 
 #### 問題4: Stripe API エラー
 
 **症状**:
 - `card_declined` エラー
-- `invalid_request_error` エラー  
+- `invalid_request_error` エラー
 - Webhook 処理失敗
 
 **診断手順**:
@@ -2408,18 +2408,18 @@ import Stripe from 'https://esm.sh/stripe@14.5.0?target=deno'
 
 export class StripeDiagnostics {
   private stripe: Stripe
-  
+
   constructor() {
     const secretKey = Deno.env.get('STRIPE_SECRET_KEY')
     if (!secretKey) {
       throw new Error('STRIPE_SECRET_KEY not configured')
     }
-    
+
     this.stripe = new Stripe(secretKey, {
       apiVersion: '2023-10-16'
     })
   }
-  
+
   async testConnection(): Promise<boolean> {
     try {
       await this.stripe.accounts.retrieve()
@@ -2430,13 +2430,13 @@ export class StripeDiagnostics {
       return false
     }
   }
-  
+
   async analyzePaymentError(error: any): Promise<string> {
     if (error instanceof Stripe.errors.StripeCardError) {
       // カードエラー分析
       const decline_code = error.decline_code
       const errorCode = error.code
-      
+
       const suggestions = {
         'card_declined': 'Customer should try a different card or contact their bank',
         'insufficient_funds': 'Customer has insufficient funds',
@@ -2444,19 +2444,19 @@ export class StripeDiagnostics {
         'incorrect_cvc': 'CVC code is incorrect',
         'processing_error': 'Temporary issue, retry payment'
       }
-      
+
       return suggestions[errorCode] || 'Generic card error - customer should try again'
-      
+
     } else if (error instanceof Stripe.errors.StripeInvalidRequestError) {
       // リクエストエラー分析
       console.error('Invalid request to Stripe:', error.message)
       return 'Payment configuration error - contact support'
-      
+
     } else if (error instanceof Stripe.errors.StripeAPIError) {
       // API エラー
       console.error('Stripe API error:', error.message)
       return 'Payment service temporarily unavailable'
-      
+
     } else {
       console.error('Unknown Stripe error:', error)
       return 'Payment processing failed - please try again'
@@ -2505,12 +2505,12 @@ serve(async (req: Request) => {
     const body = await req.text()
     const signature = req.headers.get('stripe-signature')
     const webhookSecret = Deno.env.get('STRIPE_WEBHOOK_SECRET')
-    
+
     // デバッグ情報
     console.log('Webhook signature:', signature ? 'present' : 'missing')
     console.log('Webhook secret configured:', !!webhookSecret)
     console.log('Request body length:', body.length)
-    
+
     if (!signature || !webhookSecret) {
       console.error('Missing signature or webhook secret')
       return new Response('Webhook authentication failed', { status: 400 })
@@ -2528,7 +2528,7 @@ serve(async (req: Request) => {
     // 重複イベント処理防止
     const eventId = event.id
     const processedEvents = new Set() // 実際の実装では永続化が必要
-    
+
     if (processedEvents.has(eventId)) {
       console.log(`Event ${eventId} already processed`)
       return new Response(JSON.stringify({ received: true }), { status: 200 })
@@ -2536,16 +2536,16 @@ serve(async (req: Request) => {
 
     // イベント処理
     console.log(`Processing event: ${event.type} (${eventId})`)
-    
+
     switch (event.type) {
       case 'payment_intent.succeeded':
         await handlePaymentSucceeded(event.data.object as Stripe.PaymentIntent)
         break
-      
+
       case 'payment_intent.payment_failed':
         await handlePaymentFailed(event.data.object as Stripe.PaymentIntent)
         break
-      
+
       default:
         console.log(`Unhandled event type: ${event.type}`)
     }
@@ -2562,9 +2562,9 @@ serve(async (req: Request) => {
     console.error('Webhook processing error:', error)
     return new Response(
       JSON.stringify({ error: 'Webhook processing failed' }),
-      { 
+      {
         headers: { 'Content-Type': 'application/json' },
-        status: 500 
+        status: 500
       }
     )
   }
@@ -2573,47 +2573,47 @@ serve(async (req: Request) => {
 // べき等性を保証するイベント処理
 async function handlePaymentSucceeded(paymentIntent: Stripe.PaymentIntent) {
   const orderId = paymentIntent.metadata.order_id
-  
+
   try {
     const db = initDatabase()
     const client = db.getClient()
-    
+
     // 現在の注文状態確認
     const { data: order, error: fetchError } = await client
       .from('orders')
       .select('status')
       .eq('stripe_payment_intent_id', paymentIntent.id)
       .single()
-    
+
     if (fetchError) {
       console.error('Failed to fetch order:', fetchError)
       return
     }
-    
+
     // 既に処理済みの場合はスキップ
     if (order.status === 'confirmed') {
       console.log(`Order ${orderId} already confirmed`)
       return
     }
-    
+
     // トランザクション処理
     await db.withTransaction(async (txClient) => {
       // 注文状態更新
       await txClient
         .from('orders')
-        .update({ 
+        .update({
           status: 'confirmed',
           updated_at: new Date().toISOString()
         })
         .eq('stripe_payment_intent_id', paymentIntent.id)
-      
+
       // 在庫確定
       await txClient
         .rpc('confirm_inventory_for_order', { order_id: parseInt(orderId) })
     })
-    
+
     console.log(`Payment succeeded for order ${orderId}`)
-    
+
   } catch (error) {
     console.error(`Failed to handle payment success for order ${orderId}:`, error)
     throw error // 再試行のためエラーを再スロー
@@ -2665,7 +2665,7 @@ export class OptimizedOrderProcessor {
 
     // バッチ処理で DB アクセス最適化
     const order = await this.createOrderBatch(orderRequest, inventoryResult)
-    
+
     return {
       order,
       payment_client_secret: await this.createPaymentIntent(order),
@@ -2675,7 +2675,7 @@ export class OptimizedOrderProcessor {
 
   private async createOrderBatch(orderRequest: OrderRequest, inventoryResult: any): Promise<Order> {
     const client = this.db.getClient()
-    
+
     // 単一トランザクションで複数操作
     return await this.db.withTransaction(async (txClient) => {
       // 注文とアイテムを同時作成
@@ -2684,13 +2684,13 @@ export class OptimizedOrderProcessor {
         status: OrderStatus.PENDING,
         // ... 他のフィールド
       }
-      
+
       const { data: order } = await txClient
         .from('orders')
         .insert(orderData)
         .select()
         .single()
-      
+
       // バッチでアイテム作成
       const orderItems = orderRequest.cart_items.map(item => ({
         order_id: order.id,
@@ -2698,11 +2698,11 @@ export class OptimizedOrderProcessor {
         quantity: item.quantity,
         // ... 他のフィールド
       }))
-      
+
       await txClient
         .from('order_items')
         .insert(orderItems)
-      
+
       return order
     })
   }
@@ -2715,7 +2715,7 @@ export class OptimizedOrderProcessor {
       created_at: new Date().toISOString(),
       retry_count: 0
     }
-    
+
     await this.db.getClient()
       .from('processing_queue')
       .insert(queueItem)
@@ -2732,14 +2732,14 @@ export class OptimizedOrderProcessor {
 export class EdgeFunctionDebugger {
   private static instance: EdgeFunctionDebugger
   private logs: Array<any> = []
-  
+
   static getInstance(): EdgeFunctionDebugger {
     if (!EdgeFunctionDebugger.instance) {
       EdgeFunctionDebugger.instance = new EdgeFunctionDebugger()
     }
     return EdgeFunctionDebugger.instance
   }
-  
+
   log(level: 'debug' | 'info' | 'warn' | 'error', message: string, data?: any) {
     const timestamp = new Date().toISOString()
     const logEntry = {
@@ -2749,26 +2749,26 @@ export class EdgeFunctionDebugger {
       data,
       function: this.getFunctionName()
     }
-    
+
     console[level](`[${timestamp}] ${message}`, data || '')
     this.logs.push(logEntry)
-    
+
     // ログサイズ制限
     if (this.logs.length > 1000) {
       this.logs = this.logs.slice(-500)
     }
   }
-  
+
   private getFunctionName(): string {
     const error = new Error()
     const stack = error.stack?.split('\n')[3] || ''
     return stack.split('/').pop()?.split(':')[0] || 'unknown'
   }
-  
+
   getLogs(): Array<any> {
     return this.logs
   }
-  
+
   async saveLogsToDatabase() {
     try {
       const db = initDatabase()
@@ -2778,7 +2778,7 @@ export class EdgeFunctionDebugger {
           ...log,
           created_at: log.timestamp
         })))
-      
+
       this.logs = [] // ログクリア
     } catch (error) {
       console.error('Failed to save logs:', error)
@@ -2790,29 +2790,29 @@ export class EdgeFunctionDebugger {
 const debugger = EdgeFunctionDebugger.getInstance()
 
 serve(async (req: Request) => {
-  debugger.log('info', 'Function invoked', { 
-    method: req.method, 
-    url: req.url 
+  debugger.log('info', 'Function invoked', {
+    method: req.method,
+    url: req.url
   })
-  
+
   try {
     // 処理...
     debugger.log('debug', 'Processing order', { orderId: 123 })
-    
+
     const result = await processOrder()
     debugger.log('info', 'Order processed successfully', result)
-    
+
     return new Response(JSON.stringify(result), { status: 200 })
-    
+
   } catch (error) {
-    debugger.log('error', 'Order processing failed', { 
+    debugger.log('error', 'Order processing failed', {
       error: error.message,
-      stack: error.stack 
+      stack: error.stack
     })
-    
+
     // ログ保存
     await debugger.saveLogsToDatabase()
-    
+
     return new Response(
       JSON.stringify({ error: 'Processing failed' }),
       { status: 500 }
@@ -2827,58 +2827,58 @@ serve(async (req: Request) => {
 // supabase/functions/_shared/performance-monitor.ts
 export class PerformanceMonitor {
   private metrics: Map<string, number[]> = new Map()
-  
+
   async measureExecution<T>(
-    name: string, 
+    name: string,
     operation: () => Promise<T>
   ): Promise<T> {
     const startTime = performance.now()
     const startMemory = this.getMemoryUsage()
-    
+
     try {
       const result = await operation()
       const executionTime = performance.now() - startTime
       const memoryUsed = this.getMemoryUsage() - startMemory
-      
+
       this.recordMetric(name, executionTime)
-      
+
       if (executionTime > 1000) { // 1秒以上
         console.warn(`Slow operation: ${name} took ${executionTime.toFixed(2)}ms`)
       }
-      
+
       if (memoryUsed > 10 * 1024 * 1024) { // 10MB以上
         console.warn(`High memory usage: ${name} used ${(memoryUsed / 1024 / 1024).toFixed(2)}MB`)
       }
-      
+
       return result
-      
+
     } catch (error) {
       const executionTime = performance.now() - startTime
       console.error(`Operation failed: ${name} after ${executionTime.toFixed(2)}ms`, error)
       throw error
     }
   }
-  
+
   private recordMetric(name: string, value: number) {
     if (!this.metrics.has(name)) {
       this.metrics.set(name, [])
     }
-    
+
     const values = this.metrics.get(name)!
     values.push(value)
-    
+
     // 最新100件のみ保持
     if (values.length > 100) {
       values.shift()
     }
   }
-  
+
   getStats(name: string) {
     const values = this.metrics.get(name) || []
     if (values.length === 0) return null
-    
+
     const sorted = [...values].sort((a, b) => a - b)
-    
+
     return {
       count: values.length,
       avg: values.reduce((a, b) => a + b, 0) / values.length,
@@ -2888,7 +2888,7 @@ export class PerformanceMonitor {
       p95: sorted[Math.floor(sorted.length * 0.95)]
     }
   }
-  
+
   private getMemoryUsage(): number {
     return Deno.memoryUsage().heapUsed
   }
@@ -2915,7 +2915,7 @@ await performanceMonitor.measureExecution('stripe-payment', async () => {
 
 **必要なツール**：
 - Supabase CLI（ローカル開発、`functions serve`、`functions deploy` 用。`npx` / `npm` 経由では Node.js 20以上）
-- Docker互換コンテナランタイム（Supabaseローカルスタック用）
+- Docker 互換コンテナランタイム（Supabase ローカルスタック用）
 - Deno または Deno Language Server（TypeScript補完・ローカル確認用）
 - VS Code + Deno Extension
 - Git（バージョン管理）
@@ -3003,7 +3003,7 @@ CREATE TABLE order_items (
     created_at TIMESTAMP DEFAULT NOW()
 );
 
--- RLS有効化
+-- RLS 有効化
 ALTER TABLE products ENABLE ROW LEVEL SECURITY;
 ALTER TABLE orders ENABLE ROW LEVEL SECURITY;
 ALTER TABLE order_items ENABLE ROW LEVEL SECURITY;
@@ -3011,10 +3011,10 @@ ALTER TABLE order_items ENABLE ROW LEVEL SECURITY;
 -- ポリシー作成
 CREATE POLICY "商品は全員閲覧可能" ON products FOR SELECT USING (is_active = true);
 
-CREATE POLICY "注文は本人のみ閲覧可能" ON orders 
+CREATE POLICY "注文は本人のみ閲覧可能" ON orders
     FOR SELECT USING (auth.uid() = user_id);
 
-CREATE POLICY "注文は認証ユーザーが作成可能" ON orders 
+CREATE POLICY "注文は認証ユーザーが作成可能" ON orders
     FOR INSERT WITH CHECK (auth.uid() = user_id);
 
 -- サンプルデータ挿入
@@ -3096,13 +3096,13 @@ supabase secrets set STRIPE_SECRET_KEY=sk_test_xxx  # 必要な環境変数設�
 ```sql
 -- 原因: Row Level Security ポリシーが正しく設定されていない
 -- 解決策: ポリシーを確認・修正
-SELECT schemaname, tablename, policyname, cmd, qual 
-FROM pg_policies 
+SELECT schemaname, tablename, policyname, cmd, qual
+FROM pg_policies
 WHERE tablename IN ('orders', 'order_items');
 
 -- 必要に応じてポリシー修正
 DROP POLICY IF EXISTS "注文は本人のみ閲覧可能" ON orders;
-CREATE POLICY "注文は本人のみ閲覧可能" ON orders 
+CREATE POLICY "注文は本人のみ閲覧可能" ON orders
     FOR ALL USING (auth.uid() = user_id);
 ```
 
@@ -3128,9 +3128,9 @@ CREATE POLICY "注文は本人のみ閲覧可能" ON orders
 基本動作確認後、以下の機能追加に挑戦してみましょう：
 
 1. **Stripe決済連携**: 実際のクレジットカード決済処理
-2. **メール通知機能**: SendGrid APIで注文確認メール
+2. **メール通知機能**: SendGrid API で注文確認メール
 3. **在庫アラート**: 在庫不足時の自動通知
-4. **注文履歴API**: 過去の注文データ取得・分析
+4. **注文履歴 API**: 過去の注文データ取得・分析
 
 ---
 
@@ -3141,13 +3141,13 @@ Edge Functionsパターンは、サーバーサイドでのビジネスロジッ
 **適用推奨条件**:
 
 - 複雑なビジネスロジック要件
-- 外部API連携が必要
+- 外部 API 連携が必要
 - トランザクション処理が重要
 - セキュリティ要件が厳格
 
 **主要メリット**:
 
-- Supabase認証・RLSとの自然な統合
+- Supabase 認証・RLS との自然な統合
 - TypeScript/Denoによる開発効率
 - 自動スケーリング
 - 運用負荷の軽減
@@ -3167,10 +3167,10 @@ Edge Functionsパターンは、サーバーサイドでのビジネスロジッ
 
 | 学習項目 | 時間配分 | 重要度 | 学習方法 |
 |:---------|:--------:|:------:|:---------|
-|  **開発環境構築**| 2時間 |  | Deno・Supabase CLIのインストール |
+|  **開発環境構築**| 2時間 |  | Deno・Supabase CLI のインストール |
 |  **基本的なFunction作成**| 3時間 |  | まずは動くものを作る |
 |  **ログとデバッグ**| 2時間 |  | エラーメッセージの読み方 |
-|  **認証の基本**| 2時間 |  | JWT・RLSの概念理解 |
+|  **認証の基本**| 2時間 |  | JWT・RLS の概念理解 |
 
 **学習の進め方**：
 1. [OK] **環境構築**: エラーを恐れずに何度でも試す
@@ -3194,7 +3194,7 @@ Edge Functionsパターンは、サーバーサイドでのビジネスロジッ
 | 学習項目 | 時間配分 | 重要度 | 学習方法 |
 |:---------|:--------:|:------:|:---------|
 |  **トランザクション処理**| 3時間 |  | データ整合性の重要性を理解 |
-|  **外部API連携**| 2時間 |  | Stripe・SendGrid との統合 |
+|  **外部 API 連携**| 2時間 |  | Stripe・SendGrid との統合 |
 |  **セキュリティ実装**| 2時間 |  | 認証・認可・バリデーション |
 |  **パフォーマンス最適化**| 2時間 |  | キャッシュ・非同期処理 |
 
@@ -3224,7 +3224,7 @@ Edge Functionsパターンは、サーバーサイドでのビジネスロジッ
 **学習の進め方**：
 1. [OK] **設計思想の理解**: Edge Functionsの適用範囲
 2. [OK] **制約と限界の把握**: コールドスタート・実行時間制限
-3. [OK] **代替手法との比較**: Lambda・Cloud Functions・独立API
+3. [OK] **代替手法との比較**: Lambda・Cloud Functions・独立 API
 4. [OK] **エンタープライズ対応**: 監査・コンプライアンス・運用
 
 **アーキテクチャ課題**：
@@ -3238,8 +3238,8 @@ Edge Functionsパターンは、サーバーサイドでのビジネスロジッ
 **基本理解**：
 - [] Edge Functions の動作原理
 - [] Deno/TypeScript の基本文法
-- [] Supabase認証・RLSとの連携
-- [] 外部API連携の基本パターン
+- [] Supabase 認証・RLS との連携
+- [] 外部 API 連携の基本パターン
 
 **実践スキル**：
 - [] Edge Functions の開発・デプロイ・運用
@@ -3261,11 +3261,11 @@ Edge Functionsパターンは、サーバーサイドでのビジネスロジッ
 |:---------|:--------:|
 | Edge Functions が正常に動作する | □ |
 | データベーストランザクションを理解している | □ |
-| 外部API連携ができる | □ |
+| 外部 API 連携ができる | □ |
 | 基本的なエラーは自力で解決できる | □ |
 
 **第5-1章 の予習ポイント**：
-- **FastAPI**: Pythonによる高性能WebAPI開発
+- **FastAPI**: Pythonによる高性能WebAPI 開発
 - **マルチテナント**: 複数組織のデータ分離
 - **SQLAlchemy ORM**: データベースのオブジェクト関係マッピング
 - **Redis**: キャッシュとセッション管理
@@ -3279,7 +3279,7 @@ Edge Functionsパターンは、サーバーサイドでのビジネスロジッ
 - [] Edge Functionsの役割・メリット・制約を説明できる
 - [] Deno/TypeScriptの基本的な文法・機能を理解した
 - [] サーバーレス関数の概念・実行モデルを理解した
-- [] 外部API連携（Stripe・SendGrid等）の基本パターンを理解した
+- [] 外部 API 連携（Stripe・SendGrid等）の基本パターンを理解した
 
 #### **応用理解（推奨）**
 - [] トランザクション処理・データ整合性の実装パターンを理解した
@@ -3302,31 +3302,31 @@ Edge Functionsパターンは、サーバーサイドでのビジネスロジッ
 ### [OK] **習得できたスキル**
 - [OK] Edge Functions（Deno/TypeScript）による サーバーレス開発
 - [OK] トランザクション処理とデータ整合性保証
-- [OK] 外部API連携（Stripe決済・SendGridメール）
+- [OK] 外部 API 連携（Stripe決済・SendGridメール）
 - [OK] リアルタイム在庫管理システムの構築
 
 ### **アーキテクチャパターン比較**
-| 観点 | 第3章 (クライアント) | 第4章 (Edge Functions) | 第5-1章 予告 (独立API) |
+| 観点 | 第3章 (クライアント) | 第4章 (Edge Functions) | 第5-1章 予告 (独立 API) |
 |:-----|:----------------------|:--------------------------|:----------------------|
-| **実装方式**|  クライアントサイド |  サーバーレス関数 |  独立API サーバー |
+| **実装方式**|  クライアントサイド |  サーバーレス関数 |  独立 API サーバー |
 | **複雑さ**|  シンプル |  中程度 |  高機能 |
 | **適用場面**| CRUD・リアルタイム | 決済・通知・バッチ | エンタープライズ・SaaS |
 | **スケーラビリティ**| [WARN] 制限あり | [OK] 自動スケール | [OK] カスタム制御 |
 
 ### **次章への準備**
-第5-1章で学ぶ独立APIサーバーパターンの基礎概念：
-- [OK] 複雑なビジネスロジック処理（Edge Functions活用経験）
+第5-1章で学ぶ独立 API サーバーパターンの基礎概念：
+- [OK] 複雑なビジネスロジック処理（Edge Functions 活用経験）
 - [OK] 外部システム連携（Stripe・SendGrid実装経験）
 - [OK] データベーストランザクション理解
 - [OK] 認証・認可機構の実装経験
 
 ---
 
-## 次章予告：パターン3 - 独立APIサーバー
+## 次章予告：パターン3 - 独立 API サーバー
 
 第5-1章では、「**大病院の基幹システム**」を例に、エンタープライズ級のシステム設計を学習します：
 - **マルチテナント**: 複数病院の完全データ分離システム
-- **高度なAPI**: FastAPI + SQLAlchemy による柔軟なデータ操作
+- **高度な API**: FastAPI + SQLAlchemy による柔軟なデータ操作
 - **パフォーマンス**: Redis活用による高速レスポンス
 - **セキュリティ**: エンタープライズ級認証・認可システム
 
@@ -3336,7 +3336,7 @@ Edge Functionsパターンは、サーバーサイドでのビジネスロジッ
 
 **ナビゲーション**
 - **目次**: [はじめに]({{ '/introduction/' | relative_url }})
-- **前の章**: [第3章：パターン1 - クライアントサイド実装]({{ '/chapters/chapter03/' | relative_url }})  
-- **次の章**: [第5-1章：パターン3 - 独立APIサーバー]({{ '/chapters/chapter05-1/' | relative_url }})
-- **関連章**: [第1章：Supabaseアーキテクチャ理解]({{ '/chapters/chapter01/' | relative_url }}) | [第6章：パフォーマンス最適化]({{ '/chapters/chapter06/' | relative_url }})
+- **前の章**: [第3章：パターン1 - クライアントサイド実装]({{ '/chapters/chapter03/' | relative_url }})
+- **次の章**: [第5-1章：パターン3 - 独立 API サーバー]({{ '/chapters/chapter05-1/' | relative_url }})
+- **関連章**: [第1章：Supabase アーキテクチャ理解]({{ '/chapters/chapter01/' | relative_url }}) | [第6章：パフォーマンス最適化]({{ '/chapters/chapter06/' | relative_url }})
 - **リソース**: [動作検証]({{ '/guides/code-verification/' | relative_url }}) | [トラブルシューティング]({{ '/guides/troubleshooting/' | relative_url }})

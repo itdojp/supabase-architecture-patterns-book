@@ -3,7 +3,7 @@
 ## Purpose / 目的
 
 This guide ensures consistent terminology usage throughout the Supabase Architecture Patterns book.
-本ガイドは、Supabaseアーキテクチャパターンブック全体での用語使用の一貫性を確保します。
+本ガイドは、Supabase アーキテクチャパターンブック全体での用語使用の一貫性を確保します。
 
 ## General Rules / 一般規則
 
@@ -23,13 +23,13 @@ This guide ensures consistent terminology usage throughout the Supabase Architec
 
 | English | Japanese | Usage Example |
 |---------|----------|---------------|
-| Database | データベース | PostgreSQLデータベース |
+| Database | データベース | PostgreSQL データベース |
 | Authentication | 認証 | 認証システム |
 | Authorization | 認可 | 認可ポリシー |
 | Real-time | リアルタイム | リアルタイム通信 |
-| Row Level Security (RLS) | 行レベルセキュリティ (RLS) | RLSポリシー |
+| Row Level Security (RLS) | 行レベルセキュリティ (RLS) | RLS ポリシー |
 | API | API | REST API |
-| WebSocket | WebSocket | WebSocket接続 |
+| WebSocket | WebSocket | WebSocket 接続 |
 
 ### Actions / アクション
 
@@ -71,7 +71,7 @@ This guide ensures consistent terminology usage throughout the Supabase Architec
 ### 1. First Mention / 初出時
 ```text
 正: Row Level Security (RLS) は、データベースレベルでアクセス制御を行います。
-誤: RLSは、データベースレベルでアクセス制御を行います。
+誤: RLS は、データベースレベルでアクセス制御を行います。
 ```
 
 ### 2. Code Comments / コードコメント
@@ -91,7 +91,7 @@ const supabase = createClient(url, key); // クライアント作成
 
 ### 4. Technical Explanations / 技術説明
 ```text
-正: PostgreSQLデータベースにデータを保存します
+正: PostgreSQL データベースにデータを保存します
 誤: Postgresデータベースにデータを保存します
 ```
 
