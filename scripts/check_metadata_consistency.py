@@ -269,7 +269,8 @@ def validate_public_version() -> list[str]:
         text = path.read_text(encoding="utf-8")
         if f"Version: {VERSION}" not in text:
             errors.append(f"{relative_path}: version badge must display {VERSION!r}")
-        if f"版**: {VERSION}版" not in text:
+        edition_pattern = rf"^\s*(?:-\s*)?\*\*版\*\*:\s*{re.escape(VERSION)}版\s*$"
+        if not re.search(edition_pattern, text, re.MULTILINE):
             errors.append(f"{relative_path}: edition must display {VERSION!r}")
     return errors
 
