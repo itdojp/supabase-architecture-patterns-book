@@ -3,11 +3,11 @@
 **初心者から上級者まで段階的に学べる、Supabase完全マスターガイド**
 
 ![License: CC BY-NC-SA 4.0](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-lightgrey.svg)
-![Version: 1.0](https://img.shields.io/badge/Version-1.0-brightgreen.svg)
+![Version: 1.0.0](https://img.shields.io/badge/Version-1.0.0-brightgreen.svg)
 ![Status: Active Development](https://img.shields.io/badge/Status-Active%20Development-green.svg)
 
 **著者**: 株式会社アイティードゥ  
-**版**: 1.0版  
+**版**: 1.0.0版
 **最終更新**: 2026年5月23日
 
 ---
