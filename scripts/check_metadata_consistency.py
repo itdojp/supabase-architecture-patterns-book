@@ -25,6 +25,22 @@ REQUIRED_ASSETS = [
     "assets/js/search.js",
     "assets/js/code-copy-lightweight.js",
 ]
+EXPECTED_UX_MODULES = {
+    "quickStart": False,
+    "readingGuide": True,
+    "checklistPack": True,
+    "troubleshootingFlow": True,
+    "conceptMap": False,
+    "figureIndex": True,
+    "legalNotice": False,
+    "glossary": True,
+}
+REQUIRED_READER_ROUTES = {
+    "figure index": "/guides/figure-index/",
+    "glossary": "/guides/glossary/",
+    "troubleshooting": "/guides/troubleshooting/",
+    "checklist evidence": "/appendices/appendix01/#operational-checklists",
+}
 
 
 @dataclass(frozen=True)
@@ -246,6 +262,56 @@ def compare_sections(book_entries: dict[str, list[Entry]], nav_entries: dict[str
     return errors
 
 
+def validate_public_version() -> list[str]:
+    errors: list[str] = []
+    for relative_path in ("src/introduction/index.md", "docs/introduction/index.md"):
+        path = Path(relative_path)
+        text = path.read_text(encoding="utf-8")
+        if f"Version: {VERSION}" not in text:
+            errors.append(f"{relative_path}: version badge must display {VERSION!r}")
+        if f"版**: {VERSION}版" not in text:
+            errors.append(f"{relative_path}: edition must display {VERSION!r}")
+    return errors
+
+
+def validate_ux_and_reader_routes(book: dict[str, Any], entries: list[Entry]) -> list[str]:
+    errors: list[str] = []
+    ux = book.get("ux")
+    modules = ux.get("modules") if isinstance(ux, dict) else None
+    if not isinstance(modules, dict):
+        return ["book-config.json: ux.modules must be an object"]
+    for key, expected in EXPECTED_UX_MODULES.items():
+        actual = modules.get(key)
+        if actual != expected:
+            errors.append(f"book-config.json: ux.modules.{key} must be {expected!r} (actual={actual!r})")
+
+    configured_paths = {entry.path for entry in entries}
+    for label, route in REQUIRED_READER_ROUTES.items():
+        route_path = route.split("#", 1)[0]
+        if route_path not in configured_paths:
+            errors.append(f"reader route missing ({label}): {route}")
+    checklist = Path("docs/appendices/appendix01/index.md").read_text(encoding="utf-8")
+    if "{#operational-checklists}" not in checklist:
+        errors.append("reader route missing (checklist evidence): #operational-checklists anchor")
+    return errors
+
+
+def validate_build_scripts(package: dict[str, Any]) -> list[str]:
+    errors: list[str] = []
+    scripts = package.get("scripts")
+    if not isinstance(scripts, dict):
+        return ["package.json: scripts must be an object"]
+    expected = {
+        "start": "bundle exec jekyll serve --source docs --config docs/_config.yml --destination _site --livereload",
+        "build": "bundle exec jekyll build --source docs --config docs/_config.yml --destination _site",
+        "build:gh-pages": "bundle exec jekyll build --source docs --config docs/_config.yml --destination _site",
+    }
+    for name, command in expected.items():
+        if scripts.get(name) != command:
+            errors.append(f"package.json: scripts.{name} must be {command!r} (actual={scripts.get(name)!r})")
+    return errors
+
+
 def validate_metadata(book: dict[str, Any], package: dict[str, Any]) -> list[str]:
     errors: list[str] = []
     expected_book = {
@@ -383,6 +449,9 @@ def main() -> int:
     errors.extend(validate_metadata(book, package))
     errors.extend(compare_sections(book_entries, nav_entries))
     all_entries = [entry for section in SECTION_KEYS for entry in book_entries.get(section, [])]
+    errors.extend(validate_public_version())
+    errors.extend(validate_ux_and_reader_routes(book, all_entries))
+    errors.extend(validate_build_scripts(package))
     errors.extend(validate_pages_and_assets(all_entries))
 
     if errors:
