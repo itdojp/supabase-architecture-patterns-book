@@ -267,7 +267,11 @@ def validate_public_version() -> list[str]:
     for relative_path in ("src/introduction/index.md", "docs/introduction/index.md"):
         path = Path(relative_path)
         text = path.read_text(encoding="utf-8")
-        if f"Version: {VERSION}" not in text:
+        badge_pattern = (
+            rf"^!\[Version: {re.escape(VERSION)}\]"
+            rf"\(https://img\.shields\.io/badge/Version-{re.escape(VERSION)}-brightgreen\.svg\)$"
+        )
+        if not re.search(badge_pattern, text, re.MULTILINE):
             errors.append(f"{relative_path}: version badge must display {VERSION!r}")
         edition_pattern = rf"^\s*(?:-\s*)?\*\*版\*\*:\s*{re.escape(VERSION)}版\s*$"
         if not re.search(edition_pattern, text, re.MULTILINE):
