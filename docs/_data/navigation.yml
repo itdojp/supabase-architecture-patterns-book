@@ -2,6 +2,8 @@ introduction:
 - title: はじめに
   path: /introduction/
 guides:
+- title: 概念マップ
+  path: /guides/concept-map/
 - title: 図版索引
   path: /guides/figure-index/
 - title: 設計パターン選定ガイド
