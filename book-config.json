@@ -22,6 +22,12 @@
     ],
     "guides": [
       {
+        "id": "concept-map",
+        "title": "概念マップ",
+        "description": "主要概念の責務層・依存関係・横断関心事を俯瞰する",
+        "path": "/guides/concept-map/"
+      },
+      {
         "id": "figure-index",
         "title": "図版索引",
         "description": "図版と設計要素の対応を一覧する",
@@ -181,7 +187,7 @@
       "readingGuide": true,
       "checklistPack": true,
       "troubleshootingFlow": true,
-      "conceptMap": false,
+      "conceptMap": true,
       "figureIndex": true,
       "legalNotice": false,
       "glossary": true

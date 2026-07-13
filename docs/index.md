@@ -59,6 +59,7 @@ permalink: /
 
 ## ガイド
 
+- [概念マップ]({{ site.baseurl }}/guides/concept-map/) — 主要概念の責務層・依存関係・横断関心事を俯瞰
 - [図版索引]({{ site.baseurl }}/guides/figure-index/)
 - [設計パターン選定ガイド]({{ site.baseurl }}/guides/pattern-selection/)
 - [エラーハンドリングガイド]({{ site.baseurl }}/guides/error-handling/)

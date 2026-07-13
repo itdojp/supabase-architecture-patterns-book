@@ -30,16 +30,59 @@ EXPECTED_UX_MODULES = {
     "readingGuide": True,
     "checklistPack": True,
     "troubleshootingFlow": True,
-    "conceptMap": False,
+    "conceptMap": True,
     "figureIndex": True,
     "legalNotice": False,
     "glossary": True,
 }
 REQUIRED_READER_ROUTES = {
+    "concept map": "/guides/concept-map/",
     "figure index": "/guides/figure-index/",
     "glossary": "/guides/glossary/",
     "troubleshooting": "/guides/troubleshooting/",
     "checklist evidence": "/appendices/appendix01/#operational-checklists",
+}
+CONCEPT_MAP_SOURCE = Path("src/guides/concept-map/index.md")
+CONCEPT_MAP_DOCS = Path("docs/guides/concept-map/index.md")
+CONCEPT_MAP_HEADINGS = [
+    "## このページの目的",
+    "## 読み方と責務境界",
+    "## 関係マップ",
+    "### 責務層",
+    "### 依存関係",
+    "### 横断関心事",
+    "## 次に読む場所",
+]
+CONCEPT_MAP_TERMS = [
+    "Auth",
+    "JWT",
+    "PostgREST",
+    "PostgreSQL",
+    "RLS",
+    "Storage",
+    "Realtime",
+    "Edge Functions",
+    "独立 API サーバー",
+    "マルチテナント",
+    "監視",
+]
+CONCEPT_MAP_LINKS = {
+    "図版索引": "/guides/figure-index/",
+    "設計パターン選定ガイド": "/guides/pattern-selection/",
+    "用語集": "/guides/glossary/",
+    "第1章：Supabase アーキテクチャ理解": "/chapters/chapter01/",
+    "第2章：認証・認可設計": "/chapters/chapter02/",
+    "第3章：クライアントサイド実装": "/chapters/chapter03/",
+    "第4章：Edge Functions 活用": "/chapters/chapter04/",
+    "第5-1章：独立 API サーバー": "/chapters/chapter05-1/",
+    "第5-2章：マルチテナンシー": "/chapters/chapter05-2/",
+    "第5-3章：拡張性設計とパフォーマンス最適化": "/chapters/chapter05-3/",
+    "第5-4章：RAG/ベクトル検索": "/chapters/chapter05-4/",
+    "第6章：パフォーマンス最適化": "/chapters/chapter06/",
+    "第7章：セキュリティ強化": "/chapters/chapter07/",
+    "第8章：運用監視と自動化": "/chapters/chapter08/",
+    "第9章：アーキテクチャ選択演習": "/chapters/chapter09/",
+    "第10章：統合実践プロジェクト": "/chapters/chapter10/",
 }
 
 
@@ -436,6 +479,120 @@ def validate_pages_and_assets(entries: list[Entry]) -> list[str]:
     return errors
 
 
+MARKDOWN_LINK_RE = re.compile(r"\[([^\]]+)\]\(([^)\n]+)\)")
+LIQUID_RELATIVE_URL_RE = re.compile(r"^\{\{\s*'([^']+)'\s*\|\s*relative_url\s*\}\}$")
+
+
+def strip_front_matter(text: str) -> str:
+    match = FRONT_MATTER_RE.match(text)
+    return text[match.end() :] if match else text
+
+
+def normalize_concept_map_target(target: str, *, is_source: bool) -> str:
+    target = target.strip()
+    liquid_match = LIQUID_RELATIVE_URL_RE.match(target)
+    if liquid_match:
+        target = liquid_match.group(1)
+    if not is_source:
+        return normalize_public_path(target, source="concept map docs link")
+    if target.startswith(("http://", "https://", "mailto:", "#")):
+        return target
+    if target.startswith("/"):
+        return normalize_public_path(target, source="concept map source link")
+    resolved = (CONCEPT_MAP_SOURCE.parent / target).resolve().relative_to(Path.cwd().resolve())
+    if resolved.name == "index.md":
+        resolved = resolved.parent
+    return normalize_public_path("/" + str(resolved.relative_to("src")).replace("\\", "/"), source="concept map source link")
+
+
+def normalize_concept_map_body(text: str, *, is_source: bool) -> str:
+    text = strip_front_matter(text)
+
+    def replace_link(match: re.Match[str]) -> str:
+        label, target = match.groups()
+        normalized_target = normalize_concept_map_target(target, is_source=is_source)
+        return f"[{label}]({normalized_target})"
+
+    return MARKDOWN_LINK_RE.sub(replace_link, text).strip()
+
+
+def concept_map_document_errors(source_body: str, docs_body: str) -> list[str]:
+    errors: list[str] = []
+    for label, body in (("src", source_body), ("docs", docs_body)):
+        for heading in CONCEPT_MAP_HEADINGS:
+            if heading not in body:
+                errors.append(f"concept map {label}: required heading is missing: {heading}")
+        for term in CONCEPT_MAP_TERMS:
+            if term not in body:
+                errors.append(f"concept map {label}: required concept is missing: {term}")
+        if "| 責務層 |" not in body or "| 起点 |" not in body or "| 横断関心事 |" not in body:
+            errors.append(f"concept map {label}: responsibility, dependency, and cross-cutting tables are required")
+        if "```mermaid" in body or ".svg" in body or ".png" in body or "![" in body:
+            errors.append(f"concept map {label}: visual assets and Mermaid diagrams are not allowed")
+        links = {(match.group(1), normalize_concept_map_target(match.group(2), is_source=(label == "src"))) for match in MARKDOWN_LINK_RE.finditer(body)}
+        for required_label, required_target in CONCEPT_MAP_LINKS.items():
+            if (required_label, required_target) not in links:
+                errors.append(
+                    f"concept map {label}: required direct link is missing: {required_label} -> {required_target}"
+                )
+    return errors
+
+
+def concept_map_mirror_errors(source_body: str, docs_body: str) -> list[str]:
+    if source_body != docs_body:
+        return ["concept map source/docs mirror is out of sync after link normalization"]
+    return []
+
+
+def validate_concept_map() -> list[str]:
+    errors: list[str] = []
+    for path in (CONCEPT_MAP_SOURCE, CONCEPT_MAP_DOCS):
+        if not path.is_file() or path.stat().st_size == 0:
+            errors.append(f"concept map page is missing or empty: {path}")
+    if errors:
+        return errors
+
+    source_body = normalize_concept_map_body(CONCEPT_MAP_SOURCE.read_text(encoding="utf-8"), is_source=True)
+    docs_body = normalize_concept_map_body(CONCEPT_MAP_DOCS.read_text(encoding="utf-8"), is_source=False)
+    errors.extend(concept_map_document_errors(source_body, docs_body))
+    docs_front_matter = parse_front_matter(CONCEPT_MAP_DOCS)
+    if docs_front_matter.get("layout") != "book" or docs_front_matter.get("title") != "概念マップ":
+        errors.append("concept map docs: front matter must set layout=book and title=概念マップ")
+    top_page = Path("docs/index.md").read_text(encoding="utf-8")
+    if "[概念マップ]({{ site.baseurl }}/guides/concept-map/)" not in top_page:
+        errors.append("docs/index.md: top page must link to the concept map route")
+    errors.extend(concept_map_mirror_errors(source_body, docs_body))
+    return errors
+
+
+def validate_concept_map_negative_fixtures(book: dict[str, Any], entries: list[Entry]) -> list[str]:
+    """Ensure the regression gate rejects representative invalid configurations and pages."""
+    missing = [path for path in (CONCEPT_MAP_SOURCE, CONCEPT_MAP_DOCS) if not path.is_file()]
+    if missing:
+        return [f"concept map negative fixtures require an existing page: {path}" for path in missing]
+
+    source_body = normalize_concept_map_body(CONCEPT_MAP_SOURCE.read_text(encoding="utf-8"), is_source=True)
+    docs_body = normalize_concept_map_body(CONCEPT_MAP_DOCS.read_text(encoding="utf-8"), is_source=False)
+    disabled_book = json.loads(json.dumps(book))
+    without_route = [entry for entry in entries if entry.path != "/guides/concept-map/"]
+    fixtures = {
+        "missing concept-map route": validate_ux_and_reader_routes(book, without_route),
+        "missing required direct link": concept_map_document_errors(source_body.replace("[図版索引]", "[図版一覧]"), docs_body),
+        "Mermaid diagram": concept_map_document_errors(source_body, docs_body + "\n```mermaid\ngraph TD\n```"),
+        "source/docs drift": concept_map_mirror_errors(source_body, docs_body + "\nfixture"),
+    }
+    disabled_ux = disabled_book.get("ux")
+    disabled_modules = disabled_ux.get("modules") if isinstance(disabled_ux, dict) else None
+    if isinstance(disabled_modules, dict):
+        disabled_modules["conceptMap"] = False
+        fixtures["disabled conceptMap flag"] = validate_ux_and_reader_routes(disabled_book, entries)
+    errors: list[str] = []
+    for name, fixture_errors in fixtures.items():
+        if not fixture_errors:
+            errors.append(f"concept map negative fixture was not rejected: {name}")
+    return errors
+
+
 def main() -> int:
     try:
         book = json.loads(Path("book-config.json").read_text(encoding="utf-8"))
@@ -458,6 +615,11 @@ def main() -> int:
     errors.extend(validate_ux_and_reader_routes(book, all_entries))
     errors.extend(validate_build_scripts(package))
     errors.extend(validate_pages_and_assets(all_entries))
+    try:
+        errors.extend(validate_concept_map())
+        errors.extend(validate_concept_map_negative_fixtures(book, all_entries))
+    except (CheckError, OSError, ValueError) as error:
+        errors.append(f"concept map validation failed: {error}")
 
     if errors:
         sys.stderr.write("metadata consistency check failed:\n")
@@ -466,7 +628,7 @@ def main() -> int:
         return 1
 
     counts = ", ".join(f"{section}={len(book_entries.get(section, []))}" for section in SECTION_KEYS)
-    print(f"OK: metadata, navigation, configured pages, and assets match ({counts})")
+    print(f"OK: metadata, navigation, configured pages, assets, and concept-map regression gate match ({counts})")
     return 0
 
 
