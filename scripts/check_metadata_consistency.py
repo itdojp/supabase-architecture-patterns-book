@@ -574,15 +574,18 @@ def validate_concept_map_negative_fixtures(book: dict[str, Any], entries: list[E
     source_body = normalize_concept_map_body(CONCEPT_MAP_SOURCE.read_text(encoding="utf-8"), is_source=True)
     docs_body = normalize_concept_map_body(CONCEPT_MAP_DOCS.read_text(encoding="utf-8"), is_source=False)
     disabled_book = json.loads(json.dumps(book))
-    disabled_book["ux"]["modules"]["conceptMap"] = False
     without_route = [entry for entry in entries if entry.path != "/guides/concept-map/"]
     fixtures = {
-        "disabled conceptMap flag": validate_ux_and_reader_routes(disabled_book, entries),
         "missing concept-map route": validate_ux_and_reader_routes(book, without_route),
         "missing required direct link": concept_map_document_errors(source_body.replace("[図版索引]", "[図版一覧]"), docs_body),
         "Mermaid diagram": concept_map_document_errors(source_body, docs_body + "\n```mermaid\ngraph TD\n```"),
         "source/docs drift": concept_map_mirror_errors(source_body, docs_body + "\nfixture"),
     }
+    disabled_ux = disabled_book.get("ux")
+    disabled_modules = disabled_ux.get("modules") if isinstance(disabled_ux, dict) else None
+    if isinstance(disabled_modules, dict):
+        disabled_modules["conceptMap"] = False
+        fixtures["disabled conceptMap flag"] = validate_ux_and_reader_routes(disabled_book, entries)
     errors: list[str] = []
     for name, fixture_errors in fixtures.items():
         if not fixture_errors:
@@ -612,8 +615,11 @@ def main() -> int:
     errors.extend(validate_ux_and_reader_routes(book, all_entries))
     errors.extend(validate_build_scripts(package))
     errors.extend(validate_pages_and_assets(all_entries))
-    errors.extend(validate_concept_map())
-    errors.extend(validate_concept_map_negative_fixtures(book, all_entries))
+    try:
+        errors.extend(validate_concept_map())
+        errors.extend(validate_concept_map_negative_fixtures(book, all_entries))
+    except (CheckError, OSError, ValueError) as error:
+        errors.append(f"concept map validation failed: {error}")
 
     if errors:
         sys.stderr.write("metadata consistency check failed:\n")
