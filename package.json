@@ -57,8 +57,5 @@
     "markdown-it": "14.2.0",
     "linkify-it": "5.0.1",
     "undici": "7.28.0"
-  },
-  "allowScripts": {
-    "deno@2.9.3": true
   }
 }

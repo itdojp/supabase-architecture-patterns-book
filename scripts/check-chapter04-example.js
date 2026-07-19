@@ -68,13 +68,12 @@ function checkPackageContract(failures) {
     }
   }
 
-  const expectedAllowScripts = { 'deno@2.9.3': true }
-  if (JSON.stringify(packageJson.allowScripts) !== JSON.stringify(expectedAllowScripts)) {
-    failures.push('package.json: allowScripts must explicitly allow only deno@2.9.3')
+  if (Object.prototype.hasOwnProperty.call(packageJson, 'allowScripts')) {
+    failures.push('package.json: unsupported allowScripts policy must not be present')
   }
   const npmrcLines = read('.npmrc').split(/\r?\n/).filter(Boolean)
-  if (JSON.stringify(npmrcLines) !== JSON.stringify(['strict-allow-scripts=true'])) {
-    failures.push('.npmrc: strict-allow-scripts=true must be the only install-script policy')
+  if (JSON.stringify(npmrcLines) !== JSON.stringify(['ignore-scripts=true'])) {
+    failures.push('.npmrc: ignore-scripts=true must be the only install-script policy')
   }
 
   const denoTest = packageJson.scripts?.['test:chapter04-example'] || ''
@@ -347,6 +346,8 @@ function checkContentContract(failures) {
 
     const requiredSafetyMarkers = [
       'LOCAL-ONLY / NONDEPLOY',
+      'requestのtop-levelは `items` だけを受け付け',
+      '`items` 配列の各要素は `product_id` / `quantity` だけを受け付ける',
       'client価格を拒否する',
       'DBからauthoritativeな商品価格を取得し',
       '同一\ntransactionで実行する必要があります'

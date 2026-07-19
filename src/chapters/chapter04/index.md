@@ -137,7 +137,7 @@ flowchart TD
 
 - 実行対象: `supabase/config.toml`、migration、seed、`process-order`、server-owned local catalog、注文検証・合計計算、handler-level Deno test
 - 実行しない設計例: フロントエンド、注文永続化、認証・認可、在庫引当、Stripe / SendGrid、remote deploy
-- 安全境界: requestは `product_id` / `quantity` だけを受け付け、client価格を拒否する。`verify_jwt=false` のlocal-only教材はlink/deployしない
+- 安全境界: requestのtop-levelは `items` だけを受け付け、`items` 配列の各要素は `product_id` / `quantity` だけを受け付ける。client価格を拒否する。`verify_jwt=false` のlocal-only教材はlink/deployしない
 - 実行手順と停止手順: `examples/chapter04-ecommerce/README.md`
 
 以降で `設計例（同梱外）` と記したコードとpathは、構成を検討するための概念例です。
