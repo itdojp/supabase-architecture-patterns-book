@@ -1460,13 +1460,12 @@ async function handlePaymentSucceeded(
   // 確認メール送信。auth schema は PostgREST で公開されないため、
   // service-role Edge Function から Auth Admin API で正本を参照する。
   try {
-    const {
-      data: { user },
-      error: userError
-    } = await client.auth.admin.getUserById(order.user_id)
+    const { data: userData, error: userError } =
+      await client.auth.admin.getUserById(order.user_id)
 
     if (userError) throw userError
 
+    const user = userData?.user
     if (user?.email) {
       await notificationService.sendOrderConfirmation(order, user.email)
     }

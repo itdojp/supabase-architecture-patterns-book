@@ -176,8 +176,8 @@ curl -H "apikey: YOUR_PUBLISHABLE_KEY" \
 
 3. **開発環境のテストアカウントを確認済みにする**
    ```typescript
-   // supabase/functions/admin-confirm-test-user/index.ts
-   // Edge Function または管理バックエンドだけで実行する。
+   // scripts/admin-confirm-test-user.ts
+   // 隔離した開発環境で、認可済みの運用者が単発実行する管理スクリプト。
    // SUPABASE_SECRET_KEY はブラウザ・リポジトリ・ログへ出さない。
    import { createClient } from 'npm:@supabase/supabase-js@2'
 
@@ -200,7 +200,7 @@ curl -H "apikey: YOUR_PUBLISHABLE_KEY" \
    if (error) throw error
    ```
 
-   通常は確認メールのリンクを使います。上記は隔離された開発環境の明示的なテストアカウントだけに限定し、`auth.users` を SQL で直接更新しません。
+   通常は確認メールのリンクを使います。上記は公開HTTP endpointにせず、隔離された開発環境で `deno run --allow-env --allow-net scripts/admin-confirm-test-user.ts` として明示的なテストアカウントだけに単発実行します。`auth.users` を SQL で直接更新してはいけません。
 
 ---
 

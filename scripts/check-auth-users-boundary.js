@@ -18,7 +18,7 @@ const prohibitedPatterns = [
   {
     id: 'read-auth-users',
     description: 'direct auth.users reads are limited to explicitly marked administrator diagnostics',
-    expression: new RegExp(`(?<!DELETE\\s)\\b(?:FROM|JOIN)\\s+${qualifiedAuthUsers}(?=\\s|[;,) ]|$)`, 'i'),
+    expression: new RegExp(`(?<!DELETE\\s)\\b(?:FROM|JOIN)\\s+(?:ONLY\\s+)?${qualifiedAuthUsers}(?=\\s|[;,) ]|$)`, 'i'),
     allowReadOnlyDiagnostic: true
   },
   {
@@ -84,6 +84,7 @@ function checkFixtures() {
     { file: 'negative-update-auth-users.sql', expected: ['write-auth-users'] },
     { file: 'negative-delete-auth-users.sql', expected: ['write-auth-users'] },
     { file: 'negative-read-auth-users.sql', expected: ['read-auth-users'] },
+    { file: 'negative-read-only-auth-users.sql', expected: ['read-auth-users'] },
     { file: 'negative-from-auth-users.ts', expected: ['from-auth-users'] },
     { file: 'negative-from-auth-users-template.ts', expected: ['from-auth-users'] },
     { file: 'negative-schema-auth-users.ts', expected: ['schema-auth-users'] },
@@ -116,7 +117,7 @@ function main() {
     return
   }
 
-  console.log('auth.users boundary check passed (8 negative fixtures, one marked diagnostic fixture, src/docs scanned).')
+  console.log('auth.users boundary check passed (9 negative fixtures, one marked diagnostic fixture, src/docs scanned).')
 }
 
 main()
