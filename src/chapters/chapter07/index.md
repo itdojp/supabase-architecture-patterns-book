@@ -196,12 +196,12 @@ BEGIN
                 WHERE p.id = resource_id
                 AND (
                     --  プロジェクト作成者の場合（プロジェクトオーナー）
-                    p.created_by = (SELECT id FROM auth.users WHERE auth.uid() = id)
+                    p.created_by = auth.uid()
                     OR EXISTS(
                         --  プロジェクトメンバーの場合（プロジェクトチーム）
                         SELECT 1 FROM project_members pm
                         WHERE pm.project_id = resource_id
-                        AND pm.user_id = (SELECT id FROM auth.users WHERE auth.uid() = id)
+                        AND pm.user_id = auth.uid()
                         AND pm.is_active = true        -- 現在アクティブなメンバー
                     )
                 )
@@ -654,7 +654,8 @@ BEGIN
         risk_score, request_details             -- Analysis（分析情報）
     ) VALUES (
         current_user_id,
-        (SELECT email FROM auth.users WHERE id = current_user_id),
+        -- 検証済み JWT の email claim をイベント発生時の監査スナップショットに使う。
+        auth.jwt() ->> 'email',
         (SELECT role FROM user_organizations WHERE user_id = current_user_id AND organization_id = current_org_id LIMIT 1),
         p_action,
         p_resource_type,
@@ -920,22 +921,10 @@ BEGIN
     IF threat_type IN ('suspicious_admin_activity', 'unusual_geographic_access') THEN
         suspended_user_id := (evidence->>'user_id')::uuid;
         
-        --  ユーザーアカウントを一時停止
-        UPDATE auth.users 
-        SET is_suspended = true, 
-            suspension_reason = threat_type,
-            suspended_at = NOW()
-        WHERE id = suspended_user_id;
-        
-        --  すべてのセッションを無効化
-        UPDATE user_sessions 
-        SET is_active = false, 
-            terminated_at = NOW(),
-            termination_reason = 'security_suspension'
-        WHERE user_id = suspended_user_id AND is_active = true;
-        
+        -- managed auth.users は更新しない。Auth レベルの停止が必要なため、
+        -- security alert から信頼済み管理経路へエスカレーションする。
         defense_actions := defense_actions || 
-            json_build_object('action', 'user_suspended', 'user_id', suspended_user_id)::jsonb;
+            json_build_object('action', 'auth_admin_review_required', 'user_id', suspended_user_id)::jsonb;
     END IF;
     
     --  管理者への緊急通知
@@ -981,6 +970,8 @@ EXCEPTION
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 ```
+
+> **停止制御の境界**: この SQL 関数だけでは managed `auth.users` のアカウントや Supabase Auth のセッションを停止しません。security alert を受けて認可した管理者リクエストを処理する信頼済み Edge Function/バックエンドから `supabase.auth.admin` を使用し、停止・解除を実施してください。secret key をクライアントへ公開してはいけません。
 
 ### Step 3: 定期的な脅威スキャン（巡回警備システム）
 
@@ -1067,11 +1058,11 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 
 定期スキャンシステムの動作例：
 
-| スキャン時間 | 検知される脅威 | 自動対処 | 管理者通知 |
+| スキャン時間 | 検知される脅威 | 検知後の処理 | 管理者通知 |
 |:------------|:-------------|:---------|:----------|
 | **毎時00分**| ブルートフォース攻撃 | IP自動ブロック | 緊急メール送信 |
-| **毎時30分**| 不審なログイン | ユーザー一時停止 | Slack通知 |
-| **深夜2時**| 管理者権限乱用 | セッション強制終了 | SMS緊急通報 |
+| **毎時30分**| 不審なログイン | Adminレビュー要求 | Slack通知 |
+| **深夜2時**| 管理者権限乱用 | 信頼済み管理経路へエスカレーション | SMS緊急通報 |
 | **通常時**| 脅威なし | 対処なし | 日報に記録 |
 
 ---

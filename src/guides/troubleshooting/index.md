@@ -169,12 +169,33 @@ curl -H "apikey: YOUR_PUBLISHABLE_KEY" \
    - Dashboard → Authentication → Email Templates
    - 正しいリダイレクトURLを設定
 
-3. **開発環境でのメール確認スキップ**
-   ```sql
-   -- 開発時のみ使用
-   UPDATE auth.users SET email_confirmed_at = NOW() 
-   WHERE email = 'test@example.com';
+3. **開発環境のテストアカウントを確認済みにする**
+   ```typescript
+   // scripts/admin-confirm-test-user.ts
+   // 隔離した開発環境で、認可済みの運用者が単発実行する管理スクリプト。
+   // SUPABASE_SECRET_KEY はブラウザ・リポジトリ・ログへ出さない。
+   import { createClient } from 'npm:@supabase/supabase-js@2'
+
+   if (Deno.env.get('APP_ENV') !== 'development') {
+     throw new Error('テストアカウントの確認は development 環境だけで許可します')
+   }
+
+   const userId = Deno.env.get('TEST_USER_ID')
+   if (!userId) throw new Error('TEST_USER_ID を設定してください')
+
+   const admin = createClient(
+     Deno.env.get('SUPABASE_URL')!,
+     Deno.env.get('SUPABASE_SECRET_KEY')!,
+     { auth: { autoRefreshToken: false, persistSession: false } }
+   )
+
+   const { error } = await admin.auth.admin.updateUserById(userId, {
+     email_confirm: true
+   })
+   if (error) throw error
    ```
+
+   通常は確認メールのリンクを使います。上記は公開HTTP endpointにせず、隔離された開発環境で `deno run --allow-env --allow-net scripts/admin-confirm-test-user.ts` として明示的なテストアカウントだけに単発実行します。`auth.users` を SQL で直接更新してはいけません。
 
 ---
 

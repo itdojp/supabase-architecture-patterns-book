@@ -1354,6 +1354,8 @@ export class PaymentService {
 
 ### Stripeウェブフック処理
 
+> **Auth の責務境界**: `auth` schema は自動生成 API から公開されません。Auth が正本として保持するメールアドレスが特権処理で必要な場合は、下記のような service-role Edge Function から Admin API を使用します。secret key を公開クライアントへ渡してはいけません。
+
 ```typescript
 // supabase/functions/webhook-stripe/index.ts
 import { serve } from 'https://deno.land/std@0.207.0/http/server.ts'
@@ -1455,15 +1457,16 @@ async function handlePaymentSucceeded(
     console.error('Failed to confirm inventory:', inventoryError)
   }
 
-  // 確認メール送信
+  // 確認メール送信。auth schema は PostgREST で公開されないため、
+  // service-role Edge Function から Auth Admin API で正本を参照する。
   try {
-    const { data: user } = await client
-      .from('auth.users')
-      .select('email')
-      .eq('id', order.user_id)
-      .single()
+    const { data: userData, error: userError } =
+      await client.auth.admin.getUserById(order.user_id)
 
-    if (user) {
+    if (userError) throw userError
+
+    const user = userData?.user
+    if (user?.email) {
       await notificationService.sendOrderConfirmation(order, user.email)
     }
   } catch (error) {
