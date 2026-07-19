@@ -2,6 +2,21 @@
 
 > **改善版テンプレート**: 複雑な設定を自動化し、すぐに執筆を開始できます
 
+## Chapter 4 local-only Edge Function 教材
+
+Chapter 4 の実行可能な最小教材は `examples/chapter04-ecommerce/` にあります。
+リポジトリルートで依存関係を準備し、外部接続・追加権限なしの Deno test を実行できます。
+
+```bash
+mise exec node@24 -- npm ci
+mise exec node@24 -- npm run test:chapter04-example
+```
+
+Docker 互換ランタイムを使う local stack の起動、migration / seed、Function 呼び出し、
+project ID を限定した停止手順は `examples/chapter04-ecommerce/README.md` を参照してください。
+requestは `{ "items": [...] }` 形式で、top-levelは `items` だけを受け付けます。`items` 配列の各要素は `product_id` / `quantity` のみを受け付け、価格はserver-owned local catalogで確定します。
+この教材は Stripe / SendGrid、remote project、production deploy を含みません。
+
 ## ⚡ 超高速セットアップ
 
 ### Step 1: テンプレートをクローン

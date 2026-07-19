@@ -14,7 +14,7 @@
     "preview": "npm run build && npx http-server _site -p 8080 --silent",
     "deploy": "gh-pages -d _site",
     "clean": "rm -rf _site .jekyll-cache",
-    "test": "npm run check:metadata && npm run check:auth-users-boundary && npm run check:authz-claims && npm run check:security && npm run lint && npm run check-links",
+    "test": "npm run check:metadata && npm run check:auth-users-boundary && npm run check:authz-claims && npm run check:chapter04-example && npm run test:chapter04-example && npm run check:security && npm run lint && npm run check-links",
     "lint": "markdownlint 'src/**/*.md' --ignore node_modules",
     "lint:light": "markdownlint 'src/**/*.md' --ignore node_modules",
     "check-links": "markdown-link-check src/**/*.md src/guides/concept-map/index.md",
@@ -23,13 +23,18 @@
     "check:metadata": "python3 scripts/check_metadata_consistency.py",
     "check:auth-users-boundary": "node scripts/check-auth-users-boundary.js",
     "check:security": "npm audit --omit=optional",
-    "check:authz-claims": "node scripts/check-authz-claims.js"
+    "check:authz-claims": "node scripts/check-authz-claims.js",
+    "check:chapter04-example": "node scripts/check-chapter04-example.js",
+    "test:chapter04-example": "deno test examples/chapter04-ecommerce/supabase/functions/process-order/",
+    "smoke:chapter04-local": "bash scripts/smoke-chapter04-local.sh"
   },
   "devDependencies": {
+    "deno": "2.9.3",
     "gh-pages": "^6.3.0",
     "http-server": "^14.1.1",
     "markdown-link-check": "^3.14.2",
-    "markdownlint-cli": "^0.48.0"
+    "markdownlint-cli": "^0.48.0",
+    "supabase": "2.109.1"
   },
   "keywords": [
     "book",

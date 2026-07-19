@@ -19,6 +19,17 @@ Supabase を題材に、UI クライアント / API サーバー / BaaS（Supaba
 
 - `docs/index.md`（オンライン版の目次ページと同内容）
 
+## Chapter 4 local-only 教材
+
+Edge Functions の注文検証をローカルで実行する最小教材は、
+`examples/chapter04-ecommerce/` にあります。Supabase CLI、migration、seed、
+`process-order`、server-owned local catalog、handler-level Deno test、実行・停止手順を
+同梱しています。
+
+- 実行手順: `examples/chapter04-ecommerce/README.md`
+- 対象範囲: `product_id` / `quantity` の入力検証、catalog価格による合計計算、ローカルスキーマ・seed
+- 対象外: Stripe / SendGrid、注文永続化、remote project、production deploy
+
 ## ライセンス
 
 - `LICENSE.md`（CC BY-NC-SA 4.0（商用は別契約） / シリーズ統一ライセンス準拠）

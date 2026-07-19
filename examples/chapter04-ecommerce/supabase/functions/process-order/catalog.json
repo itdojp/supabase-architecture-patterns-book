@@ -1,0 +1,22 @@
+[
+  {
+    "product_id": 1,
+    "name": "から揚げ弁当",
+    "unit_price_yen": 580
+  },
+  {
+    "product_id": 2,
+    "name": "ハンバーグ弁当",
+    "unit_price_yen": 680
+  },
+  {
+    "product_id": 3,
+    "name": "サラダボウル",
+    "unit_price_yen": 450
+  },
+  {
+    "product_id": 4,
+    "name": "チキンカレー",
+    "unit_price_yen": 750
+  }
+]
