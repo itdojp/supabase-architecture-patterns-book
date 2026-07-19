@@ -1,0 +1,1 @@
+認可claimは app_metadata だけを使う。claim変更は token refresh または再認証後に反映される。高リスクのtenant剥奪は authoritativeなmembership/revocation を照会して拒否する。

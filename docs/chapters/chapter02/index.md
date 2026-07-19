@@ -270,6 +270,31 @@ Supabase Authは JWT RFC 7519準拠のトークンを生成し、PostgreSQL RLS 
 }
 ```
 
+### 認可claimの出所と鮮度契約
+
+テナントID、テナント内ロール、権限などの**認可判断に使うclaimは、信頼済みの管理経路だけが更新する `app_metadata` に置きます**。ユーザー本人が更新できる `user_metadata` は表示名・アバター・UI設定などprofile/UI用途に限定し、RLS、Edge Function、バックエンドの認可条件には使いません。`user_metadata` に同名の `tenant_id`、`role`、`permissions` があっても、認可用のfallbackにしてはいけません。
+
+```json
+{
+  "app_metadata": {
+    "tenant_id": "tenant-uuid",
+    "tenant_role": "member"
+  },
+  "user_metadata": {
+    "display_name": "John Doe",
+    "avatar_url": "https://..."
+  }
+}
+```
+
+`app_metadata` の更新は secret key を保持するサーバーまたは管理者の `supabase.auth.admin.updateUserById()` に限定します。クライアントの `supabase.auth.updateUser({ data: ... })` は `user_metadata` の更新なので、tenant/roleを渡しても認可状態を変更する管理APIとして扱いません。カスタムclaimをJWTへ追加する場合も、Custom Access Token Hookが信頼済みのmembership情報から発行時に作るものだけを用い、クライアント入力を混ぜません。
+
+**JWT鮮度の契約**: `auth.jwt()` やJWTのローカル検証は、リクエストが提示したtokenのclaimを参照します。`app_metadata` を変更しても、既発行のJWTは **token refresh または再認証まで古いclaimを含み得ます**。通常のtenant/role変更では、管理更新の完了後にクライアントが `supabase.auth.refreshSession()` を実行するか、再認証を要求し、新しいtokenでRLSやJWT claimベースの処理を再試行することを画面・API契約に含めます。更新前tokenでの許可/拒否、refresh/re-auth後の許可/拒否をテストします。なお `supabase.auth.getUser(jwt)` はAuth serverへ問い合わせてdatabase上のuser objectを取得するため、ローカルのJWT payload読み取りとは鮮度特性が異なります。この違いを理由に、JWTベースのRLSまで即時更新されるとは扱いません。
+
+**高リスクのtenant剥奪**: `app_metadata` の更新、refresh tokenのrevoke、sign outだけでは、既発行access tokenを即時に無効化しません。tenantからの除外、管理者権限の剥奪、データ持ち出しのように即時停止が必要な操作では、(1) 信頼済みサーバー/Edge Functionが毎回、authoritativeなmembership・revocation状態を照会して拒否する、または同等の動的RLS条件を使う、(2) 対象sessionのrefreshを停止して再認証を要求する、(3) access tokenの有効期間を残存リスクとして短く設定する、を組み合わせます。JWTだけのRLSで「即時失効」とは主張しません。
+
+公式参照: [Row Level Security](https://supabase.com/docs/guides/database/postgres/row-level-security)、[User sessions](https://supabase.com/docs/guides/auth/sessions)、[Signing out](https://supabase.com/docs/guides/auth/signout)、[Retrieve a user](https://supabase.com/docs/reference/javascript/auth-getuser)、[Custom claims / RBAC](https://supabase.com/docs/guides/api/custom-claims-and-role-based-access-control-rbac)
+
 ### 実務レビューゲート: Auth・API キー・RLS 境界
 
 2026年5月時点の Supabase Cloud では、アプリケーションを識別する **API キー** と、利用者を識別する **Supabase Auth のユーザーJWT** を分けて考えます。
@@ -444,13 +469,13 @@ ALTER TABLE ai_retrieval_logs ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "tenant_owner_read" ON ai_documents
   FOR SELECT USING (
-    tenant_id = (auth.jwt() ->> 'tenant_id')::uuid
+    tenant_id = (auth.jwt() -> 'app_metadata' ->> 'tenant_id')::uuid
     AND owner_id = auth.uid()
   );
 
 CREATE POLICY "tenant_user_log" ON ai_retrieval_logs
   FOR INSERT WITH CHECK (
-    tenant_id = (auth.jwt() ->> 'tenant_id')::uuid
+    tenant_id = (auth.jwt() -> 'app_metadata' ->> 'tenant_id')::uuid
     AND user_id = auth.uid()
   );
 ```
