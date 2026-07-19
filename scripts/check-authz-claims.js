@@ -11,7 +11,7 @@ const authorizationPatterns = [
   {
     id: 'user-metadata-authorization',
     description: 'user-controlled user_metadata must not provide tenant, role, or permission authorization input',
-    expression: /\b(?:[A-Za-z_$][\w$]*\s*\.\s*)?user_metadata\s*(?:\?\.\s*|\.\s*|\[\s*['"])(?:tenant_id|tenant_role|role|roles|permission|permissions|is_admin|admin)\b/gi
+    expression: /\b(?:[A-Za-z_$][\w$]*\s*(?:\?\.\s*|\.\s*))?user_metadata\s*(?:\?\.\s*|\.\s*|\[\s*['"])(?:tenant_id|tenant_role|role|roles|permission|permissions|is_admin|admin)\b/gi
   },
   {
     id: 'bracket-user-metadata-authorization',
@@ -171,11 +171,17 @@ function checkContentFiles() {
   )
 }
 
-function checkRequiredContentContracts() {
+function checkRequiredContentContracts(contracts = requiredContentContracts) {
   const failures = []
-  for (const contract of requiredContentContracts) {
+  for (const contract of contracts) {
     for (const relativePath of contract.paths) {
-      const content = fs.readFileSync(path.join(repositoryRoot, relativePath), 'utf8')
+      let content
+      try {
+        content = fs.readFileSync(path.join(repositoryRoot, relativePath), 'utf8')
+      } catch (error) {
+        failures.push(`${relativePath}: could not be read: ${error.code || error.message}`)
+        continue
+      }
       const missing = contract.markers.filter((marker) => !content.includes(marker))
       if (missing.length > 0) failures.push(`${relativePath}: missing required contract: ${missing.join(' | ')}`)
     }
@@ -188,6 +194,7 @@ function checkFixtures() {
     { file: 'allowed-app-metadata-tenant.ts', expectedAuthorization: [], expectedStale: [] },
     { file: 'allowed-user-metadata-profile.ts', expectedAuthorization: [], expectedStale: [] },
     { file: 'negative-user-metadata-tenant-fallback.ts', expectedAuthorization: ['user-metadata-authorization'], expectedStale: [] },
+    { file: 'negative-optional-user-metadata-tenant.ts', expectedAuthorization: ['user-metadata-authorization'], expectedStale: [] },
     { file: 'negative-user-metadata-role-rbac.sql', expectedAuthorization: ['jwt-user-metadata-authorization'], expectedStale: [] },
     { file: 'negative-bracket-user-metadata-tenant.ts', expectedAuthorization: ['bracket-user-metadata-authorization'], expectedStale: [] },
     { file: 'negative-user-metadata-path-rbac.sql', expectedAuthorization: ['jwt-user-metadata-path-authorization'], expectedStale: [] },
@@ -213,6 +220,12 @@ function checkFixtures() {
     if (JSON.stringify(actualFalseAssurances) !== JSON.stringify(expectedFalseAssurances)) {
       failures.push(`${fixture.file}: false-assurance expected ${expectedFalseAssurances.join(', ') || 'no violations'}, got ${actualFalseAssurances.join(', ') || 'no violations'}`)
     }
+  }
+  const missingContractFailures = checkRequiredContentContracts([
+    { paths: ['scripts/fixtures/authz-claims/does-not-exist.md'], markers: ['unreachable'] }
+  ])
+  if (missingContractFailures.length !== 1 || !missingContractFailures[0].includes('could not be read')) {
+    failures.push('missing required contract file must produce one diagnostic failure without throwing')
   }
   return failures
 }
