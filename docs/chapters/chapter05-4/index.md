@@ -157,17 +157,19 @@ ALTER TABLE retrieval_logs ENABLE ROW LEVEL SECURITY;
 ALTER TABLE chunks ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "tenant_read" ON documents
-  FOR SELECT USING (tenant_id = (auth.jwt() ->> 'tenant_id')::uuid);
+  FOR SELECT USING (tenant_id = (auth.jwt() -> 'app_metadata' ->> 'tenant_id')::uuid);
 
 CREATE POLICY "tenant_read" ON chunks
-  FOR SELECT USING (tenant_id = (auth.jwt() ->> 'tenant_id')::uuid);
+  FOR SELECT USING (tenant_id = (auth.jwt() -> 'app_metadata' ->> 'tenant_id')::uuid);
 
 CREATE POLICY "tenant_log" ON retrieval_logs
   FOR INSERT WITH CHECK (
-    tenant_id = (auth.jwt() ->> 'tenant_id')::uuid
+    tenant_id = (auth.jwt() -> 'app_metadata' ->> 'tenant_id')::uuid
     AND user_id = auth.uid()
   );
 ```
+
+**認可claimと剥奪の契約**: このポリシーの `tenant_id` は `app_metadata` からだけ取得します。利用者が更新できる `user_metadata` のtenant/role値を使ったりfallbackにしたりしません。`auth.jwt()` はtoken発行時点のsnapshotであり、membershipまたは `app_metadata` の変更は token refresh または再認証後に反映されます。tenant剥奪を即時に止める必要がある高リスクRAG操作では、JWT claimだけに依存せず、信頼済み経路でauthoritativeなmembership/revocation状態を毎回照会するか、同等の動的RLS条件を追加します。refresh tokenのrevoke/sign out後も既発行access tokenは期限まで残り得るため、残存時間を短いaccess token期限で制限します。
 
 ---
 

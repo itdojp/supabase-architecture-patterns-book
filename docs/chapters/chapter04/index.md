@@ -1584,8 +1584,11 @@ Deno.serve(async (req) => {
   if (!body.prompt || typeof body.prompt !== 'string') {
     return new Response('Invalid input', { status: 400 })
   }
-  const tenantId = user.app_metadata?.tenant_id ?? user.user_metadata?.tenant_id
-  if (!tenantId) return new Response('Missing tenant', { status: 400 })
+  // tenant_id はserver-controlled app_metadataだけから得る。user_metadataをfallbackにしない。
+  const tenantId = user.app_metadata?.tenant_id
+  if (typeof tenantId !== 'string' || tenantId.length === 0) {
+    return new Response('Missing tenant', { status: 403 })
+  }
 
   // 例: 簡易レート制限（実運用は専用ストアで管理）
   // await checkRateLimit(user.id)
@@ -1631,6 +1634,8 @@ Deno.serve(async (req) => {
   })
 })
 ```
+
+**認可境界とclaim鮮度**: このEdge Functionのtenant判定は `app_metadata.tenant_id` だけを使います。`user_metadata` は利用者が更新できるため、同名の値をfallbackにしてはいけません。`getUser(jwt)` はAuth serverへ問い合わせてdatabase上のuser objectを取得するため、ローカルでJWT payloadだけを読む処理とは異なり、更新後のuser recordを参照できます。一方、membership/revocationの別テーブルまで自動で検証するものではなく、`auth.jwt()` を使うRLSのclaimも既発行tokenのままです。tenant剥奪など高リスク操作は、重要処理の前に信頼済みサーバーがauthoritativeなmembership/revocation状態を照会して拒否し、JWT refresh/re-authを併用します。既発行access tokenはsign out後も期限まで有効であり得るため、sign outだけを即時失効とみなしません。
 
 ### 4.2.7 自動埋め込み生成（後章への接続）
 

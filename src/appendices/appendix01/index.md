@@ -1074,6 +1074,9 @@ settings = Settings()
 - [ ] Storage の `storage.objects` ポリシーが操作別に設定されているか
 - [ ] Realtime private channel の `realtime.messages` ポリシーが設定されているか
 - [ ] Edge Functions の `--no-verify-jwt` 使用箇所に署名検証または独自認可が実装されているか
+- [ ] tenant/role/permissionの認可claimがserver-controlled `app_metadata` または信頼済みhook由来だけであり、`user_metadata` を認可条件・fallbackに使っていないか
+- [ ] user自身が `user_metadata` のtenant/role値を更新してもRLS/Edge Functionの認可結果を変えられないことを負例テストで確認したか
+- [ ] claim変更前JWT、token refresh/re-auth後JWT、およびtenant剥奪時のauthoritativeなmembership/revocation拒否をテストしたか
 - [ ] JWTトークンの有効期限が適切か
 - [ ] 入力値のバリデーションが実装されているか
 - [ ] SQLインジェクション対策が実装されているか

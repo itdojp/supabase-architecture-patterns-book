@@ -82,6 +82,9 @@ def get_user(user_id):
 - Realtime private channel は `realtime.messages` のRLS、`realtime.topic()`、JWT claims、Broadcast/Presenceのread/write権限をテーブルRLSとは別に確認する。
 - RLSの期待動作は、Supabase CLI の database test / pgTAP、またはクライアント経由のE2Eテストで `anon` / `authenticated` / 管理経路を分けて検証する。
 
+- tenant/role/permissionのJWT claimはserver-controlled `app_metadata` または信頼済みCustom Access Token Hookの出力だけを使い、`user_metadata` をRLS/Edge Functionの認可条件やfallbackに使わない。
+- tenant/role変更では、更新前JWTが残ること、token refresh/re-auth後に新claimとなることを検証する。tenant剥奪など高リスク操作は、JWTだけに依存せずauthoritativeなmembership/revocation照会で即時拒否できることを検証する。
+
 ### Step 1: 基本的な動的権限チェック関数
 
 まず、「この人はこの操作をしても良いか？」を判断する基本的な関数を作りましょう：
