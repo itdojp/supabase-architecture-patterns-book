@@ -52,11 +52,11 @@ Supabase のログイン、API key、`.env` は不要です。
 cd examples/chapter04-ecommerce
 
 # local stackを起動し、migrationとseedを再適用する
-mise exec node@24 -- npx supabase start
-mise exec node@24 -- npx supabase db reset
+mise exec node@24 -- npx --no-install supabase start
+mise exec node@24 -- npx --no-install supabase db reset
 
 # 別ターミナルで起動する。config.tomlのlocal-only設定によりJWT検証は無効
-mise exec node@24 -- npx supabase functions serve process-order
+mise exec node@24 -- npx --no-install supabase functions serve process-order
 ```
 
 別ターミナルから入力検証と合計計算を確認します。
@@ -79,7 +79,7 @@ curl --fail-with-body \
 `--no-backup` は教材用 volume も削除します。
 
 ```bash
-mise exec node@24 -- npx supabase stop \
+mise exec node@24 -- npx --no-install supabase stop \
   --project-id chapter04-ecommerce \
   --no-backup
 ```

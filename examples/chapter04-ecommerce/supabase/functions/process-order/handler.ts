@@ -20,7 +20,7 @@ export async function handleRequest(request: Request): Promise<Response> {
     return jsonResponse(
       { error: "method_not_allowed" },
       405,
-      { allow: "POST" },
+      { Allow: "POST" },
     );
   }
 

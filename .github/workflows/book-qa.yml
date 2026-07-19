@@ -37,7 +37,8 @@ jobs:
             book-formatter/package-lock.json
 
       - name: Install dependencies (book)
-        run: npm ci --omit=optional
+        # Deno's platform binary is an optional package required by the exact-pinned local CLI.
+        run: npm ci
 
       - name: Install dependencies (book-formatter)
         working-directory: book-formatter
@@ -58,6 +59,11 @@ jobs:
 
       - name: Security audit (book dependencies)
         run: npm run check:security
+
+      - name: Validate Chapter 4 executable example
+        run: |
+          npm run check:chapter04-example
+          npm run test:chapter04-example
 
       - name: Unicode check (fail on warnings)
         run: node book-formatter/scripts/check-unicode.js "${{ steps.scan.outputs.dir }}" --allowlist .book-formatter/unicode-allowlist.json --fail-on warn

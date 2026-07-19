@@ -2904,17 +2904,17 @@ remote project、API key、`.env`は不要です。
 cd examples/chapter04-ecommerce
 
 # 同梱済みconfig.tomlを使うため、supabase initは不要
-mise exec node@24 -- npx supabase start
+mise exec node@24 -- npx --no-install supabase start
 
 # 同梱migrationを適用し、supabase/seed.sqlを投入
-mise exec node@24 -- npx supabase db reset
+mise exec node@24 -- npx --no-install supabase db reset
 ```
 
 ### Step 3: process-orderを起動して呼び出す
 
 ```bash
 # terminal 1: local-only Functionを起動
-mise exec node@24 -- npx supabase functions serve process-order
+mise exec node@24 -- npx --no-install supabase functions serve process-order
 ```
 
 `supabase/config.toml`の `[functions.process-order]` は、この認証対象外の教材に限って
@@ -2946,7 +2946,7 @@ Functionを起動したterminalで `Ctrl-C` を入力し、この教材のprojec
 コンテナと教材用volumeを停止・削除します。
 
 ```bash
-mise exec node@24 -- npx supabase stop \
+mise exec node@24 -- npx --no-install supabase stop \
   --project-id chapter04-ecommerce \
   --no-backup
 ```
@@ -2957,7 +2957,7 @@ mise exec node@24 -- npx supabase stop \
   `mise exec node@24 -- npm ci`を再実行します。
 - container runtimeへ接続できない: Docker互換runtimeを起動してから再実行します。
 - portが使用中: 別projectのlocal stackを勝手に停止せず、
-  `mise exec node@24 -- npx supabase status`と
+  `mise exec node@24 -- npx --no-install supabase status`と
   runtime側の一覧で所有者を確認します。
 - 中断後にこの教材のcontainerが残った: 上記のproject IDを限定したstopを実行します。
 

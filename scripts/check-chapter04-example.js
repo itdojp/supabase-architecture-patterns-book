@@ -180,6 +180,9 @@ function checkConfigAndImplementation(failures) {
   if (!handler.includes('export async function handleRequest(request: Request): Promise<Response>')) {
     failures.push('process-order/handler.ts: Request/Response handler contract is missing')
   }
+  if (!handler.includes('{ Allow: "POST" }')) {
+    failures.push('process-order/handler.ts: 405 response must declare the Allow header')
+  }
   if (!order.includes('Object.hasOwn(item, "unit_price_yen")') ||
       !order.includes('prices are server-owned') ||
       !order.includes('findLocalProduct(productId)')) {
@@ -227,6 +230,20 @@ function checkConfigAndImplementation(failures) {
     if (!orderTest.includes(marker)) failures.push(`order_test.ts: missing coverage marker: ${marker}`)
   }
 
+  const smoke = read('scripts/smoke-chapter04-local.sh')
+  for (const marker of [
+    'log_dir="$repository_root/temp/chapter04-smoke"',
+    'response_received=0',
+    ': >"$response_file"',
+    'if [[ "$response_received" -ne 1 ]]',
+    'mise exec node@24 -- node - "$response_file"'
+  ]) {
+    if (!smoke.includes(marker)) failures.push(`smoke script: missing safety marker: ${marker}`)
+  }
+  if (/\.codex-local|\bpython3\b/.test(smoke)) {
+    failures.push('smoke script: must use ignored temp/ output and the configured Node runtime')
+  }
+
   const implementationFiles = expectedAssets.filter((relativePath) =>
     /\.(?:toml|sql|ts|json|sh)$/.test(relativePath)
   )
@@ -267,6 +284,9 @@ function checkLocalOnlyDocs(failures) {
     }
     if (/--data[^\n]*unit_price_yen/.test(content)) {
       failures.push(`${relativePath}: curl request must not send client unit_price_yen`)
+    }
+    if (/mise exec node@24 -- npx(?! --no-install) supabase\b/.test(content)) {
+      failures.push(`${relativePath}: Supabase CLI commands must use npx --no-install`)
     }
   }
 
