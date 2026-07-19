@@ -29,7 +29,7 @@
 
 ## この章で学ぶこと（初心者向け）
 
-この章では、**「コンビニ弁当」**的なアプローチでSupabaseを使った本格的なECサイトを作ります。
+この章では、EC注文処理を題材にEdge Functionsの設計を学び、local-onlyの最小教材で入力検証と合計計算を確認します。
 
 - **初心者**: サーバーレス関数がどのように動くかがわかる
 - **中級者**: 複雑なビジネスロジックをサーバーサイドで処理する方法がわかる  
@@ -91,7 +91,7 @@ flowchart TD
 
 ### どんなアプリ？
 
-**オンライン弁当ショップ**のような本格的なECサイトを作ります：
+**オンライン弁当ショップ**の設計を題材にします。リポジトリで実行できる範囲は、後述するlocal-only教材に限定されます：
 
 ```text
  オンライン弁当ショップ
@@ -101,7 +101,7 @@ flowchart TD
 └──  管理画面：売上分析・注文状況監視
 ```
 
-### 実装する機能
+### 設計として扱う機能
 
 | 機能 | 初心者向け説明 | 技術的な説明 |
 |------|:-------------:|:-------------|
@@ -130,38 +130,59 @@ flowchart TD
    └─ 「商品・注文・ユーザー情報を安全に保存」
 ```
 
-### 今回作成したソースコードの場所
+### 同梱教材と設計例の境界
 
-```bash
- src/chapter04-ecommerce/
-├──  supabase/functions/           # ← サーバーレス関数
-│   └──  process-order/           # ← 注文処理の関数
-│       ├──  index.ts             # ← メイン処理（ここが一番重要！）
-│       ├──  handlers/            # ← 各種処理ハンドラ
-│       ├──  services/            # ← 外部API連携
-│       └──  utils/               # ← ユーティリティ
-├──  client/                      # ← フロントエンド
-│   ├──  order-client.ts          # ← 注文画面のロジック
-│   └──  package.json             # ← 必要なライブラリ一覧
-└──  database/                    # ← データベース設定
-    └──  order_functions.sql      # ← カスタムSQL関数
+<!-- chapter04-example-contract:start -->
+実際にリポジトリへ同梱している実行対象は `examples/chapter04-ecommerce/` だけです。
+
+- 実行対象: `supabase/config.toml`、migration、seed、`process-order`、server-owned local catalog、注文検証・合計計算、handler-level Deno test
+- 実行しない設計例: フロントエンド、注文永続化、認証・認可、在庫引当、Stripe / SendGrid、remote deploy
+- 安全境界: requestは `product_id` / `quantity` だけを受け付け、client価格を拒否する。`verify_jwt=false` のlocal-only教材はlink/deployしない
+- 実行手順と停止手順: `examples/chapter04-ecommerce/README.md`
+
+以降で `設計例（同梱外）` と記したコードとpathは、構成を検討するための概念例です。
+同梱教材の実装または実動保証を表しません。
+<!-- chapter04-example-contract:end -->
+
+```text
+examples/chapter04-ecommerce/
+├── README.md
+└── supabase/
+    ├── config.toml
+    ├── migrations/
+    │   └── 20260719000000_create_order_example.sql
+    ├── seed.sql
+    └── functions/
+        └── process-order/
+            ├── catalog.json
+            ├── catalog.ts
+            ├── handler.ts
+            ├── handler_test.ts
+            ├── index.ts
+            ├── order.ts
+            └── order_test.ts
 ```
 
-> **重要**: これらのコードは実際に動作する完全なECサイトです！
-> Stripe（テストモード）との連携も含まれています。
+> **同梱教材の保証範囲**: local-onlyで入力検証、合計計算、migration / seed、
+> Function起動を確認できます。完全なECサイトではなく、決済・メール送信・remote projectは
+> 含みません。
+> **LOCAL-ONLY / NONDEPLOY**: `verify_jwt=false` の同梱Functionをremote projectへlink/deployしません。
 
 ---
 
-## 実際のコードを見てみよう！
+## 設計例のコードを見てみよう
 
-このセクションでは、作成したECサイトの**実際のソースコード**を段階的に説明します。
+このセクションは、ECサイトへ拡張する場合の設計を段階的に説明します。
+`設計例（同梱外）` と記したコードはリポジトリ資産ではなく、そのままの実行を保証しません。
+実行可能な最小コードは `examples/chapter04-ecommerce/supabase/functions/process-order/` を
+参照してください。
 
 ### Step 1: Edge Function のエントリーポイント（index.ts）
 
 まず、注文処理を行うサーバーレス関数を見てみましょう：
 
 ```typescript
-// src/chapter04-ecommerce/supabase/functions/process-order/index.ts（抜粋）
+// 設計例（同梱外）: supabase/functions/process-order/index.ts
 
 import { serve } from "https://deno.land/std@0.208.0/http/server.ts"
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.0'
@@ -393,7 +414,10 @@ async function processPayment(supabase: any, orderId: string, paymentData: any) 
 
 ---
 
-## サンプルアプリ概要: ECサイト注文処理システム
+## 設計例の概要: ECサイト注文処理システム
+
+以下の機能・構成は、同梱教材から発展させる場合の設計例です。Stripe / SendGrid、
+フロントエンド、永続化処理は同梱していません。
 
 ### 機能要件
 
@@ -425,6 +449,8 @@ graph TB
 ## 4.1 Deno Edge Functions構成
 
 ### プロジェクト構造
+
+以下は将来拡張の設計例（同梱外）であり、repositoryの実在pathではありません。
 
 ```text
 ecommerce-platform/
@@ -459,7 +485,7 @@ ecommerce-platform/
 ### 基本設定とユーティリティ
 
 ```typescript
-// supabase/functions/_shared/database.ts
+// 設計例（同梱外）: supabase/functions/_shared/database.ts
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.0'
 
 export interface DatabaseConfig {
@@ -541,7 +567,7 @@ export function initDatabase(): DatabaseConnection {
 ```
 
 ```typescript
-// supabase/functions/_shared/auth.ts
+// 設計例（同梱外）: supabase/functions/_shared/auth.ts
 import { verify } from 'https://deno.land/x/djwt@v3.0.1/mod.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.0'
 
@@ -610,7 +636,7 @@ export const authService = new AuthService()
 ### 型定義とモデル
 
 ```typescript
-// supabase/functions/_shared/models.ts
+// 設計例（同梱外）: supabase/functions/_shared/models.ts
 export interface Product {
   id: number
   name: string
@@ -694,7 +720,7 @@ export interface OrderResponse {
 ### バリデーション
 
 ```typescript
-// supabase/functions/_shared/validation.ts
+// 設計例（同梱外）: supabase/functions/_shared/validation.ts
 export class ValidationError extends Error {
   constructor(
     message: string,
@@ -798,7 +824,7 @@ async function validateAddress(address: Address, type: string): Promise<void> {
 ### 注文処理メイン関数
 
 ```typescript
-// supabase/functions/process-order/index.ts
+// 設計例（同梱外）: supabase/functions/process-order/index.ts
 import { serve } from 'https://deno.land/std@0.207.0/http/server.ts'
 import { corsHeaders } from '../_shared/cors.ts'
 import { authService } from '../_shared/auth.ts'
@@ -846,7 +872,7 @@ serve(async (req: Request) => {
 ### 注文処理ハンドラー
 
 ```typescript
-// supabase/functions/process-order/handlers/order-processor.ts
+// 設計例（同梱外）: supabase/functions/process-order/handlers/order-processor.ts
 import { DatabaseConnection } from '../../_shared/database.ts'
 import { Order, OrderRequest, OrderResponse, OrderStatus, OrderItem } from '../../_shared/models.ts'
 import { InventoryService } from '../services/inventory-service.ts'
@@ -1047,7 +1073,7 @@ export class OrderProcessor {
 ### 在庫管理サービス
 
 ```typescript
-// supabase/functions/process-order/services/inventory-service.ts
+// 設計例（同梱外）: supabase/functions/process-order/services/inventory-service.ts
 import { DatabaseConnection } from '../../_shared/database.ts'
 
 export interface InventoryReservation {
@@ -1220,7 +1246,7 @@ export class InventoryService {
 ### 決済サービス（Stripe連携）
 
 ```typescript
-// supabase/functions/process-order/services/payment-service.ts
+// 設計例（同梱外）: supabase/functions/process-order/services/payment-service.ts
 import Stripe from 'https://esm.sh/stripe@14.5.0?target=deno'
 
 export interface PaymentRequest {
@@ -1352,7 +1378,7 @@ export class PaymentService {
 > **Auth の責務境界**: `auth` schema は自動生成 API から公開されません。Auth が正本として保持するメールアドレスが特権処理で必要な場合は、下記のような service-role Edge Function から Admin API を使用します。secret key を公開クライアントへ渡してはいけません。
 
 ```typescript
-// supabase/functions/webhook-stripe/index.ts
+// 設計例（同梱外）: supabase/functions/webhook-stripe/index.ts
 import { serve } from 'https://deno.land/std@0.207.0/http/server.ts'
 import Stripe from 'https://esm.sh/stripe@14.5.0?target=deno'
 import { initDatabase } from '../_shared/database.ts'
@@ -1673,7 +1699,7 @@ await Deno.writeTextFile('/tmp/work.txt', 'temp')
 ### パフォーマンス最適化
 
 ```typescript
-// supabase/functions/_shared/performance.ts
+// 設計例（同梱外）: supabase/functions/_shared/performance.ts
 export class PerformanceMonitor {
   private static readonly SLOW_QUERY_THRESHOLD = 1000 // 1秒
   private static readonly MEMORY_WARNING_THRESHOLD = 50 * 1024 * 1024 // 50MB
@@ -1778,7 +1804,7 @@ export function monitored(target: any, propertyKey: string, descriptor: Property
 ### エラー監視とアラート
 
 ```typescript
-// supabase/functions/_shared/monitoring.ts
+// 設計例（同梱外）: supabase/functions/_shared/monitoring.ts
 export enum AlertSeverity {
   INFO = 'info',
   WARNING = 'warning',
@@ -1958,85 +1984,17 @@ Edge Functions は Deno 互換のサーバーサイド TypeScript 実行環境�
 - **公開Webhook**: Stripe等のWebhookでは `--no-verify-jwt` を使う代わりに、関数内部で署名検証、リプレイ対策、冪等性キー、レート制限、監査ログを確認します。
 - **CI/CD**: `supabase functions serve`、`supabase db reset`、型生成、関数単体テスト、Secrets未混入チェックをPR単位で再実行可能にします。
 
-### デプロイとCI/CD
+### デプロイとCI/CD（設計例・同梱外）
 
-```bash
-#!/bin/bash
-# scripts/deploy.sh
-
-set -e
-
-echo " Edge Functions デプロイ開始"
-
-# 環境変数チェック
-required_vars=("SUPABASE_PROJECT_ID" "SUPABASE_ACCESS_TOKEN" "STRIPE_SECRET_KEY")
-for var in "${required_vars[@]}"; do
-    if [ -z "${!var}" ]; then
-        echo "[NG] 必須環境変数が設定されていません: $var"
-        exit 1
-    fi
-done
-
-# Supabase CLI バージョン確認
-supabase --version || {
-    echo "[NG] Supabase CLI がインストールされていません"
-    exit 1
-}
-
-# プロジェクトリンク
-echo " Supabaseプロジェクトにリンク"
-supabase link --project-ref $SUPABASE_PROJECT_ID
-
-# 型生成
-echo " TypeScript型定義生成"
-supabase gen types typescript --linked > types/database.ts
-
-# テスト実行
-echo " Edge Functions テスト実行"
-npm run test:edge-functions
-
-# 関数デプロイ
-functions=(
-    "process-order"
-    "send-notifications"
-    "inventory-management"
-)
-
-for func in "${functions[@]}"; do
-    echo " 関数デプロイ: $func"
-    # 認証済みユーザー向け関数ではSupabase側のJWT検証を有効にする
-    supabase functions deploy "$func"
-done
-
-# 公開WebhookはJWT検証を外す代わりに、関数内部でStripe署名と冪等性を検証する
-echo " 関数デプロイ: webhook-stripe"
-supabase functions deploy webhook-stripe --no-verify-jwt
-
-# ヘルスチェック
-echo " デプロイ後ヘルスチェック"
-sleep 10 # デプロイ完了待機
-
-for func in "${functions[@]}"; do
-    health_url="https://$SUPABASE_PROJECT_ID.supabase.co/functions/v1/$func/health"
-    
-    echo "チェック中: $func"
-    response=$(curl -s -o /dev/null -w "%{http_code}" "$health_url" || echo "000")
-    
-    if [ "$response" = "200" ]; then
-        echo "[OK] $func: Healthy"
-    else
-        echo "[NG] $func: Unhealthy (HTTP $response)"
-        exit 1
-    fi
-done
-
-echo " デプロイ完了！"
-```
+remote projectへのlink / deployは、このlocal-only教材の対象外です。実行可能なremote command、
+access token、project ref、Secrets設定は掲載しません。production化する場合は、同梱Functionを
+流用せず、JWT検証、認証・認可、DB transaction、Secrets管理、監査、rollbackを別projectで
+設計・reviewしてください。
 
 ### コスト最適化
 
 ```typescript
-// supabase/functions/_shared/cost-optimization.ts
+// 設計例（同梱外）: supabase/functions/_shared/cost-optimization.ts
 export class CostOptimizer {
   private static readonly REQUEST_CACHE = new Map<string, any>()
   private static readonly CACHE_TTL = 60000 // 1分
@@ -2142,31 +2100,33 @@ export async function optimizedHandler(request: Request): Promise<Response> {
 
 ### Deno Edge Functions固有の問題
 
-#### 問題1: Edge Function デプロイ失敗
+#### 問題1: Edge Functionのlocal起動失敗
 
 **症状**:
-- `supabase functions deploy` 実行時のエラー
-- Function が正常に起動しない
-- TypeScript コンパイルエラー
+
+- Functionが正常に起動しない
+- TypeScript compile error
+- local stackまたはportの競合
 
 **診断手順**:
+
 ```bash
-# Supabase CLI バージョン確認
-supabase --version
+# repositoryにexact pinしたCLIとDenoを確認
+mise exec node@24 -- npx --no-install supabase --version
+mise exec node@24 -- npx --no-install deno --version
 
-# プロジェクトリンク状態確認
-supabase status
+# local-only projectの状態を確認
+mise exec node@24 -- npx --no-install supabase status \
+  --workdir examples/chapter04-ecommerce
 
-# ローカルでの関数テスト
-supabase functions serve process-order --env-file .env.local
-
-# デプロイログ確認
-supabase functions deploy process-order --debug
+# .envやremote projectを使わずlocal Functionを起動
+mise exec node@24 -- npx --no-install supabase functions serve process-order \
+  --workdir examples/chapter04-ecommerce
 ```
 
 **解決策**:
 ```typescript
-// supabase/functions/process-order/index.ts
+// 設計例（同梱外）: supabase/functions/process-order/index.ts
 // 1. import パスの明示化
 import { serve } from "https://deno.land/std@0.207.0/http/server.ts"
 import { corsHeaders } from "../_shared/cors.ts"
@@ -2211,7 +2171,7 @@ serve(async (req: Request) => {
 
 **診断手順**:
 ```typescript
-// supabase/functions/_shared/debug-auth.ts
+// 設計例（同梱外）: supabase/functions/_shared/debug-auth.ts
 import { verify } from 'https://deno.land/x/djwt@v3.0.1/mod.ts'
 
 export async function debugAuth(request: Request) {
@@ -2315,7 +2275,7 @@ class AuthService {
 
 **診断手順**:
 ```typescript
-// supabase/functions/_shared/db-diagnostics.ts
+// 設計例（同梱外）: supabase/functions/_shared/db-diagnostics.ts
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.0'
 
 export async function diagnosticDatabaseConnection() {
@@ -2406,7 +2366,7 @@ class DatabasePool {
 
 **診断手順**:
 ```typescript
-// supabase/functions/process-order/services/stripe-diagnostics.ts
+// 設計例（同梱外）: supabase/functions/process-order/services/stripe-diagnostics.ts
 import Stripe from 'https://esm.sh/stripe@14.5.0?target=deno'
 
 export class StripeDiagnostics {
@@ -2491,7 +2451,7 @@ try {
 
 **解決策**:
 ```typescript
-// supabase/functions/webhook-stripe/index.ts
+// 設計例（同梱外）: supabase/functions/webhook-stripe/index.ts
 import Stripe from 'https://esm.sh/stripe@14.5.0?target=deno'
 
 const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY')!, {
@@ -2635,7 +2595,7 @@ async function handlePaymentSucceeded(paymentIntent: Stripe.PaymentIntent) {
 
 **最適化手法**:
 ```typescript
-// supabase/functions/process-order/handlers/optimized-processor.ts
+// 設計例（同梱外）: supabase/functions/process-order/handlers/optimized-processor.ts
 export class OptimizedOrderProcessor {
   private static readonly BATCH_SIZE = 10
   private static readonly TIMEOUT_MS = 25000 // 25秒（余裕を持って）
@@ -2731,7 +2691,7 @@ export class OptimizedOrderProcessor {
 #### 包括的デバッグ設定
 
 ```typescript
-// supabase/functions/_shared/debug.ts
+// 設計例（同梱外）: supabase/functions/_shared/debug.ts
 export class EdgeFunctionDebugger {
   private static instance: EdgeFunctionDebugger
   private logs: Array<any> = []
@@ -2827,7 +2787,7 @@ serve(async (req: Request) => {
 #### パフォーマンス監視
 
 ```typescript
-// supabase/functions/_shared/performance-monitor.ts
+// 設計例（同梱外）: supabase/functions/_shared/performance-monitor.ts
 export class PerformanceMonitor {
   private metrics: Map<string, number[]> = new Map()
   
@@ -2912,202 +2872,89 @@ await performanceMonitor.measureExecution('stripe-payment', async () => {
 
 ---
 
-## 実際に動かしてみよう！（ハンズオン）
+## 同梱教材を実際に動かす（local-only）
 
-### Step 1: 開発環境の準備
+### Step 1: 依存関係とunit test
 
-**必要なツール**：
-- Supabase CLI（ローカル開発、`functions serve`、`functions deploy` 用。`npx` / `npm` 経由では Node.js 20以上）
-- Docker互換コンテナランタイム（Supabaseローカルスタック用）
-- Deno または Deno Language Server（TypeScript補完・ローカル確認用）
-- VS Code + Deno Extension
-- Git（バージョン管理）
-
-**セットアップ手順**：
+必要なものはNode.js 24（mise経由）です。Supabase CLI `2.109.1` とDeno `2.9.3` は
+リポジトリの `package.json` でexact pinされ、`npm ci`で導入されます。
 
 ```bash
-# 1. Deno インストール
-curl -fsSL https://deno.land/install.sh | sh
-# またはWindows: https://deno.land/install からインストーラー
-
-# 2. Supabase CLI インストール
-# macOS:
-brew install supabase/tap/supabase
-# Windows:
-scoop bucket add supabase https://github.com/supabase/scoop-bucket.git
-scoop install supabase
-
-# 3. プロジェクトディレクトリに移動
-cd src/chapter04-ecommerce
-
-# 4. Supabase プロジェクト初期化
-supabase init
-
-# 5. ローカル開発環境起動
-supabase start
+# リポジトリルートで実行
+mise exec node@24 -- npm ci
+mise exec node@24 -- npm run check:chapter04-example
+mise exec node@24 -- npm run test:chapter04-example
 ```
 
-### Step 2: Edge Functions の作成と設定
+Deno testはcatalog・純粋な注文検証と、`Request` / `Response`を使うHTTP handlerを対象とし、
+ファイル、ネットワーク、環境変数の権限を付与しません。`npm test`からも同じcheckerと
+Deno testを実行します。
 
-**1. 注文処理Function作成**：
+### Step 2: local stackとdatabaseの準備
+
+このstepだけは、起動済みのDockerまたはDocker互換runtimeが必要です。Supabaseへのlogin、
+remote project、API key、`.env`は不要です。
+
 ```bash
-# Edge Function 作成
-supabase functions new process-order
+cd examples/chapter04-ecommerce
 
-# ファイル構造確認
-ls supabase/functions/process-order/
-# index.ts が作成される
+# 同梱済みconfig.tomlを使うため、supabase initは不要
+mise exec node@24 -- npx supabase start
+
+# 同梱migrationを適用し、supabase/seed.sqlを投入
+mise exec node@24 -- npx supabase db reset
 ```
 
-**2. 実際のコードを配置**：
-本章で説明した `src/chapter04-ecommerce/supabase/functions/process-order/index.ts` のコードを使用してください。
+### Step 3: process-orderを起動して呼び出す
 
-### Step 3: データベーススキーマ設定
-
-**1. マイグレーションファイル作成**：
-```sql
--- supabase/migrations/20241203000001_ecommerce_schema.sql
-
--- 商品テーブル
-CREATE TABLE products (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    description TEXT,
-    price DECIMAL(10,2) NOT NULL,
-    stock_quantity INTEGER DEFAULT 0,
-    category VARCHAR(100),
-    image_url VARCHAR(500),
-    is_active BOOLEAN DEFAULT true,
-    created_at TIMESTAMP DEFAULT NOW(),
-    updated_at TIMESTAMP DEFAULT NOW()
-);
-
--- 注文テーブル
-CREATE TABLE orders (
-    id SERIAL PRIMARY KEY,
-    user_id UUID REFERENCES auth.users(id) NOT NULL,
-    status VARCHAR(50) DEFAULT 'pending',
-    total_amount DECIMAL(10,2) NOT NULL,
-    shipping_address JSONB NOT NULL,
-    payment_method VARCHAR(50) NOT NULL,
-    payment_status VARCHAR(50) DEFAULT 'pending',
-    stripe_payment_intent_id VARCHAR(255),
-    created_at TIMESTAMP DEFAULT NOW(),
-    updated_at TIMESTAMP DEFAULT NOW()
-);
-
--- 注文アイテムテーブル
-CREATE TABLE order_items (
-    id SERIAL PRIMARY KEY,
-    order_id INTEGER REFERENCES orders(id) NOT NULL,
-    product_id INTEGER REFERENCES products(id) NOT NULL,
-    quantity INTEGER NOT NULL,
-    price DECIMAL(10,2) NOT NULL,
-    created_at TIMESTAMP DEFAULT NOW()
-);
-
--- RLS有効化
-ALTER TABLE products ENABLE ROW LEVEL SECURITY;
-ALTER TABLE orders ENABLE ROW LEVEL SECURITY;
-ALTER TABLE order_items ENABLE ROW LEVEL SECURITY;
-
--- ポリシー作成
-CREATE POLICY "商品は全員閲覧可能" ON products FOR SELECT USING (is_active = true);
-
-CREATE POLICY "注文は本人のみ閲覧可能" ON orders 
-    FOR SELECT USING (auth.uid() = user_id);
-
-CREATE POLICY "注文は認証ユーザーが作成可能" ON orders 
-    FOR INSERT WITH CHECK (auth.uid() = user_id);
-
--- サンプルデータ挿入
-INSERT INTO products (name, description, price, stock_quantity, category) VALUES
-('から揚げ弁当', '自慢のから揚げがメインの人気弁当', 580, 50, 'bento'),
-('ハンバーグ弁当', 'ジューシーなハンバーグ弁当', 680, 30, 'bento'),
-('サラダボウル', 'ヘルシーな野菜たっぷりサラダ', 450, 25, 'salad'),
-('チキンカレー', 'スパイシーなチキンカレー', 750, 20, 'curry');
-```
-
-**2. マイグレーション実行**：
 ```bash
-# ローカル環境でマイグレーション実行
-supabase db reset
+# terminal 1: local-only Functionを起動
+mise exec node@24 -- npx supabase functions serve process-order
 ```
 
-### Step 4: Edge Function のローカルテスト
+`supabase/config.toml`の `[functions.process-order]` は、この認証対象外の教材に限って
+`verify_jwt = false`としています。この設定のままremote projectへdeployしないでください。
 
-**1. Function起動**：
+> **LOCAL-ONLY / NONDEPLOY**: このprojectをremote projectへlinkせず、同梱した
+> `process-order`をdeployしません。
+
 ```bash
-# Edge Functions サーバー起動
-supabase functions serve process-order
-
-# ログ確認（別ターミナル）
-supabase functions logs process-order --follow
+# terminal 2: 入力検証とserver-side合計計算を確認
+curl --fail-with-body \
+  --request POST \
+  --header 'Content-Type: application/json' \
+  --data '{"items":[{"product_id":1,"quantity":2},{"product_id":3,"quantity":1}]}' \
+  http://127.0.0.1:54321/functions/v1/process-order
 ```
 
-**2. API テスト**：
+レスポンスの `status` は `validated`、`total_amount_yen` は `1610` です。
+商品名と単価はclient入力ではなくserver-owned local catalogから確定します。
+clientが `unit_price_yen` を送った場合は改ざん入力として拒否します。
+`persistence: "not_performed"` は、注文の永続化が同梱範囲外であることを明示します。
+
+productionでは、DBからauthoritativeな商品価格を取得し、在庫確認・引当・注文保存を同一
+transactionで実行する必要があります。このlocal catalogはproduction DBの代替ではありません。
+
+### Step 4: 安全に停止する
+
+Functionを起動したterminalで `Ctrl-C` を入力し、この教材のproject IDだけを指定して
+コンテナと教材用volumeを停止・削除します。
+
 ```bash
-# 注文作成テスト
-curl -X POST http://localhost:54321/functions/v1/process-order \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
-  -d '{
-    "action": "create",
-    "order_data": {
-      "user_id": "12345678-1234-1234-1234-123456789012",
-      "items": [
-        {
-          "product_id": 1,
-          "quantity": 2,
-          "price": 580
-        }
-      ],
-      "total_amount": 1160,
-      "shipping_address": {
-        "name": "田中太郎",
-        "address": "東京都渋谷区1-1-1",
-        "phone": "090-1234-5678"
-      },
-      "payment_method": "credit_card"
-    }
-  }'
+mise exec node@24 -- npx supabase stop \
+  --project-id chapter04-ecommerce \
+  --no-backup
 ```
 
 ### Step 5: トラブルシューティング
 
-**よくあるエラーと対処法**：
-
-#### エラー1: "Deno が見つかりません"
-```bash
-# 原因: Deno がインストールされていない
-# 解決策:
-curl -fsSL https://deno.land/install.sh | sh
-# パスを追加
-echo 'export PATH="$HOME/.deno/bin:$PATH"' >> ~/.bashrc
-source ~/.bashrc
-```
-
-#### エラー2: "Edge Function デプロイ失敗"
-```bash
-# 原因: 環境変数が設定されていない
-# 解決策:
-supabase secrets list  # 現在の設定確認
-supabase secrets set STRIPE_SECRET_KEY=sk_test_xxx  # 必要な環境変数設定
-```
-
-#### エラー3: "RLS ポリシーエラー"
-```sql
--- 原因: Row Level Security ポリシーが正しく設定されていない
--- 解決策: ポリシーを確認・修正
-SELECT schemaname, tablename, policyname, cmd, qual 
-FROM pg_policies 
-WHERE tablename IN ('orders', 'order_items');
-
--- 必要に応じてポリシー修正
-DROP POLICY IF EXISTS "注文は本人のみ閲覧可能" ON orders;
-CREATE POLICY "注文は本人のみ閲覧可能" ON orders 
-    FOR ALL USING (auth.uid() = user_id);
-```
+- `deno` / `supabase`が見つからない: リポジトリルートで
+  `mise exec node@24 -- npm ci`を再実行します。
+- container runtimeへ接続できない: Docker互換runtimeを起動してから再実行します。
+- portが使用中: 別projectのlocal stackを勝手に停止せず、
+  `mise exec node@24 -- npx supabase status`と
+  runtime側の一覧で所有者を確認します。
+- 中断後にこの教材のcontainerが残った: 上記のproject IDを限定したstopを実行します。
 
 ### 学習のポイント
 
@@ -3128,7 +2975,7 @@ CREATE POLICY "注文は本人のみ閲覧可能" ON orders
 
 ### 発展課題
 
-基本動作確認後、以下の機能追加に挑戦してみましょう：
+以下は同梱範囲を超える発展課題です。別projectで認証・認可、秘密情報管理、冪等性、監査を設計してから取り組みます：
 
 1. **Stripe決済連携**: 実際のクレジットカード決済処理
 2. **メール通知機能**: SendGrid APIで注文確認メール
