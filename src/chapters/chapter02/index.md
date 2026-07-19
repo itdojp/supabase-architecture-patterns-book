@@ -284,37 +284,39 @@ Supabase AuthはJWT RFC 7519準拠のトークンを生成し、PostgreSQL RLS�
 sequenceDiagram
     participant C as Client
     participant SA as Supabase Auth
-    participant DB as PostgreSQL
     
-    C->>SA: POST /auth/v1/signup
-    SA->>DB: INSERT INTO auth.users
+    C->>SA: supabase.auth.signUp(...)
+    SA->>SA: 管理された Auth ユーザーを作成
     SA->>SA: 確認メール送信
     SA-->>C: 201 Created
     
     C->>SA: GET /auth/v1/verify
-    SA->>DB: UPDATE auth.users SET email_confirmed_at
+    SA->>SA: 確認トークンを検証
     SA->>SA: JWT生成
     SA-->>C: 302 Redirect + Set-Cookie
 ```
 
 **サインアップ実装**:
-```sql
--- auth.users テーブル構造
-SELECT column_name, data_type, is_nullable 
-FROM information_schema.columns 
-WHERE table_schema = 'auth' AND table_name = 'users';
+```typescript
+// ブラウザなどの公開クライアント: publishable key と Auth API を使う
+const { data, error } = await supabase.auth.signUp({
+  email: 'user@example.com',
+  password: 'use-a-password-manager-generated-secret',
+  options: {
+    emailRedirectTo: 'https://app.example.com/auth/callback',
+    data: { display_name: 'John Doe' }
+  }
+})
 
--- パスワードハッシュ化（bcrypt）
-INSERT INTO auth.users (
-    id, email, encrypted_password, 
-    email_confirmed_at, created_at, updated_at
-) VALUES (
-    uuid_generate_v4(),
-    'user@example.com',
-    crypt('password', gen_salt('bf')),
-    NOW(), NOW(), NOW()
-);
+if (error) throw error
+
+// Email confirmation が有効な場合、session は確認完了まで null になり得る。
+if (!data.session) {
+  console.log('確認メールを送信しました。リンクを開いて登録を完了してください。')
+}
 ```
+
+`auth.users` は Supabase が管理する内部スキーマです。アプリケーションから SQL で作成・更新したり、PostgREST の `.from()` で参照したりしません。サーバー側で招待・管理者プロビジョニングが必要な場合だけ、secret key を管理された Edge Function またはバックエンドに閉じ込め、`supabase.auth.admin` API を使用します。内部構造を SQL Editor で確認する read-only 診断と、`auth.users(id)` への主キー外部キー参照はこの境界と両立します。
 
 #### 2. OAuth実装
 

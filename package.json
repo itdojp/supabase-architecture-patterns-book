@@ -14,13 +14,14 @@
     "preview": "npm run build && npx http-server _site -p 8080 --silent",
     "deploy": "gh-pages -d _site",
     "clean": "rm -rf _site .jekyll-cache",
-    "test": "npm run check:metadata && npm run check:security && npm run lint && npm run check-links",
+    "test": "npm run check:metadata && npm run check:auth-users-boundary && npm run check:security && npm run lint && npm run check-links",
     "lint": "markdownlint 'src/**/*.md' --ignore node_modules",
     "lint:light": "markdownlint 'src/**/*.md' --ignore node_modules",
     "check-links": "markdown-link-check src/**/*.md src/guides/concept-map/index.md",
     "check-conflicts": "echo 'No Jekyll conflicts to check'",
     "help": "echo 'Available commands:\n  npm start - Start development server\n  npm run build - Build the book\n  npm run preview - Local preview\n  npm run deploy - Deploy to GitHub Pages'",
     "check:metadata": "python3 scripts/check_metadata_consistency.py",
+    "check:auth-users-boundary": "node scripts/check-auth-users-boundary.js",
     "check:security": "npm audit --omit=optional"
   },
   "devDependencies": {
