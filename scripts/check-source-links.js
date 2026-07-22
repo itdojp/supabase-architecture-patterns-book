@@ -102,7 +102,11 @@ function runChecker(files, config, { quiet = false, cwd = repoRoot } = {}) {
     stdio: quiet ? 'pipe' : 'inherit',
   });
   if (result.error) throw result.error;
-  return result.status || 0;
+  if (result.status === null) {
+    console.error(`checker terminated without an exit status${result.signal ? ` (signal: ${result.signal})` : ''}`);
+    return 1;
+  }
+  return result.status;
 }
 
 function visitTokens(tokens, visitor) {
@@ -169,7 +173,7 @@ function resolveInternalTarget(sourceFile, rawLink) {
   const fragment = decodeLinkPart(rawFragment, 'link fragment');
   const canonicalRoot = path.relative(docsRoot, sourceFile).startsWith('..') ? sourceRoot : docsRoot;
   const absolute = decodedPath.startsWith('/')
-    ? path.join(canonicalRoot, decodedPath)
+    ? path.join(canonicalRoot, decodedPath.replace(/^\/+/, ''))
     : path.resolve(path.dirname(sourceFile), decodedPath || '.');
 
   const candidates = [];
@@ -285,6 +289,7 @@ function checkExternal(files) {
 }
 
 function checkBuiltSite(siteRoot) {
+  // main() validates the canonical inventory before this rendered contract.
   for (const [relativePath, fragments] of Object.entries(builtFragmentContracts)) {
     const filePath = path.join(siteRoot, relativePath);
     if (!fs.existsSync(filePath)) fail(`built page is missing: ${relativePath}`);
@@ -348,7 +353,7 @@ function main() {
   let status;
   if (args.mode === 'internal') {
     checkInternal(files);
-    status = 0;
+    return;
   } else if (args.mode === 'external') {
     status = checkExternal(files);
   } else {
