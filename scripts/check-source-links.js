@@ -8,9 +8,18 @@ const MarkdownIt = require('markdown-it');
 
 const repoRoot = path.resolve(__dirname, '..');
 const sourceRoot = path.join(repoRoot, 'src');
+const docsRoot = path.join(repoRoot, 'docs');
 const manifestPath = path.join(repoRoot, '.qa', 'source-markdown-files.json');
+const docsOnlyManifestPath = path.join(repoRoot, '.qa', 'docs-only-markdown-files.json');
+const excludedDocsManifestPath = path.join(repoRoot, '.qa', 'excluded-docs-markdown-files.json');
 const cliPath = path.join(repoRoot, 'node_modules', 'markdown-link-check', 'markdown-link-check');
 const markdown = new MarkdownIt({ html: true, linkify: false });
+const siteRepositoryUrl = (() => {
+  const config = fs.readFileSync(path.join(docsRoot, '_config.yml'), 'utf8');
+  const match = config.match(/^repository:\s*["']?([^"'\s]+)["']?\s*$/m);
+  if (!match) fail('docs/_config.yml must define repository for Liquid link validation');
+  return match[1].replace(/\/$/, '');
+})();
 
 const builtFragmentContracts = {
   'guides/error-handling/index.html': ['認証認可エラー', 'ネットワーク接続エラー', 'エラー監視ログ'],
@@ -39,25 +48,50 @@ function discoverMarkdown(dir, base = repoRoot) {
   return files.sort();
 }
 
-function loadManifest(filePath = manifestPath) {
+function loadManifest(filePath) {
   const value = JSON.parse(fs.readFileSync(filePath, 'utf8'));
   if (!Array.isArray(value) || value.some((item) => typeof item !== 'string')) {
     fail(`${path.relative(repoRoot, filePath)} must contain a JSON string array`);
   }
-  if (new Set(value).size !== value.length) fail('source Markdown manifest contains duplicates');
-  if (JSON.stringify(value) !== JSON.stringify([...value].sort())) fail('source Markdown manifest must be sorted');
+  const label = toPosix(path.relative(repoRoot, filePath));
+  if (new Set(value).size !== value.length) fail(`${label} contains duplicates`);
+  if (JSON.stringify(value) !== JSON.stringify([...value].sort())) fail(`${label} must be sorted`);
   return value;
 }
 
 function assertManifest() {
-  const expected = loadManifest();
+  const expected = loadManifest(manifestPath);
   const actual = discoverMarkdown(sourceRoot);
   if (JSON.stringify(actual) !== JSON.stringify(expected)) {
     const missing = expected.filter((file) => !actual.includes(file));
     const untracked = actual.filter((file) => !expected.includes(file));
     fail(`source Markdown inventory mismatch: missing=${JSON.stringify(missing)}, untracked=${JSON.stringify(untracked)}`);
   }
-  return actual;
+  const docsOnly = loadManifest(docsOnlyManifestPath);
+  const excludedDocs = loadManifest(excludedDocsManifestPath);
+  for (const file of docsOnly) {
+    const absolute = path.join(repoRoot, file);
+    if (!file.startsWith('docs/') || !file.endsWith('.md') || !fs.existsSync(absolute)) {
+      fail(`invalid docs-only Markdown inventory entry: ${file}`);
+    }
+    const sourceCounterpart = path.join(sourceRoot, path.relative(path.join(repoRoot, 'docs'), absolute));
+    if (fs.existsSync(sourceCounterpart)) fail(`${file} has a src counterpart and is not docs-only`);
+  }
+  const expectedDocs = [
+    ...actual.map((file) => `docs/${toPosix(path.relative(sourceRoot, path.join(repoRoot, file)))}`),
+    ...docsOnly,
+    ...excludedDocs,
+  ].sort();
+  const actualDocs = discoverMarkdown(docsRoot);
+  if (JSON.stringify(actualDocs) !== JSON.stringify(expectedDocs)) {
+    const missing = expectedDocs.filter((file) => !actualDocs.includes(file));
+    const unclassified = actualDocs.filter((file) => !expectedDocs.includes(file));
+    fail(`docs Markdown classification mismatch: missing=${JSON.stringify(missing)}, unclassified=${JSON.stringify(unclassified)}`);
+  }
+  const combined = [...actual, ...docsOnly];
+  if (new Set(combined).size !== combined.length) fail('combined canonical Markdown inventory contains duplicates');
+  console.log(`Inventory: ${actual.length} source + ${docsOnly.length} docs-only canonical; ${excludedDocs.length} docs helper excluded`);
+  return combined;
 }
 
 function runChecker(files, config, { quiet = false, cwd = repoRoot } = {}) {
@@ -94,6 +128,19 @@ function extractLinks(filePath) {
       }
     }
   });
+  for (const token of tokens) {
+    if (token.type !== 'inline') continue;
+    const text = (token.children || [])
+      .filter((child) => child.type === 'text')
+      .map((child) => child.content)
+      .join('');
+    for (const match of text.matchAll(/\]\(\{\{\s*["']([^"']+)["']\s*\|\s*relative_url\s*\}\}(#[^)\s]+)?\)/g)) {
+      links.push(`${match[1]}${match[2] || ''}`);
+    }
+    for (const match of text.matchAll(/\{\{\s*site\.repository\s*\}\}(\/[^\s)]+)/g)) {
+      links.push(`${siteRepositoryUrl}${match[1]}`);
+    }
+  }
   return links;
 }
 
@@ -120,8 +167,9 @@ function resolveInternalTarget(sourceFile, rawLink) {
   const rawFragment = hashIndex === -1 ? '' : rawLink.slice(hashIndex + 1);
   const decodedPath = decodeLinkPart(rawPath, 'link path');
   const fragment = decodeLinkPart(rawFragment, 'link fragment');
+  const canonicalRoot = path.relative(docsRoot, sourceFile).startsWith('..') ? sourceRoot : docsRoot;
   const absolute = decodedPath.startsWith('/')
-    ? path.join(sourceRoot, decodedPath)
+    ? path.join(canonicalRoot, decodedPath)
     : path.resolve(path.dirname(sourceFile), decodedPath || '.');
 
   const candidates = [];

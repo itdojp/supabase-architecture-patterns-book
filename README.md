@@ -46,7 +46,7 @@ Edge Functions の注文検証をローカルで実行する最小教材は、
 
 `check:metadata` は `book-config.json`、`package.json`、`docs/_config.yml`、`docs/index.md`、`docs/_data/navigation.yml`、公開ページ、必須アセットの整合性を検証します。
 `check:security` は任意依存を除いた npm 依存関係監査を実行し、既知脆弱性が残っていないことを検証します。
-`check-links` は `.qa/source-markdown-files.json` と `src/` の実ファイル集合を照合してから、全source Markdownの内部リンクとfragmentをネットワーク非依存で検証します。外部URLは `npm run check-links:external` と定期Workflowへ分離し、localhostの教材例は到達性監視から除外します。
+`check-links` は `.qa/source-markdown-files.json` と `src/` の実ファイル集合を照合し、`src/` に対応原稿がない公開ページは `.qa/docs-only-markdown-files.json`、非公開補助Markdownは `.qa/excluded-docs-markdown-files.json` で分類してから、全canonical Markdownの内部リンクとfragmentをネットワーク非依存で検証します。外部URLは `npm run check-links:external` と定期Workflowへ分離し、localhostの教材例は到達性監視から除外します。
 
 ## 執筆・ビルド（開発者向け）
 
