@@ -138,6 +138,9 @@ function extractLinks(filePath) {
       .filter((child) => child.type === 'text')
       .map((child) => child.content)
       .join('');
+    for (const match of text.matchAll(/https?:\/\/[A-Za-z0-9._~:/?#\[\]@!$&()*+,;=%-]+/g)) {
+      links.push(match[0].replace(/[),.;!?]+$/, ''));
+    }
     for (const match of text.matchAll(/\]\(\{\{\s*["']([^"']+)["']\s*\|\s*relative_url\s*\}\}(#[^)\s]+)?\)/g)) {
       links.push(`${match[1]}${match[2] || ''}`);
     }
@@ -317,13 +320,26 @@ function selfTest() {
   try {
     fs.mkdirSync(path.join(fixtureRoot, 'nested'), { recursive: true });
     fs.writeFileSync(path.join(fixtureRoot, 'index.md'), '[nested](nested/page.md#target)\n');
-    fs.writeFileSync(path.join(fixtureRoot, 'nested', 'page.md'), '# Target\n\n[self](#target)\n');
+    const visibleUrl = 'https://example.com/resource';
+    const codeUrl = 'http://localhost:8000/code-example';
+    fs.writeFileSync(
+      path.join(fixtureRoot, 'nested', 'page.md'),
+      `# Target\n\n[self](#target)\n\nBare prose: ${visibleUrl}\n\nInline code: \`${codeUrl}\`\n`,
+    );
     const files = discoverMarkdown(fixtureRoot, fixtureRoot);
     if (JSON.stringify(files) !== JSON.stringify(['index.md', 'nested/page.md'])) {
       fail(`nested fixture discovery failed: ${JSON.stringify(files)}`);
     }
-    checkInternal(files.map((file) => toPosix(path.relative(repoRoot, path.join(fixtureRoot, file)))));
-    fs.writeFileSync(path.join(fixtureRoot, 'nested', 'page.md'), '# Target\n\n[self](#missing)\n');
+    const relativeFiles = files.map((file) => toPosix(path.relative(repoRoot, path.join(fixtureRoot, file))));
+    checkInternal(relativeFiles);
+    const external = extractExternalLinks(relativeFiles);
+    if (JSON.stringify(external) !== JSON.stringify([visibleUrl])) {
+      fail(`prose/code URL fixture failed: ${JSON.stringify(external)}`);
+    }
+    fs.writeFileSync(
+      path.join(fixtureRoot, 'nested', 'page.md'),
+      `# Target\n\n[self](#missing)\n\nBare prose: ${visibleUrl}\n\nInline code: \`${codeUrl}\`\n`,
+    );
     let detected = false;
     try {
       checkInternal(files.map((file) => toPosix(path.relative(repoRoot, path.join(fixtureRoot, file)))));
@@ -334,7 +350,7 @@ function selfTest() {
   } finally {
     fs.rmSync(fixtureRoot, { recursive: true, force: true });
   }
-  console.log('OK: source link self-test (nested discovery + broken fragment)');
+  console.log('OK: source link self-test (nested discovery + broken fragment + prose/code URL classification)');
 }
 
 function parseArgs(argv) {
