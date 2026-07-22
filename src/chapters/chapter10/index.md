@@ -3,7 +3,7 @@
 ---
 **目次に戻る**: [はじめに](../../introduction/)  
 **前の章**: [第9章：アーキテクチャ選択演習](../chapter09/)  
-**完了**: [学習修了・次のステップ](../../introduction/#-学習修了後の進路)  
+**完了**: [学習修了・次のステップ](../../introduction/#学習修了後の進路)<br>
 **学習フェーズ**: Part IV - 実践・応用編（統合実践）  
 **学習レベル**:  基礎 |  応用 |  発展  
 **推定学習時間**: 8〜12時間  
@@ -1897,6 +1897,6 @@ Supabaseアーキテクチャパターンの学習が完了しました。実際
 **最終ナビゲーション**
 - **目次**: [はじめに](../../introduction/)
 - **前の章**: [第9章：アーキテクチャ選択演習](../chapter09/)  
-- **修了後**: [学習継続ガイド](../../introduction/#-学習修了後の進路)
+- **修了後**: [学習継続ガイド](../../introduction/#学習修了後の進路)
 - **復習**: [全章まとめ](../../introduction/) | [パターン比較](../../guides/pattern-selection/)
-- **リソース**: [コミュニティ](https://supabase.com/community) | [公式ドキュメント](https://supabase.com/docs)
+- **リソース**: [コミュニティ](https://github.com/supabase/supabase/discussions) | [公式ドキュメント](https://supabase.com/docs)

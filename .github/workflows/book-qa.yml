@@ -101,6 +101,9 @@ jobs:
           source: ./${{ steps.scan.outputs.dir }}
           destination: ./_site
 
+      - name: Smoke check rendered source fragments
+        run: npm run check-links:built
+
       - name: Smoke check built site (top + navigation + assets)
         shell: bash
         run: |

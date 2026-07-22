@@ -1,0 +1,11 @@
+{
+  "timeout": "15s",
+  "retryOn429": true,
+  "retryCount": 2,
+  "fallbackRetryDelay": "2s",
+  "aliveStatusCodes": [200, 206],
+  "ignorePatterns": [
+    { "pattern": "^https?://(?:localhost|127\\.0\\.0\\.1|\\[::1\\])(?::[0-9]+)?(?:/|$)" },
+    { "pattern": "^(?!https?://)" }
+  ]
+}
