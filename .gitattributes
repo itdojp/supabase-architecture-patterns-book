@@ -1,0 +1,2 @@
+# Markdown sources use CRLF in parts of the existing corpus; treat CR as part of EOL.
+*.md whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol

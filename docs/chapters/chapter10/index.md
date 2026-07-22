@@ -1904,4 +1904,4 @@ Supabase アーキテクチャパターンの学習が完了しました。実�
 - **前の章**: [第9章：アーキテクチャ選択演習]({{ '/chapters/chapter09/' | relative_url }})
 - **修了後**: [学習継続ガイド]({{ '/introduction/' | relative_url }})
 - **復習**: [全章まとめ]({{ '/introduction/' | relative_url }}) | [パターン比較]({{ '/guides/pattern-selection/' | relative_url }})
-- **リソース**: [コミュニティ](https://supabase.com/community) | [公式ドキュメント](https://supabase.com/docs)
+- **リソース**: [コミュニティ](https://github.com/supabase/supabase/discussions) | [公式ドキュメント](https://supabase.com/docs)
