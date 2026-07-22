@@ -141,6 +141,9 @@ function extractLinks(filePath) {
     for (const match of text.matchAll(/\]\(\{\{\s*["']([^"']+)["']\s*\|\s*relative_url\s*\}\}(#[^)\s]+)?\)/g)) {
       links.push(`${match[1]}${match[2] || ''}`);
     }
+    for (const match of text.matchAll(/\]\(\{\{\s*site\.baseurl\s*\}\}(\/[^)\s]+)\)/g)) {
+      links.push(match[1]);
+    }
     for (const match of text.matchAll(/\{\{\s*site\.repository\s*\}\}(\/[^\s)]+)/g)) {
       links.push(`${siteRepositoryUrl}${match[1]}`);
     }
