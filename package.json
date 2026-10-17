@@ -14,7 +14,7 @@
     "preview": "npm run build && npx http-server _site -p 8080 --silent",
     "deploy": "gh-pages -d _site",
     "clean": "rm -rf _site .jekyll-cache",
-    "test": "npm run check:metadata && npm run check:auth-users-boundary && npm run check:authz-claims && npm run check:chapter04-example && npm run test:chapter04-example && npm run check:security && npm run lint && npm run check-links:self-test && npm run check-links",
+    "test": "npm run check:metadata && npm run check:dependency-compatibility && npm run check:auth-users-boundary && npm run check:authz-claims && npm run check:chapter04-example && npm run test:chapter04-example && npm run check:security && npm run lint && npm run check-links:self-test && npm run check-links",
     "lint": "markdownlint 'src/**/*.md' --ignore node_modules",
     "lint:light": "markdownlint 'src/**/*.md' --ignore node_modules",
     "check-links": "node scripts/check-source-links.js --mode internal",
@@ -29,15 +29,16 @@
     "check:authz-claims": "node scripts/check-authz-claims.js",
     "check:chapter04-example": "node scripts/check-chapter04-example.js",
     "test:chapter04-example": "deno test examples/chapter04-ecommerce/supabase/functions/process-order/",
-    "smoke:chapter04-local": "bash scripts/smoke-chapter04-local.sh"
+    "smoke:chapter04-local": "bash scripts/smoke-chapter04-local.sh",
+    "check:dependency-compatibility": "node scripts/check-dependency-compatibility.js"
   },
   "devDependencies": {
     "deno": "2.9.3",
     "gh-pages": "^6.3.0",
     "http-server": "^14.1.1",
-    "markdown-it": "14.3.0",
+    "markdown-it": "14.3.3",
     "markdown-link-check": "^3.14.2",
-    "markdownlint-cli": "^0.48.0",
+    "markdownlint-cli": "0.48.0",
     "supabase": "2.109.1"
   },
   "keywords": [
@@ -57,13 +58,19 @@
   },
   "homepage": "https://itdojp.github.io/supabase-architecture-patterns-book/",
   "overrides": {
-    "brace-expansion": "5.0.9",
-    "js-yaml": "4.3.1",
-    "markdown-it": "14.3.0",
+    "brace-expansion": "5.0.12",
+    "js-yaml": "4.3.2",
+    "markdown-it": "14.3.3",
     "linkify-it": "5.0.2",
-    "undici": "7.29.0",
+    "undici": "7.29.1",
     "run-con": "1.3.2",
     "ini": "4.1.3",
-    "ip-address": "10.5.0"
+    "ip-address": "10.7.4",
+    "markdownlint-cli@0.48.0": {
+      "smol-toml": "1.9.1"
+    },
+    "micromark-extension-math@3.1.0": {
+      "katex": "0.18.2"
+    }
   }
 }
